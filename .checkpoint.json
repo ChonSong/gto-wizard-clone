@@ -205,9 +205,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "fb978af545e2a02596ef3c63135d8518dbfee243",
-    "last_reviewed_at": "2026-06-20T20:00:00Z",
+    "last_reviewed_sha": "edbd80f3064596938755e80663c537f4f03a2843",
+    "last_reviewed_at": "2026-06-20T23:36:00Z",
     "verdict": "approved",
-    "notes": "Approved fix-e2e-test-runner (fb978af). Verified 118 Chromium E2E tests pass. No code changes needed — test runner is healthy. Firefox/WebKit browser installation is an environment issue, not a code bug."
+    "notes": "Reviewed edbd80f — checkpoint-only commit, no code changes. Last substantive code commit (1cc1cfb solutions-page-visual-match-reference) already approved. Phase 1 (Study Mode UX Completion) complete. Live site 200, API healthy."
   }
 }
