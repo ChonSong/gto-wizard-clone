@@ -124,8 +124,8 @@ test.describe("Courses Page", () => {
     const categoryFilter = coursesPage.getCategoryFilter();
     await expect(categoryFilter).toBeVisible();
 
-    // Select ICM category
-    await categoryFilter.selectOption("icm");
+    // Select Tournament category (matches seeded course data)
+    await categoryFilter.selectOption("tournament");
     await page.waitForTimeout(300);
 
     // Verify courses are still displayed

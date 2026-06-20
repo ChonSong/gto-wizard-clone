@@ -9,4 +9,6 @@ __pycache__/
 test-results/
 tsconfig.tsbuildinfo
 .turbo
+*.turbo-build.log
+apps/web/public/sw.js
 apps/web/e2e/node_modules.bak
