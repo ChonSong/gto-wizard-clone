@@ -3,17 +3,17 @@ import { test, expect, type Page } from "@playwright/test";
 /**
  * Equity Calculator (Game View) E2E Tests
  *
- * The /equity page renders an interactive poker training view with:
- * - Position flow bar (UTG, HJ, CO, BTN, SB, BB)
- * - Board display with community cards
- * - BB Range and BTN Range matrices (strength/action modes)
- * - Statistics, EQ buckets, and action breakdown widgets
+ * The /equity page renders an interactive equity calculator with:
+ * - Hero/Villain hand input fields
+ * - Board cards input
+ * - Calculate button
+ * - Equity results with win/tie breakdown
  *
  * Tests cover:
  * 1. Page loads without console errors at /equity
- * 2. Range grid renders with both BB and BTN sections
- * 3. Board and position elements are present
- * 4. Statistics panel renders
+ * 2. Hero and villain input fields render
+ * 3. Calculate button triggers calculation
+ * 4. Stats and results display after calculation
  * 5. Navigation from home page works
  */
 
@@ -31,11 +31,11 @@ test.describe("Equity Calculator Page", () => {
     await page.goto(EQUITY_URL);
     await page.waitForLoadState("domcontentloaded");
 
-    // Check that the page has loaded with correct game title
-    const heading = page.locator("h2:has-text('Game')");
-    await expect(heading).toBeVisible();
+    // Check that the page has loaded with the Game settings sidebar
+    const gameSection = page.locator("h2:has-text('Game')");
+    await expect(gameSection).toBeVisible();
 
-    // Verify the main application brand is present
+    // Verify the layout header is present
     const appBrand = page.locator("a[href='/study']").first();
     await expect(appBrand).toBeVisible();
 
@@ -46,53 +46,50 @@ test.describe("Equity Calculator Page", () => {
     expect(criticalErrors).toHaveLength(0);
   });
 
-  test("2. Range grids render with BB Range and BTN Range sections", async ({ page }) => {
+  test("2. Hand input fields and calculate button render", async ({ page }) => {
     await page.goto(EQUITY_URL);
 
-    // Both range grids should be present
-    const bbRange = page.locator("h3:has-text('BB Range')");
-    await expect(bbRange).toBeVisible();
+    // Hero and villain input fields should be present
+    const heroInput = page.locator("input[placeholder*='AA']").first();
+    await expect(heroInput).toBeVisible();
 
-    const btnRange = page.locator("h3:has-text('BTN Range')");
-    await expect(btnRange).toBeVisible();
+    const villainInput = page.locator("input[placeholder*='QQ']").first();
+    await expect(villainInput).toBeVisible();
 
-    // Game settings sidebar should be visible
-    const gameSection = page.locator("h2:has-text('Game')");
-    await expect(gameSection).toBeVisible();
+    // Board input should be present
+    const boardInput = page.locator("input[placeholder*='Ah']").first();
+    await expect(boardInput).toBeVisible();
+
+    // Calculate button should be present
+    const calcButton = page.locator("button:has-text('Calculate')");
+    await expect(calcButton).toBeVisible();
   });
 
-  test("3. Board cards and position flow display correctly", async ({ page }) => {
+  test("3. Board cards display from input", async ({ page }) => {
     await page.goto(EQUITY_URL);
 
-    // Board cards section should show Q♥ J♦ 4♠ (mock board)
-    const boardSection = page.locator("text=Q♥").last();
-    await expect(boardSection).toBeVisible();
+    // With default board "QdJh4s", board cards should render
+    // Q♥ J♦ 4♠ cards should appear
+    await page.waitForTimeout(1000);
 
-    // Position flow bar with players
-    const position = page.locator("a[href='/equity']").first();
-    await expect(position).toBeVisible();
-
-    // Stack info should be visible
-    const stackLabel = page.getByText("Stack", { exact: true });
-    await expect(stackLabel).toBeVisible();
+    const boardCard = page.locator("text=Q♥").last();
+    await expect(boardCard).toBeVisible();
   });
 
-  test("4. Statistics and analysis panels render", async ({ page }) => {
+  test("4. Stats and results display after calculation", async ({ page }) => {
     await page.goto(EQUITY_URL);
 
-    // Statistics section
-    const stats = page.locator("h3:has-text('Statistics')");
-    await expect(stats).toBeVisible();
+    // Wait for the auto-calculation to complete
+    await page.waitForTimeout(3000);
 
-    // Equity analysis panels
-    const eqBuckets = page.locator("h3:has-text('EQ BUCKETS')");
-    await expect(eqBuckets).toBeVisible();
+    // The page has default inputs "AKs" vs "QQ" on "QdJh4s"
+    // After calculation, stats should appear
+    const equityLabel = page.locator("text=AKs EQUITY").first();
+    await expect(equityLabel).toBeVisible({ timeout: 10000 });
 
-    const actionBreakdown = page.locator("h3:has-text('Action Breakdown')");
-    await expect(actionBreakdown).toBeVisible();
-
-    const equityGraph = page.locator("h3:has-text('Equity Graph')");
-    await expect(equityGraph).toBeVisible();
+    // The Equity Breakdown section should render
+    const breakdown = page.locator("h3:has-text('Equity Breakdown')");
+    await expect(breakdown).toBeVisible();
   });
 
   test("5. Page title is set correctly", async ({ page }) => {
@@ -110,7 +107,7 @@ test.describe("Equity Page Navigation", () => {
     if (await equityLink.count() > 0) {
       await equityLink.click();
       await expect(page).toHaveURL(/\/equity/);
-      // Verify the game view loaded
+      // Verify the Game settings sidebar loaded
       await expect(page.locator("h2:has-text('Game')")).toBeVisible();
     } else {
       // Navigate directly if link not found
