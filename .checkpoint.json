@@ -184,15 +184,22 @@
       "date": "2026-06-20",
       "summary": "Pixel-level color analysis of reference-dashboard.png — updated CSS vars: --bg #09090C, --panel #121214, --green #AAFBB2 (mint), --border #1D1D1F, --muted #767677. Stat values changed from green to white #FFFFFF. Matches reference screenshot color palette.",
       "coach": "approved"
+    },
+    {
+      "task": "equity-page-visual-match-reference",
+      "sha": "e892b91",
+      "date": "2026-06-20",
+      "summary": "Redesign equity calculator: hand inputs, board input, calculate button, results with wins/ties/total via EquityChart. CSS variable theme. Removed redundant nav and mock range grids. Fixed win/tie calculation bug (API field mismatch).",
+      "coach": "approved"
     }
   ],
-  "current_task": "equity-page-visual-match-reference",
+  "current_task": "practice-page-visual-match-reference",
   "next": "practice-page-visual-match-reference",
   "backlog": [],
   "health": "build_ok_site_200",
   "last_sha": "9a252128be46c6e1f364d8ea0fe25cecf89b6fb1",
   "blocker": null,
-  "note": "dashboard-page-visual-match-reference complete — mint green #AAFBB2 accents, dark #121214 panels, white stat values. Remaining AGENTS.md tasks: equity-page-visual-match-reference, practice-page-visual-match-reference. Live site 200.",
+  "note": "equity-page-visual-match-reference complete — redesigned equity calculator with hand inputs, board input, Calculate button, EquityChart results. CSS vars applied. Live site 200. Next: practice-page-visual-match-reference.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -232,10 +239,11 @@
       "status": "open"
     }
   ],
+  "current_task": "practice-page-visual-match-reference",
   "coach_review": {
-    "last_reviewed_sha": "e620dbca4a16ae67d0d8c842ff190554d3113b5b",
-    "last_reviewed_at": "2026-06-20T13:40:00Z",
-    "verdict": "approved",
-    "notes": "Reviewed 6 commits since last review (2d4db09..1623243): 3 dashboard visual match commits (4c1b8ad, 021e903, 9a25212) + 3 chore commits. Dashboard redesigned with mint green #AAFBB2 accents, dark #121214 panels, white stat values. CSS vars updated globally. Header colors matched. Live site 200 with correct rendered HTML. Removed YAGNI _analyze_ref2.py utility script. Playwright 106 failures are pre-existing environment issue. Next: equity-page-visual-match-reference."
+    "last_reviewed_sha": "e892b91",
+    "last_reviewed_at": "2026-06-20T14:12:00Z",
+    "verdict": "fixed",
+    "notes": "Reviewed commit 38e59ba (equity page redesign). Fixed win/tie calculation bug: frontend used non-existent data.win_probability/data.tie_probability fields instead of data.wins/data.ties/data.total from API. Also removed dead gtoTheme import. Fix committed as e892b91. Live site 200, API returns correct equity data. Next: practice-page-visual-match-reference."
   }
 }
