@@ -225,7 +225,7 @@
   "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "4cf220f",
+  "last_sha": "6b9c156",
   "blocker": null,
   "note": "Fix conflicting systemd service (stop+disable gto-wizard-api.service — auto-restart loop on port 8001). Update equity E2E smoke test to match redesigned equity page (no more BB/BTN Range h3 headings). 6/6 smoke tests pass, 368 Python tests pass. current_task=tbd — project healthy, no blockers.",
   "spec_gaps": [
