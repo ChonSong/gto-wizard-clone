@@ -352,9 +352,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "971b396eb0673389639a048f52f1115da846dc7a",
-    "last_reviewed_at": "2026-06-20T13:15:00Z",
+    "last_reviewed_sha": "9a840eefffd24ef352c09ec7834d16797fb7a061",
+    "last_reviewed_at": "2026-06-20T13:40:00Z",
     "verdict": "approved",
-    "notes": "Coach review: reviewed seed-quiz-spots-with-board-data (c50c33a) — idempotent per-spot dedup, 44 new postflop spots with board data. Also 2 checkpoint-only commits. 368 tests pass. Site healthy. All 93 AGENTS.md tasks complete. Project feature-complete."
+    "notes": "Coach tick 2026-06-20T13:40: no new player commits since last review. Project feature-complete — all 93 tasks done, 0 spec gaps, 368 tests pass, site healthy (200 on all pages, API healthy). Awaiting user direction for next phase."
   }
 }
