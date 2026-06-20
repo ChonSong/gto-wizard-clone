@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="GTO Wizard Clone API",
     version="0.1.0",
-    description="Backend API for GTO poker training platform"
+    description="Backend API for GTO poker training platform",
 )
 
 
@@ -34,9 +34,11 @@ def init_redis():
     try:
         if redis_url:
             import redis
+
             app.state.redis = redis.from_url(redis_url, decode_responses=True)
         else:
             import fakeredis
+
             app.state.redis = fakeredis.FakeRedis(decode_responses=True)
             logger.info("Using fakeredis (no REDIS_URL set)")
         app.state.redis.ping()
@@ -44,6 +46,7 @@ def init_redis():
     except Exception as e:
         logger.warning(f"Redis unavailable ({e}), using fakeredis")
         import fakeredis
+
         app.state.redis = fakeredis.FakeRedis(decode_responses=True)
 
 
@@ -58,10 +61,14 @@ async def _auto_seed_strategies():
     try:
         from prisma.seed_preflop_strategies import seed_strategies as seed_preflop
 
-        db_url = os.environ.get(
-            "DATABASE_URL",
-            "postgresql://postgres:***@localhost:5432/gto_wizard",
-        ).replace(":***@", ":postgres@")
+        db_url = (
+            os.environ.get(
+                "DATABASE_URL",
+                "postgresql://postgres:***@localhost:5432/gto_wizard",
+            )
+            .replace(":***@", ":postgres@")
+            .replace("+asyncpg", "")
+        )
 
         # Short delay to let DB connections settle after startup
         await asyncio.sleep(2)
@@ -83,6 +90,7 @@ async def _auto_seed_strategies():
         # Also seed flop strategies (idempotent, 7 common boards at all depths)
         try:
             from prisma.seed_flop_strategies import seed_flop_strategies
+
             flop_total = 0
             for sd in stack_depths:
                 try:
@@ -90,9 +98,7 @@ async def _auto_seed_strategies():
                     flop_total += count
                     logger.info(f"Auto-seeded {count} flop strategies at {sd}bb")
                 except Exception as e:
-                    logger.warning(
-                        f"Flop auto-seed at {sd}bb skipped (non-fatal): {e}"
-                    )
+                    logger.warning(f"Flop auto-seed at {sd}bb skipped (non-fatal): {e}")
             logger.info(f"Auto-seeded {flop_total} flop strategies across all stack depths")
         except Exception as e:
             logger.warning(f"Flop auto-seed skipped (non-fatal): {e}")
@@ -107,6 +113,7 @@ async def startup_event():
     # Try to init database, but don't fail if models have import issues
     try:
         from apps.api.services.database import init_db
+
         await init_db()
         logger.info("Database initialized")
     except Exception as e:
@@ -177,8 +184,3 @@ async def solver_ws(ws: WebSocket, job_id: str):
 async def quiz_ws(ws: WebSocket):
     """WebSocket endpoint for real-time quiz events."""
     await websocket_handler(ws)
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)

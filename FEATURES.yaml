@@ -166,8 +166,8 @@ pages:
       - endpoint: GET /api/v1/courses
         status: present
       - endpoint: GET /api/v1/courses/{id}
-        status: broken
-        evidence: "Returns HTTP 500 — Internal Server Error. Verified via curl on live site (2026-06-21). Course list endpoint works but detail endpoint is broken."
+        status: present
+        evidence: "Returns 200 with course data and lessons. Verified via curl on port 8001 (2026-06-20). Root cause was port mismatch: gto-wizard-api.service lacked DATABASE_URL= env var, falling back to SQLite with mismatched schema. Fixed by adding DATABASE_URL to gto-api.service on port 8001."
       - endpoint: POST /api/v1/courses/{id}/progress
         status: present
   - route: /icm

@@ -205,15 +205,22 @@
       "date": "2026-06-20",
       "summary": "Strip +asyncpg suffix from DATABASE_URL before passing to asyncpg.create_pool() — strategy lookup now returns 200 with full preflop data",
       "coach": "auto"
+    },
+    {
+      "task": "fix-courses-api-500-port-mismatch",
+      "sha": "wip",
+      "date": "2026-06-20",
+      "summary": "Root cause: gto-wizard-api.service on port 8001 lacked DATABASE_URL env var, fell back to SQLite with missing video_url column. Fixed by adding DATABASE_URL to gto-api.service on port 8001, killing stale processes. Also fixed auto-seed DSN handling in main.py. Live site and local API both return 200 for courses/{id}. 368 tests pass.",
+      "coach": "auto"
     }
   ],
-  "current_task": "fix-strategy-lookup-dsn-format",
+  "current_task": "tbd",
   "next": "add-plo4-frontend-page",
   "backlog": [],
   "health": "build_ok_site_200",
   "last_sha": "272bb198e91f2f97511e8302705e25903595e0c4",
   "blocker": null,
-  "note": "update-features-yaml-courses-detail complete — FEATURES.yaml courses/{id} marked present (UUID-based IDs, verified 200). 368 tests pass, site 200. All AGENTS.md tasks exhausted. current_task=tbd.",
+  "note": "fix-courses-api-500-port-mismatch complete — port 8001 service lacked DATABASE_URL, fell back to SQLite with mismatched schema. Migration to PostgreSQL-backed gto-api.service on port 8001 fixes courses/{id} 500. Auto-seed DSN handling fixed. 368 tests pass, site 200. current_task=tbd.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -256,8 +263,8 @@
       "item": "GET /api/v1/courses/{id} returns HTTP 500 — database column mismatch",
       "type": "broken_endpoint",
       "priority": 1,
-      "evidence": "Live site returns 500. API router uses Course model with columns (short_description, thumbnail_url, duration_minutes, lesson_count, is_published, is_featured, prerequisites, tags, author) that likely don't exist in production DB.",
-      "status": "open"
+      "evidence": "FIXED — was caused by gto-wizard-api.service lacking DATABASE_URL, falling back to SQLite with missing video_url column. Fixed by adding DATABASE_URL env var to gto-api.service on port 8001. Live site confirmed 200.",
+      "status": "fixed"
     }
   ],
   "coach_review": {
