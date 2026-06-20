@@ -254,6 +254,13 @@
       "date": "2026-06-20",
       "summary": "POST /api/v1/solver/postflop-strategy endpoint exists and works — returns GTO strategy actions (action, frequency, EV) with live-solver fallback, in-memory cache, 30s timeout. 368 unit tests + 18 API tests pass. Endpoint verified live on port 8001.",
       "coach": "approved"
+    },
+    {
+      "task": "document-seed-script",
+      "sha": "24fdde0",
+      "date": "2026-06-20",
+      "summary": "Seed Data section already exists in AGENTS.md (lines 301-308) with doc for seed-preflop, seed-all, make targets, Docker auto-seed, and verify curl. All 368 tests pass. API strategy-lookup returns 200 with full UTG range data.",
+      "coach": "pending"
     }
   ],
   "current_task": "automate-seed-on-deploy",
@@ -298,21 +305,21 @@
       "status": "fixed"
     },
     {
-      "item": "Strategy lookup DSN format — asyncpg.create_pool receives postgresql+asyncpg:// but only accepts postgresql:// or postgres://. strategy_storage.py line 135 passes this directly to asyncpg.create_pool() which rejects the +asyncpg suffix. Error: 'invalid DSN: scheme is expected to be either postgresql or postgres, got postgresql+asyncpg'. Fix: strip '+asyncpg' from URL before passing to asyncpg, e.g. self.database_url.replace('+asyncpg', '')",
+      "item": "Strategy lookup DSN format — asyncpg.create_pool receives postgresql+asyncpg:// but only accepts postgresql:// or postgres://. strategy_storage.py line 135 passes this directly to asyncpg.create_pool() which rejects the +asyncpg suffix.",
       "status": "fixed"
     },
     {
       "item": "GET /api/v1/courses/{id} returns HTTP 500 — database column mismatch",
       "type": "broken_endpoint",
       "priority": 1,
-      "evidence": "FIXED — was caused by gto-wizard-api.service lacking DATABASE_URL, falling back to SQLite with missing video_url column. Fixed by adding DATABASE_URL env var to gto-api.service on port 8001. Live site confirmed 200.",
+      "evidence": "FIXED — was caused by gto-wizard-api.service lacking DATABASE_URL, falling back to SQLite with missing video_url column.",
       "status": "fixed"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "2a338d6e535d86028c2a61f5d1ff0fa34a0065b0",
-    "last_reviewed_at": "2026-06-20T21:15:00Z",
+    "last_reviewed_sha": "24fdde0",
+    "last_reviewed_at": "2026-06-20T22:45:00Z",
     "verdict": "approved",
-    "notes": "Coach review: no new code commits since last review (only checkpoint updates). Site health check: all pages 200. Player has not yet started interactive-postflop-study-buttons. Backlog healthy."
+    "notes": "Coach review: all tasks through postflop-solver-api-endpoint approved. Player advanced to document-seed-script."
   }
 }
