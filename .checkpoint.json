@@ -218,7 +218,7 @@
   "next": "add-plo4-frontend-page",
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "272bb198e91f2f97511e8302705e25903595e0c4",
+  "last_sha": "868c8a0",
   "blocker": null,
   "note": "fix-courses-api-500-port-mismatch complete — port 8001 service lacked DATABASE_URL, fell back to SQLite with mismatched schema. Migration to PostgreSQL-backed gto-api.service on port 8001 fixes courses/{id} 500. Auto-seed DSN handling fixed. 368 tests pass, site 200. current_task=tbd.",
   "spec_gaps": [
