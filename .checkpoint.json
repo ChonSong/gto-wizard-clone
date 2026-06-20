@@ -219,15 +219,22 @@
       "date": "2026-06-20",
       "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator — reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-equity-smoke-test",
+      "sha": "6b9c156",
+      "date": "2026-06-20",
+      "summary": "Update equity E2E smoke test to match redesigned equity page — remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
+      "coach": "approved"
     }
   ],
-  "current_task": "tbd",
+  "current_task": "seed-preflop-strategies",
   "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "6b9c156",
+  "last_sha": "c974a79",
   "blocker": null,
-  "note": "Fix conflicting systemd service (stop+disable gto-wizard-api.service — auto-restart loop on port 8001). Update equity E2E smoke test to match redesigned equity page (no more BB/BTN Range h3 headings). 6/6 smoke tests pass, 368 Python tests pass. current_task=tbd — project healthy, no blockers.",
+  "note": "Coach reviewed 6b9c156 (1 player commit). fix(e2e): update equity smoke test + stop conflicting systemd service. 368 Python + 12 Playwright tests pass. current_task set to seed-preflop-strategies (next unstarted task). 26 tasks remaining — backlog healthy.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -275,9 +282,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "402d41c",
-    "last_reviewed_at": "2026-06-20T21:06:00Z",
+    "last_reviewed_sha": "6b9c156b1824b7a26d3e2d2b85b4ef2da9d1520e",
+    "last_reviewed_at": "2026-06-20T23:30:00Z",
     "verdict": "approved",
-    "notes": "Reviewed a77d430 (1 player commit since last review). feat(equity): add /equity/plo4 frontend page — 10-line page reusing VariantEquityPage with variantKey=plo4. Live site /equity/plo4 returns 200. API /api/v1/variants/plo4 returns valid variant info. No security issues, no scope creep. Auto-generated sw.js and turbo-build.log changes are expected. Dev loop stalled at current_task=tbd with 27 unstarted tasks remaining."
+    "notes": "Reviewed 6b9c156 (1 player commit since last review). fix(e2e): update equity smoke test for redesigned equity page + stop conflicting systemd service. No security issues, no scope creep, no new endpoints/deps. Tests: 368 Python + 12 Playwright pass. Auto-generated sw.js and turbo-build.log changes expected. Dev loop stalled at current_task=tbd — proceeding to backlog health check."
   }
 }
