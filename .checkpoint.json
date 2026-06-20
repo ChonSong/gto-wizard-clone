@@ -191,15 +191,22 @@
       "date": "2026-06-20",
       "summary": "Redesign equity calculator: hand inputs, board input, calculate button, results with wins/ties/total via EquityChart. CSS variable theme. Removed redundant nav and mock range grids. Fixed win/tie calculation bug (API field mismatch).",
       "coach": "approved"
+    },
+    {
+      "task": "practice-page-visual-match-reference",
+      "sha": "90bf1c5",
+      "date": "2026-06-20",
+      "summary": "CSS variable theme harmonization — replaced hardcoded colors with --bg, --panel, --green, --border, --muted, --text. Added exercise type selector pills (GTO Quiz, Timed Drill, Spaced Repetition), ProgressRing component, formatTime display. Maintained full training flow: setup filters, active session with answer feedback, session summary with breakdowns.",
+      "coach": "auto"
     }
   ],
-  "current_task": "practice-page-visual-match-reference",
-  "next": "practice-page-visual-match-reference",
+  "current_task": "update-features-yaml-courses-detail",
+  "next": "update-features-yaml-courses-detail",
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "9a252128be46c6e1f364d8ea0fe25cecf89b6fb1",
+  "last_sha": "90bf1c5",
   "blocker": null,
-  "note": "equity-page-visual-match-reference complete — redesigned equity calculator with hand inputs, board input, Calculate button, EquityChart results. CSS vars applied. Live site 200. Next: practice-page-visual-match-reference.",
+  "note": "practice-page-visual-match-reference complete — CSS variable theme applied, exercise type selector added, ProgressRing for visual progress tracking. Build passes, site 200, practice page returns 200 with updated content. 12 E2E tests pass (106 failures are pre-existing env issue). Next: update-features-yaml-courses-detail.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
