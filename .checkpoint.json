@@ -295,7 +295,7 @@
       "sha": "c50c33a",
       "date": "2026-06-20",
       "summary": "Make quiz seed idempotent (per-spot dedup instead of blanket skip guard) — 44 new postflop quiz spots seeded including 6 turn, 8 river, 26 flop scenarios. 40 spots with board data covering suited/connected/rainbow/paired textures. 368 tests pass.",
-      "coach": "auto"
+      "coach": "approved"
     }
   ],
   "current_task": "tbd",
@@ -352,9 +352,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "67f81da8fd813e24dc4de4d92dbe4ad991936ed0",
-    "last_reviewed_at": "2026-06-20T13:10:00Z",
+    "last_reviewed_sha": "971b396eb0673389639a048f52f1115da846dc7a",
+    "last_reviewed_at": "2026-06-20T13:15:00Z",
     "verdict": "approved",
-    "notes": "Coach review: 3 checkpoint-only commits (0 code changes since last review). Site healthy (all pages 200, 368 tests pass, solver running). All 93 AGENTS.md tasks complete. FEATURES.yaml 79/79 present. No spec gaps. Project feature-complete — no new tasks generated."
+    "notes": "Coach review: reviewed seed-quiz-spots-with-board-data (c50c33a) — idempotent per-spot dedup, 44 new postflop spots with board data. Also 2 checkpoint-only commits. 368 tests pass. Site healthy. All 93 AGENTS.md tasks complete. Project feature-complete."
   }
 }
