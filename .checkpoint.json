@@ -190,7 +190,7 @@
   "next": "practice-page-visual-match-reference",
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "021e903059a2b76d273f882cad7ee59c0c7d0d87",
+  "last_sha": "9a252128be46c6e1f364d8ea0fe25cecf89b6fb1",
   "blocker": null,
   "note": "dashboard-page-visual-match-reference complete — mint green #AAFBB2 accents, dark #121214 panels, white stat values. Remaining AGENTS.md tasks: equity-page-visual-match-reference, practice-page-visual-match-reference. Live site 200.",
   "spec_gaps": [
@@ -233,7 +233,7 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "021e903059a2b76d273f882cad7ee59c0c7d0d87",
+    "last_reviewed_sha": "9a252128be46c6e1f364d8ea0fe25cecf89b6fb1",
     "last_reviewed_at": "2026-06-20T13:30:00Z",
     "verdict": "approved",
     "notes": "dashboard-page-visual-match-reference: pixel-level analysis of reference screenshot revealed mint green #AAFBB2 accent, #121214 panel bg, #09090C page bg, white stat values. All CSS vars updated. Build passes, site 200. Next: equity-page-visual-match-reference."
