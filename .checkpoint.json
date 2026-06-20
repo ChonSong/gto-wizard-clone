@@ -177,9 +177,16 @@
       "date": "2026-06-20",
       "summary": "Update FEATURES.yaml: mark GET /api/v1/courses/{id} as present (was broken), update last_audited to 2026-06-20. Verified endpoint returns 200 with course data and lessons.",
       "coach": "auto"
+    },
+    {
+      "task": "dashboard-page-visual-match-reference",
+      "sha": "172c960",
+      "date": "2026-06-20",
+      "summary": "Redesign dashboard page to match reference: panel-colored cards (#1C1C1C) with green (#00C853) accents, compact layout, hero section with green CTA, green stats values",
+      "coach": "auto"
     }
   ],
-  "current_task": "dashboard-page-visual-match-reference",
+  "current_task": "equity-page-visual-match-reference",
   "next": null,
   "backlog": [],
   "health": "solver_running_healthy",
