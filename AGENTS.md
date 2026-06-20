@@ -1125,3 +1125,58 @@ Ordered by priority. Each task is one unit of work for one player tick.
   - Verify the endpoint returns 200 with course data
   - Check FEATURES.yaml is valid YAML after edit
   - Spot-check 2-3 other endpoints marked as present
+
+### Task: fix-course-detail-api-500
+- **Description**: `GET /api/v1/courses/{id}` returns HTTP 500 on the live site. The API router code looks correct (uses SQLAlchemy with selectinload), so the issue is likely a database column mismatch — the Course model has columns (short_description, thumbnail_url, duration_minutes, etc.) that don't exist in the production database. Inspect the actual database schema, create an Alembic migration or manual ALTER TABLE to add missing columns, or strip the model down to match the existing schema.
+- **Success criteria**:
+  - `curl "https://wiz.codeovertcp.com/api/v1/courses/16ac4d4a-e659-4429-9573-d308270b41b4"` returns 200 with course data including lessons array
+  - The course detail page at `/courses/[id]` loads with actual course data (not "Loading course..." forever)
+- **Coach checks**:
+  - Verify the endpoint returns 200 with JSON containing id, title, description, lessons array
+  - Check the course detail page renders course title and lesson list
+  - Verify the fix doesn't break the list endpoint (`GET /api/v1/courses`)
+
+### Task: fix-strategy-lookup-dsn-format
+- **Description**: The strategy lookup endpoint works on the live site but the `strategy_storage.py` DSN handling is fragile — it passes `postgresql+asyncpg://` directly to `asyncpg.create_pool()` which only accepts `postgresql://` or `postgres://`. Currently the live site works because the DATABASE_URL env var is likely already in the right format, but this is a latent bug that breaks on restart if the env var changes. Fix the DSN normalization in `apps/api/services/strategy_storage.py` to strip `+asyncpg` before passing to asyncpg.
+- **Success criteria**:
+  - `apps/api/services/strategy_storage.py` contains `replace('+asyncpg', '')` or equivalent DSN normalization
+  - Strategy lookup still works after the change
+- **Coach checks**:
+  - Verify the DSN normalization code exists in strategy_storage.py
+  - Confirm strategy lookup endpoint still returns 200 with data
+  - Check that the fix handles edge cases (no +asyncpg suffix, already correct format)
+
+### Task: seed-quiz-spots-with-board-data
+- **Description**: The quiz_spots table has basic data but lacks realistic board data (flop/turn/river cards, board textures). Create a seed script that populates quiz_spots with realistic board scenarios including suited/connected/rainbow textures, proper card representations, and spot configurations that exercise the solver.
+- **Success criteria**:
+  - At least 10 quiz spots with full board data (flop cards as JSON array like ["Ah", "Kd", "7c"])
+  - Board textures cover: suited, connected, rainbow, paired
+  - `GET /api/v1/quiz/spots` returns spots with board_data populated
+- **Coach checks**:
+  - Verify quiz spots include board_data field with card arrays
+  - Check at least 3 different board textures are represented
+  - Confirm the quiz page can display spots with board cards
+
+### Task: add-hand-history-parsing
+- **Description**: The hand-history-frontend-page task was marked complete but `/hand-history` route doesn't exist in `apps/web/src/app/`. Create the page with a text input area where users can paste a poker hand history (from PokerStars, GGPoker, etc.) and parse it into a structured format. Display parsed hands with street-by-street action breakdown.
+- **Success criteria**:
+  - `/hand-history` route exists and renders 200
+  - Page has a textarea for pasting hand history text
+  - Submitting a hand history parses and displays street-by-street actions
+  - At least PokerStars format is supported
+- **Coach checks**:
+  - Verify `/hand-history` page loads 200
+  - Paste a sample PokerStars hand and verify it parses correctly
+  - Check that parsed output shows Preflop/Flop/Turn/River actions
+
+### Task: add-plo4-frontend-page
+- **Description**: The `plo4-frontend-page` task is listed in AGENTS.md but the page doesn't exist. Create `/equity/plo4` as a 4-card PLO equity calculator reusing the existing EquityCalculator component pattern but configured for 4-card hands.
+- **Success criteria**:
+  - `/equity/plo4` route exists and renders 200
+  - Page has inputs for 4-card PLO hands (2-4 hole cards per player)
+  - Board input and calculate button
+  - Results display with equity percentages
+- **Coach checks**:
+  - Verify `/equity/plo4` page loads 200
+  - Check that it accepts 4-card hand inputs
+  - Verify calculation returns results (may use existing equity API with PLO4 config)
