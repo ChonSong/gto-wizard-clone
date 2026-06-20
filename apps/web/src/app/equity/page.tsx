@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { EquityChart } from "@/components/equity";
 import type { EquityEntry } from "@/components/equity";
 import { cn } from "@/lib/utils";
-import { gtoTheme } from "@/styles/gto-tokens";
+
 
 // ============================================================================
 // Types
@@ -191,8 +191,9 @@ export default function EquityPage() {
       const data = await res.json();
       const heroEq = data.equity !== undefined ? data.equity * 100 : 50;
       const villainEq = 100 - heroEq;
-      const heroWin = data.win_probability !== undefined ? data.win_probability * 100 : heroEq * 0.9;
-      const heroTie = data.tie_probability !== undefined ? data.tie_probability * 100 : Math.max(0, 100 - heroEq - heroWin);
+      const total = data.total || 1;
+      const heroWin = data.wins !== undefined ? (data.wins / total) * 100 : heroEq * 0.9;
+      const heroTie = data.ties !== undefined ? (data.ties / total) * 100 : Math.max(0, 100 - heroEq - heroWin);
 
       setResult({
         hero: hero,
@@ -201,9 +202,9 @@ export default function EquityPage() {
         villainEquity: Number(villainEq.toFixed(1)),
         heroWin: Number(heroWin.toFixed(1)),
         heroTie: Number(heroTie.toFixed(1)),
-        villainWin: Number(villainEq.toFixed(1)),
+        villainWin: Number((100 - heroEq).toFixed(1)),
         villainTie: Number(heroTie.toFixed(1)),
-        totalCombos: data.total_combos || 0,
+        totalCombos: data.total || 0,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Calculation failed");
