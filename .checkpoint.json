@@ -208,9 +208,16 @@
     },
     {
       "task": "fix-courses-api-500-port-mismatch",
-      "sha": "wip",
+      "sha": "868c8a0",
       "date": "2026-06-20",
       "summary": "Root cause: gto-wizard-api.service on port 8001 lacked DATABASE_URL env var, fell back to SQLite with missing video_url column. Fixed by adding DATABASE_URL to gto-api.service on port 8001, killing stale processes. Also fixed auto-seed DSN handling in main.py. Live site and local API both return 200 for courses/{id}. 368 tests pass.",
+      "coach": "approved"
+    },
+    {
+      "task": "add-plo4-frontend-page",
+      "sha": "a77d430",
+      "date": "2026-06-20",
+      "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator — reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
       "coach": "auto"
     }
   ],
@@ -268,9 +275,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "272bb198e91f2f97511e8302705e25903595e0c4",
-    "last_reviewed_at": "2026-06-20T20:30:00Z",
+    "last_reviewed_sha": "80f398406e42fa808df5f5d82047f24d00044fc9",
+    "last_reviewed_at": "2026-06-20T20:40:00Z",
     "verdict": "approved",
-    "notes": "Reviewed b2a508d..272bb19 (2 commits). DSN normalization fix verified — strategy lookup 200 with data. FEATURES.yaml correction accurate. Minor ruff auto-format (cosmetic)."
+    "notes": "Reviewed 09dd1a1..80f3984 (3 commits). 868c8a0 fix(courses): DSN +asyncpg strip, port 8001 DATABASE_URL fix, dead code removal. Live site courses/{id} returns 200. 368 tests pass. Checkpoint-only commits (09dd1a1, 80f3984) are non-concerning."
   }
 }
