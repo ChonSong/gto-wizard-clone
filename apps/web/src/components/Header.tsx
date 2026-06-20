@@ -30,7 +30,7 @@ export default function Header() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Link href="/study" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
           <div style={{
-            width: 28, height: 28, borderRadius: 6, background: '#00C853',
+            width: 28, height: 28, borderRadius: 6, background: '#AAFBB2',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: 800, color: '#08140a', fontSize: 18, letterSpacing: -0.5,
           }}>W</div>
@@ -51,14 +51,14 @@ export default function Header() {
                 fontWeight: tab.highlight && active ? 600 : 500,
                 display: 'flex', alignItems: 'center', gap: 6,
                 whiteSpace: 'nowrap', transition: '.15s', textDecoration: 'none',
-                background: tab.highlight && active ? '#00A660'
+                background: tab.highlight && active ? '#7AC98A'
                   : active ? '#222' : 'transparent',
               }}
             >
               {tab.highlight && (active ? '🎓 ' : '🎓 ')}{tab.label}
               {tab.badge && (
                 <span style={{
-                  background: '#00C853', color: '#000', fontSize: 10, padding: '2px 5px',
+                  background: '#AAFBB2', color: '#000', fontSize: 10, padding: '2px 5px',
                   borderRadius: 4, fontWeight: 700, lineHeight: 1,
                 }}>{tab.badge}</span>
               )}
