@@ -170,15 +170,22 @@
       "date": "2026-06-20",
       "summary": "Solver starts without protobuf VersionError — docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
       "coach": "auto"
+    },
+    {
+      "task": "update-features-yaml-courses-detail",
+      "sha": "6e94d81",
+      "date": "2026-06-20",
+      "summary": "Update FEATURES.yaml: mark GET /api/v1/courses/{id} as present (was broken), update last_audited to 2026-06-20. Verified endpoint returns 200 with course data and lessons.",
+      "coach": "auto"
     }
   ],
-  "current_task": "tbd",
+  "current_task": "dashboard-page-visual-match-reference",
   "next": null,
   "backlog": [],
   "health": "solver_running_healthy",
-  "last_sha": "87b16280d64e197352dcbb07f03eb97b9b8d6b27",
+  "last_sha": "6e94d81",
   "blocker": null,
-  "note": "All AGENTS.md tasks complete (68+2=70). Solver container running and healthy. Phase 1 fully closed out. No remaining actionable tasks. Live site 200, API healthy, solver healthy.",
+  "note": "All AGENTS.md tasks complete (68+2=70). Plus update-features-yaml-courses-detail completed. Remaining AGENTS.md tasks: dashboard-page-visual-match-reference, equity-page-visual-match-reference, practice-page-visual-match-reference. Solver container running and healthy. Live site 200, API healthy, solver healthy.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
