@@ -7,7 +7,7 @@
 #   reference: optional path to reference screenshot
 #   evidence: how to verify (auto-populated by coach on audit)
 version: 1
-last_audited: 2026-06-19
+last_audited: 2026-06-20
 reference_base: docs/
 references:
   - page: /
@@ -166,8 +166,8 @@ pages:
       - endpoint: GET /api/v1/courses
         status: present
       - endpoint: GET /api/v1/courses/{id}
-        status: broken
-        evidence: "Returns 500 — sqlite3.OperationalError: no such column: lessons.video_url"
+        status: present
+        evidence: "Returns 200 with course data including lessons. Verified via curl."
       - endpoint: POST /api/v1/courses/{id}/progress
         status: present
   - route: /icm
