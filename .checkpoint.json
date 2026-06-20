@@ -292,7 +292,7 @@
     },
     {
       "task": "seed-quiz-spots-with-board-data",
-      "sha": "HEAD",
+      "sha": "c50c33a",
       "date": "2026-06-20",
       "summary": "Make quiz seed idempotent (per-spot dedup instead of blanket skip guard) — 44 new postflop quiz spots seeded including 6 turn, 8 river, 26 flop scenarios. 40 spots with board data covering suited/connected/rainbow/paired textures. 368 tests pass.",
       "coach": "auto"
@@ -302,7 +302,7 @@
   "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "67f81da8fd813e24dc4de4d92dbe4ad991936ed0",
+  "last_sha": "c50c33a",
   "blocker": null,
   "note": "Player tick 2026-06-20: seed-quiz-spots-with-board-data — made seed.py idempotent (per-spot dedup), seeded 44 new postflop quiz spots with board data. All 93 AGENTS.md tasks now complete. Project feature-complete — needs user direction for next phase.",
   "spec_gaps": [
