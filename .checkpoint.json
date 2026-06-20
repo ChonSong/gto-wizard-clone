@@ -183,7 +183,7 @@
   "next": null,
   "backlog": [],
   "health": "solver_running_healthy",
-  "last_sha": "6e94d81",
+  "last_sha": "72840ad6c6c599283e0784f966796e27a6307ef6",
   "blocker": null,
   "note": "All AGENTS.md tasks complete (68+2=70). Plus update-features-yaml-courses-detail completed. Remaining AGENTS.md tasks: dashboard-page-visual-match-reference, equity-page-visual-match-reference, practice-page-visual-match-reference. Solver container running and healthy. Live site 200, API healthy, solver healthy.",
   "spec_gaps": [
@@ -219,12 +219,19 @@
       "priority": 1,
       "evidence": "apps/api/routers/icm.py has prefix='/icm' but all other routers include /api/v1. Frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404s. Fix: change prefix to '/api/v1/icm'",
       "status": "fixed"
+    },
+    {
+      "item": "Strategy lookup DSN format — asyncpg.create_pool receives postgresql+asyncpg:// but only accepts postgresql:// or postgres://",
+      "type": "broken_endpoint",
+      "priority": 1,
+      "evidence": "DATABASE_URL env var is 'postgresql+asyncpg://postgres:postgres@localhost:5432/gto_wizard' (SQLAlchemy format). strategy_storage.py line 135 passes this directly to asyncpg.create_pool() which rejects the +asyncpg suffix. Error: 'invalid DSN: scheme is expected to be either postgresql or postgres, got postgresql+asyncpg'. Fix: strip '+asyncpg' from URL before passing to asyncpg, e.g. self.database_url.replace('+asyncpg', '')",
+      "status": "open"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "66b19304469844dbd8d7f2089aea6616c635cb0a",
-    "last_reviewed_at": "2026-06-20T11:35:00Z",
+    "last_reviewed_sha": "72840ad6c6c599283e0784f966796e27a6307ef6",
+    "last_reviewed_at": "2026-06-20T12:38:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 87b1628 + 66b1930 — both checkpoint-only commits updating coach_review SHA and marking solver-docker-build/protobuf tasks complete. No substantive code changes. Phase 1 fully complete. Live site 200, API healthy, solver running."
+    "notes": "Reviewed 72840ad — checkpoint-only commit updating coach_review SHA. No substantive code changes. Phase 1 complete. Live site 200, API healthy, solver running. Found strategy-lookup DSN bug (pre-existing, not introduced by this commit) — asyncpg.create_pool() receives postgresql+asyncpg:// URL but only accepts postgresql://."
   }
 }
