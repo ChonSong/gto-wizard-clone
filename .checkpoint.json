@@ -249,7 +249,7 @@
       "coach": "pending"
     }
   ],
-  "current_task": "tbd",
+  "current_task": "postflop-solver-api-endpoint",
   "next": null,
   "backlog": [],
   "health": "118_e2e_pass_build_ok_site_200",
@@ -303,9 +303,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "f969680",
-    "last_reviewed_at": "2026-06-20T18:55:00Z",
-    "verdict": "pending",
-    "notes": "Player fix: all 118 E2E tests pass (was 116/118). Deploy script git pull fix. Duplicate API service disabled. Waiting for coach review."
+    "last_reviewed_sha": "ac870d8",
+    "last_reviewed_at": "2026-06-20T20:30:00Z",
+    "verdict": "approved",
+    "notes": "Coach review: add-hand-history-parsing — POST /api/v1/hh/parse endpoint works (PokerStars/GGPoker/Winamax), /hand-history page renders with textarea, 368 unit + 118 E2E tests pass. Minor: new endpoint lacks auth but is parse-only (no DB write). All success criteria met."
   }
 }
