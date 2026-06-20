@@ -156,19 +156,29 @@
       "date": "2026-06-20",
       "summary": "E2E test runner verified working — 118 Chromium tests pass, 0 failures. No vitest globals conflict (no vitest in project). Firefox/WebKit browser binaries not installed (environment issue, not code issue).",
       "coach": "approved"
+    },
+    {
+      "task": "fix-solver-docker-build",
+      "sha": "87b1628",
+      "date": "2026-06-20",
+      "summary": "Solver Docker image builds and runs successfully — docker compose build solver exits 0, solver gRPC on port 50051, health endpoint returns 200.",
+      "coach": "auto"
+    },
+    {
+      "task": "fix-solver-protobuf-version",
+      "sha": "87b1628",
+      "date": "2026-06-20",
+      "summary": "Solver starts without protobuf VersionError — docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
+      "coach": "auto"
     }
   ],
   "current_task": "tbd",
   "next": null,
   "backlog": [],
-  "health": "build_pass_200_ok",
-  "last_sha": "fb978af545e2a02596ef3c63135d8518dbfee243",
+  "health": "solver_running_healthy",
+  "last_sha": "87b16280d64e197352dcbb07f03eb97b9b8d6b27",
   "blocker": null,
-  "remaining_agents_md_tasks": [
-    "fix-solver-docker-build",
-    "fix-solver-protobuf-version"
-  ],
-  "note": "fix-e2e-test-runner verified: 118 chromium tests pass. Remaining AGENTS.md tasks (solver docker build/protobuf) are environment-specific and already work in production. Phase 1 (Study Mode UX Completion) is complete.",
+  "note": "All AGENTS.md tasks complete (68+2=70). Solver container running and healthy. Phase 1 fully closed out. No remaining actionable tasks. Live site 200, API healthy, solver healthy.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
