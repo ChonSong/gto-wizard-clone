@@ -59,16 +59,22 @@ test.describe("Smoke: Equity Calculator", () => {
     const gameHeading = page.locator("h2:has-text('Game')");
     await expect(gameHeading).toBeVisible();
 
-    // Range grids should be present (BB Range and BTN Range)
-    const bbRange = page.locator("h3:has-text('BB Range')");
-    await expect(bbRange).toBeVisible();
+    // Verify input fields exist (redesigned equity page uses text inputs with placeholders)
+    await expect(page.getByPlaceholder("e.g. AA, KK, AKs")).toBeVisible();
+    await expect(page.getByPlaceholder("e.g. QQ, AK, JJ")).toBeVisible();
+    await expect(page.getByPlaceholder("e.g. AhKdQc")).toBeVisible();
 
-    const btnRange = page.locator("h3:has-text('BTN Range')");
-    await expect(btnRange).toBeVisible();
+    // Verify Calculate button exists
+    await expect(page.getByRole("button", { name: /calculate/i })).toBeVisible();
 
-    // Statistics section loads
-    const stats = page.locator("h3:has-text('Statistics')");
-    await expect(stats).toBeVisible();
+    // Wait for auto-calculation results (Equity Breakdown chart)
+    await expect(page.locator("h3:has-text('Equity Breakdown')")).toBeVisible({ timeout: 15000 });
+
+    // Verify equity stat labels appear after calculation (dynamic labels like "AKs EQUITY", "QQ EQUITY")
+    await expect(page.locator("text=AKs EQUITY")).toBeVisible();
+    await expect(page.locator("text=QQ EQUITY")).toBeVisible();
+    await expect(page.locator("text=WINS")).toBeVisible();
+    await expect(page.locator("text=TIES")).toBeVisible();
 
     // No critical console errors
     const criticalErrors = consoleErrors.filter(

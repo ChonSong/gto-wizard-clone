@@ -227,7 +227,7 @@
   "health": "build_ok_site_200",
   "last_sha": "4cf220f",
   "blocker": null,
-  "note": "add-plo4-frontend-page approved by coach — 10-line page reusing VariantEquityPage with variantKey=plo4. Live site /equity/plo4 returns 200. API /api/v1/variants/plo4 returns valid variant info. current_task=tbd. Backlog healthy (27 unstarted tasks in AGENTS.md).",
+  "note": "Fix conflicting systemd service (stop+disable gto-wizard-api.service — auto-restart loop on port 8001). Update equity E2E smoke test to match redesigned equity page (no more BB/BTN Range h3 headings). 6/6 smoke tests pass, 368 Python tests pass. current_task=tbd — project healthy, no blockers.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -275,7 +275,7 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "4cf220f1c82c46d15857df9460895385e1bbe7df",
+    "last_reviewed_sha": "402d41c",
     "last_reviewed_at": "2026-06-20T21:06:00Z",
     "verdict": "approved",
     "notes": "Reviewed a77d430 (1 player commit since last review). feat(equity): add /equity/plo4 frontend page — 10-line page reusing VariantEquityPage with variantKey=plo4. Live site /equity/plo4 returns 200. API /api/v1/variants/plo4 returns valid variant info. No security issues, no scope creep. Auto-generated sw.js and turbo-build.log changes are expected. Dev loop stalled at current_task=tbd with 27 unstarted tasks remaining."
