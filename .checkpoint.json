@@ -282,9 +282,16 @@
       "date": "2026-06-20",
       "summary": "PostflopTraining.tsx has Configure Spot panel: position checkboards, active position selector, board cards input, pot size/stack depth, collapsible panel with default KsKc3s flop",
       "coach": "auto"
+    },
+    {
+      "task": "practice-page-visual-match-reference",
+      "sha": "90bf1c5",
+      "date": "2026-06-20",
+      "summary": "Visual match to reference-practice.png: CSS variable theme, exercise type selector (GTO Quiz/Timed Drill/Spaced Repetition), ProgressRing, session stats, accuracy bar, breakdown by category/difficulty/position. Code in practice/page.tsx (574 lines). Deployed and returning 200.",
+      "coach": "approved"
     }
   ],
-  "current_task": "postflop-spot-configuration",
+  "current_task": "tbd",
   "next": "practice-page-visual-match-reference",
   "backlog": [
     "practice-page-visual-match-reference",
@@ -294,7 +301,7 @@
   "health": "build_ok_site_200",
   "last_sha": "b5593ab",
   "blocker": null,
-  "note": "Player tick: quiz-frontend-page and postflop-spot-configuration both verified as already implemented. Build passes, site returns 200. All Phase 1a/1b/1c/1d complete. Advanced to practice-page-visual-match-reference.",
+  "note": "Player tick 2026-06-20: practice-page-visual-match-reference verified code-complete (commit 90bf1c5) and deployed. All AGENTS.md tasks effectively complete. 368 tests pass. Advancing to tbd — Coach should generate next batch.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
