@@ -229,9 +229,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "72840ad6c6c599283e0784f966796e27a6307ef6",
-    "last_reviewed_at": "2026-06-20T12:38:00Z",
+    "last_reviewed_sha": "2d4db092d69953ab5a254aa02df71088680d2bc4",
+    "last_reviewed_at": "2026-06-20T13:08:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 72840ad — checkpoint-only commit updating coach_review SHA. No substantive code changes. Phase 1 complete. Live site 200, API healthy, solver running. Found strategy-lookup DSN bug (pre-existing, not introduced by this commit) — asyncpg.create_pool() receives postgresql+asyncpg:// URL but only accepts postgresql://."
+    "notes": "Reviewed 3 unreviewed commits (6e94d81, 876a67b, 2d4db09) — all checkpoint/metadata-only changes (.checkpoint.json, FEATURES.yaml). No substantive code changes. Live site 200, API healthy. 24 AGENTS.md tasks remain. current_task: dashboard-page-visual-match-reference."
   }
 }
