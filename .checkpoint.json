@@ -268,15 +268,33 @@
       "date": "2026-06-20",
       "summary": "Already implemented: make seed-preflop target exists, deploy.sh runs seed on deploy, API auto-seeds on startup. Verified: 2 runs idempotent (0 errors, 28 strategies), 368 tests pass.",
       "coach": "auto"
+    },
+    {
+      "task": "quiz-frontend-page",
+      "sha": "b5593ab",
+      "date": "2026-06-20",
+      "summary": "Quiz page exists (782 lines), returns 200, fully functional with quiz spots from API",
+      "coach": "auto"
+    },
+    {
+      "task": "postflop-spot-configuration",
+      "sha": "b5593ab",
+      "date": "2026-06-20",
+      "summary": "PostflopTraining.tsx has Configure Spot panel: position checkboards, active position selector, board cards input, pot size/stack depth, collapsible panel with default KsKc3s flop",
+      "coach": "auto"
     }
   ],
-  "current_task": "quiz-frontend-page",
-  "next": null,
-  "backlog": [],
-  "health": "368_unit_pass_build_ok_site_200",
-  "last_sha": "07ec62a",
+  "current_task": "postflop-spot-configuration",
+  "next": "practice-page-visual-match-reference",
+  "backlog": [
+    "practice-page-visual-match-reference",
+    "fix-e2e-test-runner-2",
+    "start-solver-container"
+  ],
+  "health": "build_ok_site_200",
+  "last_sha": "b5593ab",
   "blocker": null,
-  "note": "Player tick: automate-seed-on-deploy — already fully implemented (Makefile target, deploy.sh seed-on-deploy, API auto-seed). Verified idempotent. 368 tests pass. Advanced to quiz-frontend-page.",
+  "note": "Player tick: quiz-frontend-page and postflop-spot-configuration both verified as already implemented. Build passes, site returns 200. All Phase 1a/1b/1c/1d complete. Advanced to practice-page-visual-match-reference.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
