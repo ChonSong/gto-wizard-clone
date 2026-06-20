@@ -9,7 +9,9 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 
-from apps.api.services.database import engine, Base
+from apps.api.services.database import get_engine, Base
+
+engine = get_engine()
 from apps.api.services.quiz_models import QuizSpot
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -958,7 +960,7 @@ SEED_SPOTS = [
 
 
 async def seed_quiz_spots():
-    """Seed the database with quiz spots."""
+    """Seed the database with quiz spots. Idempotent — skips existing spots by unique key (game_type, category, position, hero_hand, board, street)."""
     async with AsyncSession(engine) as session:
         # Create tables if they don't exist (use proper schema from model)
         async with engine.begin() as conn:
@@ -971,16 +973,28 @@ async def seed_quiz_spots():
             except Exception:
                 pass
 
-        # Check if spots already exist
-        result = await session.execute(text("SELECT COUNT(*) FROM quiz_spots"))
-        count = result.scalar()
+        # Get existing spot signatures for per-spot dedup
+        result = await session.execute(
+            text(
+                "SELECT game_type, category, position, hero_hand, COALESCE(board, ''), street FROM quiz_spots"
+            )
+        )
+        existing = set((r[0], r[1], r[2], r[3], r[4], r[5]) for r in result.fetchall())
 
-        if count > 0:
-            print(f"Quiz spots already exist ({count} spots). Skipping seed.")
-            return
-
-        # Insert seed spots
+        # Insert only new spots (idempotent)
+        new_spots = 0
         for spot_data in SEED_SPOTS:
+            key = (
+                spot_data["game_type"],
+                spot_data["category"],
+                spot_data["position"],
+                spot_data["hero_hand"],
+                spot_data.get("board") or "",
+                spot_data["street"],
+            )
+            if key in existing:
+                continue
+
             spot = QuizSpot(
                 game_type=spot_data["game_type"],
                 category=spot_data["category"],
@@ -1000,9 +1014,12 @@ async def seed_quiz_spots():
                 street=spot_data["street"],
             )
             session.add(spot)
+            new_spots += 1
 
         await session.commit()
-        print(f"Seeded {len(SEED_SPOTS)} quiz spots.")
+        print(
+            f"Quiz spots: {new_spots} new, {len(existing)} existing ({len(existing) + new_spots} total)."
+        )
 
 
 if __name__ == "__main__":
