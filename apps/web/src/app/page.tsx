@@ -123,7 +123,7 @@ export default function HomePage() {
           { label: 'Training Modules', value: '50+' },
         ].map((stat) => (
           <div key={stat.label} className="text-center">
-            <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--green)' }}>
+            <div className="text-xl sm:text-2xl font-bold" style={{ color: '#FFFFFF' }}>
               {stat.value}
             </div>
             <div className="text-xs sm:text-sm mt-0.5" style={{ color: 'var(--muted)' }}>

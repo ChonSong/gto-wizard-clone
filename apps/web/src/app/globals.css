@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0E0E0E;
-  --panel: #1C1C1C;
+  --bg: #09090C;
+  --panel: #121214;
   --nav: #111111;
   --red: #D32F2F;
   --red-bright: #E53935;
   --red-dark: #7B1E1E;
   --blue: #3A6EA5;
-  --green: #00C853;
+  --green: #AAFBB2;
   --green-bright: #7CFC7C;
-  --border: #262626;
+  --border: #1D1D1F;
   --text: #E6E6E6;
-  --muted: #9A9A9A;
+  --muted: #767677;
   --radius: 0.5rem;
 }
 
