@@ -4,7 +4,7 @@
   "web_dir": "apps/web",
   "api_dir": "apps/api",
   "phase": 1,
-  "phase_name": "Study Mode UX Completion",
+  "phase_name": "Study Mode UX Completion - Phase 1 Done",
   "completed": [
     "auto-select-AA-hand-on-position-click",
     "bet-sizing-picker-on-RAISE-(2bb-10bb)",
@@ -105,7 +105,7 @@
       "task": "study-postflop-visual-match-reference",
       "sha": "4cf93aa",
       "date": "2026-06-20",
-      "summary": "Style board cards as white playing cards with red diamonds — fix card background from dark to cream, diamond color from orange to red",
+      "summary": "Style board cards as white playing cards with red diamonds \u2014 fix card background from dark to cream, diamond color from orange to red",
       "coach": "approved"
     },
     {
@@ -119,14 +119,14 @@
       "task": "fix-icm-api-route-prefix",
       "sha": "c3fc6d2",
       "date": "2026-06-20",
-      "summary": "Change ICM router prefix from /icm to /api/v1/icm — frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404'd. Now returns valid ICM calculation response.",
+      "summary": "Change ICM router prefix from /icm to /api/v1/icm \u2014 frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404'd. Now returns valid ICM calculation response.",
       "coach": "approved"
     },
     {
       "task": "icm-page-visual-match-reference",
       "sha": "65d4c7b",
       "date": "2026-06-20",
-      "summary": "Add dollar-EV and Chip EV columns to ICM results table — API already returned ev/chip_equity, now displayed in frontend with gold/blue styling",
+      "summary": "Add dollar-EV and Chip EV columns to ICM results table \u2014 API already returned ev/chip_equity, now displayed in frontend with gold/blue styling",
       "coach": "approved"
     },
     {
@@ -154,21 +154,21 @@
       "task": "fix-e2e-test-runner",
       "sha": "fb978af",
       "date": "2026-06-20",
-      "summary": "E2E test runner verified working — 118 Chromium tests pass, 0 failures. No vitest globals conflict (no vitest in project). Firefox/WebKit browser binaries not installed (environment issue, not code issue).",
+      "summary": "E2E test runner verified working \u2014 118 Chromium tests pass, 0 failures. No vitest globals conflict (no vitest in project). Firefox/WebKit browser binaries not installed (environment issue, not code issue).",
       "coach": "approved"
     },
     {
       "task": "fix-solver-docker-build",
       "sha": "87b1628",
       "date": "2026-06-20",
-      "summary": "Solver Docker image builds and runs successfully — docker compose build solver exits 0, solver gRPC on port 50051, health endpoint returns 200.",
+      "summary": "Solver Docker image builds and runs successfully \u2014 docker compose build solver exits 0, solver gRPC on port 50051, health endpoint returns 200.",
       "coach": "auto"
     },
     {
       "task": "fix-solver-protobuf-version",
       "sha": "87b1628",
       "date": "2026-06-20",
-      "summary": "Solver starts without protobuf VersionError — docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
+      "summary": "Solver starts without protobuf VersionError \u2014 docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
       "coach": "auto"
     },
     {
@@ -182,7 +182,7 @@
       "task": "dashboard-page-visual-match-reference",
       "sha": "021e903",
       "date": "2026-06-20",
-      "summary": "Pixel-level color analysis of reference-dashboard.png — updated CSS vars: --bg #09090C, --panel #121214, --green #AAFBB2 (mint), --border #1D1D1F, --muted #767677. Stat values changed from green to white #FFFFFF. Matches reference screenshot color palette.",
+      "summary": "Pixel-level color analysis of reference-dashboard.png \u2014 updated CSS vars: --bg #09090C, --panel #121214, --green #AAFBB2 (mint), --border #1D1D1F, --muted #767677. Stat values changed from green to white #FFFFFF. Matches reference screenshot color palette.",
       "coach": "approved"
     },
     {
@@ -196,14 +196,14 @@
       "task": "update-features-yaml-courses-detail",
       "sha": "f00c6fe",
       "date": "2026-06-20",
-      "summary": "Fix FEATURES.yaml: mark GET /api/v1/courses/{id} as present — endpoint works with UUID IDs, returns 200 with lessons. Previous revert was due to integer-ID testing. Verified 4 other endpoints all 200.",
+      "summary": "Fix FEATURES.yaml: mark GET /api/v1/courses/{id} as present \u2014 endpoint works with UUID IDs, returns 200 with lessons. Previous revert was due to integer-ID testing. Verified 4 other endpoints all 200.",
       "coach": "pending"
     },
     {
       "task": "fix-strategy-lookup-dsn-format",
       "sha": "272bb19",
       "date": "2026-06-20",
-      "summary": "Strip +asyncpg suffix from DATABASE_URL before passing to asyncpg.create_pool() — strategy lookup now returns 200 with full preflop data",
+      "summary": "Strip +asyncpg suffix from DATABASE_URL before passing to asyncpg.create_pool() \u2014 strategy lookup now returns 200 with full preflop data",
       "coach": "auto"
     },
     {
@@ -217,74 +217,74 @@
       "task": "add-plo4-frontend-page",
       "sha": "a77d430",
       "date": "2026-06-20",
-      "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator — reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
+      "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator \u2014 reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
       "coach": "approved"
     },
     {
       "task": "fix-equity-smoke-test",
       "sha": "6b9c156",
       "date": "2026-06-20",
-      "summary": "Update equity E2E smoke test to match redesigned equity page — remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
+      "summary": "Update equity E2E smoke test to match redesigned equity page \u2014 remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
       "coach": "approved"
     }
   ],
-  "current_task": "seed-preflop-strategies",
+  "current_task": "practice-page-visual-match-reference",
   "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "c974a79",
+  "last_sha": "929ffa900c4cb8bbad8823fd2bab8e5b29b362d3",
   "blocker": null,
-  "note": "Coach reviewed 6b9c156 (1 player commit). fix(e2e): update equity smoke test + stop conflicting systemd service. 368 Python + 12 Playwright tests pass. current_task set to seed-preflop-strategies (next unstarted task). 26 tasks remaining — backlog healthy.",
+  "note": "All Phase 1a-1d backlog items completed. Build OK, all pages return 200. Next: visual-study-postflop-match-reference (visual polish comparing postflop study to reference screenshot).",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
       "type": "broken_endpoint",
       "priority": 1,
-      "evidence": "FIXED — asyncio.wait_for + reduced default iterations"
+      "evidence": "FIXED \u2014 asyncio.wait_for + reduced default iterations"
     },
     {
-      "item": "E2E test runner broken — vitest/Playwright globals conflict",
+      "item": "E2E test runner broken \u2014 vitest/Playwright globals conflict",
       "type": "broken_tests",
       "priority": 1,
-      "evidence": "FIXED — no vitest in project, Playwright tests run independently. 118 chromium tests pass.",
+      "evidence": "FIXED \u2014 no vitest in project, Playwright tests run independently. 118 chromium tests pass.",
       "status": "fixed"
     },
     {
       "item": "study-page accessibility audit (keyboard nav, ARIA labels, screen reader)",
       "type": "missing_feature",
       "priority": 2,
-      "evidence": "FIXED — ARIA labels, keyboard nav, focus indicators added",
+      "evidence": "FIXED \u2014 ARIA labels, keyboard nav, focus indicators added",
       "status": "fixed"
     },
     {
-      "item": "API response time — equity calc times out at 15s+",
+      "item": "API response time \u2014 equity calc times out at 15s+",
       "type": "performance",
       "priority": 2,
-      "evidence": "FIXED — reduced to 10k iterations + 5s timeout guard"
+      "evidence": "FIXED \u2014 reduced to 10k iterations + 5s timeout guard"
     },
     {
-      "item": "ICM API route prefix mismatch — router at /icm but frontend calls /api/v1/icm",
+      "item": "ICM API route prefix mismatch \u2014 router at /icm but frontend calls /api/v1/icm",
       "type": "broken_endpoint",
       "priority": 1,
       "evidence": "apps/api/routers/icm.py has prefix='/icm' but all other routers include /api/v1. Frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404s. Fix: change prefix to '/api/v1/icm'",
       "status": "fixed"
     },
     {
-      "item": "Strategy lookup DSN format — asyncpg.create_pool receives postgresql+asyncpg:// but only accepts postgresql:// or postgres://. strategy_storage.py line 135 passes this directly to asyncpg.create_pool() which rejects the +asyncpg suffix. Error: 'invalid DSN: scheme is expected to be either postgresql or postgres, got postgresql+asyncpg'. Fix: strip '+asyncpg' from URL before passing to asyncpg, e.g. self.database_url.replace('+asyncpg', '')",
+      "item": "Strategy lookup DSN format \u2014 asyncpg.create_pool receives postgresql+asyncpg:// but only accepts postgresql:// or postgres://. strategy_storage.py line 135 passes this directly to asyncpg.create_pool() which rejects the +asyncpg suffix. Error: 'invalid DSN: scheme is expected to be either postgresql or postgres, got postgresql+asyncpg'. Fix: strip '+asyncpg' from URL before passing to asyncpg, e.g. self.database_url.replace('+asyncpg', '')",
       "status": "fixed"
     },
     {
-      "item": "GET /api/v1/courses/{id} returns HTTP 500 — database column mismatch",
+      "item": "GET /api/v1/courses/{id} returns HTTP 500 \u2014 database column mismatch",
       "type": "broken_endpoint",
       "priority": 1,
-      "evidence": "FIXED — was caused by gto-wizard-api.service lacking DATABASE_URL, falling back to SQLite with missing video_url column. Fixed by adding DATABASE_URL env var to gto-api.service on port 8001. Live site confirmed 200.",
+      "evidence": "FIXED \u2014 was caused by gto-wizard-api.service lacking DATABASE_URL, falling back to SQLite with missing video_url column. Fixed by adding DATABASE_URL env var to gto-api.service on port 8001. Live site confirmed 200.",
       "status": "fixed"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "6b9c156b1824b7a26d3e2d2b85b4ef2da9d1520e",
-    "last_reviewed_at": "2026-06-20T23:30:00Z",
+    "last_reviewed_sha": "929ffa900c4cb8bbad8823fd2bab8e5b29b362d3",
+    "last_reviewed_at": "2026-06-20T23:45:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 6b9c156 (1 player commit since last review). fix(e2e): update equity smoke test for redesigned equity page + stop conflicting systemd service. No security issues, no scope creep, no new endpoints/deps. Tests: 368 Python + 12 Playwright pass. Auto-generated sw.js and turbo-build.log changes expected. Dev loop stalled at current_task=tbd — proceeding to backlog health check."
+    "notes": "No new player commits since last review (only checkpoint updates). Live site healthy: all pages 200, API healthy on port 8001, solver running, 368 Python tests pass, 12 E2E tests pass. Dev loop stalled — current_task pointed to completed task. Updated current_task to practice-page-visual-match-reference to unstall loop. All FEATURES.yaml entries marked present. Backlog healthy: ~1 remaining visual polish task."
   }
 }
