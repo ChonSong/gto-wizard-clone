@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { gtoTheme } from '@/styles/gto-tokens'
 
 const features = [
   {
@@ -7,85 +6,79 @@ const features = [
     description: 'Calculate equity between hand ranges with board cards. Explore matchups with heatmaps, charts, and detailed breakdowns.',
     href: '/equity',
     icon: '📊',
-    color: 'from-blue-600 to-blue-800',
   },
   {
     title: 'ICM Calculator',
     description: 'Make better tournament decisions with ICM-aware analysis. Factor in bubble pressure and prize pool structures.',
     href: '/icm',
     icon: '🏆',
-    color: 'from-amber-600 to-amber-800',
   },
   {
     title: 'Training Mode',
     description: 'Practice GTO concepts with interactive quizzes, spot recognition, and performance tracking.',
     href: '/train',
     icon: '🎯',
-    color: 'from-green-600 to-green-800',
   },
   {
     title: 'Courses',
     description: 'Structured learning paths covering fundamental to advanced GTO poker strategy concepts.',
     href: '/courses',
     icon: '📚',
-    color: 'from-purple-600 to-purple-800',
   },
   {
     title: 'Analyze',
     description: 'Upload and analyze hand histories. Identify leaks, review decisions, and track your progress over time.',
     href: '/analyze',
     icon: '🔍',
-    color: 'from-red-600 to-red-800',
   },
   {
     title: 'Strategy Explorer',
     description: 'Browse GTO solutions by spot, position, and stack depth. Compare strategies and export data.',
     href: '/strategy',
     icon: '♠',
-    color: 'from-teal-600 to-teal-800',
   },
   {
     title: 'Spots Database',
     description: 'Search and filter common poker spots. Study preflop and postflop GTO solutions.',
     href: '/spots',
     icon: '🎲',
-    color: 'from-indigo-600 to-indigo-800',
   },
   {
     title: 'Strategies',
     description: 'Access a library of pre-solved GTO strategies. Filter by game type, position, and stack depth.',
     href: '/strategies',
     icon: '📋',
-    color: 'from-rose-600 to-rose-800',
   },
 ]
 
 export default function HomePage() {
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12 lg:py-16">
+    <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-10">
       {/* Hero Section */}
-      <section className="text-center mb-12 sm:mb-16 lg:mb-20">
-        <div className="inline-block mb-4">
-          <span className="text-6xl sm:text-7xl md:text-8xl">♠</span>
+      <section className="text-center mb-8 sm:mb-10 lg:mb-12">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-[--panel] border border-[--border] mb-4">
+          <span className="text-3xl">♠</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-          <span className="text-poker-gold">GTO</span>{' '}
-          <span className="text-white">Wizard</span>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
+          <span style={{ color: 'var(--green)' }}>GTO</span>{' '}
+          <span style={{ color: 'var(--text)' }}>Wizard</span>
         </h1>
-        <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto px-4 mb-8">
+        <p className="text-sm sm:text-base text-[--muted] max-w-xl mx-auto px-4 mb-6">
           Master optimal poker strategy with cutting-edge GTO analysis tools.
           Train smarter, analyze deeper, and play better.
         </p>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/equity"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-poker-gold text-black font-semibold hover:bg-yellow-400 transition-colors text-sm sm:text-base"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all"
+            style={{ backgroundColor: 'var(--green)', color: '#000' }}
           >
             <span>📊</span> Get Started
           </Link>
           <Link
             href="/train"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-600 text-gray-200 font-semibold hover:border-poker-gold hover:text-poker-gold transition-colors text-sm sm:text-base"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all border"
+            style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
           >
             <span>🎯</span> Start Training
           </Link>
@@ -93,18 +86,25 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
         {features.map((feature) => (
           <Link
             key={feature.title}
             href={feature.href}
-            className={`group block p-5 sm:p-6 rounded-lg border border-gray-800 bg-gradient-to-br ${feature.color}/10 hover:border-poker-gold transition-all hover:scale-[1.02] sm:hover:scale-[1.03] hover:shadow-lg hover:shadow-poker-gold/5`}
+            className="group block p-4 sm:p-5 rounded-lg transition-all hover:-translate-y-0.5 hover:border-[var(--green)] hover:shadow-[0_4px_20px_rgba(0,200,83,0.08)]"
+            style={{
+              backgroundColor: 'var(--panel)',
+              border: '1px solid var(--border)',
+            }}
           >
-            <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{feature.icon}</div>
-            <h2 className="text-lg sm:text-xl font-semibold mb-2 text-white group-hover:text-poker-gold transition-colors">
+            <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">{feature.icon}</div>
+            <h2
+              className="text-base sm:text-lg font-semibold mb-1.5 transition-colors"
+              style={{ color: 'var(--text)' }}
+            >
               {feature.title}
             </h2>
-            <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+            <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
               {feature.description}
             </p>
           </Link>
@@ -112,7 +112,10 @@ export default function HomePage() {
       </section>
 
       {/* Stats / Trust Bar */}
-      <section className="mt-12 sm:mt-16 lg:mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-gray-800 pt-8 sm:pt-12">
+      <section
+        className="mt-10 sm:mt-12 lg:mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 border-t pt-6 sm:pt-8"
+        style={{ borderColor: 'var(--border)' }}
+      >
         {[
           { label: 'Hands Analyzed', value: '1M+' },
           { label: 'Active Users', value: '10K+' },
@@ -120,15 +123,19 @@ export default function HomePage() {
           { label: 'Training Modules', value: '50+' },
         ].map((stat) => (
           <div key={stat.label} className="text-center">
-            <div className="text-2xl sm:text-3xl font-bold text-poker-gold">{stat.value}</div>
-            <div className="text-xs sm:text-sm text-gray-500 mt-1">{stat.label}</div>
+            <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--green)' }}>
+              {stat.value}
+            </div>
+            <div className="text-xs sm:text-sm mt-0.5" style={{ color: 'var(--muted)' }}>
+              {stat.label}
+            </div>
           </div>
         ))}
       </section>
 
       {/* Bottom CTA */}
-      <section className="mt-12 sm:mt-16 text-center">
-        <p className="text-sm text-gray-500">
+      <section className="mt-10 sm:mt-12 text-center">
+        <p className="text-xs sm:text-sm" style={{ color: 'var(--muted)' }}>
           Built for serious poker players. Data-driven. GTO-optimized.
         </p>
       </section>
