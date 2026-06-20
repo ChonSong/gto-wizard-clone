@@ -226,15 +226,22 @@
       "date": "2026-06-20",
       "summary": "Update equity E2E smoke test to match redesigned equity page \u2014 remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-e2e-test-runner-execution",
+      "sha": "d0417e6",
+      "date": "2026-06-20",
+      "summary": "Add headless:true to Playwright configs — tests no longer crash with 'Missing X server'. 116/118 tests pass (2 pre-existing selector mismatches).",
+      "coach": "pending"
     }
   ],
   "current_task": "practice-page-visual-match-reference",
   "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "929ffa900c4cb8bbad8823fd2bab8e5b29b362d3",
-  "blocker": null,
-  "note": "All Phase 1a-1d backlog items completed. Build OK, all pages return 200. Next: visual-study-postflop-match-reference (visual polish comparing postflop study to reference screenshot).",
+  "last_sha": "d0417e6",
+  "blocker": "practice-page-visual-match-reference requires vision/browser tools (not available in current tool set). Also have 2 pre-existing E2E test failures (selector mismatches) that could be fixed as a code task.",
+  "note": "Player tick: fix(e2e): add headless:true to both Playwright configs. All 118 tests now run (116 pass, 2 fail from pre-existing selector issues). Push+deploy done. Current task (practice-page-visual-match-reference) is a visual comparison requiring vision_analyze/browser tools — cannot execute with current tools.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
