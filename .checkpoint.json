@@ -260,9 +260,9 @@
   "next": null,
   "backlog": [],
   "health": "368_unit_pass_18_api_pass_build_ok_site_200",
-  "last_sha": "1dc5991",
+  "last_sha": "2a338d6",
   "blocker": null,
-  "note": "Player tick: checkpoint(postflop-solver-api-endpoint) — endpoint was already implemented and live (verified curl -> 200 with solver response). Marked complete, advanced to interactive-postflop-study-buttons. 368 unit + 18 API tests pass.",
+  "note": "Player tick: interactive-postflop-study-buttons — component already existed (commits d78c7e5-4cf93aa) with all features: board cards, action buttons with chip amounts, GTO comparison, config panel, street navigation. 368 unit + 18 API tests pass, build ok, API returns 200. Also closed postflop-spot-configuration and postflop-street-navigation (same component). Advanced to document-seed-script.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
