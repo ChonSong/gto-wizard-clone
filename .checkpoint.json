@@ -256,13 +256,13 @@
       "coach": "approved"
     }
   ],
-  "current_task": "interactive-postflop-study-buttons",
+  "current_task": "automate-seed-on-deploy",
   "next": null,
   "backlog": [],
-  "health": "368_unit_pass_18_api_pass_build_ok_site_200",
-  "last_sha": "2a338d6",
+  "health": "368_unit_pass_build_ok_site_200",
+  "last_sha": "24fdde0",
   "blocker": null,
-  "note": "Player tick: interactive-postflop-study-buttons — component already existed (commits d78c7e5-4cf93aa) with all features: board cards, action buttons with chip amounts, GTO comparison, config panel, street navigation. 368 unit + 18 API tests pass, build ok, API returns 200. Also closed postflop-spot-configuration and postflop-street-navigation (same component). Advanced to document-seed-script.",
+  "note": "Player tick: document-seed-script — Seed Data section already exists in AGENTS.md with full instructions. Strategy lookup verified working (200 OK with UTG preflop range). 368 tests pass. Advanced to automate-seed-on-deploy.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -310,9 +310,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "ac870d8",
-    "last_reviewed_at": "2026-06-20T20:30:00Z",
+    "last_reviewed_sha": "2a338d6e535d86028c2a61f5d1ff0fa34a0065b0",
+    "last_reviewed_at": "2026-06-20T21:15:00Z",
     "verdict": "approved",
-    "notes": "Coach review: add-hand-history-parsing — POST /api/v1/hh/parse endpoint works (PokerStars/GGPoker/Winamax), /hand-history page renders with textarea, 368 unit + 118 E2E tests pass. Minor: new endpoint lacks auth but is parse-only (no DB write). All success criteria met."
+    "notes": "Coach review: no new code commits since last review (only checkpoint updates). Site health check: all pages 200. Player has not yet started interactive-postflop-study-buttons. Backlog healthy."
   }
 }
