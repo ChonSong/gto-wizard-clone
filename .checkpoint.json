@@ -197,16 +197,16 @@
       "sha": "90bf1c5",
       "date": "2026-06-20",
       "summary": "CSS variable theme applied (--bg, --panel, --green, --border, --muted, --text), exercise type selector pills (GTO Quiz, Timed Drill, Spaced Repetition), ProgressRing for session progress display, category/difficulty filters, Start Practice Session button. Page renders 200 with all controls functional.",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
-  "current_task": "tbd",
-  "next": "tbd",
+  "current_task": "update-features-yaml-courses-detail",
+  "next": "update-features-yaml-courses-detail",
   "backlog": [],
   "health": "build_ok_site_200",
   "last_sha": "9dbfdf1c4e685cbc05eb69c31fb0f1efd99b5b36",
   "blocker": null,
-  "note": "All AGENTS.md tasks completed. practice-page-visual-match-reference done (commit 90bf1c5). Site 200, API 200. 1 open spec_gap (strategy DSN format). Coach needs to review pending tasks and generate next batch.",
+  "note": "practice-page-visual-match-reference approved — CSS vars, exercise pills, ProgressRing. 368 tests pass, site 200. Next: update-features-yaml-courses-detail.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -247,9 +247,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "9dbfdf1",
-    "last_reviewed_at": "2026-06-20T20:20:00Z",
-    "verdict": "pending",
-    "notes": "Checkpoint sync: practice-page-visual-match-reference completed (commit 90bf1c5). All AGENTS.md tasks exhausted. Site and API healthy. 1 open spec_gap (DSN format). Coach needs to review pending tasks and generate next batch."
+    "last_reviewed_sha": "9dbfdf1c4e685cbc05eb69c31fb0f1efd99b5b36",
+    "last_reviewed_at": "2026-06-20T14:42:00Z",
+    "verdict": "approved",
+    "notes": "Reviewed commit 90bf1c5 (practice page visual match reference). CSS variable theme applied consistently, exercise type selector pills functional with state management, ProgressRing added to session panel. All existing functionality maintained. Live site 200, 368 tests pass. Next: update-features-yaml-courses-detail."
   }
 }
