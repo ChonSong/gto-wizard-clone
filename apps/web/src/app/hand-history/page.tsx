@@ -12,6 +12,8 @@ import {
   TrendingUp,
   TrendingDown,
   Filter,
+  Terminal,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -74,6 +76,47 @@ interface StatsResponse {
   by_spot_category: Record<string, { count: number; total_pot: number; total_ev_loss: number }>;
   date_from: string | null;
   date_to: string | null;
+}
+
+// ─── Parse result types ──────────────────────────────────────────────────────
+
+interface ParsedHandAction {
+  player: string;
+  action: string;
+  amount: number | null;
+  street: string;
+}
+
+interface ParsedPlayerInfo {
+  name: string;
+  seat: number;
+  stack: number;
+  position: string | null;
+  hole_cards: string[] | null;
+}
+
+interface ParsedWinner {
+  player: string;
+  amount: number;
+}
+
+interface ParseResultData {
+  hand_id: string;
+  site: string;
+  game_type: string;
+  limit_type: string;
+  stakes: { sb: number; bb: number } | null;
+  table_name: string;
+  max_seats: number;
+  button_position: number;
+  players: ParsedPlayerInfo[];
+  actions: Record<string, ParsedHandAction[]>;
+  board: string[];
+  pot: number;
+  rake: number;
+  winners: ParsedWinner[] | null;
+  hero_name: string | null;
+  format?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -232,6 +275,13 @@ export default function HandHistoryPage() {
   const [sortCol, setSortCol] = useState<string>("created_at");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
+  // Parse hand state
+  const [parseText, setParseText] = useState("");
+  const [parsing, setParsing] = useState(false);
+  const [parseResult, setParseResult] = useState<ParseResultData | null>(null);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [parseOpen, setParseOpen] = useState(false);
+
   // Init
   useEffect(() => {
     setUserId(generateUserId());
@@ -291,6 +341,40 @@ export default function HandHistoryPage() {
       // Non-critical
     }
   }, [userId, dateFrom, dateTo, siteFilter]);
+
+  // ─── Parse hand history ────────────────────────────────────────────────────
+
+  const handleParse = useCallback(async () => {
+    const trimmed = parseText.trim();
+    if (trimmed.length < 10) {
+      setParseError("Please paste a hand history first (at least 10 characters).");
+      setParseResult(null);
+      return;
+    }
+    setParsing(true);
+    setParseError(null);
+    setParseResult(null);
+    try {
+      const res = await fetch("/api/v1/hh/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: trimmed }),
+      });
+      const response: { success: boolean; format?: string; error?: string; data?: ParseResultData } = await res.json();
+      if (!response.success) {
+        setParseError(response.error || "Parse failed");
+        setParseResult(null);
+      } else {
+        setParseResult(response.data ? (response.data as ParseResultData) : null);
+        if (userId) fetchHands();
+      }
+    } catch (err: unknown) {
+      setParseError(err instanceof Error ? err.message : "Failed to parse hand history");
+      setParseResult(null);
+    } finally {
+      setParsing(false);
+    }
+  }, [parseText, userId, fetchHands]);
 
   // ─── Fetch hand detail ─────────────────────────────────────────────────────
 
@@ -452,6 +536,230 @@ export default function HandHistoryPage() {
             Refresh
           </Button>
         </div>
+      </div>
+
+      {/* ─── Parse Hand History ───────────────────────────────────────────── */}
+      <div className="border border-gray-800 rounded-lg mb-6 bg-gray-900/50 overflow-hidden">
+        <button
+          onClick={() => setParseOpen(!parseOpen)}
+          className="w-full flex items-center justify-between p-3 hover:bg-gray-800/50 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <Terminal className="h-4 w-4 text-poker-gold" />
+            <span className="text-sm font-semibold text-gray-200">Parse Hand History</span>
+            {parseResult && (
+              <span className="text-xs text-emerald-400">✓ Parsed</span>
+            )}
+          </div>
+          <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", parseOpen && "rotate-180")} />
+        </button>
+        {parseOpen && (
+          <div className="p-3 border-t border-gray-800 space-y-3">
+            <textarea
+              value={parseText}
+              onChange={(e) => setParseText(e.target.value)}
+              placeholder="Paste a PokerStars, GGPoker, or Winamax hand history here..."
+              rows={6}
+              className="w-full px-3 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-xs font-mono placeholder:text-gray-600 focus:outline-none focus:border-blue-500 resize-y"
+            />
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={handleParse}
+                disabled={parsing || parseText.trim().length < 10}
+                size="sm"
+                className="gap-1.5 bg-poker-gold text-gray-900 hover:bg-poker-gold/90 font-semibold"
+              >
+                {parsing ? (
+                  <>
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                    Parsing...
+                  </>
+                ) : (
+                  <>
+                    <Terminal className="h-3.5 w-3.5" />
+                    Parse
+                  </>
+                )}
+              </Button>
+              {parseResult && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setParseText(""); setParseResult(null); setParseError(null); }}
+                  className="text-xs text-gray-400"
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+
+            {/* Error */}
+            {parseError && (
+              <div className="px-3 py-2 bg-red-900/20 border border-red-800/30 rounded-lg text-xs text-red-400">
+                {parseError}
+              </div>
+            )}
+
+            {/* Parsed result */}
+            {parseResult && (
+              <div className="border border-gray-800 rounded-lg bg-gray-950/50 divide-y divide-gray-800">
+                {/* Hand info header */}
+                <div className="p-3 text-xs space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-gray-500">Site:</span>
+                    <span className="text-gray-200 font-medium capitalize">{parseResult.site || "—"}</span>
+                    {parseResult.format && parseResult.format !== parseResult.site && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] bg-blue-900/30 text-blue-400 border border-blue-800/30 capitalize">
+                        {parseResult.format}
+                      </span>
+                    )}
+                    {parseResult.stakes && (
+                      <>
+                        <span className="text-gray-500 ml-2">Stakes:</span>
+                        <span className="text-gray-200 font-mono">
+                          ${parseResult.stakes.sb}/{parseResult.stakes.bb}
+                        </span>
+                      </>
+                    )}
+                    {parseResult.game_type && (
+                      <>
+                        <span className="text-gray-500 ml-2">Game:</span>
+                        <span className="text-gray-200">{parseResult.game_type}</span>
+                      </>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {parseResult.board.length > 0 && (
+                      <>
+                        <span className="text-gray-500">Board:</span>
+                        <BoardCards board={parseResult.board} />
+                      </>
+                    )}
+                    {parseResult.pot != null && (
+                      <>
+                        <span className="text-gray-500 ml-2">Pot:</span>
+                        <span className="text-gray-200 font-mono">{Number(parseResult.pot).toFixed(1)} bb</span>
+                      </>
+                    )}
+                    {parseResult.hero_name && (
+                      <>
+                        <span className="text-gray-500 ml-2">Hero:</span>
+                        <span className="text-blue-400 font-medium">{parseResult.hero_name}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Street-by-street actions */}
+                {Object.keys(parseResult.actions).length > 0 && (
+                  <div className="p-3">
+                    <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                      Actions
+                    </h4>
+                    <div className="space-y-2">
+                      {(["preflop", "flop", "turn", "river", "showdown"] as const).map((street) => {
+                        const streetActions = parseResult.actions[street];
+                        if (!streetActions || streetActions.length === 0) return null;
+                        return (
+                          <div key={street}>
+                            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                              {street === "preflop" ? "Preflop" : street.charAt(0).toUpperCase() + street.slice(1)}
+                            </div>
+                            <div className="space-y-0.5">
+                              {streetActions.map((a, i) => (
+                                <div
+                                  key={i}
+                                  className="flex items-center gap-2 px-2 py-1 rounded text-xs bg-gray-800/30"
+                                >
+                                  <span className={cn(
+                                    "font-medium",
+                                    a.player === parseResult.hero_name ? "text-blue-400" : "text-gray-300",
+                                  )}>
+                                    {a.player}
+                                  </span>
+                                  <span className={cn(
+                                    "font-mono",
+                                    a.action === "fold" ? "text-red-500" :
+                                    a.action === "call" ? "text-yellow-400" :
+                                    a.action === "check" ? "text-gray-400" :
+                                    (a.action === "bet" || a.action === "raise" || a.action === "allin" || a.action === "all-in") ? "text-green-400" :
+                                    a.action === "blind" ? "text-orange-400" :
+                                    "text-gray-300",
+                                  )}>
+                                    {a.action}
+                                  </span>
+                                  {a.amount !== null && (
+                                    <span className="text-gray-400 font-mono">{a.amount.toFixed(1)}</span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Players */}
+                {parseResult.players.length > 0 && (
+                  <div className="p-3">
+                    <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                      Players
+                    </h4>
+                    <div className="space-y-1">
+                      {parseResult.players.map((p, i) => (
+                        <div
+                          key={i}
+                          className={cn(
+                            "flex items-center justify-between px-2 py-1 rounded text-xs",
+                            p.name === parseResult.hero_name
+                              ? "bg-blue-900/20 border border-blue-800/30"
+                              : "bg-gray-800/30",
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-200 font-medium">{p.name}</span>
+                            {p.name === parseResult.hero_name && (
+                              <span className="text-blue-400 text-[10px]">(hero)</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3 text-gray-400">
+                            <span>Seat {p.seat}</span>
+                            {p.position && <span>{p.position}</span>}
+                            <span className="font-mono">{p.stack.toFixed(1)}</span>
+                            {p.hole_cards && (
+                              <span className="text-gray-300 font-mono">
+                                {p.hole_cards.join(" ")}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Winners */}
+                {parseResult.winners && parseResult.winners.length > 0 && (
+                  <div className="p-3">
+                    <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                      Winners
+                    </h4>
+                    <div className="space-y-1">
+                      {parseResult.winners.map((w, i) => (
+                        <div key={i} className="flex items-center gap-2 px-2 py-1 rounded text-xs bg-emerald-900/20 text-emerald-400">
+                          <span className="font-medium">{w.player}</span>
+                          <span className="font-mono">won {w.amount.toFixed(1)} bb</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Stats bar */}
