@@ -215,9 +215,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "d42bdcf3f2456f7c6533f12f77ebb0e8a0ed37bd",
-    "last_reviewed_at": "2026-06-20T10:36:00Z",
+    "last_reviewed_sha": "66b19304469844dbd8d7f2089aea6616c635cb0a",
+    "last_reviewed_at": "2026-06-20T11:35:00Z",
     "verdict": "approved",
-    "notes": "Reviewed d42bdcf — checkpoint-only commit. No new substantive code. Phase 1 complete. Live site 200, API healthy."
+    "notes": "Reviewed 87b1628 + 66b1930 — both checkpoint-only commits updating coach_review SHA and marking solver-docker-build/protobuf tasks complete. No substantive code changes. Phase 1 fully complete. Live site 200, API healthy, solver running."
   }
 }
