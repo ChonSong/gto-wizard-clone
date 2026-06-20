@@ -291,15 +291,14 @@
       "coach": "approved"
     }
   ],
-  "current_task": "tbd",
-  "next": "practice-page-visual-match-reference",
+  "current_task": "practice-page-visual-match-reference",
+  "next": "fix-e2e-test-runner-2",
   "backlog": [
-    "practice-page-visual-match-reference",
     "fix-e2e-test-runner-2",
     "start-solver-container"
   ],
   "health": "build_ok_site_200",
-  "last_sha": "b5593ab",
+  "last_sha": "15489b602ccffe7d85f5031b9fb59293d4457183",
   "blocker": null,
   "note": "Player tick 2026-06-20: practice-page-visual-match-reference verified code-complete (commit 90bf1c5) and deployed. All AGENTS.md tasks effectively complete. 368 tests pass. Advancing to tbd — Coach should generate next batch.",
   "spec_gaps": [
@@ -349,9 +348,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "a3d86de",
-    "last_reviewed_at": "2026-06-20T23:45:00Z",
+    "last_reviewed_sha": "15489b602ccffe7d85f5031b9fb59293d4457183",
+    "last_reviewed_at": "2026-06-20T12:40:00Z",
     "verdict": "approved",
-    "notes": "Coach review: approved 5 pending tasks (update-features-yaml-courses-detail, fix-e2e-test-runner-execution, fix-e2e-tests-and-deploy-issues, add-hand-history-parsing, document-seed-script). All correct \u2014 no code changes needed for doc task, E2E fixes verified, hand-history parse endpoint works. Player now on automate-seed-on-deploy."
+    "notes": "Coach review: 3 checkpoint-only commits (0 code changes). Site healthy (all pages 200). 368 tests pass. Advancing to practice-page-visual-match-reference."
   }
 }
