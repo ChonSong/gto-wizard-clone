@@ -218,16 +218,16 @@
       "sha": "a77d430",
       "date": "2026-06-20",
       "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator — reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
-      "coach": "auto"
+      "coach": "approved"
     }
   ],
   "current_task": "tbd",
-  "next": "add-plo4-frontend-page",
+  "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "868c8a0",
+  "last_sha": "4cf220f",
   "blocker": null,
-  "note": "fix-courses-api-500-port-mismatch complete — port 8001 service lacked DATABASE_URL, fell back to SQLite with mismatched schema. Migration to PostgreSQL-backed gto-api.service on port 8001 fixes courses/{id} 500. Auto-seed DSN handling fixed. 368 tests pass, site 200. current_task=tbd.",
+  "note": "add-plo4-frontend-page approved by coach — 10-line page reusing VariantEquityPage with variantKey=plo4. Live site /equity/plo4 returns 200. API /api/v1/variants/plo4 returns valid variant info. current_task=tbd. Backlog healthy (27 unstarted tasks in AGENTS.md).",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -275,9 +275,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "80f398406e42fa808df5f5d82047f24d00044fc9",
-    "last_reviewed_at": "2026-06-20T20:40:00Z",
+    "last_reviewed_sha": "4cf220f1c82c46d15857df9460895385e1bbe7df",
+    "last_reviewed_at": "2026-06-20T21:06:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 09dd1a1..80f3984 (3 commits). 868c8a0 fix(courses): DSN +asyncpg strip, port 8001 DATABASE_URL fix, dead code removal. Live site courses/{id} returns 200. 368 tests pass. Checkpoint-only commits (09dd1a1, 80f3984) are non-concerning."
+    "notes": "Reviewed a77d430 (1 player commit since last review). feat(equity): add /equity/plo4 frontend page — 10-line page reusing VariantEquityPage with variantKey=plo4. Live site /equity/plo4 returns 200. API /api/v1/variants/plo4 returns valid variant info. No security issues, no scope creep. Auto-generated sw.js and turbo-build.log changes are expected. Dev loop stalled at current_task=tbd with 27 unstarted tasks remaining."
   }
 }
