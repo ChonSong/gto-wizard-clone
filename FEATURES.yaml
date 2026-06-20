@@ -166,8 +166,8 @@ pages:
       - endpoint: GET /api/v1/courses
         status: present
       - endpoint: GET /api/v1/courses/{id}
-        status: present
-        evidence: "Returns 200 with course data including lessons. Verified via curl."
+        status: broken
+        evidence: "Returns HTTP 500 — Internal Server Error. Verified via curl on live site."
       - endpoint: POST /api/v1/courses/{id}/progress
         status: present
   - route: /icm
