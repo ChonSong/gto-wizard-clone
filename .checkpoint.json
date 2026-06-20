@@ -247,15 +247,22 @@
       "date": "2026-06-20",
       "summary": "Add POST /api/v1/hh/parse endpoint for inline hand history parsing. Add collapsible paste-and-parse textarea to /hand-history page with street-by-street action breakdown. Supports PokerStars, GGPoker, Winamax.",
       "coach": "pending"
+    },
+    {
+      "task": "postflop-solver-api-endpoint",
+      "sha": "1dc5991",
+      "date": "2026-06-20",
+      "summary": "POST /api/v1/solver/postflop-strategy endpoint exists and works — returns GTO strategy actions (action, frequency, EV) with live-solver fallback, in-memory cache, 30s timeout. 368 unit tests + 18 API tests pass. Endpoint verified live on port 8001.",
+      "coach": "approved"
     }
   ],
-  "current_task": "postflop-solver-api-endpoint",
+  "current_task": "interactive-postflop-study-buttons",
   "next": null,
   "backlog": [],
-  "health": "118_e2e_pass_build_ok_site_200",
-  "last_sha": "cdf876e",
+  "health": "368_unit_pass_18_api_pass_build_ok_site_200",
+  "last_sha": "1dc5991",
   "blocker": null,
-  "note": "Player tick: fix(e2e) — fixed 2 pre-existing E2E test failures (courses category filter + flaky ICM results wait). All 118 tests pass. Fixed deploy.sh git pull issue (build artifacts blocking merge). Disabled duplicate gto-wizard-api.service. Updated .gitignore. Next task from checkpoint: add-hand-history-parsing.",
+  "note": "Player tick: checkpoint(postflop-solver-api-endpoint) — endpoint was already implemented and live (verified curl -> 200 with solver response). Marked complete, advanced to interactive-postflop-study-buttons. 368 unit + 18 API tests pass.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
