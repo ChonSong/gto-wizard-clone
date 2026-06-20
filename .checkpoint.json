@@ -205,9 +205,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "b828761d32a82c72e9b2610a6bab7bed618097d4",
-    "last_reviewed_at": "2026-06-20T10:07:00Z",
+    "last_reviewed_sha": "d42bdcf3f2456f7c6533f12f77ebb0e8a0ed37bd",
+    "last_reviewed_at": "2026-06-20T10:36:00Z",
     "verdict": "approved",
-    "notes": "Reviewed b828761 — checkpoint-only commit updating coach_review SHA. No new substantive code since edbd80f. Phase 1 complete. Live site 200, API healthy."
+    "notes": "Reviewed d42bdcf — checkpoint-only commit. No new substantive code. Phase 1 complete. Live site 200, API healthy."
   }
 }
