@@ -191,15 +191,22 @@
       "date": "2026-06-20",
       "summary": "Redesign equity calculator: hand inputs, board input, calculate button, results with wins/ties/total via EquityChart. CSS variable theme. Removed redundant nav and mock range grids. Fixed win/tie calculation bug (API field mismatch).",
       "coach": "approved"
+    },
+    {
+      "task": "practice-page-visual-match-reference",
+      "sha": "9dbfdf1c4e685cbc05eb69c31fb0f1efd99b5b36",
+      "date": "2026-06-20",
+      "summary": "CSS variable theme applied (--bg, --panel, --green, --border, --muted, --text), exercise type selector pills (GTO Quiz, Timed Drill, Spaced Repetition), ProgressRing component for session progress display. All training controls work.",
+      "coach": "approved"
     }
   ],
-  "current_task": "practice-page-visual-match-reference",
-  "next": "practice-page-visual-match-reference",
+  "current_task": "update-features-yaml-courses-detail",
+  "next": "update-features-yaml-courses-detail",
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "9a252128be46c6e1f364d8ea0fe25cecf89b6fb1",
+  "last_sha": "9dbfdf1c4e685cbc05eb69c31fb0f1efd99b5b36",
   "blocker": null,
-  "note": "equity-page-visual-match-reference complete — redesigned equity calculator with hand inputs, board input, Calculate button, EquityChart results. CSS vars applied. Live site 200. Next: practice-page-visual-match-reference.",
+  "note": "practice-page-visual-match-reference complete — CSS variable theme applied, exercise type selector pills (GTO Quiz, Timed Drill, Spaced Repetition), ProgressRing in session panel. All training controls work. Build passes, site 200. Next: update-features-yaml-courses-detail.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -239,11 +246,10 @@
       "status": "open"
     }
   ],
-  "current_task": "practice-page-visual-match-reference",
   "coach_review": {
-    "last_reviewed_sha": "e892b91",
-    "last_reviewed_at": "2026-06-20T14:12:00Z",
-    "verdict": "fixed",
-    "notes": "Reviewed commit 38e59ba (equity page redesign). Fixed win/tie calculation bug: frontend used non-existent data.win_probability/data.tie_probability fields instead of data.wins/data.ties/data.total from API. Also removed dead gtoTheme import. Fix committed as e892b91. Live site 200, API returns correct equity data. Next: practice-page-visual-match-reference."
+    "last_reviewed_sha": "9dbfdf1c4e685cbc05eb69c31fb0f1efd99b5b36",
+    "last_reviewed_at": "2026-06-20T14:40:00Z",
+    "verdict": "approved",
+    "notes": "Reviewed commit 90bf1c5 (practice page visual match reference). CSS variable theme applied consistently, exercise type selector pills functional with state management, ProgressRing added to session panel. All existing functionality maintained. Live site 200, 368 tests pass. Next: update-features-yaml-courses-detail."
   }
 }
