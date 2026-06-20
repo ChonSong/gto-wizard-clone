@@ -193,20 +193,20 @@
       "coach": "approved"
     },
     {
-      "task": "practice-page-visual-match-reference",
-      "sha": "90bf1c5",
+      "task": "update-features-yaml-courses-detail",
+      "sha": "f00c6fe",
       "date": "2026-06-20",
-      "summary": "CSS variable theme applied (--bg, --panel, --green, --border, --muted, --text), exercise type selector pills (GTO Quiz, Timed Drill, Spaced Repetition), ProgressRing for session progress display, category/difficulty filters, Start Practice Session button. Page renders 200 with all controls functional.",
-      "coach": "approved"
+      "summary": "Fix FEATURES.yaml: mark GET /api/v1/courses/{id} as present — endpoint works with UUID IDs, returns 200 with lessons. Previous revert was due to integer-ID testing. Verified 4 other endpoints all 200.",
+      "coach": "pending"
     }
   ],
-  "current_task": "fix-course-detail-api-500",
-  "next": "fix-course-detail-api-500",
+  "current_task": "tbd",
+  "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "9dbfdf1c4e685cbc05eb69c31fb0f1efd99b5b36",
+  "last_sha": "f00c6fe",
   "blocker": null,
-  "note": "practice-page-visual-match-reference approved — CSS vars, exercise pills, ProgressRing. 368 tests pass, site 200. Next: update-features-yaml-courses-detail.",
+  "note": "update-features-yaml-courses-detail complete — FEATURES.yaml courses/{id} marked present (UUID-based IDs, verified 200). 368 tests pass, site 200. All AGENTS.md tasks exhausted. current_task=tbd.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
