@@ -176,13 +176,17 @@ function CardDisplay({ rank, suit, small }: { rank: string; suit: string; small?
 function StreetBreadcrumb({
   streetIndex,
   streetActions,
+  potSize,
+  stackDepth,
 }: {
   streetIndex: number
   streetActions: (string | null)[]
+  potSize: number
+  stackDepth: number
 }) {
   const allStreets = ['Preflop', 'Flop', 'Turn', 'River']
   const actionLabels = ['BTN raise 2.5, BB call', ...streetActions.map((a, i) =>
-    a ? streetActionLabel(a, 0, 0) : null
+    a ? streetActionLabel(a, potSize, stackDepth) : null
   )]
 
   return (
@@ -406,6 +410,8 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
         <StreetBreadcrumb
           streetIndex={streetIndex}
           streetActions={streetActions}
+          potSize={potSize}
+          stackDepth={stackDepth}
         />
       </div>
 
