@@ -124,11 +124,11 @@
   "blocker": null,
   "note": "Player tick 2026-06-21T23:38: seed-quiz-spots-with-board-data — converted 20 short-form board notations to proper card notation (SQL UPDATE on DB + seed.py). 9 workflow E2E tests pass. Live site 200. Next: dashboard-page-visual-match-reference (needs browser/vision).",
   "coach_review": {
-    "last_reviewed_sha": "20b79d14e15e1ae7f42370af2072f3870f50e5a4",
-    "last_reviewed_at": "2026-06-21T23:42:00Z",
+    "last_reviewed_sha": "feae5bdbabeae6442b5b9ecbf7fdfda400461110",
+    "last_reviewed_at": "2026-06-22T00:10:00Z",
     "verdict": "approved",
-    "notes": "Approved: fix(quiz) board notation conversion + checkpoint stall recovery. Live site QA: 0 JS errors on /, /study, /practice. Quiz renders board cards with proper suits (A♥ K♣ 4♦). Security: no secrets, no new deps, no new endpoints. Scope: clean — pure seed data bug fix.",
-    "last_review": "2026-06-21T23:42:00Z",
+    "notes": "Reviewed feae5bd (checkpoint update only — no player code changes). Live site QA: 0 JS errors on /, /study, /practice. Quiz API returns proper board notation (QhQd8c). Security: clean. Scope: N/A — checkpoint update only. Backlog healthy — current_task: dashboard-page-visual-match-reference.",
+    "last_review": "2026-06-22T00:10:00Z",
     "status": "approved"
   }
 }
