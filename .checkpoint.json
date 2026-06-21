@@ -190,15 +190,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "52da838",
+  "last_sha": "d9f2904",
   "blocker": null,
   "note": "Player tick 2026-06-22: add-hand-history-parsing, add-plo4-frontend-page, postflop-solver-api-endpoint verified already implemented. Handled checkpoint audit gap — 3 tasks tracked as complete, 368 tests pass, live site 200. Next: visual-study-postflop-match-reference (needs browser/vision tools).",
   "coach_review": {
-    "last_reviewed_sha": "52da838f7073339266250da531dca2217d29fcca",
-    "last_reviewed_at": "2026-06-22T18:00:00Z",
+    "last_reviewed_sha": "d9f2904d7f3e47d9fe482d578b7de88db34a9010",
+    "last_reviewed_at": "2026-06-22T18:20:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 52da838 — e2e test runner fix: auto-install playwright deps, single-browser default for local runs, 5-project matrix only in CI. Changes: playwright.config.ts (conditional projects), playwright-test.sh (auto-install + set -euo pipefail), .gitignore (e2e/node_modules/). 368 poker-core tests pass. Live site QA: / loads with 12 feature cards, 0 JS errors. /study loads preflop matrix with position buttons, stack selector, action buttons (clicked AA → Fold/Raise 2.5/Allin appeared). Clicked Raise 2.5 — 0 console errors. Strategy-lookup API returns full UTG preflop strategy (169 hands). Security: no secrets, no new deps, no new endpoints. Scope: YAGNI clean — only e2e config + script changes. Perf: N/A — no DB/frontend query changes. Backlog: 31 unstarted tasks — healthy.",
-    "last_review": "2026-06-22T18:00:00Z",
+    "notes": "Reviewed d9f2904 — checkpoint-only commit: marked add-hand-history-parsing, add-plo4-frontend-page, postflop-solver-api-endpoint as completed (verified already implemented), updated current_task to visual-study-postflop-match-reference. No source code changes. Live site QA: / renders 12 feature cards, 0 JS errors. /study preflop: clicked AKs → Fold/Raise 2.5/Allin 100 appeared, 0 errors. Clicked Raise 2.5 — no errors. Postflop Training: clicked CHECK → street advanced to FLOP, board K♠K♣3♠ rendered, GTO overlay showed action frequencies + EV values, Advance to Turn button appeared, 0 console errors. 368 tests pass. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — checkpoint metadata only. Perf: N/A — no code changes.",
+    "last_review": "2026-06-22T18:20:00Z",
     "status": "approved"
   }
 }
