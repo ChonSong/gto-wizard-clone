@@ -3,7 +3,7 @@
 # Exits 0 only if ALL checks pass. Each failure is reported with endpoint info.
 set -euo pipefail
 
-API_BASE="${API_BASE:-http://localhost:8000}"
+API_BASE="${API_BASE:-http://localhost:8001}"
 WEB_BASE="${WEB_BASE:-http://localhost:3000}"
 TIMEOUT="${TIMEOUT:-5}"
 failures=0
