@@ -302,9 +302,9 @@
   "next": null,
   "backlog": [],
   "health": "build_ok_site_200",
-  "last_sha": "8351b08e",
+  "last_sha": "37d57ab",
   "blocker": null,
-  "note": "Cron tick 2026-06-21T06:21: verified all Phase 1 items (1a-1d) implemented and in completed array. Site healthy (200 on /study). Project feature-complete — all 93 AGENTS.md tasks done. Awaiting user direction for next phase.",
+  "note": "Coach review 2026-06-21T15:08: reviewed 2 new commits (25e9527, 35fea8d). Health check port fix verified correct. All pages 200, no JS errors. Project feature-complete — 93/93 tasks done, 0 open spec gaps. Awaiting user direction.",
   "spec_gaps": [
     {
       "item": "POST /api/v1/equity/calculate timeout",
@@ -352,7 +352,7 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "35fea8d50f64bd6d7fd99d1b1bc5ad461561c0ce",
+    "last_reviewed_sha": "37d57ab",
     "last_reviewed_at": "2026-06-21T15:08:00Z",
     "verdict": "approved",
     "notes": "Coach review 2026-06-21T15:08: 2 new commits reviewed. 25e9527 (checkpoint update) and 35fea8d (health-check port 8000→8001 fix). Health check fix verified correct: API runs on port 8001, port 8000 returns nothing. All pages 200, no JS errors. Project feature-complete — 93/93 tasks done, 0 open spec gaps. Awaiting user direction for next phase."
