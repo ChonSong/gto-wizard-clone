@@ -30,9 +30,9 @@ export default function Header() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Link href="/study" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
           <div style={{
-            width: 28, height: 28, borderRadius: 6, background: '#AAFBB2',
+            width: 28, height: 28, borderRadius: 6, background: '#00C853',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 800, color: '#08140a', fontSize: 18, letterSpacing: -0.5,
+            fontWeight: 800, color: '#000', fontSize: 18, letterSpacing: -0.5,
           }}>W</div>
         </Link>
       </div>
@@ -51,14 +51,14 @@ export default function Header() {
                 fontWeight: tab.highlight && active ? 600 : 500,
                 display: 'flex', alignItems: 'center', gap: 6,
                 whiteSpace: 'nowrap', transition: '.15s', textDecoration: 'none',
-                background: tab.highlight && active ? '#7AC98A'
+                background: tab.highlight && active ? '#00C853'
                   : active ? '#222' : 'transparent',
               }}
             >
               {tab.highlight && (active ? '🎓 ' : '🎓 ')}{tab.label}
               {tab.badge && (
                 <span style={{
-                  background: '#AAFBB2', color: '#000', fontSize: 10, padding: '2px 5px',
+                  background: '#00C853', color: '#000', fontSize: 10, padding: '2px 5px',
                   borderRadius: 4, fontWeight: 700, lineHeight: 1,
                 }}>{tab.badge}</span>
               )}
@@ -69,7 +69,7 @@ export default function Header() {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <button style={{
-          background: '#00B74F', color: '#fff', border: 'none', padding: '7px 13px',
+          background: '#00C853', color: '#000', border: 'none', padding: '7px 13px',
           borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: 'pointer',
         }}>👑 Upgrade</button>
       </div>
