@@ -477,10 +477,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "78f7d32",
-    "last_reviewed_at": "2026-06-21T22:00:00Z",
-    "verdict": "pending",
-    "notes": "New commit 78f7d32 — per-hand-action-legend. Pending coach review.",
+    "last_reviewed_sha": "f0d2f42",
+    "last_reviewed_at": "2026-06-21T22:20:00Z",
+    "verdict": "revert",
+    "notes": "Coach reverted 78f7d32 — /study page showed Application error (blank page on hydration). Revert restores working page.",
     "last_review": "2026-06-21T22:00:00Z",
     "status": "pending"
   }
