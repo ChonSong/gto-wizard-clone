@@ -1132,28 +1132,11 @@ export default function StudyPage() {
             </div>
             )}
           </div>
-          {/* Legend — Per-hand action legend when hand selected, static otherwise */}
-          <div style={{ display: 'flex', gap: 8, padding: '0 12px 8px', fontSize: 10, color: '#999', flexWrap: 'wrap' }}>
-            {selectedCell && selectedHandData ? (
-              (POSITION_ACTIONS[activePosition] || []).map(action => {
-                const gtoBase = getGtoActionBase(selectedHandData)
-                const isGto = action.actionBase === gtoBase
-                const freq = isGto ? selectedHandData.frequency : 0
-                const color = ACTION_COLORS[action.actionBase] || GRAY
-                return (
-                  <span key={action.id}>
-                    <span style={{ display:'inline-block', width:10, height:10, background:color, borderRadius:2, marginRight:3, verticalAlign:'middle', opacity: freq > 0 ? 0.9 : 0.3 }}></span>
-                    {action.label} {(freq * 100).toFixed(0)}%
-                  </span>
-                )
-              })
-            ) : (
-              <>
-                <span><span style={{ display:'inline-block', width:10, height:10, background:RED_BRIGHT, borderRadius:2, marginRight:3, verticalAlign:'middle' }}></span>Raise</span>
-                <span><span style={{ display:'inline-block', width:10, height:10, background:BLUE, borderRadius:2, marginRight:3, verticalAlign:'middle' }}></span>Call</span>
-                <span><span style={{ display:'inline-block', width:10, height:10, background:GRAY, borderRadius:2, marginRight:3, verticalAlign:'middle' }}></span>Fold</span>
-              </>
-            )}
+          {/* Legend */}
+          <div style={{ display: 'flex', gap: 12, padding: '0 12px 8px', fontSize: 10, color: '#999' }}>
+            <span><span style={{ display:'inline-block', width:10, height:10, background:RED_BRIGHT, borderRadius:2, marginRight:3, verticalAlign:'middle' }}></span>Raise</span>
+            <span><span style={{ display:'inline-block', width:10, height:10, background:BLUE, borderRadius:2, marginRight:3, verticalAlign:'middle' }}></span>Call</span>
+            <span><span style={{ display:'inline-block', width:10, height:10, background:GRAY, borderRadius:2, marginRight:3, verticalAlign:'middle' }}></span>Fold</span>
           </div>
         </div>
 
