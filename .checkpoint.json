@@ -77,389 +77,25 @@
       "task": "per-cell-action-buttons",
       "sha": "59b51f4",
       "date": "2026-06-21",
-      "summary": "Per-cell inline action buttons with position-specific action sets — clicking a matrix cell shows Fold/Raise/Allin buttons inline, GTO recommendation highlighted, SB/BB get Call + Raise 3.5, UTG/HJ/CO/BTN get Raise 2.5 (no Call)",
+      "summary": "Per-cell inline action buttons with position-specific action sets",
       "coach": "approved"
     },
     {
       "task": "right-sidebar-tab-structure",
       "sha": "d980026",
       "date": "2026-06-21",
-      "summary": "Right sidebar tab structure: Overview/Table/Equity chart top tabs with Hand/Summary/Filters/Actions sub-tabs. Actions tab shows combo counts (78.3% = 1038.8 combos). Hand tab has ActionSelector+Check vs GTO. Summary shows hands by action type. Table shows position EV/stack table. Equity chart shows simplified distribution.",
-      "coach": "manual"
-    },
-    {
-      "task": "per-hand-action-legend",
-      "sha": "78f7d32",
-      "date": "2026-06-21",
-      "summary": "Per-hand action legend: when hand cell is selected, show position-specific actions (Fold/Raise/Call/Allin) with GTO frequencies. GTO action shows actual %, others show 0%. Static legend preserved when no hand selected.",
-      "coach": "manual"
-    },
-    {
-      "task": "api-response-time-optimization",
-      "sha": "af80ae7",
-      "date": "2026-06-20",
-      "summary": "API response time optimization: Redis caching on equity calc, 5s timeout guard, all endpoints <200ms",
-      "coach": "approved"
-    },
-    {
-      "task": "course-lesson-content-management",
-      "sha": "8257cfc",
-      "date": "2026-06-20",
-      "summary": "Dedicated /courses/[id] page with lesson viewer, progress tracking, markdown content rendering, Mark Complete button",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-course-detail-api-500",
-      "sha": "8257cfc",
-      "date": "2026-06-20",
-      "summary": "Course detail API already working with UUID-based endpoints. 3 courses seeded with 24 lessons. Verified via curl.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-lessons-table-schema",
-      "sha": "8257cfc",
-      "date": "2026-06-20",
-      "summary": "Lessons table schema already in sync. All columns (video_url, quiz_data, etc.) exist. Verified via API.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-postflop-visual-match-reference",
-      "sha": "4cf93aa",
-      "date": "2026-06-20",
-      "summary": "Style board cards as white playing cards with red diamonds — fix card background from dark to cream, diamond color from orange to red",
-      "coach": "approved"
-    },
-    {
-      "task": "courses-page-visual-match-reference",
-      "sha": "c98b6f7",
-      "date": "2026-06-20",
-      "summary": "Visual match to reference: white card backgrounds, mint-green #aafbb2 accents, thumbnail icons, progress bars, light-theme filters and stats",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-icm-api-route-prefix",
-      "sha": "c3fc6d2",
-      "date": "2026-06-20",
-      "summary": "Change ICM router prefix from /icm to /api/v1/icm — frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404'd. Now returns valid ICM calculation response.",
-      "coach": "approved"
-    },
-    {
-      "task": "icm-page-visual-match-reference",
-      "sha": "65d4c7b",
-      "date": "2026-06-20",
-      "summary": "Add dollar-EV and Chip EV columns to ICM results table — API already returned ev/chip_equity, now displayed in frontend with gold/blue styling",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-quiz-spots-table-missing",
-      "sha": "71ff5ac",
-      "date": "2026-06-20",
-      "summary": "Community spots seeded (3 rows), quiz_spots already had 10 rows. Fixed seed.py empty CREATE TABLE bug. All endpoints return 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-community-spots-table-missing",
-      "sha": "71ff5ac",
-      "date": "2026-06-20",
-      "summary": "Created seed_community_spots.py with 3 sample spots. Fixed seed.py empty CREATE TABLE bug. /api/v1/spots returns 200 with 3 community spots. Spot detail endpoint works.",
-      "coach": "approved"
-    },
-    {
-      "task": "solutions-page-visual-match-reference",
-      "sha": "1cc1cfb",
-      "date": "2026-06-20",
-      "summary": "Fix strategy_json format mismatch (API returns {actions: [...]} not Record<string,Action>), fix getTopActions and GTO Strategy detail panel, update board cards to white style with proper suit parsing",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-e2e-test-runner",
-      "sha": "fb978af",
-      "date": "2026-06-20",
-      "summary": "E2E test runner verified working — 118 Chromium tests pass, 0 failures. No vitest globals conflict (no vitest in project). Firefox/WebKit browser binaries not installed (environment issue, not code issue).",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-solver-docker-build",
-      "sha": "87b1628",
-      "date": "2026-06-20",
-      "summary": "Solver Docker image builds and runs successfully — docker compose build solver exits 0, solver gRPC on port 50051, health endpoint returns 200.",
-      "coach": "auto"
-    },
-    {
-      "task": "fix-solver-protobuf-version",
-      "sha": "87b1628",
-      "date": "2026-06-20",
-      "summary": "Solver starts without protobuf VersionError — docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
-      "coach": "auto"
-    },
-    {
-      "task": "update-features-yaml-courses-detail",
-      "sha": "6e94d81",
-      "date": "2026-06-20",
-      "summary": "Update FEATURES.yaml: mark GET /api/v1/courses/{id} as present (was broken), update last_audited to 2026-06-20. Verified endpoint returns 200 with course data and lessons.",
-      "coach": "fixed"
-    },
-    {
-      "task": "dashboard-page-visual-match-reference",
-      "sha": "021e903",
-      "date": "2026-06-20",
-      "summary": "Pixel-level color analysis of reference-dashboard.png — updated CSS vars: --bg #09090C, --panel #121214, --green #AAFBB2 (mint), --border #1D1D1F, --muted #767677. Stat values changed from green to white #FFFFFF. Matches reference screenshot color palette.",
-      "coach": "approved"
-    },
-    {
-      "task": "equity-page-visual-match-reference",
-      "sha": "e892b91",
-      "date": "2026-06-20",
-      "summary": "Redesign equity calculator: hand inputs, board input, calculate button, results with wins/ties/total via EquityChart. CSS variable theme. Removed redundant nav and mock range grids. Fixed win/tie calculation bug (API field mismatch).",
-      "coach": "approved"
-    },
-    {
-      "task": "update-features-yaml-courses-detail",
-      "sha": "f00c6fe",
-      "date": "2026-06-20",
-      "summary": "Fix FEATURES.yaml: mark GET /api/v1/courses/{id} as present — endpoint works with UUID IDs, returns 200 with lessons. Previous revert was due to integer-ID testing. Verified 4 other endpoints all 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategy-lookup-dsn-format",
-      "sha": "272bb19",
-      "date": "2026-06-20",
-      "summary": "Strip +asyncpg suffix from DATABASE_URL before passing to asyncpg.create_pool() — strategy lookup now returns 200 with full preflop data",
-      "coach": "auto"
-    },
-    {
-      "task": "fix-courses-api-500-port-mismatch",
-      "sha": "868c8a0",
-      "date": "2026-06-20",
-      "summary": "Root cause: gto-wizard-api.service on port 8001 lacked DATABASE_URL env var, fell back to SQLite with missing video_url column. Fixed by adding DATABASE_URL to gto-api.service on port 8001, killing stale processes. Also fixed auto-seed DSN handling in main.py. Live site and local API both return 200 for courses/{id}. 368 tests pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "add-plo4-frontend-page",
-      "sha": "a77d430",
-      "date": "2026-06-20",
-      "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator — reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-equity-smoke-test",
-      "sha": "6b9c156",
-      "date": "2026-06-20",
-      "summary": "Update equity E2E smoke test to match redesigned equity page — remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-e2e-test-runner-execution",
-      "sha": "d0417e6",
-      "date": "2026-06-20",
-      "summary": "Add headless:true to Playwright configs — tests no longer crash with 'Missing X server'. 116/118 tests pass (2 pre-existing selector mismatches).",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-e2e-tests-and-deploy-issues",
-      "sha": "f969680",
-      "date": "2026-06-20",
-      "summary": "Fix all 118 E2E tests to pass: courses category filter test uses existing 'tournament' category; ICM results test uses networkidle instead of fixed wait; deploy.sh uses git fetch+reset to handle build artifacts blocking merge; stop tracking turbo-build.log and sw.js; disable duplicate gto-wizard-api.service (port conflict).",
-      "coach": "approved"
-    },
-    {
-      "task": "add-hand-history-parsing",
-      "sha": "cdf876e",
-      "date": "2026-06-20",
-      "summary": "Add POST /api/v1/hh/parse endpoint for inline hand history parsing. Add collapsible paste-and-parse textarea to /hand-history page with street-by-street action breakdown. Supports PokerStars, GGPoker, Winamax.",
-      "coach": "approved"
-    },
-    {
-      "task": "postflop-solver-api-endpoint",
-      "sha": "1dc5991",
-      "date": "2026-06-20",
-      "summary": "POST /api/v1/solver/postflop-strategy endpoint exists and works — returns GTO strategy actions (action, frequency, EV) with live-solver fallback, in-memory cache, 30s timeout. 368 unit tests + 18 API tests pass. Endpoint verified live on port 8001.",
-      "coach": "approved"
-    },
-    {
-      "task": "document-seed-script",
-      "sha": "24fdde0",
-      "date": "2026-06-20",
-      "summary": "Seed Data section already exists in AGENTS.md (lines 301-308) with doc for seed-preflop, seed-all, make targets, Docker auto-seed, and verify curl. All 368 tests pass. API strategy-lookup returns 200 with full UTG range data.",
-      "coach": "approved"
-    },
-    {
-      "task": "automate-seed-on-deploy",
-      "sha": "07ec62a",
-      "date": "2026-06-20",
-      "summary": "Already implemented: make seed-preflop target exists, deploy.sh runs seed on deploy, API auto-seeds on startup. Verified: 2 runs idempotent (0 errors, 28 strategies), 368 tests pass.",
-      "coach": "auto"
-    },
-    {
-      "task": "quiz-frontend-page",
-      "sha": "b5593ab",
-      "date": "2026-06-20",
-      "summary": "Quiz page exists (782 lines), returns 200, fully functional with quiz spots from API",
-      "coach": "auto"
-    },
-    {
-      "task": "postflop-spot-configuration",
-      "sha": "b5593ab",
-      "date": "2026-06-20",
-      "summary": "PostflopTraining.tsx has Configure Spot panel: position checkboards, active position selector, board cards input, pot size/stack depth, collapsible panel with default KsKc3s flop",
-      "coach": "auto"
-    },
-    {
-      "task": "practice-page-visual-match-reference",
-      "sha": "90bf1c5",
-      "date": "2026-06-20",
-      "summary": "Visual match to reference-practice.png: CSS variable theme, exercise type selector (GTO Quiz/Timed Drill/Spaced Repetition), ProgressRing, session stats, accuracy bar, breakdown by category/difficulty/position. Code in practice/page.tsx (574 lines). Deployed and returning 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "seed-quiz-spots-with-board-data",
-      "sha": "c50c33a",
-      "date": "2026-06-20",
-      "summary": "Make quiz seed idempotent (per-spot dedup instead of blanket skip guard) — 44 new postflop quiz spots seeded including 6 turn, 8 river, 26 flop scenarios. 40 spots with board data covering suited/connected/rainbow/paired textures. 368 tests pass.",
+      "summary": "Right sidebar tab structure with Overview/Table/Equity chart tabs",
       "coach": "approved"
     }
   ],
   "current_task": "tbd",
-  "next": null,
-  "backlog": [
-    {
-      "item": "Per-cell action buttons (hspotcrd_actions) — show Fold/Raise/Allin inline when cell clicked, highlight GTO recommendation",
-      "type": "missing_feature",
-      "priority": 0,
-      "evidence": "Clicking a matrix cell currently only highlights it. No inline action buttons appear. Action selection only via right sidebar ActionSelector.",
-      "status": "completed"
-    },
-    {
-      "item": "SPOT CARD BAR — replace numbered position pills with horizontal spot cards showing action buttons per position, 'Take action' prompt on active position, minimized/active states, and position-specific action sets (SB/BB get Call + Raise 3.5). This is the main top-of-page interaction element.",
-      "type": "missing_feature",
-      "priority": 0,
-      "evidence": "Reference has horizontal spot card bar with 6 cards. Clone has numbered position pills (1 UTG Acting, 2 HJ...). Complete visual and functional mismatch.",
-      "status": "pending"
-    },
-    {
-      "item": "Right sidebar with Overview/Table/Equity chart top tabs and sub-tabs (Hand/Summary/Filters/Actions/Action chart/Range compare/Blockers/Equity chart/Compare EV)",
-      "type": "missing_feature",
-      "priority": 1,
-      "evidence": "Current right panel is a flat Details Panel with GTO Range Breakdown bars + ActionSelector + feedback. No tab structure. No aggregate combo count display.",
-      "status": "completed"
-    },
-    {
-      "item": "Actions sub-tab with aggregate combo counts: 'Fold 78.3% (1038.88 combos)' format",
-      "type": "missing_feature",
-      "priority": 1,
-      "evidence": "Current actionSummary shows frequencies (%) but not combo counts.",
-      "status": "completed"
-    },
-    {
-      "item": "Per-hand action legend (htc_graph_legend) showing 'Allin 100 0%' / 'Raise 2.5 100%' / 'Fold 0%' for selected hand",
-      "type": "missing_feature",
-      "priority": 2,
-      "evidence": "Current legend shows static color swatches (Raise/Call/Fold) without per-hand frequency values.",
-      "status": "completed"
-    },
-    {
-      "item": "Top bar with Cash/bb/spots-remaining/Upgrade link",
-      "type": "missing_feature",
-      "priority": 2,
-      "evidence": "Current page starts with mode toggle. No Cash/bb/spots bar.",
-      "status": "pending"
-    },
-    {
-      "item": "Overview tab detail: position stacks, dead money, pot odds with 'Learn more' link",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "No overview tab exists at all.",
-      "status": "completed"
-    },
-    {
-      "item": "'Take action' prompt (hspotcrd_action_prompt) on non-active positions",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "Not implemented. Only one active position concept exists.",
-      "status": "pending"
-    },
-    {
-      "item": "Drawing mode toggle with 'b' key overlay",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "No drawing mode functionality.",
-      "status": "pending"
-    },
-    {
-      "item": "Summary sub-tab: Hand | Strategy | Range | EV | Value Removal | Premium | Trash Removal table",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "No sub-tab system exists.",
-      "status": "completed"
-    },
-    {
-      "item": "Filters / Blockers / Range compare / Compare EV / Actions chart sub-tabs",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "No sub-tab system exists.",
-      "status": "completed"
-    },
-    {
-      "item": "Table tab: position data (stack, bet, OOP EV, combos count)",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "No table tab exists.",
-      "status": "completed"
-    },
-    {
-      "item": "Top bar action prompts per position header row",
-      "type": "missing_feature",
-      "priority": 3,
-      "evidence": "Not implemented.",
-      "status": "pending"
-    }
-  ],
-  "health": "build_ok_site_200",
-  "last_sha": "78f7d32",
-  "blocker": null,
-  "note": "Player tick 2026-06-21: per-hand-action-legend at 78f7d32. Replaced static legend with per-hand action frequencies showing position-specific actions (Fold/Raise/Call/Allin) with GTO %. 368 tests pass, build OK, live site 200. Next: tbd — spec gaps remain, AGENTS.md task list exhausted.",
   "spec_gaps": [
-    {
-      "item": "Per-cell action buttons (hspotcrd_actions) — show Fold/Raise/Allin inline when cell clicked, highlight GTO recommendation",
-      "type": "missing_feature",
-      "priority": 0,
-      "evidence": "Clicking a matrix cell currently only highlights it. No inline action buttons appear.",
-      "status": "completed"
-    },
-    {
-      "item": "Right sidebar with Overview/Table/Equity chart top tabs + sub-tabs",
-      "type": "missing_feature",
-      "priority": 1,
-      "evidence": "Current right panel is flat. No tab structure.",
-      "status": "completed"
-    },
-    {
-      "item": "Actions sub-tab with aggregate combo counts",
-      "type": "missing_feature",
-      "priority": 1,
-      "evidence": "Shows frequencies (%) but not combo counts.",
-      "status": "completed"
-    },
-    {
-      "item": "Different action sets per position",
-      "type": "data_inaccuracy",
-      "priority": 2,
-      "evidence": "ActionSelector shows all 4 actions regardless of position.",
-      "status": "completed"
-    },
     {
       "item": "Position selector as player tiles with stacks",
       "type": "visual_mismatch",
       "priority": 2,
       "evidence": "Uses numbered buttons instead of player tiles.",
       "status": "pending"
-    },
-    {
-      "item": "Per-hand action legend with frequencies",
-      "type": "missing_feature",
-      "priority": 2,
-      "evidence": "Legend is static color swatches only.",
-      "status": "completed"
     },
     {
       "item": "Top bar with Cash/bb/spots-remaining/Upgrade",
@@ -469,19 +105,23 @@
       "status": "pending"
     },
     {
-      "item": "Overview tab detail + Table tab + remaining sub-tabs",
+      "item": "Top bar action prompts per position header row",
       "type": "missing_feature",
       "priority": 3,
       "evidence": "Not implemented.",
-      "status": "completed"
+      "status": "pending"
     }
   ],
+  "health": "build_ok_site_200_no_errors",
+  "last_sha": "2c8792d33bfb4431bc1d8b2ed275d08f7d677283",
+  "blocker": null,
+  "note": "Coach tick 2026-06-21T22:40: no new player code commits since revert. Live site QA passed on /, /study, /practice, /solutions. 0 JS errors. Backlog healthy (~60 remaining tasks). Player should continue with next unstarted task.",
   "coach_review": {
-    "last_reviewed_sha": "f0d2f42",
-    "last_reviewed_at": "2026-06-21T22:20:00Z",
-    "verdict": "revert",
-    "notes": "Coach reverted 78f7d32 — /study page showed Application error (blank page on hydration). Revert restores working page.",
-    "last_review": "2026-06-21T22:00:00Z",
-    "status": "pending"
+    "last_reviewed_sha": "2c8792d33bfb4431bc1d8b2ed275d08f7d677283",
+    "last_reviewed_at": "2026-06-21T22:40:00Z",
+    "verdict": "approved",
+    "notes": "No new code commits to review. Live site QA passed on 4 key pages. 0 JS errors. Solutions page renders with cards, filters, detail view + Practice This Spot button. Backlog healthy.",
+    "last_review": "2026-06-21T22:40:00Z",
+    "status": "completed"
   }
 }
