@@ -32,8 +32,8 @@ const SUIT_SYMBOLS: Record<string, string> = {
 };
 
 const SUIT_COLORS: Record<string, string> = {
-  h: "text-red-400", d: "text-blue-400", c: "text-green-400", s: "text-gray-300",
-  "♥": "text-red-400", "♦": "text-blue-400", "♣": "text-green-400", "♠": "text-gray-300",
+  h: "text-red-400", d: "text-red-400", c: "", s: "",
+  "♥": "text-red-400", "♦": "text-red-400", "♣": "", "♠": "",
 };
 
 function normalizeHand(input: string): string {
@@ -53,7 +53,7 @@ function formatSuitSymbol(suit: string): string {
 }
 
 function formatSuitColor(suit: string): string {
-  return SUIT_COLORS[suit] || "text-white";
+  return SUIT_COLORS[suit] ?? "text-white";
 }
 
 // ============================================================================
@@ -63,8 +63,9 @@ function formatSuitColor(suit: string): string {
 function BoardCardView({ rank, suit }: { rank: string; suit: string }) {
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <div className="w-10 h-14 rounded-md bg-white flex flex-col items-center justify-center shadow-lg border border-gray-300">
-        <span className="text-sm font-bold text-gray-900 leading-none">{rank}</span>
+      <div className="w-10 h-14 rounded-md flex flex-col items-center justify-center shadow-lg border"
+        style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--text)" }}>
+        <span className="text-sm font-bold leading-none">{rank}</span>
         <span className={cn("text-lg font-bold", formatSuitColor(suit))}>
           {formatSuitSymbol(suit)}
         </span>
@@ -256,12 +257,12 @@ export default function EquityPage() {
   }, [boardInput]);
 
   return (
-    <div className="flex" style={{ backgroundColor: "var(--bg)", color: "var(--text)", minHeight: "calc(100vh - 52px)" }}>
+    <div className="flex" style={{ backgroundColor: "var(--bg)", color: "var(--text)", height: "calc(100vh - 52px)", overflow: "hidden" }}>
       {/* Left Sidebar */}
       <GameSettingsSidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 space-y-4 overflow-hidden">
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         <h1 className="text-lg font-bold sr-only">Equity Calculator</h1>
 
         {/* Input Section */}
