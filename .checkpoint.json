@@ -100,9 +100,16 @@
       "date": "2026-06-22",
       "summary": "Redesign homepage to match GTO Wizard design system: updated CSS vars (#0E0E0E bg, #00C853 green), gradient hero, icon-container feature cards, 12-card grid, stats in brand green, header color consistency",
       "coach": "approved"
+    },
+    {
+      "task": "equity-page-visual-match-reference",
+      "sha": "93501aa",
+      "date": "2026-06-22",
+      "summary": "Visual polish: fixed suit colors (hearts/diamonds red, clubs/spades light), dark-themed board cards, viewport-filling layout with overflow-y-auto",
+      "coach": "approved"
     }
   ],
-  "current_task": "equity-page-visual-match-reference",
+  "current_task": "practice-page-visual-match-reference",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -127,15 +134,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "dc42aec",
+  "last_sha": "be449f5",
   "blocker": null,
-  "note": "Player tick 2026-06-22: dashboard-page-visual-match-reference — Redesigned homepage with GTO Wizard design system (CSS vars, hero, feature grid 12 cards, stats, header). 368 tests pass, build ok, live site 200 with new content. Next: equity-page-visual-match-reference.",
+  "note": "Coach review 2026-06-22: approved dc42aec (dashboard visual match) and 93501aa (equity visual polish). Both pages render correctly, 0 JS errors. Next: practice-page-visual-match-reference.",
   "coach_review": {
-    "last_reviewed_sha": "1d10381efa0e5be5e13eb829aceb092d0d58471b",
-    "last_reviewed_at": "2026-06-22T00:37:00Z",
+    "last_reviewed_sha": "be449f51c3678070ca3eb11f1f5667ad97fddeed",
+    "last_reviewed_at": "2026-06-22T01:05:00Z",
     "verdict": "approved",
-    "notes": "Reviewed dc42aec (dashboard-page-visual-match-reference). Live site QA: / loads with hero section, 12 feature cards, stats section. Clicked Study card → /study page renders with hand matrix, position buttons, stack selector. 1 pre-existing empty console error (not from this commit). Security: clean. Scope: clean — all changes task-required. CSS vars updated to #0E0E0E/#00C853. Header green consistency. Build ok. Commit pushed.",
-    "last_review": "2026-06-22T00:37:00Z",
+    "notes": "Reviewed dc42aec (dashboard redesign) and 93501aa (equity visual polish). Dashboard: 12 feature cards render, green brand colors, hero section, stats, 0 JS errors on / and /study navigation. Equity: board cards show correct suit colors (Q♦ red, J♥ red, 4♠ uncolored), dark card backgrounds, viewport-filling layout, equity calc works (AKs vs QQ on QdJh4s = 13.1%/86.9%), 0 JS errors. Security: clean on both commits. Scope: YAGNI clean — all changes directly required by visual-match tasks. Backlog healthy: 6+ tasks remaining including practice-page-visual-match-reference.",
+    "last_review": "2026-06-22T01:05:00Z",
     "status": "approved"
   }
 }
