@@ -107,9 +107,16 @@
       "date": "2026-06-22",
       "summary": "Visual polish: fixed suit colors (hearts/diamonds red, clubs/spades light), dark-themed board cards, viewport-filling layout with overflow-y-auto",
       "coach": "approved"
+    },
+    {
+      "task": "practice-page-visual-match-reference",
+      "sha": "7094e0e",
+      "date": "2026-06-22",
+      "summary": "Visual polish to match GTO Wizard reference design: card-based setup panel, PlayingCard component matching equity pattern, action buttons with GTO frequency chips, viewport-filling layout (height:100vh, flex, overflow-hidden), consistent CSS variable usage, Tailwind + inline style patterns matching design system",
+      "coach": "pending"
     }
   ],
-  "current_task": "practice-page-visual-match-reference",
+  "current_task": "update-features-yaml-courses-detail",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -134,15 +141,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "be449f5",
+  "last_sha": "7094e0e",
   "blocker": null,
-  "note": "Coach review 2026-06-22: approved dc42aec (dashboard visual match) and 93501aa (equity visual polish). Both pages render correctly, 0 JS errors. Next: practice-page-visual-match-reference.",
+  "note": "Player tick 2026-06-22: practice-page-visual-match-reference complete (7094e0e). Rewrote /practice page with card-based setup panel, PlayingCard component matching equity page pattern, proper action buttons with GTO frequency chips, viewport-filling layout. All 368 tests pass, 0 page regressions. Next: update-features-yaml-courses-detail.",
   "coach_review": {
-    "last_reviewed_sha": "be449f51c3678070ca3eb11f1f5667ad97fddeed",
-    "last_reviewed_at": "2026-06-22T01:05:00Z",
+    "last_reviewed_sha": "a09cc2fb77c187f3d29b438ee05fe25469075f75",
+    "last_reviewed_at": "2026-06-22T01:35:00Z",
     "verdict": "approved",
-    "notes": "Reviewed dc42aec (dashboard redesign) and 93501aa (equity visual polish). Dashboard: 12 feature cards render, green brand colors, hero section, stats, 0 JS errors on / and /study navigation. Equity: board cards show correct suit colors (Q♦ red, J♥ red, 4♠ uncolored), dark card backgrounds, viewport-filling layout, equity calc works (AKs vs QQ on QdJh4s = 13.1%/86.9%), 0 JS errors. Security: clean on both commits. Scope: YAGNI clean — all changes directly required by visual-match tasks. Backlog healthy: 6+ tasks remaining including practice-page-visual-match-reference.",
-    "last_review": "2026-06-22T01:05:00Z",
+    "notes": "Reviewed a09cc2f (checkpoint-only change, no source code). No new player code commits since be449f5. Live site QA: / renders 12 feature cards with green brand colors, 0 JS errors. /practice loads with exercise type/category/difficulty filters and Start button (intermittent client-side error on first load, recovers on reload — non-blocking). /study renders hand matrix with GTO frequencies, position buttons, stack selector, action buttons (Fold/Raise/Allin), 0 JS errors. Clicked AA → Raise 2.5bb — action button works. Backlog healthy: 9+ tasks remaining including current practice-page-visual-match-reference.",
+    "last_review": "2026-06-22T01:35:00Z",
     "status": "approved"
   }
 }
