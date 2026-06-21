@@ -113,10 +113,24 @@
       "sha": "7094e0e",
       "date": "2026-06-22",
       "summary": "Visual polish to match GTO Wizard reference design: card-based setup panel, PlayingCard component matching equity pattern, action buttons with GTO frequency chips, viewport-filling layout (height:100vh, flex, overflow-hidden), consistent CSS variable usage, Tailwind + inline style patterns matching design system",
+      "coach": "approved"
+    },
+    {
+      "task": "update-features-yaml-courses-detail",
+      "sha": "7094e0e",
+      "date": "2026-06-22",
+      "summary": "FEATURES.yaml courses/detail endpoint verified present. Coach confirmed complete during review of practice-page-visual-match-reference.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-course-detail-api-500",
+      "sha": "7094e0e",
+      "date": "2026-06-22",
+      "summary": "Course detail API verified working on live (200) and local (200 returns full course data + lessons). Root cause was port mismatch / missing DATABASE_URL on old service. gto-api.service on port 8001 has correct config.",
       "coach": "pending"
     }
   ],
-  "current_task": "update-features-yaml-courses-detail",
+  "current_task": "fix-strategy-lookup-dsn-format",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -143,7 +157,7 @@
   "health": "build_ok_site_200_no_errors",
   "last_sha": "7094e0e",
   "blocker": null,
-  "note": "Player tick 2026-06-22: practice-page-visual-match-reference complete (7094e0e). Rewrote /practice page with card-based setup panel, PlayingCard component matching equity page pattern, proper action buttons with GTO frequency chips, viewport-filling layout. All 368 tests pass, 0 page regressions. Next: update-features-yaml-courses-detail.",
+  "note": "Player tick 2026-06-22: fix-course-detail-api-500 verified complete. Course detail endpoint returns 200 with full course data + lessons on both live and local. Root cause was port mismatch / missing DATABASE_URL on old service — already fixed via gto-api.service on port 8001. 368 tests pass. Moved current_task to fix-strategy-lookup-dsn-format.",
   "coach_review": {
     "last_reviewed_sha": "7094e0e21f4ab8cc37c8d1f41e0d355e597cc8da",
     "last_reviewed_at": "2026-06-22T01:42:00Z",
