@@ -159,11 +159,11 @@
   "blocker": null,
   "note": "Player tick 2026-06-22: fix-course-detail-api-500 verified complete. Course detail endpoint returns 200 with full course data + lessons on both live and local. Root cause was port mismatch / missing DATABASE_URL on old service — already fixed via gto-api.service on port 8001. 368 tests pass. Moved current_task to fix-strategy-lookup-dsn-format.",
   "coach_review": {
-    "last_reviewed_sha": "12a49c69deeaafe4e73eb7115d827f479009ae4f",
-    "last_reviewed_at": "2026-06-22T02:40:00Z",
+    "last_reviewed_sha": "4816b4e9f76afa3709a4e4c04400f9778485de85",
+    "last_reviewed_at": "2026-06-22T17:06:00Z",
     "verdict": "approved",
-    "notes": "Reviewed fce0d59 and 12a49c6 — both checkpoint-only commits (only .checkpoint.json changed). No source code changes. fix-course-detail-api-500 verified complete by player: course detail endpoint returns 200 with full course data + lessons on both live and local. Live site QA: / renders with 12 feature cards, /practice loads with filters and Start button (session starts showing hand/board/action buttons with GTO frequencies), /study renders preflop matrix with position buttons and stack selector, /courses shows 3 courses. 0 JS errors on all pages. API on port 8001 healthy. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — checkpoint updates only. Backlog healthy: 35 unstarted tasks remaining.",
-    "last_review": "2026-06-22T02:40:00Z",
+    "notes": "Reviewed 4816b4e — checkpoint-only commit (only .checkpoint.json changed). No source code changes since last review. Live site QA: / renders with 12 feature cards and hero section, /study renders preflop matrix with position buttons, stack selector, and action buttons (clicked AKs → Fold/Raise 2.5/Allin 100 appeared, 0 JS errors), /practice loads with exercise type/category/difficulty filters and Start Practice Session button, /courses shows 3 courses with difficulty filter dropdown. 0 JS errors on all pages. API on port 8001 healthy (strategy-lookup returns 200 with full UTG preflop data). Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — checkpoint update only. Backlog healthy: ~23 unstarted tasks remaining in AGENTS.md. Current task: fix-strategy-lookup-dsn-format.",
+    "last_review": "2026-06-22T17:06:00Z",
     "status": "approved"
   }
 }
