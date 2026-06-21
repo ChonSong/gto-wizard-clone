@@ -352,9 +352,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "8351b08e0f21c17cf37b3dab201cd337e84202a9",
-    "last_reviewed_at": "2026-06-21T06:21:00Z",
+    "last_reviewed_sha": "35fea8d50f64bd6d7fd99d1b1bc5ad461561c0ce",
+    "last_reviewed_at": "2026-06-21T15:08:00Z",
     "verdict": "approved",
-    "notes": "Cron tick 2026-06-21: all Phase 1 sub-tasks (1a-1d) confirmed in completed array. Site healthy, /study returns 200. Project feature-complete — 93/93 tasks done, 0 open spec gaps. Awaiting user direction for next phase."
+    "notes": "Coach review 2026-06-21T15:08: 2 new commits reviewed. 25e9527 (checkpoint update) and 35fea8d (health-check port 8000→8001 fix). Health check fix verified correct: API runs on port 8001, port 8000 returns nothing. All pages 200, no JS errors. Project feature-complete — 93/93 tasks done, 0 open spec gaps. Awaiting user direction for next phase."
   }
 }
