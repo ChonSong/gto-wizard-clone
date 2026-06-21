@@ -88,7 +88,7 @@
       "coach": "approved"
     }
   ],
-  "current_task": "tbd",
+  "current_task": "add-push-fold-charts-page",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -115,13 +115,13 @@
   "health": "build_ok_site_200_no_errors",
   "last_sha": "2c8792d33bfb4431bc1d8b2ed275d08f7d677283",
   "blocker": null,
-  "note": "Coach tick 2026-06-21T22:40: no new player code commits since revert. Live site QA passed on /, /study, /practice, /solutions. 0 JS errors. Backlog healthy (~60 remaining tasks). Player should continue with next unstarted task.",
+  "note": "Coach tick 2026-06-21T23:00: stalled loop recovery. Set current_task to add-push-fold-charts-page. Live site QA passed \u2014 0 JS errors on /, /study, /practice.",
   "coach_review": {
-    "last_reviewed_sha": "2c8792d33bfb4431bc1d8b2ed275d08f7d677283",
-    "last_reviewed_at": "2026-06-21T22:40:00Z",
+    "last_reviewed_sha": "9a9e568fcc14e4844e1bf0fd49586857ce9f89c4",
+    "last_reviewed_at": "2026-06-21T13:15:21Z",
     "verdict": "approved",
     "notes": "No new code commits to review. Live site QA passed on 4 key pages. 0 JS errors. Solutions page renders with cards, filters, detail view + Practice This Spot button. Backlog healthy.",
     "last_review": "2026-06-21T22:40:00Z",
-    "status": "completed"
+    "status": "pending"
   }
 }
