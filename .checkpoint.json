@@ -74,6 +74,13 @@
       "coach": "approved"
     },
     {
+      "task": "per-cell-action-buttons",
+      "sha": "59b51f4",
+      "date": "2026-06-21",
+      "summary": "Per-cell inline action buttons with position-specific action sets — clicking a matrix cell shows Fold/Raise/Allin buttons inline, GTO recommendation highlighted, SB/BB get Call + Raise 3.5, UTG/HJ/CO/BTN get Raise 2.5 (no Call)",
+      "coach": "approved"
+    },
+    {
       "task": "api-response-time-optimization",
       "sha": "af80ae7",
       "date": "2026-06-20",
@@ -298,7 +305,7 @@
       "coach": "approved"
     }
   ],
-  "current_task": "per-cell-action-buttons",
+  "current_task": "right-sidebar-tab-structure",
   "next": null,
   "backlog": [
     {
@@ -410,7 +417,7 @@
       "type": "missing_feature",
       "priority": 0,
       "evidence": "Clicking a matrix cell currently only highlights it. No inline action buttons appear.",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "item": "Right sidebar with Overview/Table/Equity chart top tabs + sub-tabs",
@@ -463,9 +470,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "03f30fe17ddae7ec41fa71c726e52b43e461ee10",
-    "last_reviewed_at": "2026-06-21T09:07:00Z",
+    "last_reviewed_sha": "59b51f4689854846edb9eb43fbf6a7f124d1d09d",
+    "last_reviewed_at": "2026-06-21T21:07:00Z",
     "verdict": "approved",
-    "notes": "Coach review 2026-06-21T09:07: no new commits (last_reviewed_sha matches HEAD 03f30fe). Site QA: all 7 key pages render correctly (/, /study, /courses, /practice, /equity, /solutions, /icm). 0 JS errors on all pages. API healthy on port 8001. Live tunnel wiz.codeovertcp.com UP (200). Clicked Postflop Training button on /study — transitioned correctly with action buttons and GTO frequencies. Project feature-complete — 93/93 tasks done, 0 open spec gaps. Awaiting user direction for next phase."
+    "notes": "Coach review 2026-06-21T21:07: reviewed commit 59b51f4 — per-cell inline action buttons with position-specific action sets. Browser QA: /study renders, 0 JS errors. Clicked KK cell (UTG) — Fold, Raise 2.5 (GTO), Allin 100 buttons appeared. Clicked Raise 2.5 — action selected, 0 errors. Switched to SB — KK shows Fold, Call, Raise 3.5 (GTO), Allin 100. Position-specific actions verified. Build passes. Commit pushed to origin."
   }
 }
