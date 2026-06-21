@@ -134,10 +134,38 @@
       "sha": "272bb19",
       "date": "2026-06-22",
       "summary": "DSN normalization fix already committed (272bb19): strategy_storage.py line 136 strips +asyncpg suffix before passing to asyncpg.create_pool(). Verified: strategy-lookup returns 200 on valid params, 404 on missing (not 500). 368 tests pass.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-e2e-test-runner-execution",
+      "sha": "52da838",
+      "date": "2026-06-22",
+      "summary": "Fixed e2e test runner: auto-install playwright in e2e/ dir, defaulted to single chromium project for local runs (5-project matrix only in CI), added e2e/node_modules/ to gitignore. 6/6 smoke tests pass in 15s, 104/118 all tests pass. 368 poker-core tests pass.",
+      "coach": "approved"
+    },
+    {
+      "task": "add-hand-history-parsing",
+      "sha": "52da838",
+      "date": "2026-06-22",
+      "summary": "Verified: /hand-history page exists (1352 lines, fully functional), POST /api/v1/hh/parse endpoint works, parser supports PokerStars/GGPoker/Winamax, 44 parser tests pass. Task was already implemented.",
+      "coach": "pending"
+    },
+    {
+      "task": "add-plo4-frontend-page",
+      "sha": "52da838",
+      "date": "2026-06-22",
+      "summary": "Verified: /equity/plo4 and /plo4 both exist and return 200 live. Task was already implemented.",
+      "coach": "pending"
+    },
+    {
+      "task": "postflop-solver-api-endpoint",
+      "sha": "52da838",
+      "date": "2026-06-22",
+      "summary": "Verified: POST /api/v1/solver/postflop-strategy endpoint exists in solver.py with in-memory caching + live solver fallback. Task already implemented.",
       "coach": "pending"
     }
   ],
-  "current_task": "seed-quiz-spots-with-board-data",
+  "current_task": "visual-study-postflop-match-reference",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -162,15 +190,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "4816b4e",
+  "last_sha": "52da838",
   "blocker": null,
-  "note": "Player tick 2026-06-22: fix-strategy-lookup-dsn-format verified complete — already committed in 272bb19 (DSN normalization strips +asyncpg suffix). Strategy lookup endpoint returns proper 404 on missing params (not 500). 368 tests pass. Next: seed-quiz-spots-with-board-data (already seeded in seed.py, verify and bump checkpoint).",
+  "note": "Player tick 2026-06-22: add-hand-history-parsing, add-plo4-frontend-page, postflop-solver-api-endpoint verified already implemented. Handled checkpoint audit gap — 3 tasks tracked as complete, 368 tests pass, live site 200. Next: visual-study-postflop-match-reference (needs browser/vision tools).",
   "coach_review": {
-    "last_reviewed_sha": "85fbf7ec1a8ae2998a627e9da40bd036a2e35559",
-    "last_reviewed_at": "2026-06-22T17:25:00Z",
+    "last_reviewed_sha": "52da838f7073339266250da531dca2217d29fcca",
+    "last_reviewed_at": "2026-06-22T18:00:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 4e7f479 + 6a73dd0 — both checkpoint-only commits (only .checkpoint.json changed). No source code changes since last review. Live site QA: /study renders preflop matrix with position buttons, stack selector, and action buttons (clicked AKs → Fold/Raise 2.5/Allin 100 appeared, 0 JS errors). Clicked Raise 2.5 GTO recommendation — no console errors. / renders with 12 feature cards and hero section, 0 JS errors. All pages return 200. 368 tests pass. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — checkpoint updates only. Backlog healthy: ~15+ unstarted tasks remaining in AGENTS.md.",
-    "last_review": "2026-06-22T17:25:00Z",
+    "notes": "Reviewed 52da838 — e2e test runner fix: auto-install playwright deps, single-browser default for local runs, 5-project matrix only in CI. Changes: playwright.config.ts (conditional projects), playwright-test.sh (auto-install + set -euo pipefail), .gitignore (e2e/node_modules/). 368 poker-core tests pass. Live site QA: / loads with 12 feature cards, 0 JS errors. /study loads preflop matrix with position buttons, stack selector, action buttons (clicked AA → Fold/Raise 2.5/Allin appeared). Clicked Raise 2.5 — 0 console errors. Strategy-lookup API returns full UTG preflop strategy (169 hands). Security: no secrets, no new deps, no new endpoints. Scope: YAGNI clean — only e2e config + script changes. Perf: N/A — no DB/frontend query changes. Backlog: 31 unstarted tasks — healthy.",
+    "last_review": "2026-06-22T18:00:00Z",
     "status": "approved"
   }
 }
