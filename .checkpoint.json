@@ -93,9 +93,16 @@
       "date": "2026-06-21",
       "summary": "Convert 20 short-form board notations to proper card strings (e.g. 'AKr' -> 'AhKc3d') in quiz seed data and database",
       "coach": "approved"
+    },
+    {
+      "task": "dashboard-page-visual-match-reference",
+      "sha": "dc42aec",
+      "date": "2026-06-22",
+      "summary": "Redesign homepage to match GTO Wizard design system: updated CSS vars (#0E0E0E bg, #00C853 green), gradient hero, icon-container feature cards, 12-card grid, stats in brand green, header color consistency",
+      "coach": "pending"
     }
   ],
-  "current_task": "dashboard-page-visual-match-reference",
+  "current_task": "equity-page-visual-match-reference",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -120,9 +127,9 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "95f2a57",
+  "last_sha": "dc42aec",
   "blocker": null,
-  "note": "Player tick 2026-06-21T23:38: seed-quiz-spots-with-board-data — converted 20 short-form board notations to proper card notation (SQL UPDATE on DB + seed.py). 9 workflow E2E tests pass. Live site 200. Next: dashboard-page-visual-match-reference (needs browser/vision).",
+  "note": "Player tick 2026-06-22: dashboard-page-visual-match-reference — Redesigned homepage with GTO Wizard design system (CSS vars, hero, feature grid 12 cards, stats, header). 368 tests pass, build ok, live site 200 with new content. Next: equity-page-visual-match-reference.",
   "coach_review": {
     "last_reviewed_sha": "feae5bdbabeae6442b5b9ecbf7fdfda400461110",
     "last_reviewed_at": "2026-06-22T00:10:00Z",
