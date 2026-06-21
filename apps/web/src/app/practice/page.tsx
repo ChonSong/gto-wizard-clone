@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api/v1'
 const CATEGORIES = ['All', '3-bet pot', 'Open-raise pot', 'Overcard board', 'Monoboard', 'Paired board', 'Wet board']
@@ -57,13 +58,60 @@ function mockSpot(): Spot {
   }
 }
 
-const SUIT_SYM: Record<string, string> = { h: '♥', d: '♦', c: '♣', s: '♠' }
-const SUIT_COLOR: Record<string, string> = { h: '#ff7a7a', d: '#ff7a7a', c: '#e8eef7', s: '#e8eef7' }
+const SUIT_SYMBOLS: Record<string, string> = { h: '♥', d: '♦', c: '♣', s: '♠' }
 
 const DIFFICULTY_COLOR: Record<string, string> = {
   Beginner: '#AAFBB2',
   Intermediate: '#e09b3d',
   Advanced: '#e05a5a',
+}
+
+const ACTION_COLORS: Record<string, string> = {
+  Fold: '#2a2a2a',
+  Call: '#3A6EA5',
+  Raise: '#E53935',
+  'All-in': '#E53935',
+  Check: '#6b7280',
+  Bet: '#E53935',
+}
+
+interface CardViewProps {
+  rank: string
+  suit?: string
+  size?: 'sm' | 'md'
+}
+
+function PlayingCard({ rank, suit, size = 'md' }: CardViewProps) {
+  const w = size === 'sm' ? 32 : 40
+  const h = size === 'sm' ? 44 : 56
+  const isRed = suit && (suit === 'h' || suit === 'd')
+  return (
+    <div
+      className="flex flex-col items-center justify-center rounded-md border shadow-lg shrink-0"
+      style={{
+        width: w,
+        height: h,
+        backgroundColor: 'var(--bg)',
+        borderColor: 'var(--border)',
+        color: 'var(--text)',
+      }}
+    >
+      <span className="font-bold leading-none" style={{ fontSize: size === 'sm' ? 12 : 14 }}>
+        {rank}
+      </span>
+      {suit && (
+        <span
+          className="font-bold leading-none"
+          style={{
+            fontSize: size === 'sm' ? 14 : 17,
+            color: isRed ? '#ff7a7a' : '#e8eef7',
+          }}
+        >
+          {SUIT_SYMBOLS[suit] || suit}
+        </span>
+      )}
+    </div>
+  )
 }
 
 function renderHand(hand: string) {
@@ -77,18 +125,9 @@ function renderHand(hand: string) {
     cards.push({ r: chars[1], s: chars[2] })
   }
   return (
-    <div style={{ display: 'inline-flex', gap: 4 }}>
+    <div className="inline-flex gap-1.5">
       {cards.map((c, i) => (
-        <div key={i} style={{
-          width: 36, height: 50, background: '#fff', borderRadius: 6,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px rgba(0,0,0,.35)',
-          color: c.s && (c.s === 'h' || c.s === 'd') ? '#ff7a7a' : '#1a1a1a',
-          border: '1px solid #ddd',
-        }}>
-          <div>{c.r}</div>
-          {c.s && <div style={{ fontSize: 16, lineHeight: 1 }}>{SUIT_SYM[c.s] || ''}</div>}
-        </div>
+        <PlayingCard key={i} rank={c.r} suit={c.s || undefined} size="md" />
       ))}
     </div>
   )
@@ -101,35 +140,108 @@ function renderBoard(board: string | null) {
     cards.push({ r: board[i], s: board[i + 1]?.toLowerCase() || '' })
   }
   return (
-    <div style={{ display: 'flex', gap: 6, justifyContent: 'center', margin: '12px 0' }}>
+    <div className="flex gap-2 justify-center my-3">
       {cards.map((c, i) => (
-        <div key={i} style={{
-          width: 44, height: 62, background: '#fff', borderRadius: 6,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 700, fontSize: 16, boxShadow: '0 2px 8px rgba(0,0,0,.35)',
-          color: (c.s === 'h' || c.s === 'd') ? '#ff7a7a' : '#1a1a1a',
-          border: '1px solid #ddd',
-        }}>
-          <div>{c.r}</div>
-          <div style={{ fontSize: 18, lineHeight: 1 }}>{SUIT_SYM[c.s] || ''}</div>
-        </div>
+        <PlayingCard key={i} rank={c.r} suit={c.s} size="md" />
       ))}
     </div>
   )
 }
 
-function ProgressRing({ value, max, size = 56, stroke = 5, color = 'var(--green)' }: { value: number; max: number; size?: number; stroke?: number; color?: string }) {
+function ProgressRing({
+  value,
+  max,
+  size = 56,
+  stroke = 5,
+  color = 'var(--green)',
+}: {
+  value: number
+  max: number
+  size?: number
+  stroke?: number
+  color?: string
+}) {
   const radius = (size - stroke) / 2
   const circumference = 2 * Math.PI * radius
   const pct = max > 0 ? value / max : 0
   const offset = circumference * (1 - pct)
   return (
     <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--border)" strokeWidth={stroke} />
-      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth={stroke}
-        strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
-        style={{ transition: 'stroke-dashoffset .4s ease' }} />
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="var(--border)"
+        strokeWidth={stroke}
+      />
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke={color}
+        strokeWidth={stroke}
+        strokeDasharray={circumference}
+        strokeDashoffset={offset}
+        strokeLinecap="round"
+        style={{ transition: 'stroke-dashoffset .4s ease' }}
+      />
     </svg>
+  )
+}
+
+function Pill({
+  label,
+  active,
+  onClick,
+}: {
+  label: string
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-full text-xs font-medium cursor-pointer transition-all duration-150 shrink-0"
+      style={{
+        padding: '5px 14px',
+        background: active ? 'var(--green)' : 'var(--panel)',
+        color: active ? '#000' : 'var(--muted)',
+        border: `1px solid ${active ? 'var(--green)' : 'var(--border)'}`,
+        fontWeight: active ? 600 : 400,
+      }}
+    >
+      {label}
+    </button>
+  )
+}
+
+function FilterBtn({
+  label,
+  active,
+  onClick,
+}: {
+  label: string
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="cursor-pointer transition-all duration-150 shrink-0"
+      style={{
+        padding: '4px 10px',
+        borderRadius: 6,
+        fontSize: 11,
+        background: active ? 'var(--green)' : 'var(--panel)',
+        color: active ? '#000' : 'var(--muted)',
+        border: `1px solid ${active ? 'var(--green)' : 'var(--border)'}`,
+        fontWeight: active ? 600 : 400,
+      }}
+    >
+      {label}
+    </button>
   )
 }
 
@@ -202,15 +314,18 @@ export default function PracticePage() {
       streak: isCorrect ? prev.streak + 1 : 0,
       bestStreak: isCorrect ? Math.max(prev.bestStreak, prev.streak + 1) : prev.bestStreak,
     }))
-    setHistory(prev => [...prev, {
-      category: spot.category,
-      difficulty: spot.difficulty,
-      position: spot.position,
-      hero_hand: spot.hero_hand,
-      correct: isCorrect,
-      gtoAction: spot.gto_action,
-      selectedAction: actionName,
-    }])
+    setHistory(prev => [
+      ...prev,
+      {
+        category: spot.category,
+        difficulty: spot.difficulty,
+        position: spot.position,
+        hero_hand: spot.hero_hand,
+        correct: isCorrect,
+        gtoAction: spot.gto_action,
+        selectedAction: actionName,
+      },
+    ])
   }
 
   const formatTime = (s: number) => {
@@ -219,356 +334,571 @@ export default function PracticePage() {
     return `${m}:${sec.toString().padStart(2, '0')}`
   }
 
-  const accuracy = stats.total > 0 ? Math.round(stats.correct / stats.total * 100) : 0
+  const accuracy = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0
 
-  const stl = {
-    bg: 'var(--bg)',
-    panel: 'var(--panel)',
-    border: 'var(--border)',
-    text: 'var(--text)',
-    muted: 'var(--muted)',
-    green: 'var(--green)',
-    red: 'var(--red-bright)',
-    blue: 'var(--blue)',
-  }
-
-  // --- Session Summary Screen ---
+  // ── Session Summary Screen ──
   if (!sessionActive && history.length > 0) {
     const byCategory: Record<string, { total: number; correct: number }> = {}
     const byDifficulty: Record<string, { total: number; correct: number }> = {}
     const byPosition: Record<string, { total: number; correct: number }> = {}
     history.forEach(h => {
-      byCategory[h.category] = byCategory[h.category] || { total: 0, correct: 0 }
-      byCategory[h.category].total++
-      if (h.correct) byCategory[h.category].correct++
-      byDifficulty[h.difficulty] = byDifficulty[h.difficulty] || { total: 0, correct: 0 }
-      byDifficulty[h.difficulty].total++
-      if (h.correct) byDifficulty[h.difficulty].correct++
-      byPosition[h.position] = byPosition[h.position] || { total: 0, correct: 0 }
-      byPosition[h.position].total++
-      if (h.correct) byPosition[h.position].correct++
+      ;[byCategory, byDifficulty, byPosition].forEach((m, i) => {
+        const key = i === 0 ? h.category : i === 1 ? h.difficulty : h.position
+        m[key] = m[key] || { total: 0, correct: 0 }
+        m[key].total++
+        if (h.correct) m[key].correct++
+      })
     })
 
-    const accColor = accuracy >= 70 ? stl.green : accuracy >= 50 ? '#e09b3d' : stl.red
+    const accColor = accuracy >= 70 ? 'var(--green)' : accuracy >= 50 ? '#e09b3d' : 'var(--red-bright)'
 
     return (
-      <div style={{ minHeight: '100vh', background: stl.bg, padding: 24 }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 36, marginBottom: 8 }}>📊</div>
-            <h2 style={{ margin: '0 0 6px', color: stl.text, fontSize: 24, fontWeight: 700 }}>Session Complete</h2>
-            <div style={{ color: stl.muted, fontSize: 13 }}>Time: {formatTime(elapsed)}</div>
-          </div>
-
-          {/* Main stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
-            {[
-              { label: 'Spots', value: stats.total, color: stl.text },
-              { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
-              { label: 'Best Streak', value: stats.bestStreak, color: stats.bestStreak >= 5 ? stl.green : stl.text },
-              { label: 'Correct', value: `${stats.correct}/${stats.total}`, color: stl.green },
-            ].map(s => (
-              <div key={s.label} style={{
-                background: stl.panel, borderRadius: 10, padding: '16px 12px', textAlign: 'center',
-                border: `1px solid ${stl.border}`,
-              }}>
-                <div style={{ fontSize: 11, color: stl.muted, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
-                <div style={{ fontSize: 24, fontWeight: 700, color: s.color }}>{s.value}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Accuracy ring */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
-            <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ProgressRing value={stats.correct} max={stats.total} size={100} stroke={8} color={accColor} />
-              <div style={{ position: 'absolute', textAlign: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 700, color: accColor }}>{accuracy}%</div>
-                <div style={{ fontSize: 10, color: stl.muted }}>accuracy</div>
+      <div className="h-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
+        <div className="flex-1 overflow-auto">
+          <div className="max-w-2xl mx-auto p-6">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <div className="text-3xl mb-2">📊</div>
+              <h2 className="text-xl font-bold mb-1" style={{ color: 'var(--text)' }}>
+                Session Complete
+              </h2>
+              <div className="text-xs" style={{ color: 'var(--muted)' }}>
+                Time: {formatTime(elapsed)}
               </div>
             </div>
-          </div>
 
-          {/* Breakdown by category */}
-          <div style={{ background: stl.panel, borderRadius: 10, padding: 16, border: `1px solid ${stl.border}`, marginBottom: 16 }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: 13, color: '#8a94a6', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>By Category</h3>
-            {Object.entries(byCategory).map(([cat, d]) => (
-              <div key={cat} style={{ marginBottom: 8 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
-                  <span style={{ color: stl.text }}>{cat}</span>
-                  <span style={{ color: d.correct / d.total >= 0.6 ? stl.green : '#e09b3d' }}>{d.correct}/{d.total}</span>
-                </div>
-                <div style={{ height: 4, background: stl.border, borderRadius: 2, overflow: 'hidden' }}>
-                  <div style={{ width: `${d.correct / d.total * 100}%`, height: '100%', background: d.correct / d.total >= 0.6 ? stl.green : '#e09b3d', borderRadius: 2, transition: 'width .3s' }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Breakdown by difficulty */}
-          <div style={{ background: stl.panel, borderRadius: 10, padding: 16, border: `1px solid ${stl.border}`, marginBottom: 16 }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: 13, color: '#8a94a6', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>By Difficulty</h3>
-            {Object.entries(byDifficulty).map(([diff, d]) => (
-              <div key={diff} style={{ marginBottom: 8 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
-                  <span style={{ color: stl.text }}>{diff}</span>
-                  <span style={{ color: d.correct / d.total >= 0.6 ? stl.green : '#e09b3d' }}>{d.correct}/{d.total}</span>
-                </div>
-                <div style={{ height: 4, background: stl.border, borderRadius: 2, overflow: 'hidden' }}>
-                  <div style={{ width: `${d.correct / d.total * 100}%`, height: '100%', background: d.correct / d.total >= 0.6 ? stl.green : '#e09b3d', borderRadius: 2, transition: 'width .3s' }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Breakdown by position */}
-          <div style={{ background: stl.panel, borderRadius: 10, padding: 16, border: `1px solid ${stl.border}`, marginBottom: 24 }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: 13, color: '#8a94a6', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>By Position</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              {Object.entries(byPosition).map(([pos, d]) => (
-                <div key={pos} style={{ background: 'var(--border)', borderRadius: 8, padding: '8px 10px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: stl.text, marginBottom: 2 }}>{pos}</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: d.correct / d.total >= 0.6 ? stl.green : '#e09b3d' }}>
-                    {d.correct}/{d.total}
+            {/* Stats Grid */}
+            <div className="grid grid-cols-4 gap-3 mb-5">
+              {[
+                { label: 'Spots', value: stats.total, color: 'var(--text)' },
+                { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
+                { label: 'Best Streak', value: stats.bestStreak, color: stats.bestStreak >= 5 ? 'var(--green)' : 'var(--text)' },
+                { label: 'Correct', value: `${stats.correct}/${stats.total}`, color: 'var(--green)' },
+              ].map(s => (
+                <div
+                  key={s.label}
+                  className="rounded-lg p-3 text-center"
+                  style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                >
+                  <div className="text-[10px] font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--muted)' }}>
+                    {s.label}
+                  </div>
+                  <div className="text-xl font-bold" style={{ color: s.color }}>
+                    {s.value}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Action buttons */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <button onClick={() => { endSession(); startSession() }}
-              style={{ background: stl.green, color: '#000', border: 'none', padding: '12px 28px', borderRadius: 10, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
-              New Session
-            </button>
-            <button onClick={endSession}
-              style={{ background: stl.panel, color: stl.muted, border: `1px solid ${stl.border}`, padding: '12px 28px', borderRadius: 10, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
-              Back to Setup
-            </button>
+            {/* Accuracy Ring */}
+            <div className="flex justify-center mb-5">
+              <div className="relative inline-flex items-center justify-center">
+                <ProgressRing value={stats.correct} max={Math.max(stats.total, 1)} size={88} stroke={7} color={accColor} />
+                <div className="absolute text-center">
+                  <div className="text-lg font-bold" style={{ color: accColor }}>{accuracy}%</div>
+                  <div className="text-[10px]" style={{ color: 'var(--muted)' }}>accuracy</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Breakdowns */}
+            {[
+              { title: 'By Category', data: byCategory },
+              { title: 'By Difficulty', data: byDifficulty },
+              { title: 'By Position', data: byPosition, grid: Object.keys(byPosition).length > 3 },
+            ].map(section => {
+              const entries = Object.entries(section.data)
+              if (entries.length === 0) return null
+              return (
+                <div
+                  key={section.title}
+                  className="rounded-lg p-4 mb-3"
+                  style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                >
+                  <h3
+                    className="text-[11px] font-bold uppercase tracking-wider mb-3"
+                    style={{ color: 'var(--muted)' }}
+                  >
+                    {section.title}
+                  </h3>
+                  {section.grid ? (
+                    <div className="grid grid-cols-3 gap-2">
+                      {entries.map(([key, d]) => {
+                        const pct = d.total > 0 ? d.correct / d.total : 0
+                        return (
+                          <div
+                            key={key}
+                            className="rounded-lg p-2 text-center"
+                            style={{ background: 'var(--border)', border: '1px solid var(--border-light)' }}
+                          >
+                            <div className="text-xs font-semibold mb-0.5" style={{ color: 'var(--text)' }}>
+                              {key}
+                            </div>
+                            <div
+                              className="text-sm font-bold"
+                              style={{ color: pct >= 0.6 ? 'var(--green)' : '#e09b3d' }}
+                            >
+                              {d.correct}/{d.total}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    entries.map(([key, d]) => {
+                      const pct = d.total > 0 ? d.correct / d.total : 0
+                      return (
+                        <div key={key} className="mb-2 last:mb-0">
+                          <div className="flex justify-between text-xs mb-1">
+                            <span style={{ color: 'var(--text)' }}>{key}</span>
+                            <span style={{ color: pct >= 0.6 ? 'var(--green)' : '#e09b3d' }}>
+                              {d.correct}/{d.total}
+                            </span>
+                          </div>
+                          <div
+                            className="h-1 rounded-full overflow-hidden"
+                            style={{ background: 'var(--border)' }}
+                          >
+                            <div
+                              className="h-full rounded-full transition-all duration-300"
+                              style={{
+                                width: `${pct * 100}%`,
+                                background: pct >= 0.6 ? 'var(--green)' : '#e09b3d',
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              )
+            })}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 justify-center mt-4">
+              <button
+                onClick={() => { endSession(); startSession() }}
+                className="font-semibold cursor-pointer border-none rounded-lg px-7 py-2.5 text-sm"
+                style={{ background: 'var(--green)', color: '#000' }}
+              >
+                New Session
+              </button>
+              <button
+                onClick={endSession}
+                className="font-medium cursor-pointer rounded-lg px-7 py-2.5 text-sm"
+                style={{
+                  background: 'var(--panel)',
+                  color: 'var(--muted)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                Back to Setup
+              </button>
+            </div>
           </div>
         </div>
       </div>
     )
   }
 
-  // --- Setup Screen ---
-  if (!sessionActive) return (
-    <div style={{ minHeight: '100vh', background: stl.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, padding: 20 }}>
-      {/* Exercise type selector */}
-      <div style={{ textAlign: 'center' }}>
-        <h2 style={{ margin: '0 0 8px', color: stl.text, fontSize: 22, fontWeight: 700 }}>Practice</h2>
-        <p style={{ margin: 0, color: stl.muted, fontSize: 14, maxWidth: 400 }}>
-          Test your GTO knowledge with structured training exercises
-        </p>
-      </div>
+  // ── Setup Screen ──
+  if (!sessionActive)
+    return (
+      <div className="h-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
+        <div className="flex-1 overflow-auto">
+          <div className="flex flex-col items-center justify-center min-h-full py-12 px-4">
+            <div
+              className="rounded-xl p-8 w-full max-w-lg"
+              style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+            >
+              {/* Header */}
+              <div className="text-center mb-6">
+                <div className="text-3xl mb-2">🎯</div>
+                <h2 className="text-lg font-bold mb-1" style={{ color: 'var(--text)' }}>
+                  Practice
+                </h2>
+                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+                  Test your GTO knowledge with structured training exercises
+                </p>
+              </div>
 
-      {/* Exercise type pills */}
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {EXERCISE_TYPES.map(et => (
-          <button key={et} onClick={() => setExerciseType(et)}
-            style={{
-              padding: '8px 20px', borderRadius: 20, fontSize: 13, cursor: 'pointer',
-              background: exerciseType === et ? stl.green : stl.panel,
-              color: exerciseType === et ? '#000' : stl.muted,
-              border: `1px solid ${exerciseType === et ? stl.green : stl.border}`,
-              fontWeight: exerciseType === et ? 600 : 400,
-              transition: 'all .15s',
-            }}>{et}</button>
-        ))}
-      </div>
+              {/* Exercise Type */}
+              <div className="mb-5">
+                <div
+                  className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  Exercise Type
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  {EXERCISE_TYPES.map(et => (
+                    <Pill key={et} label={et} active={exerciseType === et} onClick={() => setExerciseType(et)} />
+                  ))}
+                </div>
+              </div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, justifyContent: 'center', marginTop: 8 }}>
-        {[
-          { label: 'Category', options: CATEGORIES, sel: category, set: setCategory },
-          { label: 'Difficulty', options: DIFFICULTIES, sel: difficulty, set: setDifficulty },
-        ].map(g => (
-          <div key={g.label} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 11, color: stl.muted, marginBottom: 6, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.5 }}>{g.label}</div>
-            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {g.options.map(o => (
-                <button key={o} onClick={() => g.set(o)}
-                  style={{
-                    padding: '6px 14px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: g.sel === o ? stl.green : stl.panel,
-                    color: g.sel === o ? '#000' : stl.muted,
-                    border: `1px solid ${g.sel === o ? stl.green : stl.border}`,
-                    fontWeight: g.sel === o ? 600 : 400,
-                  }}>{o}</button>
-              ))}
+              {/* Filters */}
+              <div className="flex flex-col gap-4 mb-5">
+                {[
+                  { label: 'Category', options: CATEGORIES, sel: category, set: setCategory },
+                  { label: 'Difficulty', options: DIFFICULTIES, sel: difficulty, set: setDifficulty },
+                ].map(g => (
+                  <div key={g.label}>
+                    <div
+                      className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                      style={{ color: 'var(--muted)' }}
+                    >
+                      {g.label}
+                    </div>
+                    <div className="flex gap-1.5 flex-wrap">
+                      {g.options.map(o => (
+                        <FilterBtn key={o} label={o} active={g.sel === o} onClick={() => g.set(o)} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Start Button */}
+              <button
+                onClick={startSession}
+                className="w-full font-semibold cursor-pointer border-none rounded-lg py-3 text-sm"
+                style={{ background: 'var(--green)', color: '#000' }}
+              >
+                Start Practice Session
+              </button>
             </div>
           </div>
-        ))}
-      </div>
-
-      <button onClick={startSession}
-        style={{ marginTop: 8, background: stl.green, color: '#000', border: 'none', padding: '12px 36px', borderRadius: 10, fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>
-        Start Practice Session
-      </button>
-    </div>
-  )
-
-  // --- Active Session Screen ---
-  return (
-    <div style={{ minHeight: '100vh', background: stl.bg, display: 'flex', flexDirection: 'column' }}>
-      {/* Top bar */}
-      <div style={{ height: 52, background: stl.panel, borderBottom: `1px solid ${stl.border}`, display: 'flex', alignItems: 'center', padding: '0 16px', gap: 16 }}>
-        <span style={{ fontWeight: 700, fontSize: 15, color: stl.text }}>Practice</span>
-        <span style={{ fontSize: 11, color: stl.muted, padding: '2px 8px', borderRadius: 4, background: stl.bg }}>{exerciseType}</span>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 16, fontSize: 12, color: stl.muted }}>
-          <span>Spots: <b style={{ color: stl.text }}>{stats.total}</b></span>
-          <span>Accuracy: <b style={{ color: accuracy >= 60 ? stl.green : '#e09b3d' }}>{accuracy}%</b></span>
-          <span>Streak: <b style={{ color: stats.streak >= 3 ? stl.green : stl.text }}>{stats.streak}</b></span>
-          <span>Time: <b style={{ color: stl.text }}>{formatTime(elapsed)}</b></span>
         </div>
-        <button onClick={endSession}
-          style={{ background: stl.bg, border: `1px solid ${stl.border}`, color: stl.muted, padding: '6px 14px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
+      </div>
+    )
+
+  // ── Active Session Screen ──
+  return (
+    <div className="h-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Top Bar */}
+      <div
+        className="flex items-center gap-3 shrink-0 px-4"
+        style={{
+          height: 48,
+          background: 'var(--panel)',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
+        <span className="font-bold text-sm" style={{ color: 'var(--text)' }}>
+          Practice
+        </span>
+        <span
+          className="text-[10px] font-medium px-2 py-1 rounded"
+          style={{ background: 'var(--bg)', color: 'var(--muted)' }}
+        >
+          {exerciseType}
+        </span>
+        <div className="ml-auto flex items-center gap-4 text-xs" style={{ color: 'var(--muted)' }}>
+          <span>
+            Spots:{' '}
+            <b style={{ color: 'var(--text)' }}>{stats.total}</b>
+          </span>
+          <span>
+            Accuracy:{' '}
+            <b style={{ color: accuracy >= 60 ? 'var(--green)' : '#e09b3d' }}>{accuracy}%</b>
+          </span>
+          <span>
+            Streak:{' '}
+            <b style={{ color: stats.streak >= 3 ? 'var(--green)' : 'var(--text)' }}>{stats.streak}</b>
+          </span>
+          <span>
+            Time:{' '}
+            <b style={{ color: 'var(--text)' }}>{formatTime(elapsed)}</b>
+          </span>
+        </div>
+        <button
+          onClick={endSession}
+          className="text-xs cursor-pointer rounded-md px-3 py-1.5"
+          style={{
+            background: 'var(--bg)',
+            color: 'var(--muted)',
+            border: '1px solid var(--border)',
+          }}
+        >
           End Session
         </button>
       </div>
 
-      {/* Main content */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.3fr 1fr' }} className="practice-grid">
-        {/* Left: Spot display */}
-        <div style={{ padding: 24, borderRight: `1px solid ${stl.border}` }}>
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left: Spot Display */}
+        <div
+          className="flex-1 overflow-auto p-5"
+          style={{ borderRight: '1px solid var(--border)' }}
+        >
           {spot && (
-            <>
+            <div>
               {/* Tags */}
-              <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
-                <span style={{ background: stl.panel, color: stl.green, padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600 }}>{spot.category}</span>
-                <span style={{ background: stl.panel, color: DIFFICULTY_COLOR[spot.difficulty] || '#e09b3d', padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600 }}>{spot.difficulty}</span>
-                <span style={{ background: stl.panel, color: stl.muted, padding: '4px 10px', borderRadius: 6, fontSize: 12 }}>{spot.position}</span>
+              <div className="flex gap-2 mb-3 flex-wrap">
+                <span
+                  className="text-[11px] font-semibold px-2.5 py-1 rounded-md"
+                  style={{ background: 'var(--panel)', color: 'var(--green)' }}
+                >
+                  {spot.category}
+                </span>
+                <span
+                  className="text-[11px] font-semibold px-2.5 py-1 rounded-md"
+                  style={{
+                    background: 'var(--panel)',
+                    color: DIFFICULTY_COLOR[spot.difficulty] || '#e09b3d',
+                  }}
+                >
+                  {spot.difficulty}
+                </span>
+                <span
+                  className="text-[11px] px-2.5 py-1 rounded-md"
+                  style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                >
+                  {spot.position}
+                </span>
               </div>
 
-              {/* Hand display */}
-              <div style={{ textAlign: 'center', marginBottom: 12 }}>
-                <div style={{ fontSize: 12, color: stl.muted, marginBottom: 8 }}>Your Hand</div>
-                {renderHand(spot.hero_hand)}
+              {/* Hand */}
+              <div className="text-center mb-2">
+                <div className="text-[10px] font-medium uppercase tracking-wider mb-2" style={{ color: 'var(--muted)' }}>
+                  Your Hand
+                </div>
+                <div className="flex justify-center">{renderHand(spot.hero_hand)}</div>
               </div>
 
               {/* Board */}
               {renderBoard(spot.board)}
 
-              {/* Spot info */}
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 24, margin: '12px 0 20px', fontSize: 13, color: stl.muted }}>
-                <span>Pot: <b style={{ color: stl.text }}>{spot.pot_size}bb</b></span>
-                <span>Stack: <b style={{ color: stl.text }}>{spot.stack_depth}bb</b></span>
-                <span>Position: <b style={{ color: stl.text }}>{spot.position}</b></span>
+              {/* Spot Info */}
+              <div className="flex justify-center gap-5 my-3 text-xs" style={{ color: 'var(--muted)' }}>
+                <span>
+                  Pot: <b style={{ color: 'var(--text)' }}>{spot.pot_size}bb</b>
+                </span>
+                <span>
+                  Stack: <b style={{ color: 'var(--text)' }}>{spot.stack_depth}bb</b>
+                </span>
+                <span>
+                  Position: <b style={{ color: 'var(--text)' }}>{spot.position}</b>
+                </span>
               </div>
 
               {/* Question */}
-              <div style={{ fontSize: 15, fontWeight: 600, color: stl.text, marginBottom: 14 }}>What&apos;s the GTO play?</div>
+              <div className="text-sm font-semibold mb-3 text-center" style={{ color: 'var(--text)' }}>
+                What&apos;s the GTO play?
+              </div>
 
-              {/* Action buttons */}
-              {spot.options.map(opt => {
-                const isSelected = selectedAction === opt.action
-                const isCorrect = opt.is_gto
-                const actionColor = opt.action === 'Fold' ? stl.muted : opt.action === 'Call' ? stl.blue : stl.red
-                return (
-                  <button key={opt.action} onClick={() => handleAnswer(opt.action)} disabled={answered}
-                    style={{
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%',
-                      padding: '12px 16px', marginBottom: 8, borderRadius: 10,
-                      cursor: answered ? 'default' : 'pointer',
-                      background: isSelected ? (isCorrect ? 'rgba(170,251,178,.12)' : 'rgba(229,57,57,.12)') : stl.panel,
-                      border: `1px solid ${isSelected ? (isCorrect ? stl.green : stl.red) : stl.border}`,
-                      color: stl.text,
-                      opacity: answered && !isSelected && !isCorrect ? 0.4 : 1,
-                      outline: answered && isCorrect ? `2px solid ${stl.green}` : 'none',
-                      outlineOffset: -2,
-                      transition: 'all .15s ease',
-                    }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      {answered && isCorrect && <span style={{ color: stl.green, fontSize: 16 }}>✓</span>}
-                      {answered && isSelected && !isCorrect && <span style={{ color: stl.red, fontSize: 16 }}>✗</span>}
-                      <span style={{
-                        fontWeight: 600, fontSize: 14,
-                        color: !answered ? actionColor : undefined,
-                      }}>{opt.action}</span>
-                    </div>
-                    {answered
-                      ? <span style={{ fontSize: 12, color: stl.muted }}>EV: <b style={{ color: opt.ev >= 0 ? stl.green : stl.red }}>{opt.ev >= 0 ? '+' : ''}{opt.ev.toFixed(2)}</b></span>
-                      : <span style={{ fontSize: 12, color: stl.muted }}>{opt.frequency}%</span>}
-                  </button>
-                )
-              })}
+              {/* Action Buttons */}
+              <div className="max-w-sm mx-auto">
+                {spot.options.map(opt => {
+                  const isSelected = selectedAction === opt.action
+                  const isCorrect = opt.is_gto
+                  const bgColor = isSelected
+                    ? isCorrect
+                      ? 'rgba(0,200,83,0.12)'
+                      : 'rgba(229,57,57,0.12)'
+                    : 'var(--panel)'
+                  const borderColor = isSelected
+                    ? isCorrect
+                      ? 'var(--green)'
+                      : 'var(--red-bright)'
+                    : 'var(--border)'
+
+                  return (
+                    <button
+                      key={opt.action}
+                      onClick={() => handleAnswer(opt.action)}
+                      disabled={answered}
+                      className="w-full flex items-center justify-between cursor-pointer rounded-lg mb-2 px-4 py-3 transition-all duration-150"
+                      style={{
+                        background: bgColor,
+                        border: `1px solid ${borderColor}`,
+                        color: 'var(--text)',
+                        opacity: answered && !isSelected && !isCorrect ? 0.4 : 1,
+                        outline: answered && isCorrect ? `2px solid var(--green)` : 'none',
+                        outlineOffset: -2,
+                      }}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        {answered && isCorrect && (
+                          <span className="text-sm" style={{ color: 'var(--green)' }}>✓</span>
+                        )}
+                        {answered && isSelected && !isCorrect && (
+                          <span className="text-sm" style={{ color: 'var(--red-bright)' }}>✗</span>
+                        )}
+                        <span
+                          className="font-semibold text-sm"
+                          style={{
+                            color: !answered ? ACTION_COLORS[opt.action] || 'var(--text)' : undefined,
+                          }}
+                        >
+                          {opt.action}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {!answered && (
+                          <span
+                            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            style={{
+                              background: 'rgba(255,255,255,0.08)',
+                              color: 'var(--muted)',
+                            }}
+                          >
+                            {opt.frequency}%
+                          </span>
+                        )}
+                        {answered && (
+                          <span className="text-[11px]" style={{ color: 'var(--muted)' }}>
+                            EV:{' '}
+                            <b
+                              style={{
+                                color: opt.ev >= 0 ? 'var(--green)' : 'var(--red-bright)',
+                              }}
+                            >
+                              {opt.ev >= 0 ? '+' : ''}
+                              {opt.ev.toFixed(2)}
+                            </b>
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
 
               {/* Feedback + Next */}
               {answered && (
-                <div style={{ marginTop: 16, textAlign: 'center' }}>
-                  <div style={{
-                    fontSize: 14, fontWeight: 600, marginBottom: 10,
-                    color: selectedAction === spot.options.find(o => o.is_gto)?.action ? stl.green : stl.red,
-                  }}>
-                    {selectedAction === spot.options.find(o => o.is_gto)?.action ? '✓ Correct!' : `✗ GTO: ${spot.gto_action} (${spot.gto_frequency}%)`}
+                <div className="mt-4 text-center">
+                  <div className="text-sm font-semibold mb-2">
+                    <span
+                      style={{
+                        color:
+                          selectedAction === spot.options.find(o => o.is_gto)?.action
+                            ? 'var(--green)'
+                            : 'var(--red-bright)',
+                      }}
+                    >
+                      {selectedAction === spot.options.find(o => o.is_gto)?.action
+                        ? '✓ Correct!'
+                        : `✗ GTO: ${spot.gto_action} (${spot.gto_frequency}%)`}
+                    </span>
                   </div>
-                  <button onClick={fetchSpot}
-                    style={{ background: stl.green, color: '#000', border: 'none', padding: '10px 24px', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+                  <button
+                    onClick={fetchSpot}
+                    className="font-semibold cursor-pointer border-none rounded-lg px-6 py-2.5 text-sm"
+                    style={{ background: 'var(--green)', color: '#000' }}
+                  >
                     Next Spot →
                   </button>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
 
-        {/* Right: Session panel */}
-        <div style={{ background: stl.panel, padding: 20 }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, color: stl.text, fontWeight: 600 }}>Session Stats</h3>
+        {/* Right: Session Stats Panel */}
+        <div
+          className="w-64 shrink-0 overflow-auto p-4"
+          style={{ background: 'var(--panel)' }}
+        >
+          <h3 className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: 'var(--muted)' }}>
+            Session Stats
+          </h3>
 
-          {/* Stats grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+          <div className="grid grid-cols-2 gap-2 mb-4">
             {[
               { l: 'Spots', v: stats.total },
-              { l: 'Accuracy', v: `${accuracy}%`, c: accuracy >= 60 ? stl.green : '#e09b3d' },
-              { l: 'Streak', v: stats.streak, c: stats.streak >= 3 ? stl.green : stl.text },
-              { l: 'Best Streak', v: stats.bestStreak, c: stats.bestStreak >= 5 ? stl.green : stl.text },
+              { l: 'Accuracy', v: `${accuracy}%`, c: accuracy >= 60 ? 'var(--green)' : '#e09b3d' },
+              { l: 'Streak', v: stats.streak, c: stats.streak >= 3 ? 'var(--green)' : 'var(--text)' },
+              { l: 'Best', v: stats.bestStreak, c: stats.bestStreak >= 5 ? 'var(--green)' : 'var(--text)' },
             ].map(s => (
-              <div key={s.l} style={{ background: stl.bg, borderRadius: 8, padding: 10, textAlign: 'center', border: `1px solid ${stl.border}` }}>
-                <div style={{ fontSize: 11, color: stl.muted, marginBottom: 4 }}>{s.l}</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: s.c || stl.text }}>{s.v}</div>
+              <div
+                key={s.l}
+                className="rounded-lg p-2.5 text-center"
+                style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+              >
+                <div className="text-[10px] font-medium" style={{ color: 'var(--muted)' }}>
+                  {s.l}
+                </div>
+                <div className="text-base font-bold" style={{ color: s.c || 'var(--text)' }}>
+                  {s.v}
+                </div>
               </div>
             ))}
           </div>
 
           {/* Accuracy bar */}
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: stl.muted, marginBottom: 4 }}>
-              <span>Accuracy</span><span>{accuracy}%</span>
+          <div className="mb-4">
+            <div className="flex justify-between text-[10px] mb-1" style={{ color: 'var(--muted)' }}>
+              <span>Accuracy</span>
+              <span>{accuracy}%</span>
             </div>
-            <div style={{ height: 6, background: stl.border, borderRadius: 3, overflow: 'hidden' }}>
-              <div style={{ width: `${accuracy}%`, height: '100%', background: accuracy >= 60 ? stl.green : '#e09b3d', borderRadius: 3, transition: 'width .3s' }} />
+            <div
+              className="h-1.5 rounded-full overflow-hidden"
+              style={{ background: 'var(--border)' }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{
+                  width: `${accuracy}%`,
+                  background: accuracy >= 60 ? 'var(--green)' : '#e09b3d',
+                }}
+              />
             </div>
           </div>
 
-          {/* Progress ring */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-            <ProgressRing value={stats.correct} max={Math.max(stats.total, 1)} size={72} stroke={6} color={accuracy >= 60 ? stl.green : '#e09b3d'} />
+          {/* Progress Ring */}
+          <div className="flex justify-center mb-4">
+            <ProgressRing
+              value={stats.correct}
+              max={Math.max(stats.total, 1)}
+              size={64}
+              stroke={5}
+              color={accuracy >= 60 ? 'var(--green)' : '#e09b3d'}
+            />
           </div>
 
-          {/* Recent history */}
+          {/* Recent History */}
           {history.length > 0 && (
             <>
-              <h4 style={{ margin: '0 0 8px', fontSize: 12, color: stl.muted, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.5 }}>Recent</h4>
-              <div style={{ maxHeight: 180, overflowY: 'auto' }}>
-                {history.slice().reverse().slice(0, 10).map((h, i) => (
-                  <div key={i} style={{
-                    display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
-                    borderBottom: `1px solid ${stl.border}`, fontSize: 12,
-                  }}>
-                    <span style={{ color: h.correct ? stl.green : stl.red, fontWeight: 700, fontSize: 14 }}>{h.correct ? '✓' : '✗'}</span>
-                    <span style={{ color: stl.text }}>{h.hero_hand}</span>
-                    <span style={{ color: stl.muted }}>{h.position}</span>
-                    {!h.correct && <span style={{ color: stl.muted, fontSize: 11 }}>→ {h.gtoAction}</span>}
-                  </div>
-                ))}
+              <h4
+                className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                style={{ color: 'var(--muted)' }}
+              >
+                Recent
+              </h4>
+              <div className="space-y-1">
+                {history
+                  .slice()
+                  .reverse()
+                  .slice(0, 10)
+                  .map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 py-1.5 text-xs"
+                      style={{ borderBottom: '1px solid var(--border)' }}
+                    >
+                      <span
+                        className="font-bold text-sm"
+                        style={{ color: h.correct ? 'var(--green)' : 'var(--red-bright)' }}
+                      >
+                        {h.correct ? '✓' : '✗'}
+                      </span>
+                      <span style={{ color: 'var(--text)' }}>{h.hero_hand}</span>
+                      <span style={{ color: 'var(--muted)' }}>{h.position}</span>
+                      {!h.correct && (
+                        <span className="text-[10px]" style={{ color: 'var(--muted)' }}>
+                          → {h.gtoAction}
+                        </span>
+                      )}
+                    </div>
+                  ))}
               </div>
             </>
           )}
         </div>
       </div>
-      <style>{`@media (max-width: 1100px) { .practice-grid { grid-template-columns: 1fr !important; } }`}</style>
     </div>
   )
 }
