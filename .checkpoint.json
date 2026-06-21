@@ -128,9 +128,16 @@
       "date": "2026-06-22",
       "summary": "Course detail API verified working on live (200) and local (200 returns full course data + lessons). Root cause was port mismatch / missing DATABASE_URL on old service. gto-api.service on port 8001 has correct config.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-strategy-lookup-dsn-format",
+      "sha": "272bb19",
+      "date": "2026-06-22",
+      "summary": "DSN normalization fix already committed (272bb19): strategy_storage.py line 136 strips +asyncpg suffix before passing to asyncpg.create_pool(). Verified: strategy-lookup returns 200 on valid params, 404 on missing (not 500). 368 tests pass.",
+      "coach": "pending"
     }
   ],
-  "current_task": "fix-strategy-lookup-dsn-format",
+  "current_task": "seed-quiz-spots-with-board-data",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -155,9 +162,9 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "12a49c6",
+  "last_sha": "4816b4e",
   "blocker": null,
-  "note": "Player tick 2026-06-22: fix-course-detail-api-500 verified complete. Course detail endpoint returns 200 with full course data + lessons on both live and local. Root cause was port mismatch / missing DATABASE_URL on old service — already fixed via gto-api.service on port 8001. 368 tests pass. Moved current_task to fix-strategy-lookup-dsn-format.",
+  "note": "Player tick 2026-06-22: fix-strategy-lookup-dsn-format verified complete — already committed in 272bb19 (DSN normalization strips +asyncpg suffix). Strategy lookup endpoint returns proper 404 on missing params (not 500). 368 tests pass. Next: seed-quiz-spots-with-board-data (already seeded in seed.py, verify and bump checkpoint).",
   "coach_review": {
     "last_reviewed_sha": "4816b4e9f76afa3709a4e4c04400f9778485de85",
     "last_reviewed_at": "2026-06-22T17:06:00Z",
