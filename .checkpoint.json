@@ -99,7 +99,7 @@
       "sha": "dc42aec",
       "date": "2026-06-22",
       "summary": "Redesign homepage to match GTO Wizard design system: updated CSS vars (#0E0E0E bg, #00C853 green), gradient hero, icon-container feature cards, 12-card grid, stats in brand green, header color consistency",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
   "current_task": "equity-page-visual-match-reference",
@@ -131,11 +131,11 @@
   "blocker": null,
   "note": "Player tick 2026-06-22: dashboard-page-visual-match-reference — Redesigned homepage with GTO Wizard design system (CSS vars, hero, feature grid 12 cards, stats, header). 368 tests pass, build ok, live site 200 with new content. Next: equity-page-visual-match-reference.",
   "coach_review": {
-    "last_reviewed_sha": "feae5bdbabeae6442b5b9ecbf7fdfda400461110",
-    "last_reviewed_at": "2026-06-22T00:10:00Z",
+    "last_reviewed_sha": "1d10381efa0e5be5e13eb829aceb092d0d58471b",
+    "last_reviewed_at": "2026-06-22T00:37:00Z",
     "verdict": "approved",
-    "notes": "Reviewed feae5bd (checkpoint update only — no player code changes). Live site QA: 0 JS errors on /, /study, /practice. Quiz API returns proper board notation (QhQd8c). Security: clean. Scope: N/A — checkpoint update only. Backlog healthy — current_task: dashboard-page-visual-match-reference.",
-    "last_review": "2026-06-22T00:10:00Z",
+    "notes": "Reviewed dc42aec (dashboard-page-visual-match-reference). Live site QA: / loads with hero section, 12 feature cards, stats section. Clicked Study card → /study page renders with hand matrix, position buttons, stack selector. 1 pre-existing empty console error (not from this commit). Security: clean. Scope: clean — all changes task-required. CSS vars updated to #0E0E0E/#00C853. Header green consistency. Build ok. Commit pushed.",
+    "last_review": "2026-06-22T00:37:00Z",
     "status": "approved"
   }
 }
