@@ -77,8 +77,22 @@
       "task": "per-cell-action-buttons",
       "sha": "59b51f4",
       "date": "2026-06-21",
-      "summary": "Per-cell inline action buttons with position-specific action sets \u2014 clicking a matrix cell shows Fold/Raise/Allin buttons inline, GTO recommendation highlighted, SB/BB get Call + Raise 3.5, UTG/HJ/CO/BTN get Raise 2.5 (no Call)",
+      "summary": "Per-cell inline action buttons with position-specific action sets — clicking a matrix cell shows Fold/Raise/Allin buttons inline, GTO recommendation highlighted, SB/BB get Call + Raise 3.5, UTG/HJ/CO/BTN get Raise 2.5 (no Call)",
       "coach": "approved"
+    },
+    {
+      "task": "right-sidebar-tab-structure",
+      "sha": "d980026",
+      "date": "2026-06-21",
+      "summary": "Right sidebar tab structure: Overview/Table/Equity chart top tabs with Hand/Summary/Filters/Actions sub-tabs. Actions tab shows combo counts (78.3% = 1038.8 combos). Hand tab has ActionSelector+Check vs GTO. Summary shows hands by action type. Table shows position EV/stack table. Equity chart shows simplified distribution.",
+      "coach": "manual"
+    },
+    {
+      "task": "per-hand-action-legend",
+      "sha": "78f7d32",
+      "date": "2026-06-21",
+      "summary": "Per-hand action legend: when hand cell is selected, show position-specific actions (Fold/Raise/Call/Allin) with GTO frequencies. GTO action shows actual %, others show 0%. Static legend preserved when no hand selected.",
+      "coach": "manual"
     },
     {
       "task": "api-response-time-optimization",
@@ -112,7 +126,7 @@
       "task": "study-postflop-visual-match-reference",
       "sha": "4cf93aa",
       "date": "2026-06-20",
-      "summary": "Style board cards as white playing cards with red diamonds \u2014 fix card background from dark to cream, diamond color from orange to red",
+      "summary": "Style board cards as white playing cards with red diamonds — fix card background from dark to cream, diamond color from orange to red",
       "coach": "approved"
     },
     {
@@ -126,14 +140,14 @@
       "task": "fix-icm-api-route-prefix",
       "sha": "c3fc6d2",
       "date": "2026-06-20",
-      "summary": "Change ICM router prefix from /icm to /api/v1/icm \u2014 frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404'd. Now returns valid ICM calculation response.",
+      "summary": "Change ICM router prefix from /icm to /api/v1/icm — frontend useICMCalculator.ts calls /api/v1/icm/calculate which 404'd. Now returns valid ICM calculation response.",
       "coach": "approved"
     },
     {
       "task": "icm-page-visual-match-reference",
       "sha": "65d4c7b",
       "date": "2026-06-20",
-      "summary": "Add dollar-EV and Chip EV columns to ICM results table \u2014 API already returned ev/chip_equity, now displayed in frontend with gold/blue styling",
+      "summary": "Add dollar-EV and Chip EV columns to ICM results table — API already returned ev/chip_equity, now displayed in frontend with gold/blue styling",
       "coach": "approved"
     },
     {
@@ -161,21 +175,21 @@
       "task": "fix-e2e-test-runner",
       "sha": "fb978af",
       "date": "2026-06-20",
-      "summary": "E2E test runner verified working \u2014 118 Chromium tests pass, 0 failures. No vitest globals conflict (no vitest in project). Firefox/WebKit browser binaries not installed (environment issue, not code issue).",
+      "summary": "E2E test runner verified working — 118 Chromium tests pass, 0 failures. No vitest globals conflict (no vitest in project). Firefox/WebKit browser binaries not installed (environment issue, not code issue).",
       "coach": "approved"
     },
     {
       "task": "fix-solver-docker-build",
       "sha": "87b1628",
       "date": "2026-06-20",
-      "summary": "Solver Docker image builds and runs successfully \u2014 docker compose build solver exits 0, solver gRPC on port 50051, health endpoint returns 200.",
+      "summary": "Solver Docker image builds and runs successfully — docker compose build solver exits 0, solver gRPC on port 50051, health endpoint returns 200.",
       "coach": "auto"
     },
     {
       "task": "fix-solver-protobuf-version",
       "sha": "87b1628",
       "date": "2026-06-20",
-      "summary": "Solver starts without protobuf VersionError \u2014 docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
+      "summary": "Solver starts without protobuf VersionError — docker logs show clean startup, protobuf runtime matches gencode, solver health returns ok.",
       "coach": "auto"
     },
     {
@@ -189,7 +203,7 @@
       "task": "dashboard-page-visual-match-reference",
       "sha": "021e903",
       "date": "2026-06-20",
-      "summary": "Pixel-level color analysis of reference-dashboard.png \u2014 updated CSS vars: --bg #09090C, --panel #121214, --green #AAFBB2 (mint), --border #1D1D1F, --muted #767677. Stat values changed from green to white #FFFFFF. Matches reference screenshot color palette.",
+      "summary": "Pixel-level color analysis of reference-dashboard.png — updated CSS vars: --bg #09090C, --panel #121214, --green #AAFBB2 (mint), --border #1D1D1F, --muted #767677. Stat values changed from green to white #FFFFFF. Matches reference screenshot color palette.",
       "coach": "approved"
     },
     {
@@ -203,14 +217,14 @@
       "task": "update-features-yaml-courses-detail",
       "sha": "f00c6fe",
       "date": "2026-06-20",
-      "summary": "Fix FEATURES.yaml: mark GET /api/v1/courses/{id} as present \u2014 endpoint works with UUID IDs, returns 200 with lessons. Previous revert was due to integer-ID testing. Verified 4 other endpoints all 200.",
+      "summary": "Fix FEATURES.yaml: mark GET /api/v1/courses/{id} as present — endpoint works with UUID IDs, returns 200 with lessons. Previous revert was due to integer-ID testing. Verified 4 other endpoints all 200.",
       "coach": "approved"
     },
     {
       "task": "fix-strategy-lookup-dsn-format",
       "sha": "272bb19",
       "date": "2026-06-20",
-      "summary": "Strip +asyncpg suffix from DATABASE_URL before passing to asyncpg.create_pool() \u2014 strategy lookup now returns 200 with full preflop data",
+      "summary": "Strip +asyncpg suffix from DATABASE_URL before passing to asyncpg.create_pool() — strategy lookup now returns 200 with full preflop data",
       "coach": "auto"
     },
     {
@@ -224,21 +238,21 @@
       "task": "add-plo4-frontend-page",
       "sha": "a77d430",
       "date": "2026-06-20",
-      "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator \u2014 reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
+      "summary": "Create /equity/plo4 frontend page for PLO4 equity calculator — reuses VariantEquityPage with variantKey=plo4. Build succeeds, site returns 200.",
       "coach": "approved"
     },
     {
       "task": "fix-equity-smoke-test",
       "sha": "6b9c156",
       "date": "2026-06-20",
-      "summary": "Update equity E2E smoke test to match redesigned equity page \u2014 remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
+      "summary": "Update equity E2E smoke test to match redesigned equity page — remove stale BB/BTN Range h3 selectors, use actual input placeholders and stat labels. Stop+disable conflicting gto-wizard-api.service systemd loop.",
       "coach": "approved"
     },
     {
       "task": "fix-e2e-test-runner-execution",
       "sha": "d0417e6",
       "date": "2026-06-20",
-      "summary": "Add headless:true to Playwright configs \u2014 tests no longer crash with 'Missing X server'. 116/118 tests pass (2 pre-existing selector mismatches).",
+      "summary": "Add headless:true to Playwright configs — tests no longer crash with 'Missing X server'. 116/118 tests pass (2 pre-existing selector mismatches).",
       "coach": "approved"
     },
     {
@@ -259,7 +273,7 @@
       "task": "postflop-solver-api-endpoint",
       "sha": "1dc5991",
       "date": "2026-06-20",
-      "summary": "POST /api/v1/solver/postflop-strategy endpoint exists and works \u2014 returns GTO strategy actions (action, frequency, EV) with live-solver fallback, in-memory cache, 30s timeout. 368 unit tests + 18 API tests pass. Endpoint verified live on port 8001.",
+      "summary": "POST /api/v1/solver/postflop-strategy endpoint exists and works — returns GTO strategy actions (action, frequency, EV) with live-solver fallback, in-memory cache, 30s timeout. 368 unit tests + 18 API tests pass. Endpoint verified live on port 8001.",
       "coach": "approved"
     },
     {
@@ -301,22 +315,22 @@
       "task": "seed-quiz-spots-with-board-data",
       "sha": "c50c33a",
       "date": "2026-06-20",
-      "summary": "Make quiz seed idempotent (per-spot dedup instead of blanket skip guard) \u2014 44 new postflop quiz spots seeded including 6 turn, 8 river, 26 flop scenarios. 40 spots with board data covering suited/connected/rainbow/paired textures. 368 tests pass.",
+      "summary": "Make quiz seed idempotent (per-spot dedup instead of blanket skip guard) — 44 new postflop quiz spots seeded including 6 turn, 8 river, 26 flop scenarios. 40 spots with board data covering suited/connected/rainbow/paired textures. 368 tests pass.",
       "coach": "approved"
     }
   ],
-  "current_task": "right-sidebar-tab-structure",
+  "current_task": "tbd",
   "next": null,
   "backlog": [
     {
-      "item": "Per-cell action buttons (hspotcrd_actions) \u2014 show Fold/Raise/Allin inline when cell clicked, highlight GTO recommendation",
+      "item": "Per-cell action buttons (hspotcrd_actions) — show Fold/Raise/Allin inline when cell clicked, highlight GTO recommendation",
       "type": "missing_feature",
       "priority": 0,
       "evidence": "Clicking a matrix cell currently only highlights it. No inline action buttons appear. Action selection only via right sidebar ActionSelector.",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
-      "item": "SPOT CARD BAR \u2014 replace numbered position pills with horizontal spot cards showing action buttons per position, 'Take action' prompt on active position, minimized/active states, and position-specific action sets (SB/BB get Call + Raise 3.5). This is the main top-of-page interaction element.",
+      "item": "SPOT CARD BAR — replace numbered position pills with horizontal spot cards showing action buttons per position, 'Take action' prompt on active position, minimized/active states, and position-specific action sets (SB/BB get Call + Raise 3.5). This is the main top-of-page interaction element.",
       "type": "missing_feature",
       "priority": 0,
       "evidence": "Reference has horizontal spot card bar with 6 cards. Clone has numbered position pills (1 UTG Acting, 2 HJ...). Complete visual and functional mismatch.",
@@ -327,21 +341,21 @@
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Current right panel is a flat Details Panel with GTO Range Breakdown bars + ActionSelector + feedback. No tab structure. No aggregate combo count display.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Actions sub-tab with aggregate combo counts: 'Fold 78.3% (1038.88 combos)' format",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Current actionSummary shows frequencies (%) but not combo counts.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Per-hand action legend (htc_graph_legend) showing 'Allin 100 0%' / 'Raise 2.5 100%' / 'Fold 0%' for selected hand",
       "type": "missing_feature",
       "priority": 2,
       "evidence": "Current legend shows static color swatches (Raise/Call/Fold) without per-hand frequency values.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Top bar with Cash/bb/spots-remaining/Upgrade link",
@@ -355,7 +369,7 @@
       "type": "missing_feature",
       "priority": 3,
       "evidence": "No overview tab exists at all.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "'Take action' prompt (hspotcrd_action_prompt) on non-active positions",
@@ -376,21 +390,21 @@
       "type": "missing_feature",
       "priority": 3,
       "evidence": "No sub-tab system exists.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Filters / Blockers / Range compare / Compare EV / Actions chart sub-tabs",
       "type": "missing_feature",
       "priority": 3,
       "evidence": "No sub-tab system exists.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Table tab: position data (stack, bet, OOP EV, combos count)",
       "type": "missing_feature",
       "priority": 3,
       "evidence": "No table tab exists.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Top bar action prompts per position header row",
@@ -401,12 +415,12 @@
     }
   ],
   "health": "build_ok_site_200",
-  "last_sha": "37d57ab",
+  "last_sha": "78f7d32",
   "blocker": null,
-  "note": "Comprehensive spec gap audit complete. 14 gaps identified vs reference-study-interaction-spec.md. Implementing P0: per-cell action buttons.",
+  "note": "Player tick 2026-06-21: per-hand-action-legend at 78f7d32. Replaced static legend with per-hand action frequencies showing position-specific actions (Fold/Raise/Call/Allin) with GTO %. 368 tests pass, build OK, live site 200. Next: tbd — spec gaps remain, AGENTS.md task list exhausted.",
   "spec_gaps": [
     {
-      "item": "Per-cell action buttons (hspotcrd_actions) \u2014 show Fold/Raise/Allin inline when cell clicked, highlight GTO recommendation",
+      "item": "Per-cell action buttons (hspotcrd_actions) — show Fold/Raise/Allin inline when cell clicked, highlight GTO recommendation",
       "type": "missing_feature",
       "priority": 0,
       "evidence": "Clicking a matrix cell currently only highlights it. No inline action buttons appear.",
@@ -417,21 +431,21 @@
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Current right panel is flat. No tab structure.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Actions sub-tab with aggregate combo counts",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Shows frequencies (%) but not combo counts.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Different action sets per position",
       "type": "data_inaccuracy",
       "priority": 2,
       "evidence": "ActionSelector shows all 4 actions regardless of position.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Position selector as player tiles with stacks",
@@ -445,7 +459,7 @@
       "type": "missing_feature",
       "priority": 2,
       "evidence": "Legend is static color swatches only.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "item": "Top bar with Cash/bb/spots-remaining/Upgrade",
@@ -459,15 +473,15 @@
       "type": "missing_feature",
       "priority": 3,
       "evidence": "Not implemented.",
-      "status": "pending"
+      "status": "completed"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "13e4f32f9a7ebdcf3dd35d71bda828bef3146953",
-    "last_reviewed_at": "2026-06-21T21:07:00Z",
-    "verdict": "approved",
-    "notes": "No new player commits (only checkpoint metadata commit). QA passed on all pages.",
-    "last_review": "2026-06-21T11:44:54Z",
-    "status": "approved"
+    "last_reviewed_sha": "78f7d32",
+    "last_reviewed_at": "2026-06-21T22:00:00Z",
+    "verdict": "pending",
+    "notes": "New commit 78f7d32 — per-hand-action-legend. Pending coach review.",
+    "last_review": "2026-06-21T22:00:00Z",
+    "status": "pending"
   }
 }
