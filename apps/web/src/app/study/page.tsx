@@ -159,6 +159,49 @@ const ACTION_COLORS: Record<string, string> = {
   'all_in': RED_DARK,
 }
 
+// Action sets per position (matches GTO Wizard reference)
+const POSITION_ACTIONS: Record<string, Array<{ id: string; label: string; actionBase: string; size?: number }>> = {
+  'UTG': [
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'raise_2.5', label: 'Raise 2.5', actionBase: 'raise', size: 2.5 },
+    { id: 'all_in', label: 'Allin 100', actionBase: 'all_in' },
+  ],
+  'HJ': [
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'raise_2.5', label: 'Raise 2.5', actionBase: 'raise', size: 2.5 },
+    { id: 'all_in', label: 'Allin 100', actionBase: 'all_in' },
+  ],
+  'CO': [
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'raise_2.5', label: 'Raise 2.5', actionBase: 'raise', size: 2.5 },
+    { id: 'all_in', label: 'Allin 100', actionBase: 'all_in' },
+  ],
+  'BTN': [
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'raise_2.5', label: 'Raise 2.5', actionBase: 'raise', size: 2.5 },
+    { id: 'all_in', label: 'Allin 100', actionBase: 'all_in' },
+  ],
+  'SB': [
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_3.5', label: 'Raise 3.5', actionBase: 'raise', size: 3.5 },
+    { id: 'all_in', label: 'Allin 100', actionBase: 'all_in' },
+  ],
+  'BB': [
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_3.5', label: 'Raise 3.5', actionBase: 'raise', size: 3.5 },
+    { id: 'all_in', label: 'Allin 100', actionBase: 'all_in' },
+  ],
+}
+
+function getGtoActionBase(handData: HandData | undefined): string {
+  if (!handData) return 'fold'
+  const a = handData.action
+  if (a.startsWith('raise')) return 'raise'
+  return a
+}
+
 const POSITION_KEYS: Record<string, string> = {
   '1': 'UTG', '2': 'HJ', '3': 'CO', '4': 'BTN', '5': 'SB', '6': 'BB',
 }
@@ -858,7 +901,11 @@ export default function StudyPage() {
                           }
                         }}
                         style={{
-                          aspectRatio: '1/1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          aspectRatio: isSelected ? 'auto' : '1/1',
+                          minHeight: isSelected ? 84 : undefined,
+                          display: 'flex', flexDirection: isSelected ? 'column' : undefined,
+                          alignItems: isSelected ? 'stretch' : 'center',
+                          justifyContent: isSelected ? 'flex-start' : 'center',
                           fontSize: 8, fontWeight: 700, color: '#fff', letterSpacing: -0.3,
                           textShadow: '0 1px 2px rgba(0,0,0,.8)', cursor: 'pointer', userSelect: 'none',
                           background: color, opacity,
@@ -867,9 +914,57 @@ export default function StudyPage() {
                           transition: 'opacity .15s, border .15s',
                           position: 'relative',
                           outline: 'none',
+                          padding: isSelected ? '3px' : undefined,
+                          zIndex: isSelected ? 10 : undefined,
                         }}>
-                        <span style={{ zIndex: 1 }}>{hand}</span>
-                        {data && data.action !== 'fold' && (
+                        <span style={{ textAlign: 'center', width: '100%', lineHeight: 1.1 }}>{hand}</span>
+                        {/* Inline action buttons — shown only when cell is selected */}
+                        {isSelected && (
+                          <div className="hspotcrd_actions" style={{
+                            display: 'flex', flexDirection: 'column', gap: 1.5, marginTop: 2,
+                          }}>
+                            {POSITION_ACTIONS[activePosition]?.map(action => {
+                              const gtoActionBase = getGtoActionBase(data)
+                              const isGtoRecommended = data && gtoActionBase === action.actionBase
+                              let bg = 'rgba(0,0,0,0.35)'
+                              let borderColor = 'rgba(255,255,255,0.15)'
+                              if (action.actionBase === 'fold') { bg = 'rgba(50,50,50,0.6)'; borderColor = '#444' }
+                              if (action.actionBase === 'call') { bg = 'rgba(58,110,165,0.4)'; borderColor = '#3A6EA5' }
+                              if (action.actionBase === 'raise') { bg = 'rgba(229,57,53,0.35)'; borderColor = '#E53935' }
+                              if (action.actionBase === 'all_in') { bg = 'rgba(123,30,30,0.5)'; borderColor = '#7B1E1E' }
+                              if (isGtoRecommended) { bg = 'rgba(255,255,255,0.22)'; borderColor = '#fff' }
+                              const isUserAction = userAction === action.actionBase
+                              return (
+                                <div key={action.id}
+                                  className={`hspotcrd_action${isGtoRecommended ? ' hspotcrd_action_active' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setUserAction(action.actionBase)
+                                    if (action.size) setBetSize(action.size)
+                                    else setBetSize(null)
+                                  }}
+                                  style={{
+                                    fontSize: 6.5, lineHeight: 1.3,
+                                    padding: '1.5px 3px', borderRadius: 2,
+                                    background: isUserAction ? 'rgba(255,255,255,0.35)' : bg,
+                                    border: `1px solid ${isUserAction ? '#fff' : borderColor}`,
+                                    color: isUserAction || isGtoRecommended ? '#fff' : '#ccc',
+                                    fontWeight: isGtoRecommended ? 700 : 500,
+                                    cursor: 'pointer', textAlign: 'center',
+                                    whiteSpace: 'nowrap', overflow: 'hidden',
+                                    textShadow: '0 0 2px rgba(0,0,0,0.8)',
+                                    transition: 'all 0.1s',
+                                  }}
+                                  role="button"
+                                  aria-label={`${action.label}${isGtoRecommended ? ', GTO recommendation' : ''}`}
+                                >
+                                  {action.label}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                        {data && data.action !== 'fold' && !isSelected && (
                           <span className="study-matrix-cell-freq" style={{
                             position: 'absolute', bottom: 1, right: 2,
                             fontSize: 6, fontWeight: 600, opacity: 0.7,
