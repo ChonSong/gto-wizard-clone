@@ -127,7 +127,7 @@
       "sha": "7094e0e",
       "date": "2026-06-22",
       "summary": "Course detail API verified working on live (200) and local (200 returns full course data + lessons). Root cause was port mismatch / missing DATABASE_URL on old service. gto-api.service on port 8001 has correct config.",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
   "current_task": "fix-strategy-lookup-dsn-format",
@@ -155,15 +155,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "7094e0e",
+  "last_sha": "12a49c6",
   "blocker": null,
   "note": "Player tick 2026-06-22: fix-course-detail-api-500 verified complete. Course detail endpoint returns 200 with full course data + lessons on both live and local. Root cause was port mismatch / missing DATABASE_URL on old service — already fixed via gto-api.service on port 8001. 368 tests pass. Moved current_task to fix-strategy-lookup-dsn-format.",
   "coach_review": {
-    "last_reviewed_sha": "7094e0e21f4ab8cc37c8d1f41e0d355e597cc8da",
-    "last_reviewed_at": "2026-06-22T01:42:00Z",
+    "last_reviewed_sha": "12a49c69deeaafe4e73eb7115d827f479009ae4f",
+    "last_reviewed_at": "2026-06-22T02:40:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 7094e0e (practice-page-visual-match-reference). Major rewrite: 635 insertions, 305 deletions in apps/web/src/app/practice/page.tsx. Added PlayingCard component with proper suit colors (red for hearts/diamonds), Pill/FilterBtn components, converted inline styles to Tailwind CSS, viewport-filling layout (h-screen/flex/overflow-hidden), action buttons with GTO frequency chips, session stats panel with progress ring, responsive grid. Live site QA: /practice loads with exercise type/category/difficulty filters, Start Practice Session button works, session starts showing hand/board/action buttons with GTO frequencies, 0 JS errors. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — all changes directly required by practice-page-visual-match-reference task. 368 unit tests pass. E2E tests still broken (known vitest/Playwright conflict — fix-e2e-test-runner in backlog).",
-    "last_review": "2026-06-22T01:42:00Z",
+    "notes": "Reviewed fce0d59 and 12a49c6 — both checkpoint-only commits (only .checkpoint.json changed). No source code changes. fix-course-detail-api-500 verified complete by player: course detail endpoint returns 200 with full course data + lessons on both live and local. Live site QA: / renders with 12 feature cards, /practice loads with filters and Start button (session starts showing hand/board/action buttons with GTO frequencies), /study renders preflop matrix with position buttons and stack selector, /courses shows 3 courses. 0 JS errors on all pages. API on port 8001 healthy. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — checkpoint updates only. Backlog healthy: 35 unstarted tasks remaining.",
+    "last_review": "2026-06-22T02:40:00Z",
     "status": "approved"
   }
 }
