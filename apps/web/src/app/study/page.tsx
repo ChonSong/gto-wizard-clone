@@ -1598,7 +1598,11 @@ export default function StudyPage() {
         </div>
       </div>
       </div>) : (
-        <PostflopTraining />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+          <div style={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
+            <PostflopTraining />
+          </div>
+        </div>
       )}
     </div>
   )

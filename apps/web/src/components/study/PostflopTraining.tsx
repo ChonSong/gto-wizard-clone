@@ -153,19 +153,21 @@ function actionColor(action: string): string {
 
 // ── Card Display Component ───────────────────────────────
 function CardDisplay({ rank, suit, small }: { rank: string; suit: string; small?: boolean }) {
-  const size = small ? 36 : 48
+  const size = small ? 32 : 40
+  const h = small ? 44 : 56
   const isRed = suit === 'h' || suit === 'd'
   return (
     <div style={{
-      width: size, height: size * 1.4, borderRadius: 6,
-      background: '#f5f5f0', border: '1px solid #ccc',
+      width: size, height: h, borderRadius: 6,
+      background: '#f5f5f0', border: '1px solid #ddd',
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       justifyContent: 'center', fontSize: small ? 11 : 14,
       fontWeight: 700, color: isRed ? RED : '#111',
-      boxShadow: '0 1px 3px rgba(0,0,0,.3)',
+      boxShadow: '0 2px 8px rgba(0,0,0,.35)',
+      flexShrink: 0,
     }}>
-      <span>{rank}</span>
-      <span style={{ fontSize: small ? 10 : 12, marginTop: -2 }}>{SUIT_SYMBOL[suit] || suit}</span>
+      <span style={{ lineHeight: 1 }}>{rank}</span>
+      <span style={{ fontSize: small ? 12 : 16, lineHeight: 1, marginTop: 1, color: isRed ? RED : '#111' }}>{SUIT_SYMBOL[suit] || suit}</span>
     </div>
   )
 }
@@ -398,15 +400,17 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
   }
 
   return (
-    <div style={{ padding: 16 }}>
+    <div style={{ padding: 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       {/* Street breadcrumb */}
-      <StreetBreadcrumb
-        streetIndex={streetIndex}
-        streetActions={streetActions}
-      />
+      <div style={{ flexShrink: 0 }}>
+        <StreetBreadcrumb
+          streetIndex={streetIndex}
+          streetActions={streetActions}
+        />
+      </div>
 
       {/* Configure Spot Button & Panel */}
-      <div style={{ marginBottom: 12 }}>
+      <div style={{ marginBottom: 12, flexShrink: 0 }}>
         <button onClick={() => setConfigOpen(!configOpen)}
           style={{
             background: configOpen ? '#1a3a2b' : '#161616',
@@ -575,7 +579,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
       {/* Board display */}
       <div style={{
         background: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 10,
-        padding: '14px 16px', marginBottom: 12,
+        padding: '14px 16px', marginBottom: 12, flexShrink: 0,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           {/* Board cards - progressive reveal */}
@@ -664,7 +668,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
       {/* Action Buttons */}
       <div style={{
         background: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 10,
-        padding: '14px 16px', marginBottom: 12,
+        padding: '14px 16px', marginBottom: 12, flexShrink: 0,
       }}>
         <div style={{ fontSize: 12, color: TEXT_DIM, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
           Your Action — {activePosition}
@@ -769,7 +773,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
       {(strategy || loading || error) && (
         <div style={{
           background: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 10,
-          padding: '14px 16px',
+          padding: '14px 16px', flex: 1, overflow: 'auto', minHeight: 0,
         }}>
           <div style={{ fontSize: 12, color: TEXT_DIM, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
             GTO Strategy Breakdown — {currentStreet}
