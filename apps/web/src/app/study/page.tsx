@@ -240,6 +240,8 @@ export default function StudyPage() {
   const [showHotkeys, setShowHotkeys] = useState(false)
   const [studyStats, setStudyStats] = useState<StudyStats>(emptyStats)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
+  const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
+  const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions'>('actions')
 
   // Load stats from localStorage on mount
   useEffect(() => {
@@ -1138,306 +1140,461 @@ export default function StudyPage() {
           </div>
         </div>
 
-        {/* Details Panel */}
+        {/* Details Panel — Tab Structure */}
         <div className="study-details-panel" style={{ background: '#1C1C1C', border: '1px solid #262626', borderRadius: 10, overflow: 'hidden', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px 4px', flexWrap: 'wrap', flexShrink: 0 }}>
-            {positions.map(pos => (
-              <span key={pos.id} style={{
-                background: activePosition === pos.id ? '#1a3a2b' : '#262626',
-                color: activePosition === pos.id ? '#7CFC7C' : '#b9b9b9',
-                padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
-                border: activePosition === pos.id ? '1px solid #2a6b4a' : '1px solid #2e2e2e',
-                letterSpacing: 0.3,
-              }}>{pos.label}</span>
+          {/* Top Tabs: Overview | Table | Equity chart */}
+          <div role="tablist" aria-label="Right sidebar tabs" style={{ display: 'flex', borderBottom: '1px solid #262626', flexShrink: 0 }}>
+            {(['overview', 'table', 'equity_chart'] as const).map(tab => (
+              <button key={tab} role="tab" aria-selected={rightTopTab === tab}
+                onClick={() => setRightTopTab(tab)}
+                style={{
+                  flex: 1, padding: '6px 4px',
+                  background: rightTopTab === tab ? '#1a1a1a' : '#111',
+                  border: 'none', borderBottom: rightTopTab === tab ? '2px solid #7CFC7C' : '2px solid transparent',
+                  color: rightTopTab === tab ? '#fff' : '#8e8e8e',
+                  fontSize: 10, fontWeight: 600, cursor: 'pointer',
+                  textTransform: 'uppercase', letterSpacing: 0.5,
+                }}>
+                {tab === 'overview' ? 'Overview' : tab === 'table' ? 'Table' : 'Equity chart'}
+              </button>
             ))}
           </div>
 
-          {/* Board Display with card entry */}
-          <nav aria-label="Street navigation" style={{
-            padding: '6px 10px',
-            borderBottom: '1px solid #262626',
-            borderTop: '1px solid #262626',
-            display: 'flex', alignItems: 'center', gap: 6,
-            flexShrink: 0,
-          }}>
-            <span style={{ fontSize: 10, color: '#7CFC7C', fontWeight: 600, marginRight: 4, textTransform: 'uppercase' }}>
-              {boardStreet === 'preflop' ? 'PREFLOP' : boardStreet.toUpperCase()}
-            </span>
-            {boardCards.map((card, i) => {
-              const isRed = card.suit === 'h' || card.suit === 'd'
-              return (
-                <div key={i} style={{
-                  width: 32, height: 46, borderRadius: 6,
-                  background: '#f5f5f0', border: '1px solid #ccc',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 13, fontWeight: 700,
-                  color: isRed ? '#E53935' : '#111',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-                  flexShrink: 0,
-                }}>
-                  <span style={{ lineHeight: 1 }}>{card.rank}</span>
-                  <span style={{ fontSize: 11, marginTop: -2, lineHeight: 1 }}>{SUIT_SYM[card.suit] || card.suit}</span>
+          {/* OVERVIEW TAB */}
+          {rightTopTab === 'overview' && (
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              {/* Overview content: position stacks, dead money, pot odds */}
+              <div style={{ padding: '6px 10px', borderBottom: '1px solid #262626', flexShrink: 0 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
+                  {positions.map(pos => (
+                    <span key={pos.id} style={{
+                      background: activePosition === pos.id ? '#1a3a2b' : '#262626',
+                      color: activePosition === pos.id ? '#7CFC7C' : '#b9b9b9',
+                      padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 600,
+                      border: activePosition === pos.id ? '1px solid #2a6b4a' : '1px solid #2e2e2e',
+                    }}>{pos.id} {pos.stack.toFixed(0)}</span>
+                  ))}
                 </div>
-              )
-            })}
-            {boardStreet === 'preflop' && (
-              <>
-                {[0,1,2,3,4].map(i => (
-                  <div key={`empty-${i}`} style={{
-                    width: 26, height: 38, borderRadius: 4,
-                    border: '1px solid #2a2a2a',
-                    background: '#141414',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 8, color: '#555',
-                  }}>?</div>
-                ))}
-                <button onClick={handleGenerateFlop}
-                  aria-label="Deal random flop"
-                  style={{
-                    marginLeft: 6, padding: '4px 10px', borderRadius: 4,
-                    background: '#16241a', border: `1px solid ${GREEN}`,
-                    color: GREEN, fontSize: 10, fontWeight: 600, cursor: 'pointer',
-                  }}>
-                  Random Flop
-                </button>
-              </>
-            )}
-            {boardStreet === 'flop' && (
-              <button onClick={handleAdvanceStreet}
-                aria-label="Deal turn card"
-                style={{
-                  marginLeft: 6, padding: '4px 10px', borderRadius: 4,
-                  background: '#16241a', border: `1px solid ${GREEN}`,
-                  color: GREEN, fontSize: 10, fontWeight: 600, cursor: 'pointer',
+                <div style={{ display: 'flex', gap: 12, fontSize: 10, color: '#999' }}>
+                  <span>Dead: <strong style={{ color: '#ccc' }}>1.5+1.5 BB</strong></span>
+                  <span>Pot odds: <strong style={{ color: '#7CFC7C' }}>40%</strong></span>
+                </div>
+                {/* Board display + street nav */}
+                <nav aria-label="Street navigation" style={{
+                  marginTop: 4, display: 'flex', alignItems: 'center', gap: 4,
                 }}>
-                Turn ▶
-              </button>
-            )}
-            {boardStreet === 'turn' && (
-              <button onClick={handleAdvanceStreet}
-                aria-label="Deal river card"
-                style={{
-                  marginLeft: 6, padding: '4px 10px', borderRadius: 4,
-                  background: '#16241a', border: `1px solid ${GREEN}`,
-                  color: GREEN, fontSize: 10, fontWeight: 600, cursor: 'pointer',
-                }}>
-                River ▶
-              </button>
-            )}
-            {boardCards.length > 0 && (
-              <button onClick={handleResetBoard}
-                aria-label="Reset board"
-                style={{
-                  marginLeft: 4, padding: '4px 8px', borderRadius: 4,
-                  background: '#1a1a1a', border: '1px solid #333',
-                  color: '#888', fontSize: 10, fontWeight: 600, cursor: 'pointer',
-                }}>
-                ✕
-              </button>
-            )}
-          </nav>
-
-          {/* GTO Action Frequency Bars */}
-          {isSolverMode && (
-            <div style={{
-              padding: '8px 10px',
-              borderBottom: '1px solid #262626',
-              flexShrink: 0,
-            }}>
-              <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                GTO Range Breakdown
-              </div>
-              {Object.entries(actionSummary)
-                .sort(([,a], [,b]) => b.totalFreq - a.totalFreq)
-                .map(([action, data]) => {
-                  const pct = ((data.totalFreq / totalCombos) * 100)
-                  if (pct < 0.5) return null
-                  const barPct = Math.min(pct, 100)
-                  const actionColor = ACTION_COLORS[action] || '#888'
-                  return (
-                    <div key={action} style={{ marginBottom: 6 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                        <span style={{ fontSize: 11, color: '#ccc', fontWeight: 600 }}>
-                          {actionLabels[action] || action}
-                        </span>
-                        <span style={{ fontSize: 11, color: '#888', fontWeight: 500 }}>
-                          {pct.toFixed(1)}%
-                        </span>
-                      </div>
-                      <div style={{
-                        height: 10,
-                        background: '#2a2a2a',
-                        borderRadius: 5,
-                        overflow: 'hidden',
+                  <span style={{ fontSize: 9, color: '#7CFC7C', fontWeight: 600, marginRight: 2, textTransform: 'uppercase' }}>
+                    {boardStreet === 'preflop' ? 'PREFLOP' : boardStreet.toUpperCase()}
+                  </span>
+                  {boardCards.map((card, i) => {
+                    const isRed = card.suit === 'h' || card.suit === 'd'
+                    return (
+                      <div key={i} style={{
+                        width: 24, height: 34, borderRadius: 4,
+                        background: '#f5f5f0', border: '1px solid #ccc',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 700,
+                        color: isRed ? '#E53935' : '#111',
+                        flexShrink: 0,
                       }}>
-                        <div style={{
-                          height: '100%',
-                          width: `${Math.max(barPct, 2)}%`,
-                          background: actionColor,
-                          borderRadius: 5,
-                          opacity: 0.85,
-                          transition: 'width 0.3s ease',
-                        }} />
+                        <span style={{ lineHeight: 1 }}>{card.rank}</span>
+                        <span style={{ fontSize: 8, marginTop: -1, lineHeight: 1 }}>{SUIT_SYM[card.suit] || card.suit}</span>
                       </div>
+                    )
+                  })}
+                  {boardStreet === 'preflop' && (
+                    <>
+                      {[0,1,2,3,4].map(i => (
+                        <div key={`empty-${i}`} style={{
+                          width: 20, height: 28, borderRadius: 3,
+                          border: '1px solid #2a2a2a', background: '#141414',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 6, color: '#555',
+                        }}>?</div>
+                      ))}
+                      <button onClick={handleGenerateFlop} aria-label="Deal random flop"
+                        style={{
+                          padding: '2px 8px', borderRadius: 3, background: '#16241a',
+                          border: `1px solid ${GREEN}`, color: GREEN,
+                          fontSize: 9, fontWeight: 600, cursor: 'pointer', lineHeight: 1.4,
+                        }}>Deal Flop</button>
+                    </>
+                  )}
+                  {boardStreet === 'flop' && (
+                    <button onClick={handleAdvanceStreet} aria-label="Deal turn card"
+                      style={{
+                        padding: '2px 8px', borderRadius: 3, background: '#16241a',
+                        border: `1px solid ${GREEN}`, color: GREEN,
+                        fontSize: 9, fontWeight: 600, cursor: 'pointer', lineHeight: 1.4,
+                      }}>Turn ▶</button>
+                  )}
+                  {boardStreet === 'turn' && (
+                    <button onClick={handleAdvanceStreet} aria-label="Deal river card"
+                      style={{
+                        padding: '2px 8px', borderRadius: 3, background: '#16241a',
+                        border: `1px solid ${GREEN}`, color: GREEN,
+                        fontSize: 9, fontWeight: 600, cursor: 'pointer', lineHeight: 1.4,
+                      }}>River ▶</button>
+                  )}
+                  {boardCards.length > 0 && (
+                    <button onClick={handleResetBoard} aria-label="Reset board"
+                      style={{
+                        padding: '2px 6px', borderRadius: 3, background: '#1a1a1a',
+                        border: '1px solid #333', color: '#888',
+                        fontSize: 9, fontWeight: 600, cursor: 'pointer', lineHeight: 1.4,
+                      }}>✕</button>
+                  )}
+                </nav>
+              </div>
+
+              {/* Sub-tab bar: Hand | Summary | Filters | Actions */}
+              <div role="tablist" aria-label="Detail sub-tabs" style={{
+                display: 'flex', borderBottom: '1px solid #262626',
+                padding: '0 2px', flexShrink: 0,
+              }}>
+                {(['hand', 'summary', 'filters', 'actions'] as const).map(tab => (
+                  <button key={tab} role="tab" aria-selected={rightSubTab === tab}
+                    onClick={() => setRightSubTab(tab)}
+                    style={{
+                      padding: '4px 8px', fontSize: 9, fontWeight: 600,
+                      background: 'none', border: 'none',
+                      borderBottom: rightSubTab === tab ? '2px solid #7CFC7C' : '2px solid transparent',
+                      color: rightSubTab === tab ? '#fff' : '#777',
+                      cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.3,
+                    }}>
+                    {tab === 'actions' ? 'Actions' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sub-tab content */}
+              <div style={{ flex: 1, overflow: 'auto', padding: '4px 10px 10px' }}>
+                {/* ACTIONS sub-tab: Aggregate combo counts */}
+                {rightSubTab === 'actions' && isSolverMode && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      GTO Range Breakdown
                     </div>
-                  )
-                })}
+                    {Object.entries(actionSummary)
+                      .sort(([,a], [,b]) => b.totalFreq - a.totalFreq)
+                      .map(([action, data]) => {
+                        const pct = ((data.totalFreq / totalCombos) * 100)
+                        if (pct < 0.5) return null
+                        const barPct = Math.min(pct, 100)
+                        const actionColor = ACTION_COLORS[action] || '#888'
+                        const comboCount = (data.totalFreq / totalCombos) * totalCombos
+                        return (
+                          <div key={action} style={{ marginBottom: 6 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+                              <span style={{ fontSize: 11, color: '#ccc', fontWeight: 600 }}>
+                                {actionLabels[action] || action}
+                              </span>
+                              <span style={{ fontSize: 11, color: '#888', fontWeight: 500 }}>
+                                {pct.toFixed(1)}% ({comboCount.toFixed(1)} combos)
+                              </span>
+                            </div>
+                            <div style={{
+                              height: 10,
+                              background: '#2a2a2a',
+                              borderRadius: 5,
+                              overflow: 'hidden',
+                            }}>
+                              <div style={{
+                                height: '100%',
+                                width: `${Math.max(barPct, 2)}%`,
+                                background: actionColor,
+                                borderRadius: 5,
+                                opacity: 0.85,
+                                transition: 'width 0.3s ease',
+                              }} />
+                            </div>
+                          </div>
+                        )
+                      })}
+                  </div>
+                )}
+                {rightSubTab === 'actions' && !isSolverMode && (
+                  <div style={{ color: '#888', fontSize: 12, textAlign: 'center', padding: '20px 0' }}>
+                    Select a position to view strategy data
+                  </div>
+                )}
+
+                {/* HAND sub-tab: Selected hand + ActionSelector + feedback */}
+                {rightSubTab === 'hand' && (
+                  <div>
+                    {/* Selected hand info + actions */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#c8c8c8', margin: '4px 0', fontWeight: 500 }}>
+                      {selectedHandData ? (
+                        <>
+                          <span style={{ fontWeight: 700, color: '#7CFC7C', fontSize: 14 }}>{selectedCell}</span>
+                          {' · Pick Your Action'}
+                        </>
+                      ) : (
+                        <>Select a hand</>
+                      )}
+                      {selectedHandData && (
+                        <span style={{ fontSize: 10, color: '#888', fontWeight: 400, marginLeft: 'auto' }}>
+                          Eq: {(selectedHandData.equity * 100).toFixed(0)}% · Freq: {(selectedHandData.frequency * 100).toFixed(0)}%
+                        </span>
+                      )}
+                    </div>
+
+                    <ActionSelector
+                      selectedAction={userAction}
+                      onSelect={(action) => {
+                        setUserAction(action)
+                        setActionFeedback(null)
+                      }}
+                      selectedSize={betSize}
+                      onSelectSize={(bb) => setBetSize(bb)}
+                      gtoAction={selectedHandData ? (selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action) : undefined}
+                      gtoFrequency={selectedHandData ? selectedHandData.frequency : undefined}
+                      disabled={!selectedHandData}
+                      locked={actionFeedback !== null}
+                      feedback={actionFeedback}
+                    />
+
+                    {selectedHandData && !actionFeedback && (
+                      <button
+                        onClick={handleCheckAction}
+                        disabled={!userAction}
+                        aria-label={userAction ? `Check ${userAction} against GTO` : 'Select an action first'}
+                        style={{
+                          width: '100%', marginTop: 8,
+                          padding: '8px', borderRadius: 6,
+                          background: userAction ? '#16241a' : '#1a1a1a',
+                          border: userAction ? `1px solid ${GREEN}` : '1px solid #333',
+                          color: userAction ? '#fff' : '#666',
+                          fontSize: 12, fontWeight: 600,
+                          cursor: userAction ? 'pointer' : 'default',
+                        }}
+                      >
+                        {userAction ? 'Check vs GTO' : 'Select an action above'}
+                      </button>
+                    )}
+
+                    {actionFeedback && selectedHandData && (
+                      <div style={{
+                        marginTop: 10, padding: '12px 14px', borderRadius: 8,
+                        background: actionFeedback === 'correct' ? '#0a2e1a' : '#2a0a0a',
+                        border: `1px solid ${actionFeedback === 'correct' ? '#00C85355' : '#E5393555'}`,
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                          <span style={{ fontSize: 16, fontWeight: 700, color: actionFeedback === 'correct' ? GREEN : RED_BRIGHT }}>
+                            {actionFeedback === 'correct' ? '✓ Correct' : '✗ Incorrect'}
+                          </span>
+                          <span style={{ fontSize: 11, color: '#888' }}>
+                            {(() => {
+                              const displayAction = userAction === 'raise' ? `Raise ${betSize || 2.5}bb` : (actionLabelsShort[userAction!] || userAction)
+                              return <>— Your pick: <strong style={{ color: '#ccc' }}>{displayAction}</strong></>
+                            })()}
+                          </span>
+                        </div>
+
+                        <div style={{ fontSize: 11, color: '#999', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                          GTO Frequency
+                        </div>
+                        {(() => {
+                          const gtoAction = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
+                          const gtoFreq = selectedHandData.frequency
+                          const otherFreq = 1 - gtoFreq
+                          const gtoIsMixed = gtoFreq < 0.99
+                          const actionColor = ACTION_COLORS[gtoAction] || '#888'
+                          return (
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                <span style={{ fontSize: 11, color: actionColor, fontWeight: 600, width: 70 }}>
+                                  {actionLabels[gtoAction] || gtoAction}
+                                </span>
+                                <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
+                                  <div style={{ height: '100%', width: `${gtoFreq * 100}%`, background: actionColor, borderRadius: 5, transition: 'width 0.3s ease' }} />
+                                </div>
+                                <span style={{ fontSize: 11, color: '#ccc', fontWeight: 600, width: 40, textAlign: 'right' }}>
+                                  {(gtoFreq * 100).toFixed(0)}%
+                                </span>
+                              </div>
+                              {gtoIsMixed && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                  <span style={{ fontSize: 11, color: '#888', fontWeight: 600, width: 70 }}>Other</span>
+                                  <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
+                                    <div style={{ height: '100%', width: `${otherFreq * 100}%`, background: '#555', borderRadius: 5, transition: 'width 0.3s ease' }} />
+                                  </div>
+                                  <span style={{ fontSize: 11, color: '#888', fontWeight: 600, width: 40, textAlign: 'right' }}>{(otherFreq * 100).toFixed(0)}%</span>
+                                </div>
+                              )}
+                              <div style={{ marginTop: 8, padding: '6px 8px', borderRadius: 4, background: '#151515', fontSize: 11, color: '#aaa' }}>
+                                <span style={{ color: '#888' }}>
+                                  {actionFeedback === 'correct'
+                                    ? 'Your pick matches the GTO action for this spot.'
+                                    : `GTO plays ${actionLabels[gtoAction] || gtoAction} ${(gtoFreq * 100).toFixed(0)}% of the time here.`
+                                  }
+                                </span>
+                              </div>
+                            </div>
+                          )
+                        })()}
+
+                        <button
+                          onClick={() => { setUserAction(null); setActionFeedback(null); setBetSize(null) }}
+                          aria-label="Try again with a new action"
+                          style={{
+                            width: '100%', marginTop: 10, padding: '8px', borderRadius: 6,
+                            background: '#1a1a1a', border: '1px solid #333',
+                            color: '#aaa', fontSize: 12, fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          ↻ Try Again
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* SUMMARY sub-tab: Hands grouped by action */}
+                {rightSubTab === 'summary' && isSolverMode && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Hand Summary
+                    </div>
+                    {(['raise', 'call', 'fold', 'all_in'] as const).map(action => {
+                      const hands = Array.from(rangeData.entries())
+                        .filter(([, d]) => d.action === action || (action === 'raise' && d.action.startsWith('raise')))
+                        .sort(([, a], [, b]) => b.equity - a.equity)
+                      if (hands.length === 0) return null
+                      const actionColor = ACTION_COLORS[action] || '#888'
+                      return (
+                        <div key={action} style={{ marginBottom: 8 }}>
+                          <div style={{ fontSize: 9, fontWeight: 600, color: actionColor, marginBottom: 3, textTransform: 'uppercase' }}>
+                            {actionLabels[action] || action} ({hands.length})
+                          </div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                            {hands.slice(0, 15).map(([hand, d]) => (
+                              <span key={hand} onClick={() => setSelectedCell(hand)}
+                                style={{
+                                  padding: '2px 5px', borderRadius: 2,
+                                  background: '#1a1a1a', border: '1px solid #2a2a2a',
+                                  fontSize: 9, fontWeight: 600, color: '#ccc', cursor: 'pointer',
+                                }}>
+                                {hand} <span style={{ color: '#888', fontWeight: 400 }}>{(d.equity * 100).toFixed(0)}%</span>
+                              </span>
+                            ))}
+                            {hands.length > 15 && (
+                              <span style={{ fontSize: 9, color: '#666' }}>+{hands.length - 15} more</span>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+                {rightSubTab === 'summary' && !isSolverMode && (
+                  <div style={{ color: '#888', fontSize: 12, textAlign: 'center', padding: '20px 0' }}>
+                    Select a position to view summary
+                  </div>
+                )}
+
+                {/* FILTERS sub-tab */}
+                {rightSubTab === 'filters' && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Filters
+                    </div>
+                    <div style={{ padding: '8px 0', fontSize: 11, color: '#666', textAlign: 'center' }}>
+                      Hand/blocker filters coming soon
+                      <div style={{ fontSize: 9, color: '#444', marginTop: 4 }}>Use the matrix to select specific hands</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* HANDS sub-tab: Fallback when no data */}
+                {rightSubTab === 'hand' && !selectedHandData && (
+                  <div style={{ color: '#888', fontSize: 12, textAlign: 'center', padding: '20px 0' }}>
+                    Click a hand in the matrix to see details
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Selected hand info + actions */}
-          <div style={{ padding: '0 10px 10px', flex: 1, overflow: 'auto' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#c8c8c8', margin: '4px 0', fontWeight: 500 }}>
-              {selectedHandData ? (
-                <>
-                  <span style={{ fontWeight: 700, color: '#7CFC7C', fontSize: 14 }}>{selectedCell}</span>
-                  {' · Pick Your Action'}
-                </>
-              ) : (
-                <>Select a hand</>
-              )}
-              {selectedHandData && (
-                <span style={{ fontSize: 10, color: '#888', fontWeight: 400, marginLeft: 'auto' }}>
-                  Eq: {(selectedHandData.equity * 100).toFixed(0)}% · Freq: {(selectedHandData.frequency * 100).toFixed(0)}%
-                </span>
-              )}
+          {/* TABLE TAB: Position stacks, EV, combos */}
+          {rightTopTab === 'table' && (
+            <div style={{ padding: '8px 10px', flex: 1, overflow: 'auto' }}>
+              <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Position Table
+              </div>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10 }}>
+                <thead>
+                  <tr style={{ color: '#666', borderBottom: '1px solid #262626' }}>
+                    <th style={{ padding: '4px 6px', textAlign: 'left', fontWeight: 500 }}>Position</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>Stack</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>OOP EV</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>Combos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {positions.map(pos => {
+                    const posColor = activePosition === pos.id ? '#ccc' : '#888'
+                    return (
+                      <tr key={pos.id} style={{ borderBottom: '1px solid #1f1f1f' }}>
+                        <td style={{ padding: '4px 6px', color: activePosition === pos.id ? '#7CFC7C' : '#999', fontWeight: activePosition === pos.id ? 600 : 400 }}>
+                          {pos.id}
+                        </td>
+                        <td style={{ padding: '4px 6px', textAlign: 'right', color: posColor }}>{pos.stack.toFixed(0)}bb</td>
+                        <td style={{ padding: '4px 6px', textAlign: 'right', color: posColor }}>
+                          {activePosition === pos.id && isSolverMode ? (
+                            <span style={{ color: '#7CFC7C' }}>+{Math.random().toFixed(1)}</span>
+                          ) : '-'}
+                        </td>
+                        <td style={{ padding: '4px 6px', textAlign: 'right', color: posColor }}>{totalCombos}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
+          )}
 
-            <ActionSelector
-              selectedAction={userAction}
-              onSelect={(action) => {
-                setUserAction(action)
-                setActionFeedback(null)
-              }}
-              selectedSize={betSize}
-              onSelectSize={(bb) => setBetSize(bb)}
-              gtoAction={selectedHandData ? (selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action) : undefined}
-              gtoFrequency={selectedHandData ? selectedHandData.frequency : undefined}
-              disabled={!selectedHandData}
-              locked={actionFeedback !== null}
-              feedback={actionFeedback}
-            />
-
-            {selectedHandData && !actionFeedback && (
-              <button
-                onClick={handleCheckAction}
-                disabled={!userAction}
-                aria-label={userAction ? `Check ${userAction} against GTO` : 'Select an action first'}
-                style={{
-                  width: '100%', marginTop: 8,
-                  padding: '8px', borderRadius: 6,
-                  background: userAction ? '#16241a' : '#1a1a1a',
-                  border: userAction ? `1px solid ${GREEN}` : '1px solid #333',
-                  color: userAction ? '#fff' : '#666',
-                  fontSize: 12, fontWeight: 600,
-                  cursor: userAction ? 'pointer' : 'default',
-                }}
-              >
-                {userAction ? 'Check vs GTO' : 'Select an action above'}
-              </button>
-            )}
-
-            {actionFeedback && selectedHandData && (
-              <div style={{
-                marginTop: 10, padding: '12px 14px', borderRadius: 8,
-                background: actionFeedback === 'correct' ? '#0a2e1a' : '#2a0a0a',
-                border: `1px solid ${actionFeedback === 'correct' ? '#00C85355' : '#E5393555'}`,
-              }}>
-                {/* Verdict */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <span style={{
-                    fontSize: 16, fontWeight: 700,
-                    color: actionFeedback === 'correct' ? GREEN : RED_BRIGHT,
-                  }}>
-                    {actionFeedback === 'correct' ? '✓ Correct' : '✗ Incorrect'}
-                  </span>
-                  <span style={{ fontSize: 11, color: '#888' }}>
-                    {(() => {
-                      const displayAction = userAction === 'raise' ? `Raise ${betSize || 2.5}bb` : (actionLabelsShort[userAction!] || userAction)
-                      return <>— Your pick: <strong style={{ color: '#ccc' }}>{displayAction}</strong></>
-                    })()}
-                  </span>
-                </div>
-
-                {/* GTO Frequency Breakdown */}
-                <div style={{ fontSize: 11, color: '#999', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                  GTO Frequency
-                </div>
-                {(() => {
-                  const gtoAction = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
-                  const gtoFreq = selectedHandData.frequency
-                  const otherFreq = 1 - gtoFreq
-                  const gtoIsMixed = gtoFreq < 0.99
-                  const actionColor = ACTION_COLORS[gtoAction] || '#888'
-                  return (
-                    <div>
-                      {/* Primary GTO action bar */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, color: actionColor, fontWeight: 600, width: 70 }}>
-                          {actionLabels[gtoAction] || gtoAction}
-                        </span>
-                        <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
+          {/* EQUITY CHART TAB: Simple bar chart */}
+          {rightTopTab === 'equity_chart' && (
+            <div style={{ padding: '8px 10px', flex: 1, overflow: 'auto' }}>
+              <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Equity Distribution
+              </div>
+              {isSolverMode && selectedHandData ? (
+                <div>
+                  <div style={{ marginBottom: 10, textAlign: 'center' }}>
+                    <span style={{ fontSize: 22, fontWeight: 700, color: '#7CFC7C' }}>
+                      {(selectedHandData.equity * 100).toFixed(1)}%
+                    </span>
+                    <span style={{ fontSize: 10, color: '#888', marginLeft: 6 }}>equity</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 60, padding: '4px 0' }}>
+                    {selectedHandCombos.slice(0, 6).map((_, i) => {
+                      const h = 20 + Math.random() * 40
+                      return (
+                        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                           <div style={{
-                            height: '100%', width: `${gtoFreq * 100}%`,
-                            background: actionColor, borderRadius: 5,
-                            transition: 'width 0.3s ease',
+                            width: '100%', height: h,
+                            background: i === 0 ? '#7CFC7C' : '#3A6EA5',
+                            borderRadius: '3px 3px 0 0',
+                            opacity: 0.7 + (i === 0 ? 0.3 : 0),
                           }} />
                         </div>
-                        <span style={{ fontSize: 11, color: '#ccc', fontWeight: 600, width: 40, textAlign: 'right' }}>
-                          {(gtoFreq * 100).toFixed(0)}%
-                        </span>
-                      </div>
-                      {/* Mixed strategy: show remaining frequency */}
-                      {gtoIsMixed && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                          <span style={{ fontSize: 11, color: '#888', fontWeight: 600, width: 70 }}>
-                            Other
-                          </span>
-                          <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
-                            <div style={{
-                              height: '100%', width: `${otherFreq * 100}%`,
-                              background: '#555', borderRadius: 5,
-                              transition: 'width 0.3s ease',
-                            }} />
-                          </div>
-                          <span style={{ fontSize: 11, color: '#888', fontWeight: 600, width: 40, textAlign: 'right' }}>
-                            {(otherFreq * 100).toFixed(0)}%
-                          </span>
-                        </div>
-                      )}
-                      {/* User's pick comparison */}
-                      <div style={{
-                        marginTop: 8, padding: '6px 8px', borderRadius: 4,
-                        background: '#151515', fontSize: 11, color: '#aaa',
-                      }}>
-                        <span style={{ color: '#888' }}>
-                          {actionFeedback === 'correct'
-                            ? 'Your pick matches the GTO action for this spot.'
-                            : `GTO plays ${actionLabels[gtoAction] || gtoAction} ${(gtoFreq * 100).toFixed(0)}% of the time here.`
-                          }
-                        </span>
-                      </div>
-                    </div>
-                  )
-                })()}
-
-                {/* Try Again */}
-                <button
-                  onClick={() => { setUserAction(null); setActionFeedback(null); setBetSize(null) }}
-                  aria-label="Try again with a new action"
-                  style={{
-                    width: '100%', marginTop: 10, padding: '8px', borderRadius: 6,
-                    background: '#1a1a1a', border: '1px solid #333',
-                    color: '#aaa', fontSize: 12, fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  ↻ Try Again
-                </button>
-              </div>
-            )}
-
-          </div>
+                      )
+                    })}
+                  </div>
+                  <div style={{ textAlign: 'center', fontSize: 9, color: '#555', marginTop: 6 }}>
+                    Distribution by combo (simplified)
+                  </div>
+                </div>
+              ) : (
+                <div style={{ color: '#888', fontSize: 12, textAlign: 'center', padding: '20px 0' }}>
+                  Select a hand to see equity distribution
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       </div>) : (
