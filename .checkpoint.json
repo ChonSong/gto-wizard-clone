@@ -145,11 +145,11 @@
   "blocker": null,
   "note": "Player tick 2026-06-22: practice-page-visual-match-reference complete (7094e0e). Rewrote /practice page with card-based setup panel, PlayingCard component matching equity page pattern, proper action buttons with GTO frequency chips, viewport-filling layout. All 368 tests pass, 0 page regressions. Next: update-features-yaml-courses-detail.",
   "coach_review": {
-    "last_reviewed_sha": "a09cc2fb77c187f3d29b438ee05fe25469075f75",
-    "last_reviewed_at": "2026-06-22T01:35:00Z",
+    "last_reviewed_sha": "7094e0e21f4ab8cc37c8d1f41e0d355e597cc8da",
+    "last_reviewed_at": "2026-06-22T01:42:00Z",
     "verdict": "approved",
-    "notes": "Reviewed a09cc2f (checkpoint-only change, no source code). No new player code commits since be449f5. Live site QA: / renders 12 feature cards with green brand colors, 0 JS errors. /practice loads with exercise type/category/difficulty filters and Start button (intermittent client-side error on first load, recovers on reload — non-blocking). /study renders hand matrix with GTO frequencies, position buttons, stack selector, action buttons (Fold/Raise/Allin), 0 JS errors. Clicked AA → Raise 2.5bb — action button works. Backlog healthy: 9+ tasks remaining including current practice-page-visual-match-reference.",
-    "last_review": "2026-06-22T01:35:00Z",
+    "notes": "Reviewed 7094e0e (practice-page-visual-match-reference). Major rewrite: 635 insertions, 305 deletions in apps/web/src/app/practice/page.tsx. Added PlayingCard component with proper suit colors (red for hearts/diamonds), Pill/FilterBtn components, converted inline styles to Tailwind CSS, viewport-filling layout (h-screen/flex/overflow-hidden), action buttons with GTO frequency chips, session stats panel with progress ring, responsive grid. Live site QA: /practice loads with exercise type/category/difficulty filters, Start Practice Session button works, session starts showing hand/board/action buttons with GTO frequencies, 0 JS errors. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — all changes directly required by practice-page-visual-match-reference task. 368 unit tests pass. E2E tests still broken (known vitest/Playwright conflict — fix-e2e-test-runner in backlog).",
+    "last_review": "2026-06-22T01:42:00Z",
     "status": "approved"
   }
 }
