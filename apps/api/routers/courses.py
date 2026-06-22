@@ -20,6 +20,7 @@ from sqlalchemy.orm import selectinload
 
 from apps.api.services.database import get_session_context
 from apps.api.models.course_models import Course, Lesson, UserProgress
+from apps.api.services.cache import cached
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/courses", tags=["courses"])
@@ -27,8 +28,10 @@ router = APIRouter(prefix="/api/v1/courses", tags=["courses"])
 
 # === REQUEST/RESPONSE MODELS ===
 
+
 class CourseCreate(BaseModel):
     """Request model for creating a course."""
+
     title: str = Field(..., description="Course title")
     description: Optional[str] = Field(None, description="Course description")
     short_description: Optional[str] = Field(None, description="Short description for cards")
@@ -46,6 +49,7 @@ class CourseCreate(BaseModel):
 
 class CourseUpdate(BaseModel):
     """Request model for updating a course."""
+
     title: Optional[str] = None
     description: Optional[str] = None
     short_description: Optional[str] = None
@@ -62,6 +66,7 @@ class CourseUpdate(BaseModel):
 
 class LessonCreate(BaseModel):
     """Request model for creating a lesson."""
+
     course_id: str = Field(..., description="Course ID")
     title: str = Field(..., description="Lesson title")
     content: Optional[str] = Field(None, description="Lesson content (markdown/html)")
@@ -75,6 +80,7 @@ class LessonCreate(BaseModel):
 
 class LessonUpdate(BaseModel):
     """Request model for updating a lesson."""
+
     title: Optional[str] = None
     content: Optional[str] = None
     content_type: Optional[str] = None
@@ -87,6 +93,7 @@ class LessonUpdate(BaseModel):
 
 class UserProgressUpdate(BaseModel):
     """Request model for updating user progress."""
+
     status: Optional[str] = Field(None, description="Status: not_started, in_progress, completed")
     progress_percent: Optional[float] = Field(None, ge=0.0, le=100.0)
     time_spent_minutes: Optional[int] = Field(None, ge=0)
@@ -95,6 +102,7 @@ class UserProgressUpdate(BaseModel):
 
 class CourseResponse(BaseModel):
     """Response model for a course."""
+
     id: str
     title: str
     description: Optional[str] = None
@@ -116,11 +124,13 @@ class CourseResponse(BaseModel):
 
 class CourseDetailResponse(CourseResponse):
     """Response model for a course with lessons."""
+
     lessons: List[Dict[str, Any]] = []
 
 
 class LessonResponse(BaseModel):
     """Response model for a lesson."""
+
     id: str
     course_id: str
     title: str
@@ -137,6 +147,7 @@ class LessonResponse(BaseModel):
 
 class UserProgressResponse(BaseModel):
     """Response model for user progress."""
+
     id: str
     user_id: str
     course_id: str
@@ -153,6 +164,7 @@ class UserProgressResponse(BaseModel):
 
 class CourseListResponse(BaseModel):
     """Response for listing courses."""
+
     courses: List[CourseResponse]
     total: int
     offset: int
@@ -161,6 +173,7 @@ class CourseListResponse(BaseModel):
 
 class UserCourseProgressResponse(BaseModel):
     """Response for user's progress in a course."""
+
     course_id: str
     course_title: str
     overall_progress: float
@@ -170,6 +183,7 @@ class UserCourseProgressResponse(BaseModel):
 
 
 # === COURSE ENDPOINTS ===
+
 
 @router.post("", response_model=CourseResponse, status_code=201)
 async def create_course(request: CourseCreate) -> Dict[str, Any]:
@@ -197,6 +211,7 @@ async def create_course(request: CourseCreate) -> Dict[str, Any]:
 
 
 @router.get("", response_model=CourseListResponse)
+@cached(ttl=300)
 async def list_courses(
     game_type: Optional[str] = Query(None, description="Filter by game type"),
     difficulty: Optional[str] = Query(None, description="Filter by difficulty"),
@@ -212,7 +227,7 @@ async def list_courses(
         # Build query
         query = select(Course)
         count_query = select(func.count(Course.id))
-        
+
         if game_type:
             query = query.where(Course.game_type == game_type)
             count_query = count_query.where(Course.game_type == game_type)
@@ -228,16 +243,16 @@ async def list_courses(
         if is_featured is not None:
             query = query.where(Course.is_featured == is_featured)
             count_query = count_query.where(Course.is_featured == is_featured)
-        
+
         # Get total count
         total_result = await session.execute(count_query)
         total = total_result.scalar() or 0
-        
+
         # Apply pagination
         query = query.order_by(Course.created_at.desc()).offset(offset).limit(limit)
         result = await session.execute(query)
         courses = result.scalars().all()
-        
+
         return {
             "courses": [c.to_dict() for c in courses],
             "total": total,
@@ -247,19 +262,22 @@ async def list_courses(
 
 
 @router.get("/featured", response_model=CourseListResponse)
+@cached(ttl=300)
 async def list_featured_courses(
     limit: int = Query(10, ge=1, le=50),
 ) -> Dict[str, Any]:
     """List featured courses."""
     async with get_session_context() as session:
-        query = select(Course).where(
-            Course.is_featured == True,
-            Course.is_published == True
-        ).order_by(Course.created_at.desc()).limit(limit)
-        
+        query = (
+            select(Course)
+            .where(Course.is_featured == True, Course.is_published == True)
+            .order_by(Course.created_at.desc())
+            .limit(limit)
+        )
+
         result = await session.execute(query)
         courses = result.scalars().all()
-        
+
         return {
             "courses": [c.to_dict() for c in courses],
             "total": len(courses),
@@ -269,6 +287,7 @@ async def list_featured_courses(
 
 
 @router.get("/categories", response_model=Dict[str, List[str]])
+@cached(ttl=600)
 async def get_categories() -> Dict[str, List[str]]:
     """Get all available course metadata."""
     async with get_session_context() as session:
@@ -277,19 +296,19 @@ async def get_categories() -> Dict[str, List[str]]:
             select(Course.category).distinct().where(Course.is_published == True)
         )
         categories = [r[0] for r in cat_result.fetchall()]
-        
+
         # Get unique difficulties
         diff_result = await session.execute(
             select(Course.difficulty).distinct().where(Course.is_published == True)
         )
         difficulties = [r[0] for r in diff_result.fetchall()]
-        
+
         # Get unique game types
         game_result = await session.execute(
             select(Course.game_type).distinct().where(Course.is_published == True)
         )
         game_types = [r[0] for r in game_result.fetchall()]
-        
+
         return {
             "categories": sorted(categories),
             "difficulties": sorted(difficulties),
@@ -304,14 +323,13 @@ async def get_course(course_id: str) -> Dict[str, Any]:
         query = select(Course).options(selectinload(Course.lessons)).where(Course.id == course_id)
         result = await session.execute(query)
         course = result.scalar_one_or_none()
-        
+
         if not course:
             raise HTTPException(status_code=404, detail=f"Course not found: {course_id}")
-        
+
         course_dict = course.to_dict()
         course_dict["lessons"] = sorted(
-            [l.to_dict() for l in course.lessons],
-            key=lambda x: x["order_index"]
+            [l.to_dict() for l in course.lessons], key=lambda x: x["order_index"]
         )
         return course_dict
 
@@ -323,21 +341,30 @@ async def update_course(course_id: str, request: CourseUpdate) -> Dict[str, Any]
         query = select(Course).where(Course.id == course_id)
         result = await session.execute(query)
         course = result.scalar_one_or_none()
-        
+
         if not course:
             raise HTTPException(status_code=404, detail=f"Course not found: {course_id}")
-        
+
         # Update fields
         update_fields = [
-            "title", "description", "short_description", "thumbnail_url",
-            "game_type", "difficulty", "category", "duration_minutes",
-            "is_published", "is_featured", "prerequisites", "tags"
+            "title",
+            "description",
+            "short_description",
+            "thumbnail_url",
+            "game_type",
+            "difficulty",
+            "category",
+            "duration_minutes",
+            "is_published",
+            "is_featured",
+            "prerequisites",
+            "tags",
         ]
         for field in update_fields:
             value = getattr(request, field, None)
             if value is not None:
                 setattr(course, field, value)
-        
+
         await session.flush()
         await session.refresh(course)
         return course.to_dict()
@@ -350,15 +377,16 @@ async def delete_course(course_id: str) -> Dict[str, str]:
         query = select(Course).where(Course.id == course_id)
         result = await session.execute(query)
         course = result.scalar_one_or_none()
-        
+
         if not course:
             raise HTTPException(status_code=404, detail=f"Course not found: {course_id}")
-        
+
         await session.delete(course)
         return {"status": "deleted", "id": course_id}
 
 
 # === LESSON ENDPOINTS ===
+
 
 @router.post("/lessons", response_model=LessonResponse, status_code=201)
 async def create_lesson(request: LessonCreate) -> Dict[str, Any]:
@@ -368,10 +396,10 @@ async def create_lesson(request: LessonCreate) -> Dict[str, Any]:
         course_query = select(Course).where(Course.id == request.course_id)
         course_result = await session.execute(course_query)
         course = course_result.scalar_one_or_none()
-        
+
         if not course:
             raise HTTPException(status_code=404, detail=f"Course not found: {request.course_id}")
-        
+
         lesson = Lesson(
             course_id=request.course_id,
             title=request.title,
@@ -384,10 +412,10 @@ async def create_lesson(request: LessonCreate) -> Dict[str, Any]:
             quiz_data=request.quiz_data,
         )
         session.add(lesson)
-        
+
         # Update course lesson count
         course.lesson_count = (course.lesson_count or 0) + 1
-        
+
         await session.flush()
         await session.refresh(lesson)
         return lesson.to_dict()
@@ -400,10 +428,10 @@ async def get_lesson(lesson_id: str) -> Dict[str, Any]:
         query = select(Lesson).where(Lesson.id == lesson_id)
         result = await session.execute(query)
         lesson = result.scalar_one_or_none()
-        
+
         if not lesson:
             raise HTTPException(status_code=404, detail=f"Lesson not found: {lesson_id}")
-        
+
         return lesson.to_dict()
 
 
@@ -414,20 +442,26 @@ async def update_lesson(lesson_id: str, request: LessonUpdate) -> Dict[str, Any]
         query = select(Lesson).where(Lesson.id == lesson_id)
         result = await session.execute(query)
         lesson = result.scalar_one_or_none()
-        
+
         if not lesson:
             raise HTTPException(status_code=404, detail=f"Lesson not found: {lesson_id}")
-        
+
         # Update fields
         update_fields = [
-            "title", "content", "content_type", "video_url",
-            "order_index", "duration_minutes", "is_preview", "quiz_data"
+            "title",
+            "content",
+            "content_type",
+            "video_url",
+            "order_index",
+            "duration_minutes",
+            "is_preview",
+            "quiz_data",
         ]
         for field in update_fields:
             value = getattr(request, field, None)
             if value is not None:
                 setattr(lesson, field, value)
-        
+
         await session.flush()
         await session.refresh(lesson)
         return lesson.to_dict()
@@ -440,24 +474,25 @@ async def delete_lesson(lesson_id: str) -> Dict[str, str]:
         query = select(Lesson).where(Lesson.id == lesson_id)
         result = await session.execute(query)
         lesson = result.scalar_one_or_none()
-        
+
         if not lesson:
             raise HTTPException(status_code=404, detail=f"Lesson not found: {lesson_id}")
-        
+
         course_id = lesson.course_id
         await session.delete(lesson)
-        
+
         # Update course lesson count
         course_query = select(Course).where(Course.id == course_id)
         course_result = await session.execute(course_query)
         course = course_result.scalar_one_or_none()
         if course and course.lesson_count > 0:
             course.lesson_count -= 1
-        
+
         return {"status": "deleted", "id": lesson_id}
 
 
 # === USER PROGRESS ENDPOINTS ===
+
 
 @router.get("/user/{user_id}/progress", response_model=List[UserCourseProgressResponse])
 async def get_user_course_progress(user_id: str) -> List[Dict[str, Any]]:
@@ -467,7 +502,7 @@ async def get_user_course_progress(user_id: str) -> List[Dict[str, Any]]:
         query = select(UserProgress).where(UserProgress.user_id == user_id)
         result = await session.execute(query)
         progress_records = result.scalars().all()
-        
+
         # Group by course
         course_progress: Dict[str, Dict[str, Any]] = {}
         for progress in progress_records:
@@ -482,26 +517,29 @@ async def get_user_course_progress(user_id: str) -> List[Dict[str, Any]]:
                     "lessons": [],
                 }
             course_progress[cid]["lessons"].append(progress.to_dict())
-        
+
         # Get course details and calculate progress
         for course_id in course_progress:
-            course_query = select(Course).options(selectinload(Course.lessons)).where(Course.id == course_id)
+            course_query = (
+                select(Course).options(selectinload(Course.lessons)).where(Course.id == course_id)
+            )
             course_result = await session.execute(course_query)
             course = course_result.scalar_one_or_none()
-            
+
             if course:
                 course_progress[course_id]["course_title"] = course.title or ""
                 course_progress[course_id]["total_lessons"] = len(course.lessons)
-                
-                completed = sum(1 for lp in course_progress[course_id]["lessons"] 
-                              if lp["status"] == "completed")
+
+                completed = sum(
+                    1 for lp in course_progress[course_id]["lessons"] if lp["status"] == "completed"
+                )
                 course_progress[course_id]["lessons_completed"] = completed
-                
+
                 if len(course.lessons) > 0:
                     course_progress[course_id]["overall_progress"] = (
                         completed / len(course.lessons)
                     ) * 100
-        
+
         return list(course_progress.values())
 
 
@@ -518,10 +556,10 @@ async def update_user_progress(
         lesson_query = select(Lesson).where(Lesson.id == lesson_id)
         lesson_result = await session.execute(lesson_query)
         lesson = lesson_result.scalar_one_or_none()
-        
+
         if not lesson:
             raise HTTPException(status_code=404, detail=f"Lesson not found: {lesson_id}")
-        
+
         # Find existing progress or create new
         query = select(UserProgress).where(
             UserProgress.user_id == user_id,
@@ -529,7 +567,7 @@ async def update_user_progress(
         )
         result = await session.execute(query)
         progress = result.scalar_one_or_none()
-        
+
         if not progress:
             progress = UserProgress(
                 user_id=user_id,
@@ -537,28 +575,30 @@ async def update_user_progress(
                 lesson_id=lesson_id,
             )
             session.add(progress)
-        
+
         # Update fields
         if request.status is not None:
             progress.status = request.status
             if request.status == "completed":
                 progress.completed_at = datetime.utcnow()
-        
+
         if request.progress_percent is not None:
             progress.progress_percent = request.progress_percent
-        
+
         if request.time_spent_minutes is not None:
             progress.time_spent_minutes = request.time_spent_minutes
-        
+
         if request.quiz_score is not None:
             progress.quiz_score = request.quiz_score
-        
+
         await session.flush()
         await session.refresh(progress)
         return progress.to_dict()
 
 
-@router.get("/user/{user_id}/course/{course_id}/progress", response_model=UserCourseProgressResponse)
+@router.get(
+    "/user/{user_id}/course/{course_id}/progress", response_model=UserCourseProgressResponse
+)
 async def get_user_course_progress_detail(
     user_id: str,
     course_id: str,
@@ -566,13 +606,15 @@ async def get_user_course_progress_detail(
     """Get detailed progress for a user in a specific course."""
     async with get_session_context() as session:
         # Get course with lessons
-        course_query = select(Course).options(selectinload(Course.lessons)).where(Course.id == course_id)
+        course_query = (
+            select(Course).options(selectinload(Course.lessons)).where(Course.id == course_id)
+        )
         course_result = await session.execute(course_query)
         course = course_result.scalar_one_or_none()
-        
+
         if not course:
             raise HTTPException(status_code=404, detail=f"Course not found: {course_id}")
-        
+
         # Get user progress for this course
         progress_query = select(UserProgress).where(
             UserProgress.user_id == user_id,
@@ -580,13 +622,13 @@ async def get_user_course_progress_detail(
         )
         progress_result = await session.execute(progress_query)
         progress_records = progress_result.scalars().all()
-        
+
         progress_map = {str(p.lesson_id): p for p in progress_records}
-        
+
         total_lessons = len(course.lessons)
         completed = 0
         lessons_response = []
-        
+
         for lesson in sorted(course.lessons, key=lambda x: x.order_index):
             if str(lesson.id) in progress_map:
                 p = progress_map[str(lesson.id)]
@@ -594,23 +636,25 @@ async def get_user_course_progress_detail(
                 if p.status == "completed":
                     completed += 1
             else:
-                lessons_response.append({
-                    "id": None,
-                    "user_id": user_id,
-                    "course_id": course_id,
-                    "lesson_id": str(lesson.id),
-                    "status": "not_started",
-                    "progress_percent": 0.0,
-                    "time_spent_minutes": 0,
-                    "quiz_score": None,
-                    "completed_at": None,
-                    "last_accessed_at": None,
-                    "created_at": None,
-                    "updated_at": None,
-                })
-        
+                lessons_response.append(
+                    {
+                        "id": None,
+                        "user_id": user_id,
+                        "course_id": course_id,
+                        "lesson_id": str(lesson.id),
+                        "status": "not_started",
+                        "progress_percent": 0.0,
+                        "time_spent_minutes": 0,
+                        "quiz_score": None,
+                        "completed_at": None,
+                        "last_accessed_at": None,
+                        "created_at": None,
+                        "updated_at": None,
+                    }
+                )
+
         overall_progress = (completed / total_lessons * 100) if total_lessons > 0 else 0.0
-        
+
         return {
             "course_id": course_id,
             "course_title": course.title,

@@ -17,6 +17,7 @@ from routers.strategy_lookup import router as strategy_lookup_router
 from routers.trainer import router as trainer_router
 from routers.quiz_ws import websocket_handler
 from routers.variants import router as variants_router
+from apps.api.services.cache import init_cache
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -110,6 +111,7 @@ async def _auto_seed_strategies():
 @app.on_event("startup")
 async def startup_event():
     init_redis()
+    init_cache(app)
     # Try to init database, but don't fail if models have import issues
     try:
         from apps.api.services.database import init_db

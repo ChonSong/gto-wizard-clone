@@ -28,6 +28,7 @@ from apps.api.services.quiz_models import (
     UserStats,
     ReviewSpot,
 )
+from apps.api.services.cache import cached
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/quiz", tags=["quiz"])
@@ -35,8 +36,10 @@ router = APIRouter(prefix="/api/v1/quiz", tags=["quiz"])
 
 # === REQUEST/RESPONSE MODELS ===
 
+
 class QuizSubmitRequest(BaseModel):
     """Request model for quiz submission."""
+
     spot_id: str
     user_id: str
     user_name: Optional[str] = None
@@ -47,6 +50,7 @@ class QuizSubmitRequest(BaseModel):
 
 class QuizSubmitResponse(BaseModel):
     """Response for quiz submission."""
+
     is_correct: bool
     ev_loss: float
     gto_action: str
@@ -60,6 +64,7 @@ class QuizSubmitResponse(BaseModel):
 
 class SpotResponse(BaseModel):
     """Response model for a quiz spot."""
+
     id: str
     game_type: str
     category: str
@@ -81,6 +86,7 @@ class SpotResponse(BaseModel):
 
 class UserStatsResponse(BaseModel):
     """Response model for user statistics."""
+
     user_id: str
     total_solves: int
     correct_count: int
@@ -96,6 +102,7 @@ class UserStatsResponse(BaseModel):
 
 class LeaderboardEntry(BaseModel):
     """Single leaderboard entry."""
+
     rank: int
     user_id: str
     user_name: Optional[str]
@@ -108,6 +115,7 @@ class LeaderboardEntry(BaseModel):
 
 class LeaderboardResponse(BaseModel):
     """Response for leaderboard endpoint."""
+
     entries: List[LeaderboardEntry]
     total_users: int
     user_rank: Optional[int] = None
@@ -115,24 +123,26 @@ class LeaderboardResponse(BaseModel):
 
 class CategoriesResponse(BaseModel):
     """Response for categories endpoint."""
+
     categories: List[str]
     difficulties: List[str]
 
 
 # === HELPER FUNCTIONS ===
 
-async def get_or_create_user_stats(session: AsyncSession, user_id: str, user_name: Optional[str] = None) -> UserStats:
+
+async def get_or_create_user_stats(
+    session: AsyncSession, user_id: str, user_name: Optional[str] = None
+) -> UserStats:
     """Get or create user stats record."""
-    result = await session.execute(
-        select(UserStats).where(UserStats.user_id == user_id)
-    )
+    result = await session.execute(select(UserStats).where(UserStats.user_id == user_id))
     stats = result.scalar_one_or_none()
-    
+
     if not stats:
         stats = UserStats(user_id=user_id, user_name=user_name)
         session.add(stats)
         await session.flush()
-    
+
     return stats
 
 
@@ -146,22 +156,24 @@ async def update_user_stats_on_answer(
 ) -> None:
     """Update user stats after an answer."""
     stats.total_solves += 1
-    
+
     if is_correct:
         stats.correct_count += 1
         stats.current_streak += 1
         stats.max_streak = max(stats.max_streak, stats.current_streak)
         # Points: 10 for correct, bonus based on difficulty
-        difficulty_bonus = {"beginner": 5, "intermediate": 10, "advanced": 20}.get(spot.difficulty, 10)
+        difficulty_bonus = {"beginner": 5, "intermediate": 10, "advanced": 20}.get(
+            spot.difficulty, 10
+        )
         stats.points += 10 + difficulty_bonus
     else:
         stats.current_streak = 0
         # Add to missed spots
         if spot.id not in stats.missed_spot_ids:
             stats.missed_spot_ids.append(spot.id)
-    
+
     stats.total_ev_loss += ev_loss
-    
+
     # Update weak spots tracking
     category = spot.category
     weak = dict(stats.weak_spots)
@@ -171,20 +183,21 @@ async def update_user_stats_on_answer(
     if is_correct:
         weak[category]["correct"] += 1
     stats.weak_spots = weak
-    
+
     # Calculate level (every 500 points = 1 level)
     stats.level = (stats.points // 500) + 1
-    
+
     stats.last_updated = datetime.utcnow()
 
 
 # === API ENDPOINTS ===
 
+
 @router.post("/submit", response_model=QuizSubmitResponse)
 async def submit_quiz_answer(request: QuizSubmitRequest):
     """
     Submit a quiz answer and get GTO comparison result.
-    
+
     Compares user's selected action against GTO action,
     calculates EV loss, and updates user stats.
     """
@@ -194,18 +207,16 @@ async def submit_quiz_answer(request: QuizSubmitRequest):
             spot_uuid = uuid.UUID(request.spot_id)
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid spot_id format")
-        
-        result = await session.execute(
-            select(QuizSpot).where(QuizSpot.id == spot_uuid)
-        )
+
+        result = await session.execute(select(QuizSpot).where(QuizSpot.id == spot_uuid))
         spot = result.scalar_one_or_none()
-        
+
         if not spot:
             raise HTTPException(status_code=404, detail="Spot not found")
-        
+
         # Compare to GTO action
         is_correct = request.selected_action.lower() == spot.gto_action.lower()
-        
+
         # Calculate EV loss
         ev_loss = 0.0
         if not is_correct:
@@ -223,10 +234,13 @@ async def submit_quiz_answer(request: QuizSubmitRequest):
             for action_key in ["raise", "call", "fold"]:
                 if action_key in options:
                     for opt in options[action_key]:
-                        if isinstance(opt, dict) and opt.get("action") == request.selected_action.lower():
+                        if (
+                            isinstance(opt, dict)
+                            and opt.get("action") == request.selected_action.lower()
+                        ):
                             selected_option = opt
                             break
-            
+
             if selected_option and "ev" in selected_option:
                 ev_loss = float(spot.gto_ev) - float(selected_option["ev"])
             else:
@@ -234,15 +248,15 @@ async def submit_quiz_answer(request: QuizSubmitRequest):
                 ev_loss = abs(float(spot.gto_ev)) * 0.3
                 if request.selected_action == "fold":
                     ev_loss = abs(float(spot.gto_ev))
-        
+
         # Get or create user stats
         stats = await get_or_create_user_stats(session, request.user_id, request.user_name)
-        
+
         # Update stats
         await update_user_stats_on_answer(
             session, stats, spot, request.selected_action, is_correct, ev_loss
         )
-        
+
         # Record submission
         submission = QuizSubmission(
             user_id=request.user_id,
@@ -255,9 +269,9 @@ async def submit_quiz_answer(request: QuizSubmitRequest):
             session_id=request.session_id,
         )
         session.add(submission)
-        
+
         await session.commit()
-        
+
         return QuizSubmitResponse(
             is_correct=is_correct,
             ev_loss=ev_loss,
@@ -280,20 +294,20 @@ async def get_random_spot(
 ):
     """
     Get a random quiz spot from the database.
-    
+
     Supports filtering by category, difficulty, and street.
     Also supports avoiding recently shown spots via exclude_ids.
     """
     async with get_session_context() as session:
         query = select(QuizSpot)
-        
+
         if category:
             query = query.where(QuizSpot.category == category)
         if difficulty:
             query = query.where(QuizSpot.difficulty == difficulty)
         if street:
             query = query.where(QuizSpot.street == street)
-        
+
         # Exclude specific IDs
         if exclude_ids:
             try:
@@ -301,27 +315,23 @@ async def get_random_spot(
                 query = query.where(~QuizSpot.id.in_(exclude_uuid_list))
             except ValueError:
                 pass  # Skip invalid IDs
-        
+
         # Get count
         subq = query.subquery()
-        count_result = await session.execute(
-            select(func.count()).select_from(subq)
-        )
+        count_result = await session.execute(select(func.count()).select_from(subq))
         total_count = count_result.scalar() or 0
-        
+
         if total_count == 0:
             raise HTTPException(status_code=404, detail="No spots found matching criteria")
-        
+
         # Get random offset and fetch
         random_offset = random.randint(0, total_count - 1)
-        result = await session.execute(
-            query.offset(random_offset).limit(1)
-        )
+        result = await session.execute(query.offset(random_offset).limit(1))
         spot = result.scalar_one_or_none()
-        
+
         if not spot:
             raise HTTPException(status_code=404, detail="Failed to fetch random spot")
-        
+
         return SpotResponse(
             id=str(spot.id),
             game_type=spot.game_type,
@@ -337,7 +347,11 @@ async def get_random_spot(
             gto_action=spot.gto_action,
             gto_frequency=float(spot.gto_frequency),
             gto_ev=float(spot.gto_ev),
-            options=spot.options if isinstance(spot.options, list) else list(spot.options.values())[0] if isinstance(spot.options, dict) and spot.options else [],
+            options=spot.options
+            if isinstance(spot.options, list)
+            else list(spot.options.values())[0]
+            if isinstance(spot.options, dict) and spot.options
+            else [],
             street=spot.street,
             explanation=spot.explanation,
         )
@@ -351,15 +365,13 @@ async def get_spot(spot_id: str):
             spot_uuid = uuid.UUID(spot_id)
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid spot_id format")
-        
-        result = await session.execute(
-            select(QuizSpot).where(QuizSpot.id == spot_uuid)
-        )
+
+        result = await session.execute(select(QuizSpot).where(QuizSpot.id == spot_uuid))
         spot = result.scalar_one_or_none()
-        
+
         if not spot:
             raise HTTPException(status_code=404, detail="Spot not found")
-        
+
         return SpotResponse(
             id=str(spot.id),
             game_type=spot.game_type,
@@ -375,7 +387,11 @@ async def get_spot(spot_id: str):
             gto_action=spot.gto_action,
             gto_frequency=float(spot.gto_frequency),
             gto_ev=float(spot.gto_ev),
-            options=spot.options if isinstance(spot.options, list) else list(spot.options.values())[0] if isinstance(spot.options, dict) and spot.options else [],
+            options=spot.options
+            if isinstance(spot.options, list)
+            else list(spot.options.values())[0]
+            if isinstance(spot.options, dict) and spot.options
+            else [],
             street=spot.street,
             explanation=spot.explanation,
         )
@@ -386,7 +402,7 @@ async def get_user_stats(user_id: str):
     """Get user statistics and progress."""
     async with get_session_context() as session:
         stats = await get_or_create_user_stats(session, user_id)
-        
+
         return UserStatsResponse(
             user_id=stats.user_id,
             total_solves=stats.total_solves,
@@ -411,17 +427,23 @@ async def get_leaderboard(
     """Get leaderboard ranked by accuracy and solves completed."""
     async with get_session_context() as session:
         # Query top users by accuracy (min 10 solves for ranking)
-        subquery = select(
-            UserStats.user_id,
-            UserStats.user_name,
-            UserStats.total_solves,
-            UserStats.correct_count,
-            UserStats.total_ev_loss,
-        ).where(UserStats.total_solves >= 10).subquery()
-        
+        subquery = (
+            select(
+                UserStats.user_id,
+                UserStats.user_name,
+                UserStats.total_solves,
+                UserStats.correct_count,
+                UserStats.total_ev_loss,
+            )
+            .where(UserStats.total_solves >= 10)
+            .subquery()
+        )
+
         # Calculate accuracy in SQL
-        accuracy_expr = cast(subquery.c.correct_count, Float) / cast(subquery.c.total_solves, Float) * 100
-        
+        accuracy_expr = (
+            cast(subquery.c.correct_count, Float) / cast(subquery.c.total_solves, Float) * 100
+        )
+
         result = await session.execute(
             select(
                 subquery.c.user_id,
@@ -436,43 +458,46 @@ async def get_leaderboard(
             .limit(limit)
         )
         rows = result.all()
-        
+
         # Get total count
         count_result = await session.execute(
             select(func.count(UserStats.user_id)).where(UserStats.total_solves >= 10)
         )
         total_users = count_result.scalar() or 0
-        
+
         # Build entries with ranks
         entries = []
         for i, row in enumerate(rows):
-            avg_ev = float(row.total_ev_loss) / float(row.total_solves) if row.total_solves > 0 else 0
-            entries.append(LeaderboardEntry(
-                rank=offset + i + 1,
-                user_id=row.user_id,
-                user_name=row.user_name,
-                score=row.correct_count * 10,  # Points based on correct answers
-                accuracy=float(row.accuracy) if hasattr(row, 'accuracy') else 0,
-                correct_count=row.correct_count,
-                total_solves=row.total_solves,
-                avg_ev_loss=avg_ev,
-            ))
-        
+            avg_ev = (
+                float(row.total_ev_loss) / float(row.total_solves) if row.total_solves > 0 else 0
+            )
+            entries.append(
+                LeaderboardEntry(
+                    rank=offset + i + 1,
+                    user_id=row.user_id,
+                    user_name=row.user_name,
+                    score=row.correct_count * 10,  # Points based on correct answers
+                    accuracy=float(row.accuracy) if hasattr(row, "accuracy") else 0,
+                    correct_count=row.correct_count,
+                    total_solves=row.total_solves,
+                    avg_ev_loss=avg_ev,
+                )
+            )
+
         # Find user's rank if specified
         user_rank = None
         if user_id:
             rank_result = await session.execute(
                 select(
                     subquery.c.user_id,
-                )
-                .order_by(accuracy_expr.desc())
+                ).order_by(accuracy_expr.desc())
             )
             all_rows = rank_result.all()
             for idx, row in enumerate(all_rows):
                 if row.user_id == user_id:
                     user_rank = idx + 1
                     break
-        
+
         return LeaderboardResponse(
             entries=entries,
             total_users=total_users,
@@ -481,21 +506,18 @@ async def get_leaderboard(
 
 
 @router.get("/categories", response_model=CategoriesResponse)
+@cached(ttl=600)
 async def get_categories():
     """Get all available spot categories and difficulties."""
     async with get_session_context() as session:
         # Get distinct categories
-        cat_result = await session.execute(
-            select(QuizSpot.category).distinct()
-        )
+        cat_result = await session.execute(select(QuizSpot.category).distinct())
         categories = [row[0] for row in cat_result.all()]
-        
+
         # Get distinct difficulties
-        diff_result = await session.execute(
-            select(QuizSpot.difficulty).distinct()
-        )
+        diff_result = await session.execute(select(QuizSpot.difficulty).distinct())
         difficulties = [row[0] for row in diff_result.all()]
-        
+
         return CategoriesResponse(
             categories=categories,
             difficulties=difficulties,
@@ -514,15 +536,13 @@ async def mark_for_review(
             spot_uuid = uuid.UUID(spot_id)
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid spot_id format")
-        
+
         # Check spot exists
-        spot_result = await session.execute(
-            select(QuizSpot).where(QuizSpot.id == spot_uuid)
-        )
+        spot_result = await session.execute(select(QuizSpot).where(QuizSpot.id == spot_uuid))
         spot = spot_result.scalar_one_or_none()
         if not spot:
             raise HTTPException(status_code=404, detail="Spot not found")
-        
+
         # Check if already marked for review
         existing = await session.execute(
             select(ReviewSpot).where(
@@ -531,7 +551,7 @@ async def mark_for_review(
             )
         )
         review = existing.scalar_one_or_none()
-        
+
         if review:
             review.review_count += 1
             review.last_reviewed_at = datetime.utcnow()
@@ -543,9 +563,9 @@ async def mark_for_review(
                 mastered=mastered,
             )
             session.add(review)
-        
+
         await session.commit()
-        
+
         return {"status": "ok", "message": "Spot marked for review"}
 
 
@@ -556,38 +576,46 @@ async def get_review_spots(
 ):
     """Get spots a user has marked for review."""
     async with get_session_context() as session:
-        query = select(ReviewSpot, QuizSpot).join(
-            QuizSpot, ReviewSpot.spot_id == QuizSpot.id
-        ).where(ReviewSpot.user_id == user_id)
-        
+        query = (
+            select(ReviewSpot, QuizSpot)
+            .join(QuizSpot, ReviewSpot.spot_id == QuizSpot.id)
+            .where(ReviewSpot.user_id == user_id)
+        )
+
         if mastered_only:
             query = query.where(ReviewSpot.mastered == False)
-        
+
         result = await session.execute(query)
         rows = result.all()
-        
+
         spots = []
         for review, spot in rows:
-            spots.append(SpotResponse(
-                id=str(spot.id),
-                game_type=spot.game_type,
-                category=spot.category,
-                difficulty=spot.difficulty,
-                position=spot.position,
-                hero_hand=spot.hero_hand,
-                board=spot.board,
-                turn=spot.turn,
-                river=spot.river,
-                pot_size=spot.pot_size,
-                stack_depth=spot.stack_depth,
-                gto_action=spot.gto_action,
-                gto_frequency=float(spot.gto_frequency),
-                gto_ev=float(spot.gto_ev),
-                options=spot.options if isinstance(spot.options, list) else list(spot.options.values())[0] if isinstance(spot.options, dict) and spot.options else [],
-                street=spot.street,
-                explanation=spot.explanation,
-            ))
-        
+            spots.append(
+                SpotResponse(
+                    id=str(spot.id),
+                    game_type=spot.game_type,
+                    category=spot.category,
+                    difficulty=spot.difficulty,
+                    position=spot.position,
+                    hero_hand=spot.hero_hand,
+                    board=spot.board,
+                    turn=spot.turn,
+                    river=spot.river,
+                    pot_size=spot.pot_size,
+                    stack_depth=spot.stack_depth,
+                    gto_action=spot.gto_action,
+                    gto_frequency=float(spot.gto_frequency),
+                    gto_ev=float(spot.gto_ev),
+                    options=spot.options
+                    if isinstance(spot.options, list)
+                    else list(spot.options.values())[0]
+                    if isinstance(spot.options, dict) and spot.options
+                    else [],
+                    street=spot.street,
+                    explanation=spot.explanation,
+                )
+            )
+
         return {"spots": spots, "count": len(spots)}
 
 
@@ -595,20 +623,18 @@ async def get_review_spots(
 async def get_missed_spots(user_id: str):
     """Get spots that user has gotten wrong (for review mode)."""
     async with get_session_context() as session:
-        stats_result = await session.execute(
-            select(UserStats).where(UserStats.user_id == user_id)
-        )
+        stats_result = await session.execute(select(UserStats).where(UserStats.user_id == user_id))
         stats = stats_result.scalar_one_or_none()
-        
+
         if not stats or not stats.missed_spot_ids:
             return {"spots": [], "count": 0}
-        
+
         # Get spots
         result = await session.execute(
             select(QuizSpot).where(QuizSpot.id.in_(stats.missed_spot_ids))
         )
         spots = result.scalars().all()
-        
+
         return {
             "spots": [
                 SpotResponse(
@@ -626,7 +652,11 @@ async def get_missed_spots(user_id: str):
                     gto_action=spot.gto_action,
                     gto_frequency=float(spot.gto_frequency),
                     gto_ev=float(spot.gto_ev),
-                    options=spot.options if isinstance(spot.options, list) else list(spot.options.values())[0] if isinstance(spot.options, dict) and spot.options else [],
+                    options=spot.options
+                    if isinstance(spot.options, list)
+                    else list(spot.options.values())[0]
+                    if isinstance(spot.options, dict) and spot.options
+                    else [],
                     street=spot.street,
                     explanation=spot.explanation,
                 )
