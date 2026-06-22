@@ -8,6 +8,7 @@ const RED_BRIGHT = '#E53935'
 const RED_DARK = '#7B1E1E'
 const BLUE = '#3A6EA5'
 const GREEN = '#00C853'
+const YELLOW = '#FDD835'
 const GRAY = '#2a2a2a'
 const BG_CARD = '#1C1C1C'
 const BORDER = '#262626'
@@ -719,18 +720,22 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                     position: 'relative',
                   }}>
                   {/* GTO frequency chip */}
-                  {gtoFreq !== null && (
-                    <div style={{
-                      position: 'absolute', top: -8, right: -6,
-                      background: isGtoRecommended ? GREEN : '#555',
-                      color: isGtoRecommended ? '#000' : '#fff',
-                      fontSize: 9, fontWeight: 700, padding: '1px 5px',
-                      borderRadius: 8, lineHeight: 1.3,
-                      boxShadow: '0 1px 3px rgba(0,0,0,.5)',
-                    }}>
-                      {(gtoFreq * 100).toFixed(0)}%
-                    </div>
-                  )}
+                  {gtoFreq !== null && (() => {
+                    // Color by frequency threshold: green >20%, yellow 5-20%, gray <5%
+                    const chipColor = gtoFreq > 0.2 ? GREEN : gtoFreq >= 0.05 ? YELLOW : '#444'
+                    return (
+                      <div style={{
+                        position: 'absolute', top: -8, right: -6,
+                        background: chipColor,
+                        color: chipColor === YELLOW ? '#000' : '#fff',
+                        fontSize: 9, fontWeight: 700, padding: '1px 5px',
+                        borderRadius: 8, lineHeight: 1.3,
+                        boxShadow: '0 1px 3px rgba(0,0,0,.5)',
+                      }}>
+                        {(gtoFreq * 100).toFixed(0)}%
+                      </div>
+                    )
+                  })()}
                   <div>{btn.label}</div>
                   {btn.amount != null && (
                     <div style={{ fontSize: 10, fontWeight: 400, opacity: 0.7, marginTop: 2 }}>
