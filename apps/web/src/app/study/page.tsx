@@ -956,6 +956,49 @@ export default function StudyPage() {
         </div>
       </div>
 
+      {/* Action Prompt Header Row — per-position GTO recommendation */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        padding: '5px 12px', background: '#0E0E0E',
+        borderBottom: '1px solid #1a1a1a', flexShrink: 0,
+        fontSize: 11, fontWeight: 500, color: '#888',
+        whiteSpace: 'nowrap', overflow: 'hidden',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>Your action:</span>
+          {(() => {
+            if (!isSolverMode) return <span style={{ color: '#555' }}>—</span>
+            // Use selected hand's GTO action, or fall back to most frequent position action
+            let gtoAction: string | null = null
+            let gtoFreq: number | null = null
+            if (selectedHandData) {
+              gtoAction = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
+              gtoFreq = selectedHandData.frequency
+            } else {
+              const entries = Object.entries(actionSummary).sort(([,a],[,b]) => b.totalFreq - a.totalFreq)
+              if (entries.length > 0) {
+                gtoAction = entries[0][0]
+              }
+            }
+            if (!gtoAction) return <span style={{ color: '#555' }}>Select a hand</span>
+            const actionColor = ACTION_COLORS[gtoAction] || GRAY
+            return (
+              <span style={{ color: actionColor, fontWeight: 700 }}>
+                {actionLabelsShort[gtoAction] || gtoAction}
+                {gtoFreq !== null && (
+                  <span style={{ fontWeight: 400, color: '#aaa', marginLeft: 3 }}>
+                    {(gtoFreq * 100).toFixed(0)}%
+                  </span>
+                )}
+              </span>
+            )
+          })()}
+        </div>
+        <div style={{ width: 1, height: 12, background: '#262626', flexShrink: 0 }} />
+        <span>Pot: <strong style={{ color: '#ccc', fontWeight: 600 }}>3.0</strong>bb</span>
+        <span>Eff: <strong style={{ color: '#ccc', fontWeight: 600 }}>{stackDepth}</strong>bb</span>
+      </div>
+
       {/* Main Grid — fills remaining space, grid scrolls internally */}
       <div className="study-main-grid" style={{ flex: 1, display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(320px, 1fr)', gap: 8, padding: '0 12px', minHeight: 0 }}>
         {/* Matrix Panel */}

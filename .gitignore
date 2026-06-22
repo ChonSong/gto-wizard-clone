@@ -11,4 +11,6 @@ tsconfig.tsbuildinfo
 .turbo
 *.turbo-build.log
 apps/web/public/sw.js
+apps/web/public/workbox-*.js
 apps/web/e2e/node_modules.bak
+.next_old/
