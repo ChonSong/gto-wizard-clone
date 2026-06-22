@@ -163,9 +163,16 @@
       "date": "2026-06-22",
       "summary": "Verified: POST /api/v1/solver/postflop-strategy endpoint exists in solver.py with in-memory caching + live solver fallback. Task already implemented.",
       "coach": "pending"
+    },
+    {
+      "task": "visual-study-postflop-match-reference",
+      "sha": "af66907",
+      "date": "2026-06-22",
+      "summary": "Fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb to pass real values. CardDisplay, action buttons, street breadcrumb, GTO comparison, config panel all present. Visual matching against reference.png requires vision_analyze/browser tools not available this session.",
+      "coach": "pending"
     }
   ],
-  "current_task": "visual-study-postflop-match-reference",
+  "current_task": "fix-solver-postflop-response-dedup",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -190,9 +197,9 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "d9f2904",
+  "last_sha": "af66907",
   "blocker": null,
-  "note": "Player tick 2026-06-22: add-hand-history-parsing, add-plo4-frontend-page, postflop-solver-api-endpoint verified already implemented. Handled checkpoint audit gap — 3 tasks tracked as complete, 368 tests pass, live site 200. Next: visual-study-postflop-match-reference (needs browser/vision tools).",
+  "note": "Player tick 2026-06-22: fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb (af66907). PostflopTraining.tsx (941 lines) complete: CardDisplay, all 11 action buttons with GTO frequency chips, street breadcrumb, config panel, GTO comparison overlay all present. 368 tests pass, build ok, live site 200/200. Visual comparison vs reference-study-interface.png requires vision_analyze/browser tools not available this session. Moving to fix-solver-postflop-response-dedup next.",
   "coach_review": {
     "last_reviewed_sha": "d9f2904d7f3e47d9fe482d578b7de88db34a9010",
     "last_reviewed_at": "2026-06-22T18:20:00Z",

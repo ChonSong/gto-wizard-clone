@@ -4,6 +4,7 @@ Solver API Router — GTO solve workflows.
 Direct integration with the MCCFR engine (bypasses gRPC/Celery).
 Supports preflop range solving for the study page.
 """
+
 import sys, os, json, logging
 from pathlib import Path
 
@@ -25,25 +26,30 @@ router = APIRouter(prefix="/api/v1/solver", tags=["solver"])
 # ── Engine availability cache ──
 _engine_available = None
 
+
 def _check_engine():
     global _engine_available
     if _engine_available is None:
         try:
             from cfr.engine import CFREngine
+
             _engine_available = True
         except ImportError:
             _engine_available = False
     return _engine_available
 
+
 # ── Precomputed chart cache ──
 _charts_dir = Path(_solver_dir) / "strategy" / "charts"
 _chart_cache = {}
 
+
 def _load_chart(position: str, stack_depth: int) -> dict | None:
     """Load push/fold chart for a given position and stack depth."""
     # Find nearest available depth
-    depths = sorted([int(f.stem.split("_")[1].replace("bb", ""))
-                     for f in _charts_dir.glob("push_*bb_*.json")])
+    depths = sorted(
+        [int(f.stem.split("_")[1].replace("bb", "")) for f in _charts_dir.glob("push_*bb_*.json")]
+    )
     if not depths:
         return None
     nearest = min(depths, key=lambda d: abs(d - stack_depth))
@@ -59,6 +65,7 @@ def _load_chart(position: str, stack_depth: int) -> dict | None:
 
 
 # ── Request/response models ──
+
 
 class SolveRequest(BaseModel):
     game_type: str = "nlh"
@@ -90,6 +97,7 @@ class SolveResponse(BaseModel):
 
 class PreflopRangeRequest(BaseModel):
     """Request for preflop range data for the study page."""
+
     position: str = "UTG"
     stack_depth: int = 100
     game_type: str = "nlh"
@@ -97,6 +105,7 @@ class PreflopRangeRequest(BaseModel):
 
 class HandCell(BaseModel):
     """Single hand cell in the range matrix."""
+
     hand: str
     action: str  # fold, raise, call, all_in
     frequency: float
@@ -105,6 +114,7 @@ class HandCell(BaseModel):
 
 class PreflopRangeResponse(BaseModel):
     """Response containing all 169 hands with solver data."""
+
     position: str
     stack_depth: int
     hands: List[HandCell]
@@ -122,6 +132,7 @@ _postflop_cache: dict[str, dict] = {}
 
 class PostflopStrategyRequest(BaseModel):
     """Request for postflop GTO strategy data for interactive training."""
+
     board: str = "KsKc3s"
     position: str = "BTN"
     street: str = "flop"
@@ -132,16 +143,31 @@ class PostflopStrategyRequest(BaseModel):
 
 class PostflopStrategyResponse(BaseModel):
     """Response containing GTO strategy actions for a postflop spot."""
+
     actions: List[StrategyAction] = []
-    source: str = ""       # "cached" or "live-solver"
+    source: str = ""  # "cached" or "live-solver"
     status: str = ""
     message: Optional[str] = None
     error: Optional[str] = None
 
 
+def _dedup_actions(actions: list[StrategyAction]) -> list[StrategyAction]:
+    """Deduplicate actions by name, keeping the max frequency for each unique name."""
+    best: dict[str, StrategyAction] = {}
+    for a in actions:
+        key = a.action.lower().strip()
+        if key not in best or a.frequency > best[key].frequency:
+            best[key] = a
+    return sorted(best.values(), key=lambda a: -a.frequency)
+
+
 def _make_postflop_cache_key(
-    board: str, position: str, street: str,
-    pot_size: float, stack_depth: float, hero_hand: Optional[str]
+    board: str,
+    position: str,
+    street: str,
+    pot_size: float,
+    stack_depth: float,
+    hero_hand: Optional[str],
 ) -> str:
     """Deterministic MD5 cache key for a postflop strategy request."""
     raw = f"{board.strip()}:{position}:{street}:{pot_size}:{stack_depth}:{hero_hand or 'generic'}"
@@ -188,15 +214,20 @@ async def postflop_strategy(req: PostflopStrategyRequest):
     to the live MCCFR solver with a 30‑second timeout.
     """
     cache_key = _make_postflop_cache_key(
-        req.board, req.position, req.street,
-        req.pot_size, req.stack_depth, req.hero_hand,
+        req.board,
+        req.position,
+        req.street,
+        req.pot_size,
+        req.stack_depth,
+        req.hero_hand,
     )
 
     # 1. In-memory cache hit
     if cache_key in _postflop_cache:
         cached = _postflop_cache[cache_key]
+        cached_actions = [StrategyAction(**a) for a in cached["actions"]]
         return PostflopStrategyResponse(
-            actions=[StrategyAction(**a) for a in cached["actions"]],
+            actions=_dedup_actions(cached_actions),
             source="cached",
             status="complete",
         )
@@ -210,12 +241,12 @@ async def postflop_strategy(req: PostflopStrategyRequest):
         )
 
     board_str = req.board.strip()
-    board_cards = [board_str[i:i+2] for i in range(0, len(board_str), 2)]
+    board_cards = [board_str[i : i + 2] for i in range(0, len(board_str), 2)]
 
     # Hero hole cards
     if req.hero_hand and len(req.hero_hand) >= 4:
         hh = req.hero_hand.strip()
-        hero_cards = [hh[i:i+2] for i in range(0, len(hh), 2)]
+        hero_cards = [hh[i : i + 2] for i in range(0, len(hh), 2)]
     else:
         hero_cards = ["Ah", "Kh"]
 
@@ -238,6 +269,7 @@ async def postflop_strategy(req: PostflopStrategyRequest):
                 nonlocal bet_sizes
                 if req.street == "river" and len(board_cards) >= 5:
                     from cfr.river_solver import create_river_state_from_params
+
                     state = create_river_state_from_params(
                         p0_cards=hero_cards,
                         p1_cards=opponent_cards,
@@ -252,6 +284,7 @@ async def postflop_strategy(req: PostflopStrategyRequest):
 
                 elif req.street == "turn" and len(board_cards) >= 4:
                     from cfr.turn_solver import create_turn_state
+
                     state = create_turn_state(
                         p0_cards=hero_cards,
                         p1_cards=opponent_cards,
@@ -267,6 +300,7 @@ async def postflop_strategy(req: PostflopStrategyRequest):
 
                 elif req.street == "flop" and len(board_cards) >= 3:
                     from cfr.flop_solver import create_flop_state
+
                     state = create_flop_state(
                         p0_cards=hero_cards,
                         p1_cards=opponent_cards,
@@ -291,21 +325,26 @@ async def postflop_strategy(req: PostflopStrategyRequest):
         # 3. Extract actions from solver output using engine's infoset_manager
         actions: list[StrategyAction] = []
         for key, avg_strat in strategies.items():
-            info = engine.infoset_manager.get(key) if hasattr(engine, 'infoset_manager') else None
+            info = engine.infoset_manager.get(key) if hasattr(engine, "infoset_manager") else None
             if info is None:
                 continue
-            valid_actions = info.actions if hasattr(info, 'actions') and info.actions else []
+            valid_actions = info.actions if hasattr(info, "actions") and info.actions else []
             for i, act in enumerate(valid_actions):
                 freq = float(avg_strat[i]) if i < len(avg_strat) else 0.0
                 if freq > 0.01:
                     ev = _compute_ev(str(act), req.pot_size)
-                    actions.append(StrategyAction(
-                        action=str(act),
-                        frequency=round(freq, 4),
-                        ev=ev,
-                    ))
+                    actions.append(
+                        StrategyAction(
+                            action=str(act),
+                            frequency=round(freq, 4),
+                            ev=ev,
+                        )
+                    )
 
         actions.sort(key=lambda a: -a.frequency)
+
+        # Deduplicate — keep the max frequency for each unique action name
+        actions = _dedup_actions(actions)
 
         # 4. Cache for future use
         _postflop_cache[cache_key] = {
@@ -344,6 +383,7 @@ async def postflop_strategy(req: PostflopStrategyRequest):
 
 # ── Solver endpoints ──
 
+
 @router.post("/solve", response_model=SolveResponse)
 async def solve(req: SolveRequest):
     """
@@ -353,7 +393,8 @@ async def solve(req: SolveRequest):
     try:
         if not _check_engine():
             return SolveResponse(
-                status="error", progress=0,
+                status="error",
+                progress=0,
                 error="Solver engine not available",
                 message="Install phevaluator and rebuild",
             )
@@ -369,7 +410,7 @@ async def solve(req: SolveRequest):
 
         board_strings = []
         if req.board and len(req.board) >= 6:
-            board_strings = [req.board[i:i+2] for i in range(0, len(req.board), 2)]
+            board_strings = [req.board[i : i + 2] for i in range(0, len(req.board), 2)]
 
         if req.street == "river" and len(board_strings) >= 3:
             state = create_river_state(
@@ -393,11 +434,15 @@ async def solve(req: SolveRequest):
                 for i, act in enumerate(info.actions):
                     freq = float(avg_strat[i]) if i < len(avg_strat) else 0.0
                     if freq > 0.01:
-                        actions.append(StrategyAction(
-                            action=str(act),
-                            frequency=round(freq, 4),
-                            ev=0.0,
-                        ))
+                        actions.append(
+                            StrategyAction(
+                                action=str(act),
+                                frequency=round(freq, 4),
+                                ev=0.0,
+                            )
+                        )
+
+        actions = _dedup_actions(actions)
 
         return SolveResponse(
             status="complete",
@@ -409,7 +454,8 @@ async def solve(req: SolveRequest):
     except ImportError as e:
         logger.warning(f"Solver engine not available: {e}")
         return SolveResponse(
-            status="error", progress=0,
+            status="error",
+            progress=0,
             error=str(e),
             message="Solver engine unavailable",
         )
@@ -430,31 +476,31 @@ _PREFLOP_RANGES = {
         "call_actions": [],
     },
     "HJ": {
-        "width": 0.21,   # ~21%
+        "width": 0.21,  # ~21%
         "call_width": 0.0,
         "raise_actions": ["raise_2.5bb"],
         "call_actions": [],
     },
     "CO": {
-        "width": 0.28,   # ~28%
+        "width": 0.28,  # ~28%
         "call_width": 0.0,
         "raise_actions": ["raise_2.5bb"],
         "call_actions": [],
     },
     "BTN": {
-        "width": 0.42,   # ~42%
+        "width": 0.42,  # ~42%
         "call_width": 0.0,
         "raise_actions": ["raise_2.5bb"],
         "call_actions": [],
     },
     "SB": {
-        "width": 0.45,   # ~45% (SB opens wide due to being last to act preflop)
+        "width": 0.45,  # ~45% (SB opens wide due to being last to act preflop)
         "call_width": 0.0,
         "raise_actions": ["raise_3bb"],
         "call_actions": [],
     },
     "BB": {
-        "width": 0.0,    # BB doesn't RFI
+        "width": 0.0,  # BB doesn't RFI
         "call_width": 0.50,
         "raise_actions": [],
         "call_actions": ["call"],
@@ -468,7 +514,7 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
     1. Precomputed push/fold charts for short stacks (<40bb)
     2. GTO range model with real equities for deeper stacks
     """
-    ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
+    ranks = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 
     # Build all 169 hands
     hands_169 = []
@@ -493,6 +539,7 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
             # Compute equities using HandEvaluator for display
             try:
                 from gto_poker.hand import HandEvaluator
+
                 evaluator = HandEvaluator()
             except ImportError:
                 evaluator = None
@@ -504,17 +551,20 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
                 eq = _get_preflop_equity(hand)
                 if eq is not None:
                     equity = round(eq, 4)
-                cells.append(HandCell(
-                    hand=hand,
-                    action=action,
-                    frequency=1.0 if action == "raise" else 0.0,
-                    equity=equity,
-                ))
+                cells.append(
+                    HandCell(
+                        hand=hand,
+                        action=action,
+                        frequency=1.0 if action == "raise" else 0.0,
+                        equity=equity,
+                    )
+                )
             return cells, source, False
 
     # ── Deep stacks: use equity-based GTO range model ──
     try:
         from gto_poker.hand import HandEvaluator
+
         evaluator = HandEvaluator()
     except ImportError:
         evaluator = None
@@ -543,9 +593,17 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
             # Raise — with frequency tapering at the bottom of the range
             position_in_range = i / max(raise_count, 1)
             freq = max(0.5, 1.0 - position_in_range * 0.5)
-            action_map[hand] = (config["raise_actions"][0] if config["raise_actions"] else "raise", round(freq, 3), round(eq, 4))
+            action_map[hand] = (
+                config["raise_actions"][0] if config["raise_actions"] else "raise",
+                round(freq, 3),
+                round(eq, 4),
+            )
         elif i < raise_count + call_count:
-            action_map[hand] = (config["call_actions"][0] if config["call_actions"] else "call", 1.0, round(eq, 4))
+            action_map[hand] = (
+                config["call_actions"][0] if config["call_actions"] else "call",
+                1.0,
+                round(eq, 4),
+            )
         else:
             action_map[hand] = ("fold", 1.0, round(eq, 4))
 
@@ -566,7 +624,9 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
 
 # Load precomputed preflop equities
 _preflop_equities = {}
-_eq_cache_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "preflop_equities.json")
+_eq_cache_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "data", "preflop_equities.json"
+)
 if os.path.exists(_eq_cache_path):
     with open(_eq_cache_path) as f:
         _preflop_equities = json.load(f)
@@ -612,6 +672,7 @@ async def solver_health():
     """Check solver engine availability."""
     try:
         from cfr.engine import CFREngine
+
         # Quick import test
         engine_ok = _check_engine()
         return {

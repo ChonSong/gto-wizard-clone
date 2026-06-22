@@ -16,7 +16,7 @@ import uuid
 def test_submit_solve_request():
     """Test that submit solve request model works."""
     from apps.api.routers.solver import SolveRequest
-    
+
     req = SolveRequest(
         game_type="nlh",
         players=2,
@@ -24,7 +24,7 @@ def test_submit_solve_request():
         pot_size=100,
         stack_depth=100,
     )
-    
+
     assert req.game_type == "nlh"
     assert req.players == 2
     assert req.stack_depth == 100
@@ -48,10 +48,10 @@ def test_solve_job_response():
 def test_strategy_key_parsing():
     """Test strategy key parsing."""
     from apps.api.services.strategy_storage import StrategyStorageService
-    
+
     key = "nlh:2:preflop::0:100"
     parsed = StrategyStorageService.parse_strategy_key(key)
-    
+
     assert parsed["game_type"] == "nlh"
     assert parsed["players"] == 2
     assert parsed["street"] == "preflop"
@@ -61,7 +61,7 @@ def test_strategy_key_parsing():
 def test_strategy_key_creation():
     """Test strategy key creation."""
     from apps.api.services.strategy_storage import StrategyStorageService
-    
+
     key = StrategyStorageService.make_strategy_key(
         street="flop",
         board_hash="",
@@ -70,7 +70,7 @@ def test_strategy_key_creation():
         game_type="nlh",
         players=2,
     )
-    
+
     assert key == "nlh:2:flop::0.5:100"
 
 
@@ -78,9 +78,9 @@ def test_strategy_key_creation():
 async def test_strategy_storage_service():
     """Test strategy storage service."""
     from apps.api.services.strategy_storage import StrategyStorageService
-    
+
     storage = StrategyStorageService()
-    
+
     # Store a strategy
     strategy = await storage.store_strategy(
         street="preflop",
@@ -109,7 +109,7 @@ async def test_strategy_storage_service():
 def test_websocket_manager_initialization():
     """Test WebSocket manager initializes correctly."""
     from apps.api.websocket.manager import WebSocketManager
-    
+
     manager = WebSocketManager()
     assert manager.connection_count == 0
 
@@ -117,7 +117,7 @@ def test_websocket_manager_initialization():
 def test_redis_service_initialization():
     """Test Redis service initializes correctly."""
     from apps.api.services.redis_service import RedisService
-    
+
     # Get singleton instance
     service = RedisService.get_instance()
     assert service is not None
@@ -127,7 +127,7 @@ def test_redis_service_initialization():
 def test_celery_app_configuration():
     """Test Celery app configuration."""
     from apps.worker.celery_app import celery_app, get_progress_channel
-    
+
     assert celery_app is not None
     assert celery_app.conf.task_serializer == "json"
     assert get_progress_channel("job-123") == "solver:progress:job-123"
@@ -145,6 +145,7 @@ def test_progress_channel_format():
 # ════════════════════════════════════════════════════════════════════
 # Postflop Strategy Tests
 # ════════════════════════════════════════════════════════════════════
+
 
 def test_postflop_strategy_request_model():
     """Test that PostflopStrategyRequest model works with defaults."""
@@ -308,6 +309,47 @@ def test_postflop_strategy_invalid_board():
     if resp.status_code == 200:
         data = resp.json()
         assert data["status"] in ("error", "complete")
+
+
+def test_dedup_actions_removes_duplicates():
+    """_dedup_actions keeps max frequency per unique action name."""
+    from apps.api.routers.solver import _dedup_actions, StrategyAction
+
+    raw = [
+        StrategyAction(action="check", frequency=0.3, ev=2.5),
+        StrategyAction(action="check", frequency=0.5, ev=2.5),  # duplicate, higher freq
+        StrategyAction(action="check", frequency=0.2, ev=2.5),  # duplicate, lower freq
+        StrategyAction(action="bet_33", frequency=0.4, ev=3.0),
+        StrategyAction(action="bet_50", frequency=0.1, ev=3.5),
+        StrategyAction(action="bet_33", frequency=0.3, ev=3.0),  # duplicate
+        StrategyAction(action="fold", frequency=0.05, ev=0.0),
+        StrategyAction(action="call", frequency=0.15, ev=1.0),
+    ]
+
+    deduped = _dedup_actions(raw)
+
+    # Should have 5 unique actions
+    assert len(deduped) == 5, f"Expected 5, got {len(deduped)}: {[a.action for a in deduped]}"
+
+    # Should keep the highest frequency for each name
+    by_name = {a.action: a for a in deduped}
+    assert by_name["check"].frequency == 0.5  # max of 0.3, 0.5, 0.2
+    assert by_name["bet_33"].frequency == 0.4  # max of 0.4, 0.3
+
+    # Should be sorted by frequency descending
+    for i in range(len(deduped) - 1):
+        assert deduped[i].frequency >= deduped[i + 1].frequency, (
+            f"Not sorted: {deduped[i].frequency} < {deduped[i + 1].frequency}"
+        )
+
+    # Case-insensitive dedup
+    mixed_case = [
+        StrategyAction(action="CHECK", frequency=0.4, ev=2.0),
+        StrategyAction(action="check", frequency=0.6, ev=2.0),
+    ]
+    deduped_mixed = _dedup_actions(mixed_case)
+    assert len(deduped_mixed) == 1
+    assert deduped_mixed[0].frequency == 0.6
 
 
 if __name__ == "__main__":
