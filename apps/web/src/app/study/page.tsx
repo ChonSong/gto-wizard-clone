@@ -392,6 +392,25 @@ export default function StudyPage() {
     return counts
   }, [rangeData])
 
+  // Compute weighted-average OOP EV from solver range data
+  // Equity is per-hand win probability (0-1). Convert to bb EV:
+  // EV = (avgEquity - 0.5) * potSize * 2  where potSize = 1.5bb for preflop
+  const oopEV = useMemo((): number | null => {
+    if (!isSolverMode || rangeData.size === 0) return null
+    let weightedSum = 0
+    let weightSum = 0
+    rangeData.forEach((h) => {
+      // Use frequency as weight — more frequently played hands contribute more
+      weightedSum += h.equity * h.frequency
+      weightSum += h.frequency
+    })
+    if (weightSum === 0) return null
+    const avgEquity = weightedSum / weightSum
+    // Preflop pot is typically 1.5bb (SB 0.5 + BB 1.0)
+    // EV in bb = (equity - 0.5) * pot_amount * 2 (since equity is win% of total pot)
+    return (avgEquity - 0.5) * 3
+  }, [rangeData, isSolverMode])
+
   const totalCombos = 1326 // 52 choose 2
 
   const actionLabels: Record<string, string> = {
@@ -1948,8 +1967,10 @@ export default function StudyPage() {
                         </td>
                         <td style={{ padding: '4px 6px', textAlign: 'right', color: posColor }}>{pos.stack.toFixed(0)}bb</td>
                         <td style={{ padding: '4px 6px', textAlign: 'right', color: posColor }}>
-                          {activePosition === pos.id && isSolverMode ? (
-                            <span style={{ color: '#7CFC7C' }}>+{Math.random().toFixed(1)}</span>
+                          {activePosition === pos.id && oopEV !== null ? (
+                            <span style={{ color: oopEV >= 0 ? '#7CFC7C' : '#E53935' }}>
+                              {oopEV >= 0 ? '+' : ''}{oopEV.toFixed(1)}
+                            </span>
                           ) : '-'}
                         </td>
                         <td style={{ padding: '4px 6px', textAlign: 'right', color: posColor }}>{totalCombos}</td>
