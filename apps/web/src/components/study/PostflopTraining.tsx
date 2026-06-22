@@ -679,7 +679,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
       }}>
         <div style={{ fontSize: 12, color: TEXT_DIM, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
           Your Action — {activePosition}
-          {actionTaken && <span style={{ marginLeft: 8, fontSize: 10, color: GREEN, textTransform: 'none' }}>✓ Action selected</span>}
+          {userChoice && <span style={{ marginLeft: 8, fontSize: 10, color: GREEN, textTransform: 'none' }}>✓ Action selected</span>}
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {[
@@ -695,6 +695,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
             { action: 'all_in', label: `ALL IN ${stackDepth.toFixed(1)}`, bg: RED_DARK, amount: stackDepth },
           ].map(btn => {
             const isSelected = userChoice === btn.action
+            const isDisabled = loading || (userChoice !== null && !isSelected)
             // Find GTO frequency for this action
             const gtoAction = strategy?.actions?.find(a => a.action === btn.action)
             const gtoFreq = gtoAction?.frequency ?? null
@@ -704,20 +705,21 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
             const isGtoRecommended = topGtoAction && btn.action === topGtoAction.action
             return (
               <div key={btn.action} style={{ position: 'relative' }}>
-                <button onClick={() => handleAction(btn.action)}
+                <button onClick={() => !isDisabled && handleAction(btn.action)}
                   style={{
                     background: isSelected ? btn.bg : '#1a1a1a',
                     border: isSelected
-                      ? `2px solid ${isGtoRecommended ? GREEN : btn.bg}`
+                      ? `2px solid ${GREEN}`
                       : isGtoRecommended
                         ? `2px solid ${GREEN}88`
                         : `1px solid #333`,
                     color: isSelected ? '#fff' : btn.bg,
-                    borderRadius: 8, padding: '10px 14px', cursor: 'pointer',
+                    borderRadius: 8, padding: '10px 14px', cursor: isDisabled ? 'default' : 'pointer',
                     fontSize: 12, fontWeight: 600, transition: 'all .1s',
                     textAlign: 'center', minWidth: 80,
-                    opacity: (loading || actionTaken) ? 0.5 : 1,
+                    opacity: isDisabled ? 0.5 : 1,
                     position: 'relative',
+                    boxShadow: isSelected ? `0 0 12px ${GREEN}66` : 'none',
                   }}>
                   {/* GTO frequency chip */}
                   {gtoFreq !== null && (() => {
@@ -736,6 +738,31 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                       </div>
                     )
                   })()}
+                  {/* GTO-recommended checkmark badge */}
+                  {isGtoRecommended && !isSelected && (
+                    <div style={{
+                      position: 'absolute', top: -8, left: -6,
+                      background: GREEN, color: '#000',
+                      fontSize: 9, fontWeight: 700, padding: '1px 5px',
+                      borderRadius: 8, lineHeight: 1.3,
+                      boxShadow: '0 1px 3px rgba(0,0,0,.5)',
+                      display: 'flex', alignItems: 'center', gap: 2,
+                    }}>
+                      ✓ GTO
+                    </div>
+                  )}
+                  {isSelected && isGtoRecommended && (
+                    <div style={{
+                      position: 'absolute', top: -8, left: -6,
+                      background: GREEN, color: '#000',
+                      fontSize: 9, fontWeight: 700, padding: '1px 5px',
+                      borderRadius: 8, lineHeight: 1.3,
+                      boxShadow: '0 1px 3px rgba(0,0,0,.5)',
+                      display: 'flex', alignItems: 'center', gap: 2,
+                    }}>
+                      ✓ BEST
+                    </div>
+                  )}
                   <div>{btn.label}</div>
                   {btn.amount != null && (
                     <div style={{ fontSize: 10, fontWeight: 400, opacity: 0.7, marginTop: 2 }}>
@@ -754,27 +781,70 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
           })}
         </div>
 
-        {/* Advance to Next Street button */}
-        {actionTaken && !isLastStreet && (
-          <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
-            <button onClick={advanceToNextStreet}
-              style={{
-                background: '#1a3a2b', border: `1px solid ${GREEN}66`, borderRadius: 8,
-                color: GREEN, padding: '10px 24px', fontSize: 13, fontWeight: 700,
-                cursor: 'pointer', transition: 'all .15s',
-                display: 'flex', alignItems: 'center', gap: 8,
-              }}>
-              <span>▶</span>
-              Advance to {streetIndex === 0 ? 'Turn' : 'River'}
-              <span style={{ fontSize: 10, fontWeight: 400, opacity: 0.7 }}>
-                (new board card + updated pot)
-              </span>
-            </button>
-          </div>
-        )}
+        {/* Feedback text below action row — shown after user picks */}
+        {userChoice && strategy && !loading && (() => {
+          const topGto = bestActions[0]
+          const userActionData = strategy.actions.find(a => a.action === userChoice)
+          const userEv = userActionData?.ev ?? null
+          const gtoEv = topGto?.ev ?? null
+          const evDiff = (userEv !== null && gtoEv !== null) ? (userEv - gtoEv) : null
+          const userMatchesGto = topGto && userChoice === topGto.action
+          return (
+            <div style={{
+              marginTop: 12, padding: '10px 14px', borderRadius: 8,
+              background: userMatchesGto ? '#0a2e1a' : '#2a0a0a',
+              border: `1px solid ${userMatchesGto ? '#00C85344' : '#E5393544'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{
+                  fontSize: 15, fontWeight: 700,
+                  color: userMatchesGto ? GREEN : RED_BRIGHT,
+                }}>
+                  {userMatchesGto ? '✓ Correct!' : '✗ Suboptimal'}
+                </span>
+                {!userMatchesGto && evDiff !== null && (
+                  <span style={{ fontSize: 12, color: '#aaa' }}>
+                    EV gap: {Math.abs(evDiff).toFixed(2)} bb
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {/* Try Again button */}
+                <button onClick={() => {
+                  setUserChoice(null)
+                  const updated = [...streetActions]
+                  updated[streetIndex] = null
+                  setStreetActions(updated)
+                }}
+                  style={{
+                    background: '#2a2a2a', border: '1px solid #444', borderRadius: 6,
+                    color: '#ccc', padding: '6px 14px', fontSize: 11, fontWeight: 600,
+                    cursor: 'pointer',
+                  }}>
+                  ↻ Try Again
+                </button>
 
-        {actionTaken && isLastStreet && (
-          <div style={{ marginTop: 12, textAlign: 'center', color: GREEN, fontSize: 12, fontWeight: 600 }}>
+                {/* Continue to Next Street button */}
+                {!isLastStreet && (
+                  <button onClick={advanceToNextStreet}
+                    style={{
+                      background: '#1a3a2b', border: `1px solid ${GREEN}66`, borderRadius: 6,
+                      color: GREEN, padding: '6px 14px', fontSize: 11, fontWeight: 600,
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
+                    }}>
+                    <span>▶</span>
+                    Continue to {streetIndex === 0 ? 'Turn' : 'River'}
+                  </button>
+                )}
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* Hand complete message on last street */}
+        {userChoice && isLastStreet && strategy && !loading && (
+          <div style={{ marginTop: 10, textAlign: 'center', color: GREEN, fontSize: 12, fontWeight: 600 }}>
             ✓ Hand complete — all streets played on river
           </div>
         )}

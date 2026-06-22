@@ -331,6 +331,13 @@
       "date": "2026-06-23",
       "summary": "Implemented full-stack progress persistence: POST/GET /api/v1/study/progress backend endpoints with SQLAlchemy model, /progress frontend page with stats cards/position-action breakdown/charts/session history, study page fires POST on Check vs GTO with localStorage UUID identity. 6 API tests, 368 poker-core tests all pass. Build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "leaderboard-frontend-page",
+      "sha": "f2555d2",
+      "date": "2026-06-23",
+      "summary": "Created /leaderboard page with period filter (all-time/weekly/daily), table with rank/player/score/accuracy/hands/EV-loss columns, current user highlight with YOU badge, medal icons for top 3, empty/error/loading states. Added period filter support to GET /api/v1/quiz/leaderboard backend. 368 tests pass, build clean, live returns 200 with 0 JS errors.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -385,16 +392,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "bdd3bb5",
-  "current_task": "leaderboard-frontend-page",
+  "last_sha": "f2555d2",
+  "current_task": "study-postflop-action-selection-feedback",
   "blocker": null,
-  "note": "study-progress-persistence-backend: APPROVED by Coach. Full-stack progress tracking: POST/GET /api/v1/study/progress, /progress page, study page wiring, UUID identity. 6/6 API tests pass, 368/368 poker-core tests pass. Live site: /progress loads with 0 JS errors, /study shows hand matrix with GTO data. Next: leaderboard-frontend-page.",
+  "note": "leaderboard-frontend-page: APPROVED by Coach. /leaderboard page with period filter, rank/player/score/accuracy/hands/EV-loss columns, current user highlight, 0 JS errors. 368 tests pass, build clean, live 200. Next: study-postflop-action-selection-feedback.",
   "coach_review": {
-    "last_reviewed_sha": "c19b255",
-    "last_reviewed_at": "2026-06-23T20:52:00Z",
+    "last_reviewed_sha": "f2555d2",
+    "last_reviewed_at": "2026-06-23T21:30:00Z",
     "verdict": "approved",
-    "notes": "study-progress-persistence-backend: APPROVED. All criteria met: POST returns 201 with id/created_at, GET returns aggregated stats with position/action breakdowns, /progress page renders with no console errors, study page fires POST on Check vs GTO interaction, localStorage UUID identity implemented. 6/6 API tests pass, 368/368 existing tests pass. Security: no secrets, no new deps, endpoints are public by design (consistent with all other endpoints). YAGNI: all 8 files directly required by task criteria. Perf: user_id column indexed. Live site verified: /, /progress, /study all render with 0 JS errors. Backlog: 3 tasks remaining (leaderboard, postflop-feedback, timed-drill) — kicking off leaderboard-frontend-page.",
-    "last_review": "2026-06-23T20:52:00Z",
+    "notes": "leaderboard-frontend-page: APPROVED. All criteria met: /leaderboard renders with 0 JS errors, period filter API returns 200 for all three periods, empty state shows gracefully, dark design system consistent. 368 poker-core tests pass, 25 API tests pass, 6 e2e smoke tests pass, frontend build clean. Security: no secrets, no new deps, no new endpoints. Scope: clean — 2 files, both required by task. Perf: no N+1 patterns. Minor: rank query doesn't respect period filter (edge case, no data yet). Deprecated 'regex' param in FastAPI Query (cosmetic). Backlog: 2 tasks remaining (study-postflop-action-selection-feedback, practice-timed-drill-mode).",
+    "last_review": "2026-06-23T21:30:00Z",
     "status": "approved"
   }
 }
