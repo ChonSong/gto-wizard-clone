@@ -292,7 +292,7 @@
     },
     {
       "task": "solutions-page-visual-match-reference",
-      "sha": "HEAD",
+      "sha": "9c73224",
       "date": "2026-06-23",
       "summary": "Converted solutions page to GTO Wizard dark design system: viewport-filling layout (h-screen, flex-col, overflow-hidden), CSS variable colors (var(--panel), var(--border), var(--bg), var(--text), var(--muted), var(--green)), dark-themed board cards (#f0f0f0→var(--bg)), brand green (#00C853) accent replacing gold. 368 tests pass, build clean.",
       "coach": "pending"
@@ -350,7 +350,7 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "HEAD",
+  "last_sha": "9c73224",
   "current_task": "tbd",
   "blocker": null,
   "note": "solutions-page-visual-match-reference complete. Converted solutions page to GTO Wizard dark design system — viewport-filling layout, CSS variable colors, brand green accent, dark board cards. 368 tests pass, build clean, live 200. Next: Coach to generate next batch.",
