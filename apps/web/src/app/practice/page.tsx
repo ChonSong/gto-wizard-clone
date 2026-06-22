@@ -768,7 +768,7 @@ export default function PracticePage() {
                               color: 'var(--muted)',
                             }}
                           >
-                            {opt.frequency}%
+                            {Math.round(opt.frequency * 100)}%
                           </span>
                         )}
                         {answered && (
@@ -804,7 +804,7 @@ export default function PracticePage() {
                     >
                       {selectedAction === spot.options.find(o => o.is_gto)?.action
                         ? '✓ Correct!'
-                        : `✗ GTO: ${spot.gto_action} (${spot.gto_frequency}%)`}
+                        : `✗ GTO: ${spot.gto_action} (${Math.round(spot.gto_frequency * 100)}%)`}
                     </span>
                   </div>
                   <button
