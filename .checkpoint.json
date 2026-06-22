@@ -170,9 +170,23 @@
       "date": "2026-06-22",
       "summary": "Fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb to pass real values. CardDisplay, action buttons, street breadcrumb, GTO comparison, config panel all present. Visual matching against reference.png requires vision_analyze/browser tools not available this session.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-solver-postflop-response-dedup",
+      "sha": "bd560ef",
+      "date": "2026-06-22",
+      "summary": "Added _dedup_actions() helper that deduplicates solver actions by name keeping max frequency. Applied to postflop-strategy (cache + live-solver paths) and solve endpoints. 387 tests pass.",
+      "coach": "pending"
+    },
+    {
+      "task": "update-features-yaml-to-match-reality",
+      "sha": "bd560ef",
+      "date": "2026-06-22",
+      "summary": "Verified complete: FEATURES.yaml has 0 missing entries. All 12 live pages return 200. API on port 8001 serves strategy-lookup, quiz, spots, courses, all endpoints OK. 14 DB tables present (quiz_spots=54 rows, 40 with board data). Solver container up. No code changes needed — task was already done by prior sessions, checkpoint just needed advancing.",
+      "coach": "pending"
     }
   ],
-  "current_task": "fix-solver-postflop-response-dedup",
+  "current_task": "tbd",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -197,9 +211,9 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "af66907",
+  "last_sha": "bd560ef",
   "blocker": null,
-  "note": "Player tick 2026-06-22: fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb (af66907). PostflopTraining.tsx (941 lines) complete: CardDisplay, all 11 action buttons with GTO frequency chips, street breadcrumb, config panel, GTO comparison overlay all present. 368 tests pass, build ok, live site 200/200. Visual comparison vs reference-study-interface.png requires vision_analyze/browser tools not available this session. Moving to fix-solver-postflop-response-dedup next.",
+  "note": "Player tick 2026-06-22T23:55+: update-features-yaml-to-match-reality — verified complete: FEATURES.yaml has 0 missing entries, all pages return 200 (12/12 live), API port 8001 serves all endpoints OK (strategy-lookup, quiz, spots, courses all return 200). 14 DB tables present. Solver container up. All AGENTS.md tasks exhausted. 5 entries pending coach review (last sha: bd560ef). current_task → tbd awaiting coach. Spec gaps: 3 visual polish items pending (player tiles, top bar, action prompts).",
   "coach_review": {
     "last_reviewed_sha": "d9f2904d7f3e47d9fe482d578b7de88db34a9010",
     "last_reviewed_at": "2026-06-22T18:20:00Z",
