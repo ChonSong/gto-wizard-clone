@@ -707,10 +707,22 @@ export function StrategyHeatmap({
     const entries = Object.values(strategy);
     if (entries.length === 0) return null;
     
-    const totalFrequency = entries.reduce((sum, e) => sum + e.frequency, 0) / entries.length;
-    const avgEv = entries.reduce((sum, e) => sum + e.ev, 0) / entries.length;
+    // Filter out null/undefined/NaN entries to prevent NaN in averages
+    const validFreq = entries.filter(
+      (e): e is StrategyCell => e != null && typeof e.frequency === 'number' && !isNaN(e.frequency) && isFinite(e.frequency)
+    );
+    const validEv = entries.filter(
+      (e): e is StrategyCell => e != null && typeof e.ev === 'number' && !isNaN(e.ev) && isFinite(e.ev)
+    );
+    
+    const totalFrequency = validFreq.length > 0
+      ? validFreq.reduce((sum, e) => sum + e.frequency, 0) / validFreq.length
+      : null;
+    const avgEv = validEv.length > 0
+      ? validEv.reduce((sum, e) => sum + e.ev, 0) / validEv.length
+      : null;
     const actionCounts = entries.reduce((acc, e) => {
-      acc[e.action] = (acc[e.action] || 0) + 1;
+      if (e && e.action) acc[e.action] = (acc[e.action] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
     
@@ -862,12 +874,21 @@ export function StrategyHeatmap({
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
           <div className="flex items-center gap-1.5">
             <span>Avg Freq:</span>
-            <span className="font-medium">{(stats.totalFrequency * 100).toFixed(1)}%</span>
+            <span className="font-medium">
+              {stats.totalFrequency != null
+                ? `${(stats.totalFrequency * 100).toFixed(1)}%`
+                : '—'}
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span>Avg EV:</span>
-            <span className={cn("font-medium", stats.avgEv >= 0 ? "text-green-500" : "text-red-500")}>
-              {stats.avgEv >= 0 ? "+" : ""}{stats.avgEv.toFixed(3)}
+            <span className={cn(
+              "font-medium",
+              stats.avgEv != null ? (stats.avgEv >= 0 ? "text-green-500" : "text-red-500") : ""
+            )}>
+              {stats.avgEv != null
+                ? `${stats.avgEv >= 0 ? "+" : ""}${stats.avgEv.toFixed(3)}`
+                : '—'}
             </span>
           </div>
           {position && (
