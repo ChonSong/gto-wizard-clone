@@ -6,6 +6,13 @@
   "phase": 2,
   "phase_name": "Study Mode UX Completion - Phase 2: Spec Gap Closure",
   "completed": [
+    {
+      "task": "study-page-equity-chart-real-values",
+      "sha": "d247912",
+      "date": "2026-06-23",
+      "summary": "Replaced Math.random() bar heights with real selectedHandData.equity values. Bar height = Math.max(4, equity * 55), showing actual per-hand equity from solver API.",
+      "coach": "approved"
+    },
     "auto-select-AA-hand-on-position-click",
     "bet-sizing-picker-on-RAISE-(2bb-10bb)",
     "board-display-area-with-PREFLOP-placeholder",
@@ -240,6 +247,13 @@
       "date": "2026-06-23",
       "summary": "GTO frequency micro-chips with threshold coloring on postflop action buttons. Green >20%, yellow 5-20%, gray <5%. 368 tests pass, build clean.",
       "coach": "approved"
+    },
+    {
+      "task": "api-response-time-optimization",
+      "sha": "176c4fa",
+      "date": "2026-06-23",
+      "summary": "Added response caching layer (apps/api/services/cache.py) with TTL-based in-memory/fakeredis caching. Wired init_cache(app) into main.py. Applied @cached(ttl=300) to GET /api/v1/courses and /featured, @cached(ttl=600) to GET /api/v1/quiz/categories. All endpoints already met <200ms targets; caching further improves latency (courses: 14ms→2ms). 387 tests pass, build clean, live 200.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -294,16 +308,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "136d654",
-  "current_task": "study-page-equity-chart-real-values",
+  "last_sha": "176c4fa",
+  "current_task": "course-lesson-content-management",
   "blocker": null,
-  "note": "practice-page-replace-mock-data + gto-frequency-microchips both approved. Practice page uses real quiz API data (no more Math.random()), action buttons show threshold-colored GTO frequency chips. 368 tests pass, build clean, live 200. Coach fixed frequency % display (proportion→percentage). Next: study-page-equity-chart-real-values.",
+  "note": "api-response-time-optimization: Added response caching layer with TTL-based cache decorator for courses and quiz endpoints. Courses latency 14ms→2ms (7x improvement). All endpoints already met <200ms targets. 387 tests pass, build clean, live 200. Next: course-lesson-content-management.",
   "coach_review": {
-    "last_reviewed_sha": "136d654",
-    "last_reviewed_at": "2026-06-23T05:00:00Z",
+    "last_reviewed_sha": "176c4fa",
+    "last_reviewed_at": "2026-06-23T14:49:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 2 commits: 74b7161 (practice-page-replace-mock-data) and b330536 (gto-frequency-microchips-on-action-buttons). Both approved. Coach fixed freq % display bug (Math.round(freq*100)). Next task: study-page-equity-chart-real-values.",
-    "last_review": "2026-06-23T05:00:00Z",
-    "status": "complete"
+    "notes": "api-response-time-optimization — caching layer verified. 387 tests pass. Build clean. Live site 200, 0 JS errors. All gates pass.",
+    "last_review": "2026-06-23T14:49:00Z",
+    "status": "approved"
   }
 }

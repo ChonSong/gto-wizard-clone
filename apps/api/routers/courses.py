@@ -148,7 +148,7 @@ class LessonResponse(BaseModel):
 class UserProgressResponse(BaseModel):
     """Response model for user progress."""
 
-    id: str
+    id: Optional[str] = None
     user_id: str
     course_id: str
     lesson_id: str
