@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { gtoTheme } from "@/styles/gto-tokens";
 
 type Position = "BTN" | "SB" | "BB" | "CO" | "MP" | "UTG";
 type BoardType = "dry" | "wet" | "paired" | "rainbow" | "monochrome";
@@ -105,8 +104,8 @@ function renderBoardCards(board: string) {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="w-9 h-12 rounded border border-gray-600 flex items-center justify-center text-gray-500 text-xs"
-            style={{ backgroundColor: "#1a1a2e" }}
+            className="w-9 h-12 rounded border flex items-center justify-center text-gray-500 text-xs"
+            style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)" }}
           >
             ?
           </div>
@@ -148,8 +147,8 @@ function renderBoardCards(board: string) {
               color
             )}
             style={{
-              backgroundColor: "#f0f0f0",
-              borderColor: "#ccc",
+              backgroundColor: "var(--bg)",
+              borderColor: "var(--border)",
             }}
           >
             <span className="leading-none font-bold text-[11px]">{rank}</span>
@@ -268,24 +267,24 @@ export default function SolutionsPage() {
     });
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0E0E0E" }}>
+    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: "var(--bg)" }}>
       {/* Header */}
       <div
-        className="border-b"
-        style={{ borderColor: "#262626", backgroundColor: "#1C1C1C" }}
+        className="border-b flex-shrink-0"
+        style={{ borderColor: "var(--border)", backgroundColor: "var(--panel)" }}
       >
         <div className="max-w-7xl mx-auto px-4 py-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold" style={{ color: gtoTheme.gold }}>
+              <h1 className="text-2xl font-bold" style={{ color: "var(--green)" }}>
                 Solutions
               </h1>
-              <p className="text-sm text-gray-400 mt-0.5">
+              <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>
                 Browse pre-computed GTO solutions for common spots
               </p>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="px-2 py-1 rounded bg-gray-800 text-gray-300 font-mono">
+            <div className="flex items-center gap-2 text-sm" style={{ color: "var(--muted)" }}>
+              <span className="px-2 py-1 rounded font-mono" style={{ backgroundColor: "var(--panel)", border: "1px solid var(--border)", color: "var(--text)" }}>
                 {filteredSolutions.length}
               </span>
               <span>solutions</span>
@@ -296,28 +295,29 @@ export default function SolutionsPage() {
 
       {/* Filters */}
       <div
-        className="border-b"
-        style={{ borderColor: "#262626", backgroundColor: "#1C1C1C" }}
+        className="border-b flex-shrink-0"
+        style={{ borderColor: "var(--border)", backgroundColor: "var(--panel)" }}
       >
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[180px]">
-              <label className="block text-xs text-gray-500 mb-1">Search</label>
+              <label className="block text-xs mb-1" style={{ color: "var(--muted)" }}>Search</label>
               <input
                 type="text"
                 placeholder="Search by board or title..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-poker-gold/50"
+                className="w-full px-3 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none focus:ring-1"
                 style={{
-                  backgroundColor: "#262626",
-                  border: "1px solid #333",
+                  backgroundColor: "var(--bg)",
+                  border: "1px solid var(--border)",
+                  color: "var(--text)",
                 }}
               />
             </div>
 
             <div className="min-w-[130px]">
-              <label className="block text-xs text-gray-500 mb-1">Position</label>
+              <label className="block text-xs mb-1" style={{ color: "var(--muted)" }}>Position</label>
               <select
                 value={filterPosition}
                 onChange={(e) =>
@@ -325,8 +325,8 @@ export default function SolutionsPage() {
                 }
                 className="w-full px-3 py-2 rounded-lg text-sm text-white outline-none"
                 style={{
-                  backgroundColor: "#262626",
-                  border: "1px solid #333",
+                  backgroundColor: "var(--bg)",
+                  border: "1px solid var(--border)",
                 }}
               >
                 <option value="all">All Positions</option>
@@ -340,7 +340,7 @@ export default function SolutionsPage() {
             </div>
 
             <div className="min-w-[120px]">
-              <label className="block text-xs text-gray-500 mb-1">Board Type</label>
+              <label className="block text-xs mb-1" style={{ color: "var(--muted)" }}>Board Type</label>
               <select
                 value={filterBoardType}
                 onChange={(e) =>
@@ -348,8 +348,8 @@ export default function SolutionsPage() {
                 }
                 className="w-full px-3 py-2 rounded-lg text-sm text-white outline-none"
                 style={{
-                  backgroundColor: "#262626",
-                  border: "1px solid #333",
+                  backgroundColor: "var(--bg)",
+                  border: "1px solid var(--border)",
                 }}
               >
                 <option value="all">All Types</option>
@@ -362,7 +362,7 @@ export default function SolutionsPage() {
             </div>
 
             <div className="min-w-[110px]">
-              <label className="block text-xs text-gray-500 mb-1">Street</label>
+              <label className="block text-xs mb-1" style={{ color: "var(--muted)" }}>Street</label>
               <select
                 value={filterStreet}
                 onChange={(e) =>
@@ -370,8 +370,8 @@ export default function SolutionsPage() {
                 }
                 className="w-full px-3 py-2 rounded-lg text-sm text-white outline-none"
                 style={{
-                  backgroundColor: "#262626",
-                  border: "1px solid #333",
+                  backgroundColor: "var(--bg)",
+                  border: "1px solid var(--border)",
                 }}
               >
                 <option value="all">All Streets</option>
@@ -383,14 +383,14 @@ export default function SolutionsPage() {
             </div>
 
             <div className="min-w-[120px]">
-              <label className="block text-xs text-gray-500 mb-1">Sort</label>
+              <label className="block text-xs mb-1" style={{ color: "var(--muted)" }}>Sort</label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as "recent" | "popular")}
                 className="w-full px-3 py-2 rounded-lg text-sm text-white outline-none"
                 style={{
-                  backgroundColor: "#262626",
-                  border: "1px solid #333",
+                  backgroundColor: "var(--bg)",
+                  border: "1px solid var(--border)",
                 }}
               >
                 <option value="recent">Most Recent</option>
@@ -407,20 +407,20 @@ export default function SolutionsPage() {
           <div className="text-center py-16">
             <div
               className="inline-block w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mb-4"
-              style={{ borderColor: gtoTheme.gold, borderTopColor: "transparent" }}
+              style={{ borderColor: "var(--green)", borderTopColor: "transparent" }}
             />
-            <p className="text-gray-400">Loading solutions...</p>
+            <p style={{ color: "var(--muted)" }}>Loading solutions...</p>
           </div>
         )}
 
         {error && (
           <div className="text-center py-16">
             <div className="text-red-400 text-lg mb-2">Error loading solutions</div>
-            <p className="text-gray-500 text-sm mb-4">{error}</p>
+            <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>{error}</p>
             <button
               onClick={fetchSolutions}
               className="px-4 py-2 rounded-lg font-semibold text-sm"
-              style={{ backgroundColor: gtoTheme.gold, color: "#1a1a2e" }}
+              style={{ backgroundColor: "var(--green)", color: "#0E0E0E" }}
             >
               Retry
             </button>
@@ -430,8 +430,8 @@ export default function SolutionsPage() {
         {!loading && !error && filteredSolutions.length === 0 && (
           <div className="text-center py-16">
             <div className="text-4xl mb-4">🔍</div>
-            <p className="text-gray-400 text-lg mb-2">No solutions found</p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-lg mb-2" style={{ color: "var(--text)" }}>No solutions found</p>
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
               Try adjusting your filters or search query
             </p>
           </div>
@@ -458,11 +458,11 @@ export default function SolutionsPage() {
                       isSelected ? "ring-1" : "hover:brightness-110"
                     )}
                     style={{
-                      backgroundColor: isSelected ? "#1C1C1C" : "#141414",
+                      backgroundColor: isSelected ? "var(--panel)" : "#141414",
                       border: isSelected
-                        ? `1px solid ${gtoTheme.gold}`
-                        : "1px solid #262626",
-                      boxShadow: isSelected ? `0 0 0 1px ${gtoTheme.gold}` : "none",
+                        ? "1px solid var(--green)"
+                        : "1px solid var(--border)",
+                      boxShadow: isSelected ? "0 0 0 1px var(--green)" : "none",
                     }}
                   >
                     <div className="flex items-start gap-4">
@@ -480,16 +480,16 @@ export default function SolutionsPage() {
                           <span
                             className="px-1.5 py-0.5 rounded text-[10px] font-semibold"
                             style={{
-                              backgroundColor: gtoTheme.gold + "20",
-                              color: gtoTheme.gold,
+                              backgroundColor: "rgba(0, 200, 83, 0.12)",
+                              color: "var(--green)",
                             }}
                           >
                             {sol.position}
                           </span>
-                          <span className="px-1.5 py-0.5 rounded text-[10px] bg-gray-800 text-gray-400 capitalize">
+                          <span className="px-1.5 py-0.5 rounded text-[10px] capitalize" style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}>
                             {sol.board_type}
                           </span>
-                          <span className="px-1.5 py-0.5 rounded text-[10px] bg-gray-800 text-gray-400 capitalize">
+                          <span className="px-1.5 py-0.5 rounded text-[10px] capitalize" style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}>
                             {street}
                           </span>
                         </div>
@@ -498,7 +498,7 @@ export default function SolutionsPage() {
                           {sol.title}
                         </h3>
 
-                        <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-500">
+                        <div className="flex items-center gap-3 mt-1.5 text-xs" style={{ color: "var(--muted)" }}>
                           <span>{sol.stack_depth}bb</span>
                           <span>·</span>
                           <span>Pot: {sol.pot_size}</span>
@@ -524,7 +524,7 @@ export default function SolutionsPage() {
                                 </span>
                                 <div
                                   className="flex-1 h-2 rounded-full overflow-hidden"
-                                  style={{ backgroundColor: "#262626" }}
+                                  style={{ backgroundColor: "var(--border)" }}
                                 >
                                   <div
                                     className={cn(
@@ -536,7 +536,7 @@ export default function SolutionsPage() {
                                     }}
                                   />
                                 </div>
-                                <span className="text-[10px] text-gray-400 w-10 text-right">
+                                <span className="text-[10px] w-10 text-right font-medium" style={{ color: "var(--muted)" }}>
                                   {(action.frequency * 100).toFixed(0)}%
                                 </span>
                               </div>
@@ -561,22 +561,22 @@ export default function SolutionsPage() {
                   <div
                     className="rounded-lg p-5"
                     style={{
-                      backgroundColor: "#1C1C1C",
-                      border: "1px solid #262626",
+                      backgroundColor: "var(--panel)",
+                      border: "1px solid var(--border)",
                     }}
                   >
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-base font-semibold text-white">
                         {selectedSolution.title}
                       </h3>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs" style={{ color: "var(--muted)" }}>
                         ❤️ {selectedSolution.likes}
                       </span>
                     </div>
 
                     {/* Board */}
                     <div className="mb-4">
-                      <label className="text-xs text-gray-500 mb-1.5 block">
+                      <label className="text-xs block mb-1.5" style={{ color: "var(--muted)" }}>
                         Board
                       </label>
                       <div className="flex gap-1.5">
@@ -587,21 +587,21 @@ export default function SolutionsPage() {
                     {/* Meta */}
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div>
-                        <label className="text-xs text-gray-500 block mb-0.5">
+                        <label className="text-xs block mb-0.5" style={{ color: "var(--muted)" }}>
                           Position
                         </label>
                         <span
                           className="px-2 py-1 rounded text-xs font-semibold"
                           style={{
-                            backgroundColor: gtoTheme.gold + "20",
-                            color: gtoTheme.gold,
+                            backgroundColor: "rgba(0, 200, 83, 0.12)",
+                            color: "var(--green)",
                           }}
                         >
                           {selectedSolution.position}
                         </span>
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500 block mb-0.5">
+                        <label className="text-xs block mb-0.5" style={{ color: "var(--muted)" }}>
                           Stack Depth
                         </label>
                         <span className="text-sm text-white font-mono">
@@ -609,7 +609,7 @@ export default function SolutionsPage() {
                         </span>
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500 block mb-0.5">
+                        <label className="text-xs block mb-0.5" style={{ color: "var(--muted)" }}>
                           Pot Size
                         </label>
                         <span className="text-sm text-white font-mono">
@@ -617,7 +617,7 @@ export default function SolutionsPage() {
                         </span>
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500 block mb-0.5">
+                        <label className="text-xs block mb-0.5" style={{ color: "var(--muted)" }}>
                           Board Type
                         </label>
                         <span className="text-sm text-white capitalize">
@@ -633,7 +633,8 @@ export default function SolutionsPage() {
                           {selectedSolution.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-0.5 rounded text-[10px] bg-gray-800 text-gray-400"
+                              className="px-2 py-0.5 rounded text-[10px]"
+                              style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}
                             >
                               #{tag}
                             </span>
@@ -641,7 +642,7 @@ export default function SolutionsPage() {
                         </div>
                       )}
 
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs" style={{ color: "var(--muted)" }}>
                       {selectedSolution.description}
                     </p>
                   </div>
@@ -650,8 +651,8 @@ export default function SolutionsPage() {
                   <div
                     className="rounded-lg p-5"
                     style={{
-                      backgroundColor: "#1C1C1C",
-                      border: "1px solid #262626",
+                      backgroundColor: "var(--panel)",
+                      border: "1px solid var(--border)",
                     }}
                   >
                     <h4 className="text-sm font-semibold text-white mb-3">
@@ -667,7 +668,7 @@ export default function SolutionsPage() {
                             .slice(0, 8)
                             .map(([hand, data]) => (
                               <div key={hand} className="flex items-center gap-2">
-                                <span className="text-xs font-mono text-gray-300 w-10">
+                                <span className="text-xs font-mono w-10" style={{ color: "var(--text)" }}>
                                   {hand}
                                 </span>
                                 <span
@@ -680,7 +681,7 @@ export default function SolutionsPage() {
                                 </span>
                                 <div
                                   className="flex-1 h-2 rounded-full overflow-hidden"
-                                  style={{ backgroundColor: "#262626" }}
+                                  style={{ backgroundColor: "var(--border)" }}
                                 >
                                   <div
                                     className={cn(
@@ -692,10 +693,10 @@ export default function SolutionsPage() {
                                     }}
                                   />
                                 </div>
-                                <span className="text-[10px] text-gray-400 w-10 text-right">
+                                <span className="text-[10px] w-10 text-right" style={{ color: "var(--muted)" }}>
                                   {(data.frequency * 100).toFixed(0)}%
                                 </span>
-                                <span className="text-[10px] text-gray-500 w-12 text-right">
+                                <span className="text-[10px] w-12 text-right" style={{ color: "var(--muted)" }}>
                                   {data.ev.toFixed(2)} EV
                                 </span>
                               </div>
@@ -705,7 +706,7 @@ export default function SolutionsPage() {
                             .slice(0, 8)
                             .map((action, idx) => (
                               <div key={idx} className="flex items-center gap-2">
-                                <span className="text-xs font-mono text-gray-300 w-10">
+                                <span className="text-xs font-mono w-10" style={{ color: "var(--text)" }}>
                                   Action {idx + 1}
                                 </span>
                                 <span
@@ -718,7 +719,7 @@ export default function SolutionsPage() {
                                 </span>
                                 <div
                                   className="flex-1 h-2 rounded-full overflow-hidden"
-                                  style={{ backgroundColor: "#262626" }}
+                                  style={{ backgroundColor: "var(--border)" }}
                                 >
                                   <div
                                     className={cn(
@@ -730,10 +731,10 @@ export default function SolutionsPage() {
                                     }}
                                   />
                                 </div>
-                                <span className="text-[10px] text-gray-400 w-10 text-right">
+                                <span className="text-[10px] w-10 text-right" style={{ color: "var(--muted)" }}>
                                   {(action.frequency * 100).toFixed(0)}%
                                 </span>
-                                <span className="text-[10px] text-gray-500 w-12 text-right">
+                                <span className="text-[10px] w-12 text-right" style={{ color: "var(--muted)" }}>
                                   {action.ev.toFixed(2)} EV
                                 </span>
                               </div>
@@ -746,18 +747,18 @@ export default function SolutionsPage() {
                     <button
                       className="flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-opacity hover:opacity-90"
                       style={{
-                        backgroundColor: gtoTheme.gold,
-                        color: "#1a1a2e",
-                      }}
+                      backgroundColor: "var(--green)",
+                      color: "#0E0E0E",
+                    }}
                     >
                       Practice This Spot
                     </button>
                     <button
                       className="py-2.5 px-4 rounded-lg font-semibold text-sm border transition-colors hover:bg-gray-800"
                       style={{
-                        borderColor: "#333",
-                        color: "#9ca3af",
-                        backgroundColor: "#1C1C1C",
+                        borderColor: "var(--border)",
+                        color: "var(--muted)",
+                        backgroundColor: "var(--panel)",
                       }}
                     >
                       Study
@@ -768,12 +769,12 @@ export default function SolutionsPage() {
                 <div
                   className="rounded-lg p-8 text-center"
                   style={{
-                    backgroundColor: "#1C1C1C",
-                    border: "1px solid #262626",
+                    backgroundColor: "var(--panel)",
+                    border: "1px solid var(--border)",
                   }}
                 >
                   <div className="text-4xl mb-3">📋</div>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Select a solution to view details
                   </p>
                 </div>

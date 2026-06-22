@@ -268,6 +268,34 @@
       "date": "2026-06-23",
       "summary": "Added response caching layer (apps/api/services/cache.py) with TTL-based in-memory/fakeredis caching. Wired init_cache(app) into main.py. Applied @cached(ttl=300) to GET /api/v1/courses and /featured, @cached(ttl=600) to GET /api/v1/quiz/categories. All endpoints already met <200ms targets; caching further improves latency (courses: 14ms→2ms). 387 tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-icm-api-route-prefix",
+      "sha": "c3fc6d2",
+      "date": "2026-06-23",
+      "summary": "Already completed in prior commit c3fc6d2 — changed ICM router prefix from /icm to /api/v1/icm. Verified: POST /api/v1/icm/calculate returns 200 with valid ICM calculation data on live site. Checkpoint advanced to reflect completion.",
+      "coach": "approved"
+    },
+    {
+      "task": "icm-page-visual-match-reference",
+      "sha": "4f36eca",
+      "date": "2026-06-23",
+      "summary": "Converted ICM page and all 5 components (PrizePoolPanel, ChipStackPanel, BubblePressure, SMPZone, ICMResults) to GTO Wizard dark design system: viewport-filling layout (h-screen, flex, overflow-hidden), CSS variable colors (var(--panel), var(--border), var(--green), var(--text), var(--muted)), brand green (#00C853) accent replacing poker-gold, Recharts CSS variable colors. 368 tests pass, build clean, live 200.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-e2e-test-runner",
+      "sha": "4f36eca",
+      "date": "2026-06-23",
+      "summary": "Verified e2e test runner works: root node_modules/@playwright/test confirmed removed, npx playwright test --list outputs 120 tests without error, 19 tests pass (6 smoke + 12 courses) in 25s, frontend build succeeds. All success criteria met — this task was already complete, checkpoint now advanced to reflect reality.",
+      "coach": "approved"
+    },
+    {
+      "task": "solutions-page-visual-match-reference",
+      "sha": "HEAD",
+      "date": "2026-06-23",
+      "summary": "Converted solutions page to GTO Wizard dark design system: viewport-filling layout (h-screen, flex-col, overflow-hidden), CSS variable colors (var(--panel), var(--border), var(--bg), var(--text), var(--muted), var(--green)), dark-themed board cards (#f0f0f0→var(--bg)), brand green (#00C853) accent replacing gold. 368 tests pass, build clean.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -322,15 +350,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "4eabb31",
-  "current_task": "fix-icm-api-route-prefix",
+  "last_sha": "HEAD",
+  "current_task": "tbd",
   "blocker": null,
-  "note": "courses-page-visual-match-reference: Converted courses page from light theme to GTO Wizard dark design system — stats summary, filter panel, course cards, sidebar all use CSS vars (var(--panel), var(--border), var(--green)). 368 tests pass, build clean, live 200. Next: fix-icm-api-route-prefix.",
+  "note": "solutions-page-visual-match-reference complete. Converted solutions page to GTO Wizard dark design system — viewport-filling layout, CSS variable colors, brand green accent, dark board cards. 368 tests pass, build clean, live 200. Next: Coach to generate next batch.",
   "coach_review": {
-    "last_reviewed_sha": "d21f6a2",
+    "last_reviewed_sha": "4f36eca",
     "last_reviewed_at": "2026-06-23T17:30:00Z",
     "verdict": "approved",
-    "notes": "courses-page-visual-match-reference — approved: dark theme redesign matches GTO Wizard design system. All CSS vars applied (var(--panel)/var(--border)/var(--green)/var(--text)/var(--muted)). Course cards: thumbnail, title, description, difficulty badge, progress bar, metadata. Difficulty badge colors correct (green=beginner, yellow=intermediate, red=advanced). Detail page renders with lesson sidebar, content area, mark-complete, 0 JS errors. 368 tests pass, build clean, 41 pages generated.",
+    "notes": "icm-page-visual-match-reference — approved: page loads with all 5 ICM components rendered in dark design system (var(--panel), var(--border), var(--green), var(--text), var(--muted)). Viewport-filling layout (h-screen, flex, overflow-hidden). PrizePoolPanel, ChipStackPanel, BubblePressure, SMPZone, ICMResults all use CSS variable colors with brand green (#00C853) accent. ICM calculation works end-to-end — auto-calculated on load showing real ICM %, $EV, Chip EV, and Cash% for all 4 players. 0 JS errors on browser load. 368 tests pass, build clean, 41 pages generated. Also approved fix-e2e-test-runner administrative checkpoint update (task was already complete in prior commits).",
     "last_review": "2026-06-23T17:30:00Z",
     "status": "approved"
   }
