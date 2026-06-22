@@ -212,9 +212,16 @@
       "date": "2026-06-22",
       "summary": "Implemented Filters sub-tab with hand category checkboxes (Pairs, Suited, Offsuit, Broadway, Ace High) and blocker rank buttons (A/K/Q/J/T). Filtered hands dim to opacity 0.08, blocked hands to 0.15. Dynamic hand count shown. 368 tests pass, frontend build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "study-blockers-sub-tab",
+      "sha": "ac3a20b",
+      "date": "2026-06-22",
+      "summary": "Added Blockers sub-tab with card removal analysis: board card blockers, manual blocker ranks, combo counting (pairs C(4-n,2), suited 4-b1-b2, offsuit total-suited), total combos/1326, per-class breakdown, per-rank blocking effect. 368 tests pass, frontend build clean.",
+      "coach": "approved"
     }
   ],
-  "current_task": "study-blockers-sub-tab",
+  "current_task": "study-oop-ev-real-values",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -249,7 +256,7 @@
       "type": "missing_feature",
       "priority": 1,
       "evidence": "No 'blockers' option in rightSubTab state. Interaction spec lists Blockers tab.",
-      "status": "open"
+      "status": "complete"
     },
     {
       "item": "OOP EV column uses Math.random() placeholder",
@@ -267,9 +274,9 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "8d54020",
+  "last_sha": "ac3a20b",
   "blocker": null,
-  "note": "Filters sub-tab done. hand category checkboxes + blocker rank buttons live. 387 tests pass, build clean. Next: study-blockers-sub-tab.",
+  "note": "Blockers sub-tab added with card removal analysis. Board card blockers + manual blocker ranks affect combo counts. 368 tests pass, build clean, live 200. Next: study-oop-ev-real-values.",
   "coach_review": {
     "last_reviewed_sha": "8d54020",
     "last_reviewed_at": "2026-06-22T23:40:00Z",
