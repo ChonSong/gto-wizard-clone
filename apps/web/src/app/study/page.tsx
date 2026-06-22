@@ -241,7 +241,7 @@ export default function StudyPage() {
   const [studyStats, setStudyStats] = useState<StudyStats>(emptyStats)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
   const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
-  const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions'>('actions')
+  const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'blockers'>('actions')
   const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
   const [blockerRanks, setBlockerRanks] = useState<string[]>([])
 
@@ -1419,12 +1419,12 @@ export default function StudyPage() {
                 </nav>
               </div>
 
-              {/* Sub-tab bar: Hand | Summary | Filters | Actions */}
+              {/* Sub-tab bar: Hand | Summary | Filters | Actions | Blockers */}
               <div role="tablist" aria-label="Detail sub-tabs" style={{
                 display: 'flex', borderBottom: '1px solid #262626',
                 padding: '0 2px', flexShrink: 0,
               }}>
-                {(['hand', 'summary', 'filters', 'actions'] as const).map(tab => (
+                {(['hand', 'summary', 'filters', 'actions', 'blockers'] as const).map(tab => (
                   <button key={tab} role="tab" aria-selected={rightSubTab === tab}
                     onClick={() => setRightSubTab(tab)}
                     style={{
@@ -1735,6 +1735,181 @@ export default function StudyPage() {
                         </div>
                       </>
                     )}
+                  </div>
+                )}
+
+                {/* BLOCKERS sub-tab: Card removal analysis */}
+                {rightSubTab === 'blockers' && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Card Removal Analysis
+                    </div>
+
+                    {(() => {
+                      // Collect blocked ranks from board cards (postflop) + manual blockerRanks
+                      const boardRanks = new Set<string>()
+                      for (const card of boardCards) {
+                        boardRanks.add(card.rank)
+                      }
+                      const allBlockedRanks = new Set<string>([...boardRanks, ...blockerRanks])
+
+                      // Combo counting helpers
+                      function countCombos(hand: string, blocked: Set<string>): number {
+                        const r1 = hand[0], r2 = hand[1]
+                        const b1 = blocked.has(r1) ? 1 : 0
+                        const b2 = blocked.has(r2) ? 1 : 0
+                        if (r1 === r2) {
+                          // Pair: C(4,2)=6, C(3,2)=3, C(2,2)=1, else 0
+                          const avail = 4 - b1
+                          if (avail < 2) return 0
+                          return avail * (avail - 1) / 2
+                        }
+                        const isSuited = hand.length === 3 && hand[2] === 's'
+                        const totalRaw = (4 - b1) * (4 - b2)
+                        if (isSuited) {
+                          // Suited: one combo per suit pair, reduced by blocked cards
+                          const suited = Math.max(0, 4 - b1 - b2)
+                          return suited
+                        }
+                        // Offsuit: total minus suited
+                        const suited = Math.max(0, 4 - b1 - b2)
+                        return Math.max(0, totalRaw - suited)
+                      }
+
+                      // Count total combos
+                      let totalCombos = 0
+                      const perClass: Record<string, number> = {
+                        pairs: 0, suited: 0, offsuit: 0, broadway: 0, aceHigh: 0,
+                      }
+                      for (const row of MATRIX_HANDS) {
+                        for (const hand of row) {
+                          const combos = countCombos(hand, allBlockedRanks)
+                          totalCombos += combos
+                          const cats = getHandCategories(hand)
+                          if (cats.includes('pair')) perClass.pairs += combos
+                          if (cats.includes('suited')) perClass.suited += combos
+                          if (cats.includes('offsuit')) perClass.offsuit += combos
+                          if (cats.includes('broadway')) perClass.broadway += combos
+                          if (cats.includes('aceHigh')) perClass.aceHigh += combos
+                        }
+                      }
+
+                      return (
+                        <>
+                          {/* Blocked cards section */}
+                          <div style={{ marginBottom: 10 }}>
+                            {boardCards.length > 0 && (
+                              <div style={{ marginBottom: 6 }}>
+                                <div style={{ fontSize: 9, color: '#aaa', marginBottom: 3 }}>
+                                  Board cards blocking:
+                                </div>
+                                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                                  {boardCards.map((card, i) => (
+                                    <span key={i} style={{
+                                      display: 'inline-flex', alignItems: 'center', gap: 2,
+                                      padding: '2px 6px', borderRadius: 4,
+                                      background: '#2a2a2a', fontSize: 10, fontWeight: 700,
+                                      color: card.suit === 'h' || card.suit === 'd' ? '#E53935' : '#fff',
+                                    }}>
+                                      {card.rank}{card.suit === 'h' ? '♥' : card.suit === 'd' ? '♦' : card.suit === 'c' ? '♣' : '♠'}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {allBlockedRanks.size > 0 && (
+                              <div style={{ fontSize: 9, color: '#777' }}>
+                                Blocked ranks: {Array.from(allBlockedRanks).sort().join(', ')}
+                              </div>
+                            )}
+                            {allBlockedRanks.size === 0 && (
+                              <div style={{ fontSize: 10, color: '#666', fontStyle: 'italic' }}>
+                                No blockers active. Postflop board cards will appear here.
+                              </div>
+                            )}
+                          </div>
+
+                          <div style={{ height: 1, background: '#262626', margin: '8px 0' }} />
+
+                          {/* Total combos */}
+                          <div style={{
+                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                            padding: '6px 8px', borderRadius: 4,
+                            background: '#1a1a1a', marginBottom: 8,
+                          }}>
+                            <span style={{ fontSize: 10, color: '#aaa', fontWeight: 600 }}>Total Combos</span>
+                            <span style={{ fontSize: 12, color: '#fff', fontWeight: 700 }}>
+                              {totalCombos}
+                              <span style={{ fontSize: 9, color: '#666', fontWeight: 400, marginLeft: 3 }}>
+                                / 1326
+                              </span>
+                            </span>
+                          </div>
+
+                          {/* Per-class breakdown */}
+                          <div style={{ fontSize: 9, color: '#aaa', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                            By Hand Class
+                          </div>
+                          {([
+                            { key: 'pairs', label: 'Pairs' },
+                            { key: 'suited', label: 'Suited' },
+                            { key: 'offsuit', label: 'Offsuit' },
+                            { key: 'broadway', label: 'Broadway' },
+                            { key: 'aceHigh', label: 'Ace High' },
+                          ] as const).map(({ key, label }) => {
+                            const val = perClass[key]
+                            const pct = totalCombos > 0 ? ((val / totalCombos) * 100) : 0
+                            return (
+                              <div key={key} style={{
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                padding: '4px 6px', fontSize: 10, color: '#ccc',
+                                borderBottom: '1px solid #1e1e1e',
+                              }}>
+                                <span>{label}</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                  <span style={{ color: '#fff', fontWeight: 600 }}>{val}</span>
+                                  <span style={{ color: '#666', fontSize: 9 }}>{pct.toFixed(1)}%</span>
+                                </div>
+                              </div>
+                            )
+                          })}
+
+                          {/* Blocked info per rank */}
+                          {allBlockedRanks.size > 0 && (
+                            <>
+                              <div style={{ height: 1, background: '#262626', margin: '8px 0' }} />
+                              <div style={{ fontSize: 9, color: '#aaa', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                Blocking Effect
+                              </div>
+                              {Array.from(allBlockedRanks).sort().reverse().map(rank => {
+                                // Calculate combos removed by this rank
+                                const withoutThis = new Set(Array.from(allBlockedRanks).filter(r => r !== rank))
+                                let combosWith = 0, combosWithout = 0
+                                for (const row of MATRIX_HANDS) {
+                                  for (const hand of row) {
+                                    combosWith += countCombos(hand, allBlockedRanks)
+                                    combosWithout += countCombos(hand, withoutThis)
+                                  }
+                                }
+                                const removed = combosWithout - combosWith
+                                return (
+                                  <div key={rank} style={{
+                                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                    padding: '3px 6px', fontSize: 10, color: '#ccc',
+                                    borderBottom: '1px solid #1e1e1e',
+                                  }}>
+                                    <span style={{ fontWeight: 700 }}>{rank}</span>
+                                    <span style={{ color: '#E53935' }}>
+                                      -{removed} combos
+                                    </span>
+                                  </div>
+                                )
+                              })}
+                            </>
+                          )}
+                        </>
+                      )
+                    })()}
                   </div>
                 )}
 

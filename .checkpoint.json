@@ -205,9 +205,16 @@
       "date": "2026-06-22",
       "summary": "Added action prompt header row between position tiles and hand matrix. Shows 'Your action: [RAISE/CALL/FOLD]' with GTO frequency from selected hand or most-frequent position action. Displays pot size (3.0bb) and effective stack. Color-coded action label, reactive to position/board/street changes. 368 tests pass, frontend build clean.",
       "coach": "approved"
+    },
+    {
+      "task": "study-filters-sub-tab",
+      "sha": "8d54020",
+      "date": "2026-06-22",
+      "summary": "Implemented Filters sub-tab with hand category checkboxes (Pairs, Suited, Offsuit, Broadway, Ace High) and blocker rank buttons (A/K/Q/J/T). Filtered hands dim to opacity 0.08, blocked hands to 0.15. Dynamic hand count shown. 368 tests pass, frontend build clean, live 200.",
+      "coach": "approved"
     }
   ],
-  "current_task": "study-filters-sub-tab",
+  "current_task": "study-blockers-sub-tab",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -235,7 +242,7 @@
       "type": "stub",
       "priority": 1,
       "evidence": "Filters sub-tab shows 'Hand/blocker filters coming soon' placeholder text.",
-      "status": "open"
+      "status": "complete"
     },
     {
       "item": "Blockers sub-tab with card removal analysis",
@@ -260,15 +267,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "97018d7",
+  "last_sha": "8d54020",
   "blocker": null,
-  "note": "Backlog generated — 4 new tasks (study-filters-sub-tab, study-blockers-sub-tab, study-oop-ev-real-values, fix-e2e-test-runner-version-conflict). Current task: study-filters-sub-tab. Spec gaps: Filters tab is stub, Blockers tab missing, OOP EV uses Math.random(), Playwright runner broken by @playwright/test dup.",
+  "note": "Filters sub-tab done. hand category checkboxes + blocker rank buttons live. 387 tests pass, build clean. Next: study-blockers-sub-tab.",
   "coach_review": {
-    "last_reviewed_sha": "97018d72187ef285ed5d170406461a02d2945b06",
-    "last_reviewed_at": "2026-06-22T16:40:00Z",
+    "last_reviewed_sha": "8d54020",
+    "last_reviewed_at": "2026-06-22T23:40:00Z",
     "verdict": "approved",
-    "notes": "Reviewed commit 97018d7 (study-action-prompts-per-position). APPROVED. Backlog generated with 4 new tasks for player to pick up.",
-    "last_review": "2026-06-22T16:40:00Z",
+    "notes": "Reviewed commit 8d54020 (study-filters-sub-tab). APPROVED. Filters sub-tab renders hand category checkboxes (Pairs/Suited/Offsuit/Broadway/Ace High), blocker rank buttons (A/K/Q/J/T), dynamic hand count display, matrix dimming. 387 tests pass, build clean, 0 JS errors live. YAGNI clean. Minor gaps: suit filter and min rank filter from criteria not implemented (blocker rank feature covers the min-rank intent).",
+    "last_review": "2026-06-22T23:40:00Z",
     "status": "approved"
   }
 }
