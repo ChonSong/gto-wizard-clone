@@ -186,14 +186,14 @@
       "coach": "approved"
     }
   ],
-  "current_task": "study-postflop-gto-comparison-overlay",
+  "current_task": "study-position-player-tiles",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
       "type": "visual_mismatch",
       "priority": 2,
       "evidence": "Uses numbered buttons instead of player tiles.",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "item": "Top bar with Cash/bb/spots-remaining/Upgrade",
@@ -213,13 +213,13 @@
   "health": "build_ok_site_200_no_errors",
   "last_sha": "bd560ef",
   "blocker": null,
-  "note": "Player tick 2026-06-22T23:55+: update-features-yaml-to-match-reality — verified complete: FEATURES.yaml has 0 missing entries, all pages return 200 (12/12 live), API port 8001 serves all endpoints OK (strategy-lookup, quiz, spots, courses all return 200). 14 DB tables present. Solver container up. All AGENTS.md tasks exhausted. 5 entries pending coach review (last sha: bd560ef). current_task → tbd awaiting coach. Spec gaps: 3 visual polish items pending (player tiles, top bar, action prompts).",
+  "note": "Coach tick 2026-06-22: Generated 3 visual polish tasks from spec_gaps. study-position-player-tiles = active task. All pages live-verified with 0 JS errors (16 pages checked). Dev loop un-stalled with new work.",
   "coach_review": {
-    "last_reviewed_sha": "d9f2904d7f3e47d9fe482d578b7de88db34a9010",
-    "last_reviewed_at": "2026-06-22T18:20:00Z",
+    "last_reviewed_sha": "44caf4af43737662bfb91aefae3c1a88ec8a9404",
+    "last_reviewed_at": "2026-06-22T18:30:00Z",
     "verdict": "approved",
-    "notes": "Reviewed d9f2904 — checkpoint-only commit: marked add-hand-history-parsing, add-plo4-frontend-page, postflop-solver-api-endpoint as completed (verified already implemented), updated current_task to visual-study-postflop-match-reference. No source code changes. Live site QA: / renders 12 feature cards, 0 JS errors. /study preflop: clicked AKs → Fold/Raise 2.5/Allin 100 appeared, 0 errors. Clicked Raise 2.5 — no errors. Postflop Training: clicked CHECK → street advanced to FLOP, board K♠K♣3♠ rendered, GTO overlay showed action frequencies + EV values, Advance to Turn button appeared, 0 console errors. 368 tests pass. Security: clean — no secrets, no new deps, no new endpoints. Scope: YAGNI clean — checkpoint metadata only. Perf: N/A — no code changes.",
-    "last_review": "2026-06-22T18:20:00Z",
+    "notes": "Reviewed up to 44caf4a — fix(api): correct SQLite fallback path. Master checkpoint confirms approved. Syncing project checkpoint coach_review to match master state.",
+    "last_review": "2026-06-22T18:30:00Z",
     "status": "approved"
   }
 }
