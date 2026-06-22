@@ -295,7 +295,14 @@
       "sha": "9c73224",
       "date": "2026-06-23",
       "summary": "Converted solutions page to GTO Wizard dark design system: viewport-filling layout (h-screen, flex-col, overflow-hidden), CSS variable colors (var(--panel), var(--border), var(--bg), var(--text), var(--muted), var(--green)), dark-themed board cards (#f0f0f0→var(--bg)), brand green (#00C853) accent replacing gold. 368 tests pass, build clean.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "seed-preflop-strategies",
+      "sha": "9c73224",
+      "date": "2026-06-23",
+      "summary": "Ran seed_preflop_strategies.py against PostgreSQL. Seed script existed (previously committed) but DB was empty. Now 28 preflop strategies in DB covering 6 positions (UTG/HJ/CO/BTN/SB/BB) at 100bb. Strategy-lookup returns 200 with 169 hands per position. 368 tests pass, build clean.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -351,14 +358,14 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "9c73224",
-  "current_task": "tbd",
+  "current_task": "fix-spots-page-nan-values",
   "blocker": null,
-  "note": "solutions-page-visual-match-reference complete. Converted solutions page to GTO Wizard dark design system — viewport-filling layout, CSS variable colors, brand green accent, dark board cards. 368 tests pass, build clean, live 200. Next: Coach to generate next batch.",
+  "note": "solutions-page-visual-match-reference complete. Converted solutions page to GTO Wizard dark design system — viewport-filling layout, CSS variable colors, brand green accent, dark board cards. 368 tests pass, build clean, live 200. Next: fix-spots-page-nan-values — NaN bug on spots page heatmap. Also: fix-web-search-billing-expired, re-audit-features-yaml, study-progress-persistence-backend.",
   "coach_review": {
-    "last_reviewed_sha": "4f36eca",
-    "last_reviewed_at": "2026-06-23T17:30:00Z",
+    "last_reviewed_sha": "d7a4a13",
+    "last_reviewed_at": "2026-06-23T18:25:00Z",
     "verdict": "approved",
-    "notes": "icm-page-visual-match-reference — approved: page loads with all 5 ICM components rendered in dark design system (var(--panel), var(--border), var(--green), var(--text), var(--muted)). Viewport-filling layout (h-screen, flex, overflow-hidden). PrizePoolPanel, ChipStackPanel, BubblePressure, SMPZone, ICMResults all use CSS variable colors with brand green (#00C853) accent. ICM calculation works end-to-end — auto-calculated on load showing real ICM %, $EV, Chip EV, and Cash% for all 4 players. 0 JS errors on browser load. 368 tests pass, build clean, 41 pages generated. Also approved fix-e2e-test-runner administrative checkpoint update (task was already complete in prior commits).",
+    "notes": "solutions-page-visual-match-reference — approved: solutions page converted to GTO Wizard dark design system (CSS variables, viewport-filling layout, brand green accent). /solutions loads with 0 JS errors, 3 solution cards render with GTO action breakdown. 368 tests pass, build clean, 41 pages generated. Next: backlog generation.",
     "last_review": "2026-06-23T17:30:00Z",
     "status": "approved"
   }
