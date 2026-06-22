@@ -62,10 +62,10 @@ export function PrizePoolPanel({
   const totalPercentage = localPrizes.reduce((sum, p) => sum + p.percentage, 0);
 
   return (
-    <div className={cn("border border-gray-800 rounded-lg p-4 bg-gray-900/50", className)}>
+    <div className={cn("border border-[var(--border)] rounded-lg p-4 bg-[var(--panel)]", className)}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-poker-gold">Prize Pool Structure</h3>
-        <span className="text-sm text-muted-foreground">
+        <h3 className="text-lg font-semibold text-[var(--green)]">Prize Pool Structure</h3>
+        <span className="text-sm text-[var(--muted)]">
           Total: ${totalPrize.toLocaleString()}
         </span>
       </div>
@@ -74,9 +74,9 @@ export function PrizePoolPanel({
         {localPrizes.map((prize, index) => (
           <div
             key={prize.place}
-            className="flex items-center gap-3 p-2 rounded bg-gray-800/50 hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-3 p-2 rounded bg-[var(--bg)]/60 hover:bg-[var(--bg)] transition-colors"
           >
-            <span className="w-16 text-sm font-medium">
+            <span className="w-16 text-sm font-medium text-[var(--text)]">
               {prize.place === 1
                 ? "1st"
                 : prize.place === 2
@@ -100,7 +100,7 @@ export function PrizePoolPanel({
                     setEditingIndex(null);
                   }
                 }}
-                className="w-20 px-2 py-1 bg-gray-900 border border-gray-700 rounded text-sm text-center"
+                className="w-20 px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded text-sm text-center text-[var(--text)]"
                 min="0"
                 max="100"
                 step="0.1"
@@ -112,28 +112,28 @@ export function PrizePoolPanel({
                   setEditingIndex(index);
                   setEditValue(prize.percentage.toString());
                 }}
-                className="cursor-pointer hover:text-poker-gold transition-colors"
+                className="cursor-pointer hover:text-[var(--green)] transition-colors"
               >
-                <span className="text-green-400 font-mono">
+                <span className="text-[var(--green-bright)] font-mono">
                   ${((prize.percentage / 100) * totalPrize).toLocaleString(undefined, {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
                   })}
                 </span>
-                <span className="text-muted-foreground text-sm ml-2">
+                <span className="text-[var(--muted)] text-sm ml-2">
                   ({prize.percentage.toFixed(1)}%)
                 </span>
               </span>
             )}
-            <div className="flex-1 h-2 bg-gray-900 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-[var(--bg)] rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-poker-gold to-yellow-500 transition-all"
+                className="h-full bg-gradient-to-r from-[var(--green)] to-[var(--green-bright)] transition-all"
                 style={{ width: `${prize.percentage}%` }}
               />
             </div>
             <button
               onClick={() => removePlace(index)}
-              className="p-1 text-gray-500 hover:text-red-400 transition-colors"
+              className="p-1 text-[var(--muted)] hover:text-[var(--red-bright)] transition-colors"
               disabled={localPrizes.length <= 2}
             >
               <svg
@@ -155,24 +155,24 @@ export function PrizePoolPanel({
       <div className="mt-4 flex items-center justify-between">
         <button
           onClick={addPlace}
-          className="px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 rounded border border-gray-700 transition-colors"
+          className="px-3 py-1.5 text-sm bg-[var(--bg)] border border-[var(--border)] rounded hover:bg-[var(--panel)] transition-colors text-[var(--text)]"
         >
           + Add Place
         </button>
         <div className="text-sm">
-          <span className="text-muted-foreground">Total: </span>
+          <span className="text-[var(--muted)]">Total: </span>
           <span
             className={cn(
               "font-mono font-semibold",
               Math.abs(totalPercentage - 100) < 0.01
-                ? "text-green-400"
-                : "text-red-400"
+                ? "text-[var(--green)]"
+                : "text-[var(--red-bright)]"
             )}
           >
             {totalPercentage.toFixed(1)}%
           </span>
           {Math.abs(totalPercentage - 100) > 0.01 && (
-            <span className="text-red-400 text-xs ml-2">(must equal 100%)</span>
+            <span className="text-[var(--red-bright)] text-xs ml-2">(must equal 100%)</span>
           )}
         </div>
       </div>

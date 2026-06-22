@@ -92,10 +92,10 @@ export function ChipStackPanel({
   const sortedPlayers = [...localPlayers].sort((a, b) => b.chips - a.chips);
 
   return (
-    <div className={cn("border border-gray-800 rounded-lg p-4 bg-gray-900/50", className)}>
+    <div className={cn("border border-[var(--border)] rounded-lg p-4 bg-[var(--panel)]", className)}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-poker-gold">Chip Stacks</h3>
-        <span className="text-sm text-muted-foreground">
+        <h3 className="text-lg font-semibold text-[var(--green)]">Chip Stacks</h3>
+        <span className="text-sm text-[var(--muted)]">
           Total: {totalStacked.toLocaleString()} chips
         </span>
       </div>
@@ -112,11 +112,11 @@ export function ChipStackPanel({
               className={cn(
                 "flex items-center gap-3 p-2 rounded transition-colors",
                 isShort
-                  ? "bg-red-900/20 border border-red-800/30"
-                  : "bg-gray-800/50 hover:bg-gray-800"
+                  ? "bg-[var(--red)]/10 border border-[var(--red)]/30"
+                  : "bg-[var(--bg)]/60 hover:bg-[var(--bg)]"
               )}
             >
-              <span className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs font-medium">
+              <span className="w-6 h-6 rounded-full bg-[var(--border)] flex items-center justify-center text-xs font-medium text-[var(--muted)]">
                 {index + 1}
               </span>
 
@@ -126,32 +126,32 @@ export function ChipStackPanel({
                     type="text"
                     value={player.name}
                     onChange={(e) => handleNameChange(player.id, e.target.value)}
-                    className="bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-1 focus:ring-poker-gold rounded px-1 w-24"
+                    className="bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[var(--green)] rounded px-1 w-24 text-[var(--text)]"
                   />
                   {isLeading && (
-                    <span className="px-1.5 py-0.5 rounded bg-poker-gold/20 text-poker-gold text-xs font-semibold">
+                    <span className="px-1.5 py-0.5 rounded bg-[var(--green-dim)] text-[var(--green)] text-xs font-semibold">
                       CHIP LEADER
                     </span>
                   )}
                   {isShort && (
-                    <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 text-xs font-semibold">
+                    <span className="px-1.5 py-0.5 rounded bg-[var(--red)]/20 text-[var(--red-bright)] text-xs font-semibold">
                       SHORT
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <div className="flex-1 h-2 bg-gray-900 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-[var(--bg)] rounded-full overflow-hidden">
                     <div
                       className={cn(
                         "h-full transition-all",
                         isShort
-                          ? "bg-gradient-to-r from-red-600 to-red-400"
-                          : "bg-gradient-to-r from-blue-600 to-blue-400"
+                          ? "bg-gradient-to-r from-[var(--red-dark)] to-[var(--red-bright)]"
+                          : "bg-gradient-to-r from-[var(--blue)] to-[var(--blue)]/80"
                       )}
                       style={{ width: `${Math.min(stackPercentage, 100)}%` }}
                     />
                   </div>
-                  <span className="text-xs font-mono text-muted-foreground w-16 text-right">
+                  <span className="text-xs font-mono text-[var(--muted)] w-16 text-right">
                     {player.chips.toLocaleString()}
                   </span>
                 </div>
@@ -159,7 +159,7 @@ export function ChipStackPanel({
 
               <button
                 onClick={() => removePlayer(player.id)}
-                className="p-1 text-gray-500 hover:text-red-400 transition-colors"
+                className="p-1 text-[var(--muted)] hover:text-[var(--red-bright)] transition-colors"
                 disabled={localPlayers.length <= 2}
               >
                 <svg
@@ -182,11 +182,11 @@ export function ChipStackPanel({
       <div className="mt-4 flex items-center justify-between">
         <button
           onClick={addPlayer}
-          className="px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 rounded border border-gray-700 transition-colors"
+          className="px-3 py-1.5 text-sm bg-[var(--bg)] border border-[var(--border)] rounded hover:bg-[var(--panel)] transition-colors text-[var(--text)]"
         >
           + Add Player
         </button>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-[var(--muted)]">
           {localPlayers.length} players remaining
         </div>
       </div>

@@ -11,7 +11,7 @@
       "sha": "4eabb31",
       "date": "2026-06-23",
       "summary": "Convert courses listing page from light theme (white cards, #aafbb2 green) to GTO Wizard dark design system: var(--panel) cards, var(--border) borders, var(--green) (#00C853) accents, var(--text)/var(--muted) text. Updated stats summary, filter panel, course cards, sidebar, loading/error states. 368 tests pass, build clean, live 200.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "course-lesson-content-management",
@@ -327,11 +327,11 @@
   "blocker": null,
   "note": "courses-page-visual-match-reference: Converted courses page from light theme to GTO Wizard dark design system — stats summary, filter panel, course cards, sidebar all use CSS vars (var(--panel), var(--border), var(--green)). 368 tests pass, build clean, live 200. Next: fix-icm-api-route-prefix.",
   "coach_review": {
-    "last_reviewed_sha": "4eabb31",
-    "last_reviewed_at": "2026-06-23T17:00:00Z",
-    "verdict": "pending",
-    "notes": "courses-page-visual-match-reference — awaiting coach review",
-    "last_review": "2026-06-23T17:00:00Z",
-    "status": "pending"
+    "last_reviewed_sha": "d21f6a2",
+    "last_reviewed_at": "2026-06-23T17:30:00Z",
+    "verdict": "approved",
+    "notes": "courses-page-visual-match-reference — approved: dark theme redesign matches GTO Wizard design system. All CSS vars applied (var(--panel)/var(--border)/var(--green)/var(--text)/var(--muted)). Course cards: thumbnail, title, description, difficulty badge, progress bar, metadata. Difficulty badge colors correct (green=beginner, yellow=intermediate, red=advanced). Detail page renders with lesson sidebar, content area, mark-complete, 0 JS errors. 368 tests pass, build clean, 41 pages generated.",
+    "last_review": "2026-06-23T17:30:00Z",
+    "status": "approved"
   }
 }

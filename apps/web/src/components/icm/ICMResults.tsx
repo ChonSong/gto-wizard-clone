@@ -109,10 +109,10 @@ export function ICMResults({
   }));
 
   return (
-    <div className={cn("border border-gray-800 rounded-lg p-4 bg-gray-900/50", className)}>
+    <div className={cn("border border-[var(--border)] rounded-lg p-4 bg-[var(--panel)]", className)}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-poker-gold">ICM Analysis</h3>
-        <div className="text-sm text-muted-foreground">
+        <h3 className="text-lg font-semibold text-[var(--green)]">ICM Analysis</h3>
+        <div className="text-sm text-[var(--muted)]">
           Independent Chip Model
         </div>
       </div>
@@ -125,29 +125,29 @@ export function ICMResults({
             margin={{ top: 4, right: 4, bottom: 4, left: 0 }}
             barCategoryGap="20%"
           >
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} />
             <XAxis
               dataKey="name"
-              tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }}
+              tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }}
+              tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={false}
               domain={[0, 100]}
-              label={{ value: "%", angle: -90, position: "insideLeft", fontSize: 9, fill: "var(--color-muted-foreground)" }}
+              label={{ value: "%", angle: -90, position: "insideLeft", fontSize: 9, fill: "var(--muted)" }}
             />
             <Tooltip
               contentStyle={{
-                background: "var(--color-popover)",
-                border: "1px solid var(--color-border)",
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
                 borderRadius: "6px",
                 fontSize: 12,
-                color: "var(--color-popover-foreground)",
+                color: "var(--text)",
               }}
-              labelStyle={{ color: "var(--color-foreground)" }}
+              labelStyle={{ color: "var(--text)" }}
               formatter={(value: number, name: string) => {
                 if (name === "equity") return [`${value.toFixed(1)}%`, "ICM Equity"];
                 if (name === "prizeEquity") return [`$${value}`, "Prize Equity"];
@@ -165,7 +165,7 @@ export function ICMResults({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={index === 0 ? "#d4af37" : index === chartData.length - 1 ? "#ef4444" : "#3b82f6"}
+                  fill={index === 0 ? "var(--green)" : index === chartData.length - 1 ? "var(--red-bright)" : "var(--blue)"}
                   fillOpacity={0.8}
                 />
               ))}
@@ -175,79 +175,79 @@ export function ICMResults({
       </div>
 
       {/* Results Table - Horizontal scroll on mobile */}
-      <div className="overflow-x-auto rounded-lg border border-gray-800 -mx-2 sm:mx-0">
+      <div className="overflow-x-auto -mx-2 sm:mx-0">
         <table className="w-full text-sm min-w-[600px]">
-          <thead className="bg-gray-800/50">
-            <tr>
-              <th className="px-2 sm:px-3 py-2 text-left font-medium text-muted-foreground">Rank</th>
-              <th className="px-2 sm:px-3 py-2 text-left font-medium text-muted-foreground">Player</th>
-              <th className="px-2 sm:px-3 py-2 text-right font-medium text-muted-foreground">Chips</th>
-              <th className="px-2 sm:px-3 py-2 text-right font-medium text-muted-foreground">ICM %</th>
-              <th className="px-2 sm:px-3 py-2 text-right font-medium text-muted-foreground">Prize $</th>
-              <th className="px-2 sm:px-3 py-2 text-right font-medium text-muted-foreground">$EV</th>
-              <th className="px-2 sm:px-3 py-2 text-right font-medium text-muted-foreground">Chip EV</th>
-              <th className="px-2 sm:px-3 py-2 text-right font-medium text-muted-foreground">Cash%</th>
+          <thead>
+            <tr className="border-b border-[var(--border)]">
+              <th className="px-2 sm:px-3 py-2 text-left font-medium text-[var(--muted)]">Rank</th>
+              <th className="px-2 sm:px-3 py-2 text-left font-medium text-[var(--muted)]">Player</th>
+              <th className="px-2 sm:px-3 py-2 text-right font-medium text-[var(--muted)]">Chips</th>
+              <th className="px-2 sm:px-3 py-2 text-right font-medium text-[var(--muted)]">ICM %</th>
+              <th className="px-2 sm:px-3 py-2 text-right font-medium text-[var(--muted)]">Prize $</th>
+              <th className="px-2 sm:px-3 py-2 text-right font-medium text-[var(--muted)]">$EV</th>
+              <th className="px-2 sm:px-3 py-2 text-right font-medium text-[var(--muted)]">Chip EV</th>
+              <th className="px-2 sm:px-3 py-2 text-right font-medium text-[var(--muted)]">Cash%</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-[var(--border)]">
             {sortedByEquity.map((player, index) => (
-              <tr key={player.id} className="hover:bg-gray-800/30 transition-colors">
+              <tr key={player.id} className="hover:bg-[var(--bg)]/50 transition-colors">
                 <td className="px-2 sm:px-3 py-2">
                   <span
                     className={cn(
                       "w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-semibold",
                       index === 0
-                        ? "bg-poker-gold/20 text-poker-gold"
+                        ? "bg-[var(--green-dim)] text-[var(--green)]"
                         : index === sortedByEquity.length - 1
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-gray-700 text-gray-300"
+                        ? "bg-[var(--red)]/20 text-[var(--red-bright)]"
+                        : "bg-[var(--border)] text-[var(--muted)]"
                     )}
                   >
                     {index + 1}
                   </span>
                 </td>
-                <td className="px-2 sm:px-3 py-2 font-medium truncate max-w-[100px] sm:max-w-none">
+                <td className="px-2 sm:px-3 py-2 font-medium truncate max-w-[100px] sm:max-w-none text-[var(--text)]">
                   {player.name}
                   {index === 0 && (
-                    <span className="ml-1 sm:ml-2 text-xs text-poker-gold">★</span>
+                    <span className="ml-1 sm:ml-2 text-xs text-[var(--green)]">★</span>
                   )}
                 </td>
-                <td className="px-2 sm:px-3 py-2 text-right font-mono text-muted-foreground text-xs sm:text-sm">
+                <td className="px-2 sm:px-3 py-2 text-right font-mono text-[var(--muted)] text-xs sm:text-sm">
                   {player.chips.toLocaleString()}
                 </td>
                 <td className="px-2 sm:px-3 py-2 text-right">
                   <span className={cn(
                     "font-mono font-semibold text-xs sm:text-sm",
-                    index === 0 ? "text-poker-gold" : index === sortedByEquity.length - 1 ? "text-red-400" : "text-blue-400"
+                    index === 0 ? "text-[var(--green)]" : index === sortedByEquity.length - 1 ? "text-[var(--red-bright)]" : "text-[var(--blue)]"
                   )}>
                     {player.equity.toFixed(1)}%
                   </span>
                 </td>
-                <td className="px-2 sm:px-3 py-2 text-right font-mono text-green-400 text-xs sm:text-sm">
+                <td className="px-2 sm:px-3 py-2 text-right font-mono text-[var(--green-bright)] text-xs sm:text-sm">
                   ${player.prizeEquity.toLocaleString()}
                 </td>
-                <td className="px-2 sm:px-3 py-2 text-right font-mono text-poker-gold text-xs sm:text-sm">
+                <td className="px-2 sm:px-3 py-2 text-right font-mono text-[var(--green)] text-xs sm:text-sm">
                   ${player.ev != null ? player.ev.toLocaleString(undefined, { maximumFractionDigits: 0 }) : player.prizeEquity.toLocaleString()}
                 </td>
-                <td className="px-2 sm:px-3 py-2 text-right font-mono text-blue-300 text-xs sm:text-sm">
+                <td className="px-2 sm:px-3 py-2 text-right font-mono text-[var(--blue)] text-xs sm:text-sm">
                   {player.chipEquity != null ? player.chipEquity.toLocaleString(undefined, { maximumFractionDigits: 0 }) : player.chips.toLocaleString()}
                 </td>
                 <td className="px-2 sm:px-3 py-2 text-right">
                   <div className="flex items-center justify-end gap-1 sm:gap-2">
-                    <div className="w-12 sm:w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="w-12 sm:w-16 h-1.5 bg-[var(--bg)] rounded-full overflow-hidden">
                       <div
                         className={cn(
                           "h-full",
                           player.cashProbability >= 80
-                            ? "bg-green-500"
+                            ? "bg-[var(--green)]"
                             : player.cashProbability >= 50
                             ? "bg-yellow-500"
-                            : "bg-red-500"
+                            : "bg-[var(--red-bright)]"
                         )}
                         style={{ width: `${player.cashProbability}%` }}
                       />
                     </div>
-                    <span className="font-mono text-muted-foreground w-8 sm:w-10 text-right text-xs sm:text-sm">
+                    <span className="font-mono text-[var(--muted)] w-8 sm:w-10 text-right text-xs sm:text-sm">
                       {player.cashProbability}%
                     </span>
                   </div>
@@ -260,21 +260,21 @@ export function ICMResults({
 
       {/* Summary Stats - Mobile responsive grid */}
       <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-4">
-        <div className="text-center p-2 sm:p-3 rounded bg-gray-800/30">
-          <div className="text-xs text-muted-foreground mb-1">Total Prize Pool</div>
-          <div className="text-lg sm:text-xl font-bold text-poker-gold">
+        <div className="text-center p-2 sm:p-3 rounded bg-[var(--bg)]/60">
+          <div className="text-xs text-[var(--muted)] mb-1">Total Prize Pool</div>
+          <div className="text-lg sm:text-xl font-bold text-[var(--green)]">
             ${sortedByEquity.reduce((sum, p) => sum + p.prizeEquity, 0).toLocaleString()}
           </div>
         </div>
-        <div className="text-center p-2 sm:p-3 rounded bg-gray-800/30">
-          <div className="text-xs text-muted-foreground mb-1">Avg Stack Value</div>
-          <div className="text-lg sm:text-xl font-bold text-blue-400">
+        <div className="text-center p-2 sm:p-3 rounded bg-[var(--bg)]/60">
+          <div className="text-xs text-[var(--muted)] mb-1">Avg Stack Value</div>
+          <div className="text-lg sm:text-xl font-bold text-[var(--blue)]">
             ${(sortedByEquity.reduce((sum, p) => sum + p.prizeEquity, 0) / sortedByEquity.length || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </div>
         </div>
-        <div className="text-center p-2 sm:p-3 rounded bg-gray-800/30">
-          <div className="text-xs text-muted-foreground mb-1">Chip Leader Adv</div>
-          <div className="text-lg sm:text-xl font-bold text-green-400">
+        <div className="text-center p-2 sm:p-3 rounded bg-[var(--bg)]/60">
+          <div className="text-xs text-[var(--muted)] mb-1">Chip Leader Adv</div>
+          <div className="text-lg sm:text-xl font-bold text-[var(--green-bright)]">
             +{((sortedByEquity[0]?.equity || 0) - (100 / (sortedByEquity.length || 1))).toFixed(1)}%
           </div>
         </div>
