@@ -33,27 +33,49 @@ interface SessionHistory {
   selectedAction: string
 }
 
-function mockSpot(): Spot {
-  const cats = CATEGORIES.slice(1)
-  const diffs = DIFFICULTIES.slice(1)
-  const actions = ['Fold', 'Call', 'Raise', 'All-in']
-  const gtoIdx = Math.floor(Math.random() * 4)
+interface QuizOption {
+  action: string
+  frequency: number
+  ev: number
+}
+
+interface QuizSpot {
+  id: string
+  game_type: string
+  category: string
+  difficulty: string
+  position: string
+  hero_hand: string
+  board: string | null
+  turn?: string | null
+  river?: string | null
+  pot_size: number
+  stack_depth: number
+  gto_action: string
+  gto_frequency: number
+  gto_ev: number
+  options: QuizOption[]
+  street: string
+  explanation?: string
+}
+
+function quizToSpot(d: QuizSpot): Spot {
   return {
-    category: cats[Math.floor(Math.random() * cats.length)],
-    difficulty: diffs[Math.floor(Math.random() * diffs.length)],
-    position: POSITIONS[Math.floor(Math.random() * POSITIONS.length)],
-    hero_hand: ['AKs', 'AA', 'KK', 'QQ', 'AQs', 'JJ', 'TT', 'AKo', 'KQs', 'AJs'][Math.floor(Math.random() * 10)],
-    board: Math.random() > 0.3 ? 'Kd7h2c' : null,
-    pot_size: Math.floor(Math.random() * 80) + 15,
-    stack_depth: [50, 75, 100, 125, 150, 200][Math.floor(Math.random() * 6)],
-    gto_action: actions[gtoIdx],
-    gto_frequency: Math.round(30 + Math.random() * 50),
-    gto_ev: Math.round((Math.random() * 4 - 0.5) * 100) / 100,
-    options: actions.map((a, i) => ({
-      action: a,
-      frequency: Math.round(Math.random() * 60 + 5),
-      ev: Math.round((Math.random() * 5 - 1) * 100) / 100,
-      is_gto: i === gtoIdx,
+    category: d.category,
+    difficulty: d.difficulty,
+    position: d.position,
+    hero_hand: d.hero_hand,
+    board: d.board,
+    pot_size: d.pot_size,
+    stack_depth: d.stack_depth,
+    gto_action: d.gto_action,
+    gto_frequency: d.gto_frequency,
+    gto_ev: d.gto_ev,
+    options: d.options.map(o => ({
+      action: o.action,
+      frequency: o.frequency,
+      ev: o.ev,
+      is_gto: o.action === d.gto_action,
     })),
   }
 }
@@ -267,16 +289,17 @@ export default function PracticePage() {
       if (difficulty !== 'All') params.set('difficulty', difficulty.toLowerCase())
       const res = await fetch(`${API_BASE}/quiz/random?${params.toString()}`)
       if (res.ok) {
-        const d = await res.json()
+        const d: QuizSpot = await res.json()
         if (d?.options) {
-          setSpot(d)
+          setSpot(quizToSpot(d))
           return
         }
       }
     } catch {
       /* fallback */
     }
-    setSpot(mockSpot())
+    // If quiz API unavailable, show error state instead of mock data
+    setSpot(null)
   }, [category, difficulty])
 
   const startSession = () => {
@@ -633,7 +656,7 @@ export default function PracticePage() {
           className="flex-1 overflow-auto p-5"
           style={{ borderRight: '1px solid var(--border)' }}
         >
-          {spot && (
+          {spot ? (
             <div>
               {/* Tags */}
               <div className="flex gap-2 mb-3 flex-wrap">
@@ -793,6 +816,23 @@ export default function PracticePage() {
                   </button>
                 </div>
               )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <div className="text-3xl mb-3">⚠️</div>
+              <div className="text-sm font-semibold mb-1" style={{ color: 'var(--text)' }}>
+                Unable to load training spot
+              </div>
+              <div className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
+                The quiz API is not responding. Please ensure the backend is running.
+              </div>
+              <button
+                onClick={fetchSpot}
+                className="font-semibold cursor-pointer border-none rounded-lg px-6 py-2.5 text-sm"
+                style={{ background: 'var(--green)', color: '#000' }}
+              >
+                Retry
+              </button>
             </div>
           )}
         </div>
