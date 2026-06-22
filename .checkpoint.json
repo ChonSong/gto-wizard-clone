@@ -317,6 +317,13 @@
       "date": "2026-06-23",
       "summary": "Installed ddgs (DuckDuckGo search) Python package in Hermes venv and set web.search_backend: ddgs in ~/.hermes/config.yaml. Firecrawl billing was exhausted (402 Payment Required). DuckDuckGo requires no API key. Verified: web_search() returns real results successfully. web_extract still on Firecrawl (separate issue). Next: re-audit-features-yaml.",
       "coach": "approved"
+    },
+    {
+      "task": "re-audit-features-yaml",
+      "sha": "fc7ea78",
+      "date": "2026-06-23",
+      "summary": "Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml: corrected API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress), added missing pages (/omaha, /push-fold, /range-explorer, /solutions), added new study components (top-bar, player-tiles, filters, OOP-EV, action-prompt, GTO microchips). last_audited=2026-06-23. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -371,10 +378,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "fee7e61",
-  "current_task": "re-audit-features-yaml",
+  "last_sha": "fc7ea78",
+  "current_task": "study-progress-persistence-backend",
   "blocker": null,
-  "note": "fix-web-search-billing-expired: Installed ddgs package in Hermes venv, set web.search_backend: ddgs in ~/.hermes/config.yaml. Firecrawl billing was exhausted (402). DuckDuckGo works with no API key. web_search returns real results. Next: re-audit-features-yaml.",
+  "note": "re-audit-features-yaml: Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml with correct API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress). Added missing pages: /omaha, /push-fold, /range-explorer, /solutions. Added new study components. last_audited=2026-06-23. 368 tests pass. Build clean. Live 200.",
   "coach_review": {
     "last_reviewed_sha": "7201ea1",
     "last_reviewed_at": "2026-06-23T19:30:00Z",
