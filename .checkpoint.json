@@ -232,7 +232,14 @@
       "sha": "74b7161",
       "date": "2026-06-23",
       "summary": "Replaced mockSpot() with real quiz API data. Added QuizSpot/QuizOption interfaces, quizToSpot() converter that derives is_gto from gto_action. API failure shows error state with Retry button instead of fake data. Build passes, 368 tests pass.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "gto-frequency-microchips-on-action-buttons",
+      "sha": "b330536",
+      "date": "2026-06-23",
+      "summary": "GTO frequency micro-chips with threshold coloring on postflop action buttons. Green >20%, yellow 5-20%, gray <5%. 368 tests pass, build clean.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -287,16 +294,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "74b7161",
-  "current_task": "gto-frequency-microchips-on-action-buttons",
+  "last_sha": "136d654",
+  "current_task": "study-page-equity-chart-real-values",
   "blocker": null,
-  "note": "practice-page-replace-mock-data complete. Replaced Math.random() mock data with real quiz API. 368 tests pass, build clean, live 200. Next: gto-frequency-microchips-on-action-buttons (visual polish).",
+  "note": "practice-page-replace-mock-data + gto-frequency-microchips both approved. Practice page uses real quiz API data (no more Math.random()), action buttons show threshold-colored GTO frequency chips. 368 tests pass, build clean, live 200. Coach fixed frequency % display (proportion→percentage). Next: study-page-equity-chart-real-values.",
   "coach_review": {
-    "last_reviewed_sha": "35accd5",
-    "last_reviewed_at": "2026-06-22T23:59:00Z",
+    "last_reviewed_sha": "136d654",
+    "last_reviewed_at": "2026-06-23T05:00:00Z",
     "verdict": "approved",
-    "notes": "2 unreviewed commits (8ff6438, 35accd5) reviewed. Both approved.",
-    "last_review": "2026-06-22T23:59:00Z",
+    "notes": "Reviewed 2 commits: 74b7161 (practice-page-replace-mock-data) and b330536 (gto-frequency-microchips-on-action-buttons). Both approved. Coach fixed freq % display bug (Math.round(freq*100)). Next task: study-page-equity-chart-real-values.",
+    "last_review": "2026-06-23T05:00:00Z",
     "status": "complete"
   }
 }
