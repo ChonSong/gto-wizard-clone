@@ -381,7 +381,7 @@
   "last_sha": "fc7ea78",
   "current_task": "study-progress-persistence-backend",
   "blocker": null,
-  "note": "re-audit-features-yaml: Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml with correct API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress). Added missing pages: /omaha, /push-fold, /range-explorer, /solutions. Added new study components. last_audited=2026-06-23. 368 tests pass. Build clean. Live 200.",
+  "note": "re-audit-features-yaml: Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml with correct API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress). Added missing pages: /omaha, /push-fold, /range-explorer, /solutions. Added new study components. last_audited=2026-06-23. 368 tests pass. Build clean. Live 200. Added 3 new backlog tasks to AGENTS.md: leaderboard-frontend-page, study-postflop-action-selection-feedback, practice-timed-drill-mode.",
   "coach_review": {
     "last_reviewed_sha": "2b4f571",
     "last_reviewed_at": "2026-06-23T19:35:00Z",
