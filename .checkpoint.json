@@ -324,6 +324,13 @@
       "date": "2026-06-23",
       "summary": "Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml: corrected API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress), added missing pages (/omaha, /push-fold, /range-explorer, /solutions), added new study components (top-bar, player-tiles, filters, OOP-EV, action-prompt, GTO microchips). last_audited=2026-06-23. 368 tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "study-progress-persistence-backend",
+      "sha": "bdd3bb5",
+      "date": "2026-06-23",
+      "summary": "Implemented full-stack progress persistence: POST/GET /api/v1/study/progress backend endpoints with SQLAlchemy model, /progress frontend page with stats cards/position-action breakdown/charts/session history, study page fires POST on Check vs GTO with localStorage UUID identity. 6 API tests, 368 poker-core tests all pass. Build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -378,10 +385,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "fc7ea78",
-  "current_task": "study-progress-persistence-backend",
+  "last_sha": "bdd3bb5",
+  "current_task": "tbd",
   "blocker": null,
-  "note": "re-audit-features-yaml: Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml with correct API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress). Added missing pages: /omaha, /push-fold, /range-explorer, /solutions. Added new study components. last_audited=2026-06-23. 368 tests pass. Build clean. Live 200. Added 3 new backlog tasks to AGENTS.md: leaderboard-frontend-page, study-postflop-action-selection-feedback, practice-timed-drill-mode.",
+  "note": "study-progress-persistence-backend: Full-stack progress tracking implemented. POST/GET /api/v1/study/progress with SQLAlchemy study_progress table. /progress page with stats cards, position/action accuracy breakdowns, 7-day chart, session history. Study page saves progress on Check vs GTO via UUID in localStorage. 6 API tests pass. 368 poker-core tests pass. Build clean. Live 200. Next: task exhaustion — Coach should generate next batch.",
   "coach_review": {
     "last_reviewed_sha": "2b4f571",
     "last_reviewed_at": "2026-06-23T19:35:00Z",
