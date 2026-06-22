@@ -7,6 +7,13 @@
   "phase_name": "Study Mode UX Completion - Phase 2: Spec Gap Closure",
   "completed": [
     {
+      "task": "courses-page-visual-match-reference",
+      "sha": "4eabb31",
+      "date": "2026-06-23",
+      "summary": "Convert courses listing page from light theme (white cards, #aafbb2 green) to GTO Wizard dark design system: var(--panel) cards, var(--border) borders, var(--green) (#00C853) accents, var(--text)/var(--muted) text. Updated stats summary, filter panel, course cards, sidebar, loading/error states. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
+    },
+    {
       "task": "course-lesson-content-management",
       "sha": "c5dc971",
       "date": "2026-06-23",
@@ -315,16 +322,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "c5dc971",
-  "current_task": "courses-page-visual-match-reference",
+  "last_sha": "4eabb31",
+  "current_task": "fix-icm-api-route-prefix",
   "blocker": null,
-  "note": "course-lesson-content-management: Fixed progress endpoint 500 (UserProgressResponse.id Optional[str]). Restarted API to populate lesson content. Course detail page functional — lessons with real markdown, progress tracking, mark-complete flow. 387 tests pass, build clean, live 200. Next: courses-page-visual-match-reference.",
+  "note": "courses-page-visual-match-reference: Converted courses page from light theme to GTO Wizard dark design system — stats summary, filter panel, course cards, sidebar all use CSS vars (var(--panel), var(--border), var(--green)). 368 tests pass, build clean, live 200. Next: fix-icm-api-route-prefix.",
   "coach_review": {
-    "last_reviewed_sha": "c5dc971",
-    "last_reviewed_at": "2026-06-23T06:00:00Z",
-    "verdict": "approved",
-    "notes": "course-lesson-content-management — approved: 1-line fix (id: str → Optional[str]) resolves progress endpoint 500. Verified: endpoint returns 200 with 12.5% progress, course detail renders 8 lessons, 0 JS errors across pages, 368/368 poker-core tests pass.",
-    "last_review": "2026-06-23T06:00:00Z",
-    "status": "approved"
+    "last_reviewed_sha": "4eabb31",
+    "last_reviewed_at": "2026-06-23T17:00:00Z",
+    "verdict": "pending",
+    "notes": "courses-page-visual-match-reference — awaiting coach review",
+    "last_review": "2026-06-23T17:00:00Z",
+    "status": "pending"
   }
 }
