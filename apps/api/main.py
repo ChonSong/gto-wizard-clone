@@ -17,6 +17,7 @@ from routers.strategy_lookup import router as strategy_lookup_router
 from routers.trainer import router as trainer_router
 from routers.quiz_ws import websocket_handler
 from routers.variants import router as variants_router
+from routers.study_progress import router as study_progress_router
 from apps.api.services.cache import init_cache
 
 logging.basicConfig(level=logging.INFO)
@@ -158,6 +159,7 @@ app.include_router(icm.router)
 app.include_router(strategy_lookup_router)
 app.include_router(variants_router)
 app.include_router(trainer_router)
+app.include_router(study_progress_router)
 
 
 @app.get("/")

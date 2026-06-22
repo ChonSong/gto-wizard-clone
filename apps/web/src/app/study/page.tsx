@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PostflopTraining from '@/components/study/PostflopTraining'
 import ActionSelector from '@/components/study/ActionSelector'
+import { getUserId } from '@/lib/user-id'
 
 // --- Study Stats (localStorage-backed) ---
 
@@ -467,7 +468,25 @@ export default function StudyPage() {
       saveStats(updated)
       return updated
     })
-  }, [userAction, selectedHandData, betSize, activePosition])
+    // Save progress to backend (fire-and-forget)
+    const gtoAction = selectedHandData.action
+    const userActionDisplay = userAction === 'raise' ? `raise_${betSize || 2.5}bb` : userAction
+    fetch(`${API_BASE}/study/progress`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        hand: selectedCell,
+        position: activePosition,
+        stack_depth: stackDepth,
+        action_chosen: userActionDisplay,
+        action_gto: gtoAction,
+        correct: isCorrect,
+        user_id: getUserId(),
+      }),
+    }).catch(() => {
+      // Silently ignore — backend may be down, local stats still work
+    })
+  }, [userAction, selectedHandData, betSize, activePosition, selectedCell, stackDepth])
 
   const handleGenerateFlop = useCallback(() => {
     const flop = generateRandomCards(3, [])
