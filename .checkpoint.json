@@ -148,45 +148,45 @@
       "sha": "52da838",
       "date": "2026-06-22",
       "summary": "Verified: /hand-history page exists (1352 lines, fully functional), POST /api/v1/hh/parse endpoint works, parser supports PokerStars/GGPoker/Winamax, 44 parser tests pass. Task was already implemented.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "add-plo4-frontend-page",
       "sha": "52da838",
       "date": "2026-06-22",
       "summary": "Verified: /equity/plo4 and /plo4 both exist and return 200 live. Task was already implemented.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "postflop-solver-api-endpoint",
       "sha": "52da838",
       "date": "2026-06-22",
       "summary": "Verified: POST /api/v1/solver/postflop-strategy endpoint exists in solver.py with in-memory caching + live solver fallback. Task already implemented.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "visual-study-postflop-match-reference",
       "sha": "af66907",
       "date": "2026-06-22",
-      "summary": "Fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb to pass real values. CardDisplay, action buttons, street breadcrumb, GTO comparison, config panel all present. Visual matching against reference.png requires vision_analyze/browser tools not available this session.",
-      "coach": "pending"
+      "summary": "Fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb to pass real values. CardDisplay, action buttons, street breadcrumb, GTO comparison, config panel all present. Verified live: viewport-filling layout works, card styling improved, street breadcrumb shows proper progression, action buttons with GTO frequencies render, 0 JS errors. Solver dedup verified in test (19/19 pass).",
+      "coach": "approved"
     },
     {
       "task": "fix-solver-postflop-response-dedup",
       "sha": "bd560ef",
       "date": "2026-06-22",
-      "summary": "Added _dedup_actions() helper that deduplicates solver actions by name keeping max frequency. Applied to postflop-strategy (cache + live-solver paths) and solve endpoints. 387 tests pass.",
-      "coach": "pending"
+      "summary": "Added _dedup_actions() helper that deduplicates solver actions by name keeping max frequency. Applied to postflop-strategy (cache + live-solver) paths and solve endpoints. 19/19 solver API tests pass including new dedup test. 368 poker-core tests pass.",
+      "coach": "approved"
     },
     {
       "task": "update-features-yaml-to-match-reality",
       "sha": "bd560ef",
       "date": "2026-06-22",
       "summary": "Verified complete: FEATURES.yaml has 0 missing entries. All 12 live pages return 200. API on port 8001 serves strategy-lookup, quiz, spots, courses, all endpoints OK. 14 DB tables present (quiz_spots=54 rows, 40 with board data). Solver container up. No code changes needed — task was already done by prior sessions, checkpoint just needed advancing.",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
-  "current_task": "tbd",
+  "current_task": "study-postflop-gto-comparison-overlay",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",

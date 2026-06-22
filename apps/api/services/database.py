@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # Try PostgreSQL first, fall back to SQLite
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 if not DATABASE_URL:
-    _sqlite_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gto_wizard.db")
+    _sqlite_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "gto_wizard.db")
     DATABASE_URL = f"sqlite+aiosqlite:///{os.path.abspath(_sqlite_path)}"
     logger.info(f"No DATABASE_URL set, using SQLite: {_sqlite_path}")
 
@@ -74,35 +74,40 @@ async def init_db():
     """Initialize database tables."""
     logger.info("Initializing database tables...")
     engine = get_engine()
-    
+
     # Import all models so their metadata gets registered
     from apps.api.models.spots import CommunitySpot, SpotComment, SpotLike
     from apps.api.models.course_models import Course, Lesson, UserProgress
     from apps.api.models.hh_models import HandHistory, HandTag, HandAction
     from apps.api.services.quiz_models import QuizSpot, QuizSubmission, UserStats, ReviewSpot
-    
+
     # Import models from services/models.py as well
     from apps.api.services.models import Strategy, Base as ModelsBase
-    
+
     try:
         async with engine.begin() as conn:
             # Create tables from both base classes since models inherit from different ones
             await conn.run_sync(ModelsBase.metadata.create_all)
             from apps.api.services.database import Base as DbBase
+
             await conn.run_sync(DbBase.metadata.create_all)
         logger.info("Database tables initialized")
     except Exception as e:
         error_str = str(e)
         if "JSONB" in error_str or "can't render element" in error_str:
-            logger.warning("JSONB columns not supported in SQLite. Trying incremental table creation...")
-            logger.warning("JSONB columns not supported in SQLite. Trying incremental table creation...")
+            logger.warning(
+                "JSONB columns not supported in SQLite. Trying incremental table creation..."
+            )
+            logger.warning(
+                "JSONB columns not supported in SQLite. Trying incremental table creation..."
+            )
             # Get all registered tables
             from sqlalchemy import Table, MetaData
-            
+
             tables_to_create = list(Base.metadata.tables.values())
             created_count = 0
             failed_tables = []
-            
+
             for table in tables_to_create:
                 try:
                     async with engine.begin() as conn:
@@ -111,7 +116,7 @@ async def init_db():
                 except Exception as table_err:
                     failed_tables.append(table.name)
                     logger.warning(f"Could not create table '{table.name}': {table_err}")
-            
+
             if created_count > 0:
                 logger.info(f"Created {created_count} tables. Failed: {failed_tables}")
             else:
