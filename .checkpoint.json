@@ -47,6 +47,13 @@
       "date": "2026-06-23",
       "summary": "Timed Drill mode: per-spot countdown timer (configurable 30s/60s/120s) with visual ⏱️ indicator, auto-advance on expiry (records as incorrect), response time tracking with speed bonus scoring (up to +50 pts per spot), drill summary with Score/Avg Time/Accuracy. Timer duration selector in setup. Spaced Repetition shows 'coming soon' notice. 368 tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "study-right-sidebar-analysis-tabs",
+      "sha": "0b6adeb",
+      "date": "2026-06-23",
+      "summary": "Verified right sidebar analysis tabs are fully implemented: Overview/Table/Equity chart main tabs, Hand/Summary/Filters/Actions/Blockers sub-tabs, aggregate action frequencies with combo counts, card removal analysis. Already committed in d980026. 368 tests pass, build clean, live 200. Advancing to next task.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -122,8 +129,8 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "0bebc60",
-  "current_task": "study-right-sidebar-analysis-tabs",
+  "last_sha": "0b6adeb",
+  "current_task": "study-spot-card-bar-with-action-prompts",
   "blocker": null,
   "note": "Backlog replenished: 3 new tasks. study-right-sidebar-analysis-tabs (1st), study-spot-card-bar-with-action-prompts (2nd), practice-spaced-repetition-mode (3rd).",
   "coach_review": {
