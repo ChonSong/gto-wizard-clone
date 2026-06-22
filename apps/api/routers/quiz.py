@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
-from sqlalchemy import cast, Float, func, select
+from sqlalchemy import cast, Float, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.services.database import get_session_context
@@ -423,36 +423,45 @@ async def get_leaderboard(
     limit: int = Query(20, ge=1, le=100, description="Number of entries to return"),
     offset: int = Query(0, ge=0, description="Offset for pagination"),
     user_id: Optional[str] = Query(None, description="Current user ID to show their rank"),
+    period: str = Query(
+        "all-time", regex="^(all-time|weekly|daily)$", description="Leaderboard time period"
+    ),
 ):
     """Get leaderboard ranked by accuracy and solves completed."""
     async with get_session_context() as session:
-        # Query top users by accuracy (min 10 solves for ranking)
-        subquery = (
+        # Build base query with optional time filter
+        base_select = select(
+            UserStats.user_id,
+            UserStats.user_name,
+            UserStats.total_solves,
+            UserStats.correct_count,
+            UserStats.total_ev_loss,
+        )
+
+        if period == "weekly":
+            # Last 7 days
+            base_select = base_select.where(text("last_updated >= NOW() - INTERVAL '7 days'"))
+        elif period == "daily":
+            # Last 24 hours
+            base_select = base_select.where(text("last_updated >= NOW() - INTERVAL '1 day'"))
+
+        base_select = base_select.where(UserStats.total_solves >= 10)
+
+        # Calculate accuracy in SQL
+        accuracy_expr = (
+            cast(UserStats.correct_count, Float) / cast(UserStats.total_solves, Float) * 100
+        )
+
+        result = await session.execute(
             select(
                 UserStats.user_id,
                 UserStats.user_name,
                 UserStats.total_solves,
                 UserStats.correct_count,
                 UserStats.total_ev_loss,
-            )
-            .where(UserStats.total_solves >= 10)
-            .subquery()
-        )
-
-        # Calculate accuracy in SQL
-        accuracy_expr = (
-            cast(subquery.c.correct_count, Float) / cast(subquery.c.total_solves, Float) * 100
-        )
-
-        result = await session.execute(
-            select(
-                subquery.c.user_id,
-                subquery.c.user_name,
-                subquery.c.total_solves,
-                subquery.c.correct_count,
-                subquery.c.total_ev_loss,
                 accuracy_expr.label("accuracy"),
             )
+            .where(UserStats.total_solves >= 10)
             .order_by(accuracy_expr.desc())
             .offset(offset)
             .limit(limit)
@@ -460,8 +469,14 @@ async def get_leaderboard(
         rows = result.all()
 
         # Get total count
+        count_where = UserStats.total_solves >= 10
+        if period == "weekly":
+            count_where = text("last_updated >= NOW() - INTERVAL '7 days' AND total_solves >= 10")
+        elif period == "daily":
+            count_where = text("last_updated >= NOW() - INTERVAL '1 day' AND total_solves >= 10")
+
         count_result = await session.execute(
-            select(func.count(UserStats.user_id)).where(UserStats.total_solves >= 10)
+            select(func.count(UserStats.user_id)).where(count_where)
         )
         total_users = count_result.scalar() or 0
 
@@ -489,8 +504,11 @@ async def get_leaderboard(
         if user_id:
             rank_result = await session.execute(
                 select(
-                    subquery.c.user_id,
-                ).order_by(accuracy_expr.desc())
+                    UserStats.user_id,
+                    accuracy_expr.label("_accuracy"),
+                )
+                .where(UserStats.total_solves >= 10)
+                .order_by(accuracy_expr.desc())
             )
             all_rows = rank_result.all()
             for idx, row in enumerate(all_rows):
