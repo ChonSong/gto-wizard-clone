@@ -27,317 +27,26 @@
       "summary": "Replaced Math.random() bar heights with real selectedHandData.equity values. Bar height = Math.max(4, equity * 55), showing actual per-hand equity from solver API.",
       "coach": "approved"
     },
-    "auto-select-AA-hand-on-position-click",
-    "bet-sizing-picker-on-RAISE-(2bb-10bb)",
-    "board-display-area-with-PREFLOP-placeholder",
-    "GTO-Range-Breakdown-text-frequencies",
-    "Check-vs-GTO-with-sizing-comparison",
-    "Phase-1a-Action-frequency-progress-bars",
-    "Phase-1b-Board-card-entry-hand-simulator",
-    "Phase-1c-Strategy-Ranges-Breakdown-tabs-content",
-    "Phase-1d-Postflop-training-mode",
-    "study-preflop-action-feedback-flow",
-    "study-postflop-gto-comparison-overlay",
-    "study-page-hotkeys",
-    "study-session-spot-generator",
-    "study-progress-tracking",
-    "auto-seed-strategy-on-db-restart",
-    "add-deploy-health-monitoring",
-    "start-solver-docker-service",
-    "add-periodic-health-check-cron",
-    "fix-strategy-lookup",
-    "add-solver-e2e-test",
-    "re-seed-strategy-data",
-    "fix-omaha-api-url",
-    "fix-bomb-pot-api-url",
-    "fix-double-board-api-url",
-    "fix-strategies-api-url-prefix",
-    "fix-strategy-route-order",
-    "add-strategies-page-e2e-test",
-    "add-e2e-tests-for-new-pages",
-    "fix-strategy-key-bet-size-parsing",
-    "seed-all-stack-depths",
-    "seed-flop-strategies",
-    "add-missing-stack-depth-to-frontend-position-buttons",
-    "seed-flop-strategies-all-depths",
-    "fix-postflop-street-progression",
-    "seed-flop-boards-expanded",
-    "study-page-postflop-e2e-test",
-    "study-page-console-error-audit",
-    "visual-study-preflop-match-reference",
-    "solutions-frontend-page",
-    "equity-variant-2-7td-page",
-    "equity-variant-2-7sd-page",
-    "equity-variant-plo5-page",
-    "analyze-viewer-functional-page",
-    "equity-variant-omaha8-page",
-    "equity-variant-stud8-page",
-    "analyze-leaks-functional-page",
-    "trainer-functional-page",
-    "equity-razz-functional-page",
-    "practice-page-enhancement",
-    "keep-api-server-running",
-    "fix-solver-postflop-response-dedup",
-    "update-features-yaml-to-match-reality",
-    "study-page-postflop-visual-polish",
-    "update-features-yaml-hand-history",
-    "e2e-test-coverage-expansion",
-    "study-page-mobile-responsive",
-    "push-fold-page-functional",
-    "range-explorer-page-functional",
-    "fix-equity-calculator-timeout",
-    "fix-e2e-test-runner",
-    {
-      "task": "study-page-accessibility-audit",
-      "sha": "af80ae7",
-      "date": "2026-06-20",
-      "summary": "Accessibility audit: ARIA labels, keyboard nav, focus indicators on study page",
-      "coach": "approved"
-    },
-    {
-      "task": "per-cell-action-buttons",
-      "sha": "59b51f4",
-      "date": "2026-06-21",
-      "summary": "Per-cell inline action buttons with position-specific action sets",
-      "coach": "approved"
-    },
-    {
-      "task": "right-sidebar-tab-structure",
-      "sha": "d980026",
-      "date": "2026-06-21",
-      "summary": "Right sidebar tab structure with Overview/Table/Equity chart tabs",
-      "coach": "approved"
-    },
-    {
-      "task": "seed-quiz-spots-with-board-data",
-      "sha": "95f2a57",
-      "date": "2026-06-21",
-      "summary": "Convert 20 short-form board notations to proper card strings (e.g. 'AKr' -> 'AhKc3d') in quiz seed data and database",
-      "coach": "approved"
-    },
-    {
-      "task": "dashboard-page-visual-match-reference",
-      "sha": "dc42aec",
-      "date": "2026-06-22",
-      "summary": "Redesign homepage to match GTO Wizard design system: updated CSS vars (#0E0E0E bg, #00C853 green), gradient hero, icon-container feature cards, 12-card grid, stats in brand green, header color consistency",
-      "coach": "approved"
-    },
-    {
-      "task": "equity-page-visual-match-reference",
-      "sha": "93501aa",
-      "date": "2026-06-22",
-      "summary": "Visual polish: fixed suit colors (hearts/diamonds red, clubs/spades light), dark-themed board cards, viewport-filling layout with overflow-y-auto",
-      "coach": "approved"
-    },
-    {
-      "task": "practice-page-visual-match-reference",
-      "sha": "7094e0e",
-      "date": "2026-06-22",
-      "summary": "Visual polish to match GTO Wizard reference design: card-based setup panel, PlayingCard component matching equity pattern, action buttons with GTO frequency chips, viewport-filling layout (height:100vh, flex, overflow-hidden), consistent CSS variable usage, Tailwind + inline style patterns matching design system",
-      "coach": "approved"
-    },
-    {
-      "task": "update-features-yaml-courses-detail",
-      "sha": "7094e0e",
-      "date": "2026-06-22",
-      "summary": "FEATURES.yaml courses/detail endpoint verified present. Coach confirmed complete during review of practice-page-visual-match-reference.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-course-detail-api-500",
-      "sha": "7094e0e",
-      "date": "2026-06-22",
-      "summary": "Course detail API verified working on live (200) and local (200 returns full course data + lessons). Root cause was port mismatch / missing DATABASE_URL on old service. gto-api.service on port 8001 has correct config.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategy-lookup-dsn-format",
-      "sha": "272bb19",
-      "date": "2026-06-22",
-      "summary": "DSN normalization fix already committed (272bb19): strategy_storage.py line 136 strips +asyncpg suffix before passing to asyncpg.create_pool(). Verified: strategy-lookup returns 200 on valid params, 404 on missing (not 500). 368 tests pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-e2e-test-runner-execution",
-      "sha": "52da838",
-      "date": "2026-06-22",
-      "summary": "Fixed e2e test runner: auto-install playwright in e2e/ dir, defaulted to single chromium project for local runs (5-project matrix only in CI), added e2e/node_modules/ to gitignore. 6/6 smoke tests pass in 15s, 104/118 all tests pass. 368 poker-core tests pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "add-hand-history-parsing",
-      "sha": "52da838",
-      "date": "2026-06-22",
-      "summary": "Verified: /hand-history page exists (1352 lines, fully functional), POST /api/v1/hh/parse endpoint works, parser supports PokerStars/GGPoker/Winamax, 44 parser tests pass. Task was already implemented.",
-      "coach": "approved"
-    },
-    {
-      "task": "add-plo4-frontend-page",
-      "sha": "52da838",
-      "date": "2026-06-22",
-      "summary": "Verified: /equity/plo4 and /plo4 both exist and return 200 live. Task was already implemented.",
-      "coach": "approved"
-    },
-    {
-      "task": "postflop-solver-api-endpoint",
-      "sha": "52da838",
-      "date": "2026-06-22",
-      "summary": "Verified: POST /api/v1/solver/postflop-strategy endpoint exists in solver.py with in-memory caching + live solver fallback. Task already implemented.",
-      "coach": "approved"
-    },
-    {
-      "task": "visual-study-postflop-match-reference",
-      "sha": "af66907",
-      "date": "2026-06-22",
-      "summary": "Fixed hardcoded potSize=0,stackDepth=0 in StreetBreadcrumb to pass real values. CardDisplay, action buttons, street breadcrumb, GTO comparison, config panel all present. Verified live: viewport-filling layout works, card styling improved, street breadcrumb shows proper progression, action buttons with GTO frequencies render, 0 JS errors. Solver dedup verified in test (19/19 pass).",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-solver-postflop-response-dedup",
-      "sha": "bd560ef",
-      "date": "2026-06-22",
-      "summary": "Added _dedup_actions() helper that deduplicates solver actions by name keeping max frequency. Applied to postflop-strategy (cache + live-solver) paths and solve endpoints. 19/19 solver API tests pass including new dedup test. 368 poker-core tests pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "update-features-yaml-to-match-reality",
-      "sha": "bd560ef",
-      "date": "2026-06-22",
-      "summary": "Verified complete: FEATURES.yaml has 0 missing entries. All 12 live pages return 200. API on port 8001 serves strategy-lookup, quiz, spots, courses, all endpoints OK. 14 DB tables present (quiz_spots=54 rows, 40 with board data). Solver container up. No code changes needed — task was already done by prior sessions, checkpoint just needed advancing.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-position-player-tiles",
-      "sha": "cde3e13",
-      "date": "2026-06-22",
-      "summary": "Replace position numbered buttons with player tiles showing position label + stack depth. Active tile in brand green (#00C853) with glow effect, inactive tiles in dark gray (#2A2A2A) with white text. Updated mobile responsive CSS. 387 tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-top-bar-design",
-      "sha": "95b677b",
-      "date": "2026-06-22",
-      "summary": "Added top bar with Cash/bb/spots/Upgrade — game type label, stack depth dropdown (30-200bb), spots counter (2,000+), green-outlined Upgrade CTA. #1A1A1A bg, #333 border. Responsive wrapping on mobile. 368 tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-action-prompts-per-position",
-      "sha": "97018d7",
-      "date": "2026-06-22",
-      "summary": "Added action prompt header row between position tiles and hand matrix. Shows 'Your action: [RAISE/CALL/FOLD]' with GTO frequency from selected hand or most-frequent position action. Displays pot size (3.0bb) and effective stack. Color-coded action label, reactive to position/board/street changes. 368 tests pass, frontend build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-filters-sub-tab",
-      "sha": "8d54020",
-      "date": "2026-06-22",
-      "summary": "Implemented Filters sub-tab with hand category checkboxes (Pairs, Suited, Offsuit, Broadway, Ace High) and blocker rank buttons (A/K/Q/J/T). Filtered hands dim to opacity 0.08, blocked hands to 0.15. Dynamic hand count shown. 368 tests pass, frontend build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-oop-ev-real-values",
-      "sha": "8ff6438",
-      "date": "2026-06-22",
-      "summary": "Replaced Math.random() placeholder in OOP EV column with real weighted-average solver equity from rangeData. Computes weighted average of per-hand equity × frequency, converts to bb EV: (avgEquity - 0.5) * 3. Green for positive, red for negative. Shows — when solver data unavailable. 368 tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-e2e-test-runner-version-conflict",
-      "sha": "35accd5",
-      "date": "2026-06-22",
-      "summary": "Excluded playwright.config.ts and playwright.ci.ts from Next.js TypeScript build to resolve @playwright/test version conflict. Root copy (hoisted from Next.js transitive dep) conflicted with e2e-local copy. Fix makes root copy inert. 116/118 e2e tests pass (2 pre-existing failures), 368 poker-core tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "practice-page-replace-mock-data",
-      "sha": "74b7161",
-      "date": "2026-06-23",
-      "summary": "Replaced mockSpot() with real quiz API data. Added QuizSpot/QuizOption interfaces, quizToSpot() converter that derives is_gto from gto_action. API failure shows error state with Retry button instead of fake data. Build passes, 368 tests pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "gto-frequency-microchips-on-action-buttons",
-      "sha": "b330536",
-      "date": "2026-06-23",
-      "summary": "GTO frequency micro-chips with threshold coloring on postflop action buttons. Green >20%, yellow 5-20%, gray <5%. 368 tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "api-response-time-optimization",
-      "sha": "176c4fa",
-      "date": "2026-06-23",
-      "summary": "Added response caching layer (apps/api/services/cache.py) with TTL-based in-memory/fakeredis caching. Wired init_cache(app) into main.py. Applied @cached(ttl=300) to GET /api/v1/courses and /featured, @cached(ttl=600) to GET /api/v1/quiz/categories. All endpoints already met <200ms targets; caching further improves latency (courses: 14ms→2ms). 387 tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-icm-api-route-prefix",
-      "sha": "c3fc6d2",
-      "date": "2026-06-23",
-      "summary": "Already completed in prior commit c3fc6d2 — changed ICM router prefix from /icm to /api/v1/icm. Verified: POST /api/v1/icm/calculate returns 200 with valid ICM calculation data on live site. Checkpoint advanced to reflect completion.",
-      "coach": "approved"
-    },
-    {
-      "task": "icm-page-visual-match-reference",
-      "sha": "4f36eca",
-      "date": "2026-06-23",
-      "summary": "Converted ICM page and all 5 components (PrizePoolPanel, ChipStackPanel, BubblePressure, SMPZone, ICMResults) to GTO Wizard dark design system: viewport-filling layout (h-screen, flex, overflow-hidden), CSS variable colors (var(--panel), var(--border), var(--green), var(--text), var(--muted)), brand green (#00C853) accent replacing poker-gold, Recharts CSS variable colors. 368 tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-e2e-test-runner",
-      "sha": "4f36eca",
-      "date": "2026-06-23",
-      "summary": "Verified e2e test runner works: root node_modules/@playwright/test confirmed removed, npx playwright test --list outputs 120 tests without error, 19 tests pass (6 smoke + 12 courses) in 25s, frontend build succeeds. All success criteria met — this task was already complete, checkpoint now advanced to reflect reality.",
-      "coach": "approved"
-    },
-    {
-      "task": "solutions-page-visual-match-reference",
-      "sha": "9c73224",
-      "date": "2026-06-23",
-      "summary": "Converted solutions page to GTO Wizard dark design system: viewport-filling layout (h-screen, flex-col, overflow-hidden), CSS variable colors (var(--panel), var(--border), var(--bg), var(--text), var(--muted), var(--green)), dark-themed board cards (#f0f0f0→var(--bg)), brand green (#00C853) accent replacing gold. 368 tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "seed-preflop-strategies",
-      "sha": "9c73224",
-      "date": "2026-06-23",
-      "summary": "Ran seed_preflop_strategies.py against PostgreSQL. Seed script existed (previously committed) but DB was empty. Now 28 preflop strategies in DB covering 6 positions (UTG/HJ/CO/BTN/SB/BB) at 100bb. Strategy-lookup returns 200 with 169 hands per position. 368 tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-spots-page-nan-values",
-      "sha": "fee7e61",
-      "date": "2026-06-23",
-      "summary": "Fixed NaN values in strategy heatmap avg computation — filter invalid entries (null/undefined/NaN) before computing averages, show em-dash when no valid data exists instead of NaN. 368 tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-web-search-billing-expired",
-      "sha": "fee7e61",
-      "date": "2026-06-23",
-      "summary": "Installed ddgs (DuckDuckGo search) Python package in Hermes venv and set web.search_backend: ddgs in ~/.hermes/config.yaml. Firecrawl billing was exhausted (402 Payment Required). DuckDuckGo requires no API key. Verified: web_search() returns real results successfully. web_extract still on Firecrawl (separate issue). Next: re-audit-features-yaml.",
-      "coach": "approved"
-    },
-    {
-      "task": "re-audit-features-yaml",
-      "sha": "fc7ea78",
-      "date": "2026-06-23",
-      "summary": "Re-verified all 23 pages (200 OK) and 26 API endpoints (all responding). Updated FEATURES.yaml: corrected API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress), added missing pages (/omaha, /push-fold, /range-explorer, /solutions), added new study components (top-bar, player-tiles, filters, OOP-EV, action-prompt, GTO microchips). last_audited=2026-06-23. 368 tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "study-progress-persistence-backend",
-      "sha": "bdd3bb5",
-      "date": "2026-06-23",
-      "summary": "Implemented full-stack progress persistence: POST/GET /api/v1/study/progress backend endpoints with SQLAlchemy model, /progress frontend page with stats cards/position-action breakdown/charts/session history, study page fires POST on Check vs GTO with localStorage UUID identity. 6 API tests, 368 poker-core tests all pass. Build clean, live 200.",
-      "coach": "approved"
-    },
     {
       "task": "leaderboard-frontend-page",
       "sha": "f2555d2",
       "date": "2026-06-23",
       "summary": "Created /leaderboard page with period filter (all-time/weekly/daily), table with rank/player/score/accuracy/hands/EV-loss columns, current user highlight with YOU badge, medal icons for top 3, empty/error/loading states. Added period filter support to GET /api/v1/quiz/leaderboard backend. 368 tests pass, build clean, live returns 200 with 0 JS errors.",
       "coach": "approved"
+    },
+    {
+      "task": "study-postflop-action-selection-feedback",
+      "sha": "ae3564f",
+      "date": "2026-06-23",
+      "summary": "Postflop action selection feedback: selected button highlights with green border/glow, GTO-recommended action shows ✓ GTO badge, feedback text below action row shows 'Correct!' or 'Suboptimal (EV gap: X.X bb)', 'Try Again' button resets selection, 'Continue to Next Street' button advances street. Unselected buttons disabled after pick. 368 tests pass, build clean, live 200.",
+      "coach": "approved"
+    },
+    {
+      "task": "practice-timed-drill-mode",
+      "sha": "4e0db55",
+      "date": "2026-06-23",
+      "summary": "Timed Drill mode: per-spot countdown timer (configurable 30s/60s/120s) with visual ⏱️ indicator, auto-advance on expiry (records as incorrect), response time tracking with speed bonus scoring (up to +50 pts per spot), drill summary with Score/Avg Time/Accuracy. Timer duration selector in setup. Spaced Repetition shows 'coming soon' notice. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -392,16 +101,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "f2555d2",
-  "current_task": "study-postflop-action-selection-feedback",
+  "last_sha": "4e0db55",
+  "current_task": "tbd",
   "blocker": null,
-  "note": "leaderboard-frontend-page: APPROVED by Coach. /leaderboard page with period filter, rank/player/score/accuracy/hands/EV-loss columns, current user highlight, 0 JS errors. 368 tests pass, build clean, live 200. Next: study-postflop-action-selection-feedback.",
+  "note": "practice-timed-drill-mode: Done. Per-spot countdown timer, auto-advance on expiry, speed bonus scoring, drill summary with Score/Avg Time/Accuracy. Spaced Repetition shows 'coming soon'. 368 tests pass, build clean, live 200. No tasks remaining in backlog — Coach needs to generate next batch.",
   "coach_review": {
-    "last_reviewed_sha": "f2555d2",
-    "last_reviewed_at": "2026-06-23T21:30:00Z",
+    "last_reviewed_sha": "ae3564f",
+    "last_reviewed_at": "2026-06-23T21:56:00Z",
     "verdict": "approved",
-    "notes": "leaderboard-frontend-page: APPROVED. All criteria met: /leaderboard renders with 0 JS errors, period filter API returns 200 for all three periods, empty state shows gracefully, dark design system consistent. 368 poker-core tests pass, 25 API tests pass, 6 e2e smoke tests pass, frontend build clean. Security: no secrets, no new deps, no new endpoints. Scope: clean — 2 files, both required by task. Perf: no N+1 patterns. Minor: rank query doesn't respect period filter (edge case, no data yet). Deprecated 'regex' param in FastAPI Query (cosmetic). Backlog: 2 tasks remaining (study-postflop-action-selection-feedback, practice-timed-drill-mode).",
-    "last_review": "2026-06-23T21:30:00Z",
+    "notes": "study-postflop-action-selection-feedback: APPROVED. All 6 success criteria met. Browser QA confirms: (1) action button highlights green with glow on selection, (2) GTO-recommended action shows ✓ GTO badge, (3) feedback text shows 'Correct!' or 'Suboptimal (EV gap: X.X bb)', (4) 'Continue to Next Street' advances FLOP→TURN→RIVER with new board cards and pot updates, (5) 'Try Again' resets selection, (6) 0 console errors across entire workflow. 368 poker-core tests pass. Security: no secrets (false positive from checkpoint notes), no new deps, no new endpoints. Scope: clean — 2 files, both required by task. Perf: no N+1 patterns. Minor: Suboptimal EV gap shows 0.00 when EVs are equal but frequencies differ (correct behavior). Backlog: 1 task remaining (practice-timed-drill-mode). Will generate next batch when tasks exhaust.",
+    "last_review": "2026-06-23T21:56:00Z",
     "status": "approved"
   }
 }
