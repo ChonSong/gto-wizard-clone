@@ -66,9 +66,9 @@ interface CourseDetail extends Course {
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-  beginner: "bg-[#aafbb2]/20 text-[#6d9c72] border-[#aafbb2]/40",
-  intermediate: "bg-yellow-100 text-yellow-700 border-yellow-300",
-  advanced: "bg-red-100 text-red-700 border-red-300",
+  beginner: "bg-[var(--green-dim)] text-[var(--green)] border-[var(--green)]/40",
+  intermediate: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
+  advanced: "bg-red-500/10 text-red-400 border-red-500/30",
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -232,8 +232,8 @@ export default function CoursesPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#aafbb2]">Pre-Built Courses</h1>
-          <p className="text-gray-400 mt-1">Structured learning paths to master GTO poker</p>
+          <h1 className="text-3xl font-bold text-[var(--green)]">Pre-Built Courses</h1>
+          <p className="text-[var(--muted)] mt-1">Structured learning paths to master GTO poker</p>
         </div>
         <Link
           href="/train"
@@ -245,34 +245,34 @@ export default function CoursesPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-gray-900">{courses.length}</div>
-          <div className="text-sm text-gray-500">Available Courses</div>
+        <div className="bg-[var(--panel)] border border-[var(--border)] rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-[var(--text)]">{courses.length}</div>
+          <div className="text-sm text-[var(--muted)]">Available Courses</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-[#6d9c72]">{totalLessons}</div>
-          <div className="text-sm text-gray-500">Total Lessons</div>
+        <div className="bg-[var(--panel)] border border-[var(--border)] rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-[var(--green)]">{totalLessons}</div>
+          <div className="text-sm text-[var(--muted)]">Total Lessons</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-gray-900">
+        <div className="bg-[var(--panel)] border border-[var(--border)] rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-[var(--text)]">
             {formatDuration(totalDurationMinutes)}
           </div>
-          <div className="text-sm text-gray-500">Total Content</div>
+          <div className="text-sm text-[var(--muted)]">Total Content</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-[#6d9c72]">0%</div>
-          <div className="text-sm text-gray-500">Overall Progress</div>
+        <div className="bg-[var(--panel)] border border-[var(--border)] rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-[var(--green)]">0%</div>
+          <div className="text-sm text-[var(--muted)]">Overall Progress</div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-8 p-4 bg-white border border-gray-200 rounded-xl">
+      <div className="flex flex-wrap gap-4 mb-8 p-4 bg-[var(--panel)] border border-[var(--border)] rounded-xl">
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">Difficulty</label>
+          <label className="text-xs font-medium text-[var(--muted)]">Difficulty</label>
           <select
             value={filterDifficulty}
             onChange={(e) => setFilterDifficulty(e.target.value as Difficulty | "all")}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm"
+            className="px-3 py-2 bg-[var(--bg)] border border-[var(--border)] rounded-lg text-[var(--text)] text-sm"
           >
             <option value="all">All Levels</option>
             <option value="beginner">Beginner</option>
@@ -282,11 +282,11 @@ export default function CoursesPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">Category</label>
+          <label className="text-xs font-medium text-[var(--muted)]">Category</label>
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm"
+            className="px-3 py-2 bg-[var(--bg)] border border-[var(--border)] rounded-lg text-[var(--text)] text-sm"
           >
             <option value="all">All Categories</option>
             {availableCategories.map((cat) => (
@@ -301,10 +301,10 @@ export default function CoursesPage() {
       {loading ? (
         <div className="text-center py-12">
           <div className="text-4xl mb-4 animate-pulse">📚</div>
-          <p className="text-gray-400">Loading courses...</p>
+          <p className="text-[var(--muted)]">Loading courses...</p>
         </div>
       ) : error ? (
-        <div className="text-center py-12 border border-gray-800 rounded-lg">
+        <div className="text-center py-12 border border-[var(--border)] rounded-lg">
           <div className="text-4xl mb-4">⚠️</div>
           <p className="text-red-400">Failed to load courses: {error}</p>
         </div>
@@ -312,10 +312,10 @@ export default function CoursesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Course List */}
           <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Available Courses</h2>
+            <h2 className="text-xl font-semibold text-[var(--text)] mb-4">Available Courses</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredCourses.length === 0 ? (
-                <div className="col-span-2 text-center py-8 text-gray-500">
+                <div className="col-span-2 text-center py-8 text-[var(--muted)]">
                   No courses match your filters.
                 </div>
               ) : (
@@ -324,25 +324,25 @@ export default function CoursesPage() {
                     key={course.id}
                     href={`/courses/${course.id}`}
                     className={cn(
-                      "flex gap-4 p-4 rounded-xl border bg-white text-left transition-all hover:shadow-md hover:scale-[1.02]",
+                      "flex gap-4 p-4 rounded-xl border bg-[var(--panel)] text-left transition-all hover:shadow-md hover:shadow-black/10 hover:scale-[1.02]",
                       selectedCourse?.id === course.id
-                        ? "border-[#aafbb2] ring-2 ring-[#aafbb2]/30"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-[var(--green)] ring-2 ring-[var(--green)]/30"
+                        : "border-[var(--border)] hover:border-[var(--border-light)]"
                     )}
                   >
                     {/* Thumbnail / Icon area */}
                     <div className={cn(
                       "flex-shrink-0 w-16 h-16 rounded-lg flex items-center justify-center text-2xl",
-                      course.difficulty === "beginner" ? "bg-[#aafbb2]/30" :
-                      course.difficulty === "intermediate" ? "bg-yellow-100" :
-                      "bg-red-100"
+                      course.difficulty === "beginner" ? "bg-[var(--green-dim)]" :
+                      course.difficulty === "intermediate" ? "bg-yellow-500/10" :
+                      "bg-red-500/10"
                     )}>
                       {course.image}
                     </div>
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 truncate">{course.title}</h3>
-                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">{course.description}</p>
+                      <h3 className="font-semibold text-[var(--text)] truncate">{course.title}</h3>
+                      <p className="text-sm text-[var(--muted)] mt-0.5 line-clamp-2">{course.description}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <span
                           className={cn(
@@ -352,20 +352,20 @@ export default function CoursesPage() {
                         >
                           {course.difficulty}
                         </span>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[var(--bg)] text-[var(--muted)] border border-[var(--border)]">
                           {CATEGORY_LABELS[course.category] || course.category}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                      <div className="flex items-center justify-between mt-2 text-xs text-[var(--muted)]">
                         <span>{course.lessons} lessons · {course.duration}</span>
                         <div className="flex items-center gap-2">
-                          <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="w-16 h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-[#aafbb2] rounded-full"
+                              className="h-full bg-[var(--green)] rounded-full"
                               style={{ width: `${course.progress}%` }}
                             />
                           </div>
-                          <span className="font-medium text-gray-700">{course.progress}%</span>
+                          <span className="font-medium text-[var(--muted)]">{course.progress}%</span>
                         </div>
                       </div>
                     </div>
@@ -543,7 +543,7 @@ export default function CoursesPage() {
                       );
                     }
                   }}
-                  className="w-full py-3 px-4 rounded-lg font-semibold bg-green-600 text-white hover:bg-green-700 transition-all"
+                  className="w-full py-3 px-4 rounded-lg font-semibold bg-[var(--green)] text-black hover:opacity-90 transition-all"
                 >
                   {selectedCourse.lessonsList.length > 0
                     ? "Start Course"
@@ -551,26 +551,26 @@ export default function CoursesPage() {
                 </button>
               </div>
             ) : (
-              <div className="border border-gray-800 rounded-lg p-8 text-center bg-gray-900/50">
+              <div className="border border-[var(--border)] rounded-lg p-8 text-center bg-[var(--panel)]">
                 <div className="text-4xl mb-4">📚</div>
-                <p className="text-gray-400">Select a course to view details</p>
+                <p className="text-[var(--muted)]">Select a course to view details</p>
               </div>
             )}
 
-            <div className="border border-gray-800 rounded-lg bg-gray-900/50 p-6">
-              <h4 className="text-lg font-semibold mb-4">Quick Stats</h4>
+            <div className="border border-[var(--border)] rounded-lg bg-[var(--panel)] p-6">
+              <h4 className="text-lg font-semibold text-[var(--text)] mb-4">Quick Stats</h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Courses Available</span>
-                  <span className="font-medium text-white">{courses.length}</span>
+                  <span className="text-[var(--muted)]">Courses Available</span>
+                  <span className="font-medium text-[var(--text)]">{courses.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Total Lessons</span>
-                  <span className="font-medium text-white">{totalLessons}</span>
+                  <span className="text-[var(--muted)]">Total Lessons</span>
+                  <span className="font-medium text-[var(--text)]">{totalLessons}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Started</span>
-                  <span className="font-medium text-white">0</span>
+                  <span className="text-[var(--muted)]">Started</span>
+                  <span className="font-medium text-[var(--text)]">0</span>
                 </div>
               </div>
             </div>

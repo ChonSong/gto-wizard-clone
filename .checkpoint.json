@@ -7,6 +7,13 @@
   "phase_name": "Study Mode UX Completion - Phase 2: Spec Gap Closure",
   "completed": [
     {
+      "task": "course-lesson-content-management",
+      "sha": "c5dc971",
+      "date": "2026-06-23",
+      "summary": "Fixed progress endpoint 500 error (UserProgressResponse.id Optional[str]), restarted API to populate lesson content with real markdown. Course detail page shows lessons with content, progress tracking works end-to-end (mark complete, view progress). 387 tests pass, build clean, live 200.",
+      "coach": "approved"
+    },
+    {
       "task": "study-page-equity-chart-real-values",
       "sha": "d247912",
       "date": "2026-06-23",
@@ -308,16 +315,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "176c4fa",
-  "current_task": "course-lesson-content-management",
+  "last_sha": "c5dc971",
+  "current_task": "courses-page-visual-match-reference",
   "blocker": null,
-  "note": "api-response-time-optimization: Added response caching layer with TTL-based cache decorator for courses and quiz endpoints. Courses latency 14ms→2ms (7x improvement). All endpoints already met <200ms targets. 387 tests pass, build clean, live 200. Next: course-lesson-content-management.",
+  "note": "course-lesson-content-management: Fixed progress endpoint 500 (UserProgressResponse.id Optional[str]). Restarted API to populate lesson content. Course detail page functional — lessons with real markdown, progress tracking, mark-complete flow. 387 tests pass, build clean, live 200. Next: courses-page-visual-match-reference.",
   "coach_review": {
-    "last_reviewed_sha": "176c4fa",
-    "last_reviewed_at": "2026-06-23T14:49:00Z",
+    "last_reviewed_sha": "c5dc971",
+    "last_reviewed_at": "2026-06-23T06:00:00Z",
     "verdict": "approved",
-    "notes": "api-response-time-optimization — caching layer verified. 387 tests pass. Build clean. Live site 200, 0 JS errors. All gates pass.",
-    "last_review": "2026-06-23T14:49:00Z",
+    "notes": "course-lesson-content-management — approved: 1-line fix (id: str → Optional[str]) resolves progress endpoint 500. Verified: endpoint returns 200 with 12.5% progress, course detail renders 8 lessons, 0 JS errors across pages, 368/368 poker-core tests pass.",
+    "last_review": "2026-06-23T06:00:00Z",
     "status": "approved"
   }
 }
