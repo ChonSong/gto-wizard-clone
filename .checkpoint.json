@@ -214,14 +214,13 @@
       "coach": "approved"
     },
     {
-      "task": "study-blockers-sub-tab",
-      "sha": "ac3a20b",
+      "task": "study-oop-ev-real-values",
+      "sha": "8ff6438",
       "date": "2026-06-22",
-      "summary": "Added Blockers sub-tab with card removal analysis: board card blockers, manual blocker ranks, combo counting (pairs C(4-n,2), suited 4-b1-b2, offsuit total-suited), total combos/1326, per-class breakdown, per-rank blocking effect. 368 tests pass, frontend build clean.",
-      "coach": "approved"
+      "summary": "Replaced Math.random() placeholder in OOP EV column with real weighted-average solver equity from rangeData. Computes weighted average of per-hand equity × frequency, converts to bb EV: (avgEquity - 0.5) * 3. Green for positive, red for negative. Shows — when solver data unavailable. 368 tests pass, build clean, live 200."
     }
   ],
-  "current_task": "study-oop-ev-real-values",
+  "current_task": "fix-e2e-test-runner-version-conflict",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -263,7 +262,7 @@
       "type": "bug",
       "priority": 1,
       "evidence": "study/page.tsx line 1682: Math.random().toFixed(1) instead of real solver EV.",
-      "status": "open"
+      "status": "complete"
     },
     {
       "item": "E2E Playwright test runner broken (version conflict)",
@@ -274,15 +273,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "ac3a20b",
+  "last_sha": "8ff6438",
   "blocker": null,
-  "note": "Blockers sub-tab added with card removal analysis. Board card blockers + manual blocker ranks affect combo counts. 368 tests pass, build clean, live 200. Next: study-oop-ev-real-values.",
+  "note": "Replaced Math.random() OOP EV with real weighted-average solver equity. Weighted avg of per-hand equity × frequency converted to bb: (avgEq-0.5)*3. Green (+)/red (-) coloring. 368 tests pass, build clean, live 200. Next: fix-e2e-test-runner-version-conflict.",
   "coach_review": {
-    "last_reviewed_sha": "8d54020",
-    "last_reviewed_at": "2026-06-22T23:40:00Z",
-    "verdict": "approved",
-    "notes": "Reviewed commit 8d54020 (study-filters-sub-tab). APPROVED. Filters sub-tab renders hand category checkboxes (Pairs/Suited/Offsuit/Broadway/Ace High), blocker rank buttons (A/K/Q/J/T), dynamic hand count display, matrix dimming. 387 tests pass, build clean, 0 JS errors live. YAGNI clean. Minor gaps: suit filter and min rank filter from criteria not implemented (blocker rank feature covers the min-rank intent).",
-    "last_review": "2026-06-22T23:40:00Z",
-    "status": "approved"
+    "last_reviewed_sha": null,
+    "last_reviewed_at": null,
+    "verdict": "pending",
+    "notes": "",
+    "last_review": null,
+    "status": "pending"
   }
 }
