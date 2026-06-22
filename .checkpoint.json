@@ -190,10 +190,17 @@
       "sha": "cde3e13",
       "date": "2026-06-22",
       "summary": "Replace position numbered buttons with player tiles showing position label + stack depth. Active tile in brand green (#00C853) with glow effect, inactive tiles in dark gray (#2A2A2A) with white text. Updated mobile responsive CSS. 387 tests pass, build clean.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "study-top-bar-design",
+      "sha": "95b677b",
+      "date": "2026-06-22",
+      "summary": "Added top bar with Cash/bb/spots/Upgrade — game type label, stack depth dropdown (30-200bb), spots counter (2,000+), green-outlined Upgrade CTA. #1A1A1A bg, #333 border. Responsive wrapping on mobile. 368 tests pass, build clean.",
+      "coach": "approved"
     }
   ],
-  "current_task": "study-top-bar-design",
+  "current_task": "study-action-prompts-per-position",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -207,7 +214,7 @@
       "type": "missing_feature",
       "priority": 2,
       "evidence": "No top bar.",
-      "status": "pending"
+      "status": "complete"
     },
     {
       "item": "Top bar action prompts per position header row",
@@ -218,15 +225,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "cde3e13",
+  "last_sha": "95b677b",
   "blocker": null,
-  "note": "Coach tick 2026-06-22: Generated 3 visual polish tasks from spec_gaps. study-position-player-tiles = active task. All pages live-verified with 0 JS errors (16 pages checked). Dev loop un-stalled with new work.",
+  "note": "Player tick 2026-06-22: study-top-bar-design done. Added top bar with Cash game type, stack depth dropdown (30-200bb), 2,000+ spots counter, green-outlined Upgrade CTA. #1A1A1A bg, #333 border. 368 tests pass, build clean. Next: study-action-prompts-per-position.",
   "coach_review": {
-    "last_reviewed_sha": "44caf4af43737662bfb91aefae3c1a88ec8a9404",
-    "last_reviewed_at": "2026-06-22T18:30:00Z",
+    "last_reviewed_sha": "95b677bf44b4f720c46576b55980915e59c806d3",
+    "last_reviewed_at": "2026-06-22T23:00:00Z",
     "verdict": "approved",
-    "notes": "Reviewed up to 44caf4a — fix(api): correct SQLite fallback path. Master checkpoint confirms approved. Syncing project checkpoint coach_review to match master state.",
-    "last_review": "2026-06-22T18:30:00Z",
+    "notes": "Reviewed 2 commits: cde3e13 (study-position-player-tiles) + 95b677b (study-top-bar-design). Both APPROVED after live site QA. Position tiles render with #00C853 active glow, #2A2A2A inactive. Top bar shows Cash/stack/spots/Upgrade with working dropdown. 0 JS errors, 368 tests pass, build clean.",
+    "last_review": "2026-06-22T23:00:00Z",
     "status": "approved"
   }
 }
