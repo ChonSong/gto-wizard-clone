@@ -184,16 +184,23 @@
       "date": "2026-06-22",
       "summary": "Verified complete: FEATURES.yaml has 0 missing entries. All 12 live pages return 200. API on port 8001 serves strategy-lookup, quiz, spots, courses, all endpoints OK. 14 DB tables present (quiz_spots=54 rows, 40 with board data). Solver container up. No code changes needed — task was already done by prior sessions, checkpoint just needed advancing.",
       "coach": "approved"
+    },
+    {
+      "task": "study-position-player-tiles",
+      "sha": "cde3e13",
+      "date": "2026-06-22",
+      "summary": "Replace position numbered buttons with player tiles showing position label + stack depth. Active tile in brand green (#00C853) with glow effect, inactive tiles in dark gray (#2A2A2A) with white text. Updated mobile responsive CSS. 387 tests pass, build clean.",
+      "coach": "pending"
     }
   ],
-  "current_task": "study-position-player-tiles",
+  "current_task": "study-top-bar-design",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
       "type": "visual_mismatch",
       "priority": 2,
       "evidence": "Uses numbered buttons instead of player tiles.",
-      "status": "in_progress"
+      "status": "complete"
     },
     {
       "item": "Top bar with Cash/bb/spots-remaining/Upgrade",
@@ -211,7 +218,7 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "bd560ef",
+  "last_sha": "cde3e13",
   "blocker": null,
   "note": "Coach tick 2026-06-22: Generated 3 visual polish tasks from spec_gaps. study-position-player-tiles = active task. All pages live-verified with 0 JS errors (16 pages checked). Dev loop un-stalled with new work.",
   "coach_review": {

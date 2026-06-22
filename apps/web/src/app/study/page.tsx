@@ -584,6 +584,16 @@ export default function StudyPage() {
     return () => document.removeEventListener('click', handleClick)
   }, [showHotkeys])
 
+  // Extended stack depths for top bar (including 30bb, 75bb)
+  const topBarDepths = useMemo(() => [
+    { value: 30, label: '30bb' },
+    { value: 50, label: '50bb' },
+    { value: 75, label: '75bb' },
+    { value: 100, label: '100bb' },
+    { value: 150, label: '150bb' },
+    { value: 200, label: '200bb' },
+  ], [])
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#0E0E0E', overflow: 'hidden' }}>
       <style>{`
@@ -627,6 +637,14 @@ export default function StudyPage() {
           }
           .study-details-panel {
             min-height: 300px !important;
+          }
+          .study-top-bar {
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            padding: 6px 8px !important;
+          }
+          .study-top-bar-upgrade {
+            margin-left: auto !important;
           }
         }
         @media (max-width: 480px) {
@@ -676,6 +694,74 @@ export default function StudyPage() {
           `}</style>
         </div>
       )}
+      {/* Top Bar — Cash / Stack Depth / Spots / Upgrade */}
+      <div className="study-top-bar" style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '6px 12px', background: '#1A1A1A',
+        borderBottom: '1px solid #333', flexShrink: 0,
+      }}>
+        {/* Game type label */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 4,
+          color: '#e0e0e0', fontSize: 12, fontWeight: 600,
+          whiteSpace: 'nowrap',
+        }}>
+          <span>Cash</span>
+          <span style={{ color: '#666', fontSize: 8, marginTop: 1 }}>▾</span>
+        </div>
+        <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
+        {/* Stack depth selector */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <select
+            value={stackDepth}
+            onChange={(e) => setStackDepth(Number(e.target.value))}
+            aria-label="Select stack depth"
+            style={{
+              background: '#0E0E0E', color: '#e0e0e0',
+              border: '1px solid #333', borderRadius: 4,
+              padding: '2px 20px 2px 8px', fontSize: 12, fontWeight: 600,
+              cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none',
+              lineHeight: 1.6, minWidth: 66,
+            }}
+          >
+            {topBarDepths.map(d => (
+              <option key={d.value} value={d.value}>{d.label}</option>
+            ))}
+          </select>
+          <span style={{
+            position: 'absolute', right: 6, top: '50%', marginTop: -5,
+            color: '#666', fontSize: 8, pointerEvents: 'none',
+          }}>▾</span>
+        </div>
+        <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
+        {/* Spots counter */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 4,
+          color: '#888', fontSize: 11, fontWeight: 500,
+          whiteSpace: 'nowrap',
+        }}>
+          <span style={{ color: '#aaa', fontWeight: 600 }}>2,000+</span>
+          <span>spots</span>
+        </div>
+        <div style={{ flex: 1 }} />
+        {/* Upgrade CTA button */}
+        <a
+          href="#"
+          className="study-top-bar-upgrade"
+          onClick={(e) => { e.preventDefault() }}
+          style={{
+            color: '#00C853', fontSize: 11, fontWeight: 700,
+            padding: '3px 12px', borderRadius: 4,
+            border: '1px solid #00C853',
+            background: 'transparent',
+            textDecoration: 'none', cursor: 'pointer',
+            whiteSpace: 'nowrap', letterSpacing: '0.03em',
+            lineHeight: 1.5,
+          }}
+        >
+          Upgrade
+        </a>
+      </div>
       {/* Mode Toggle — fixed height */}
       <div style={{ display: 'flex', gap: 8, padding: '6px 12px', borderBottom: '1px solid #141414', background: '#0E0E0E', flexShrink: 0 }}>
         <button onClick={() => setMode('preflop')}
