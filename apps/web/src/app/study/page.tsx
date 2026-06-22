@@ -242,6 +242,8 @@ export default function StudyPage() {
   const [showStatsPanel, setShowStatsPanel] = useState(false)
   const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
   const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions'>('actions')
+  const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
+  const [blockerRanks, setBlockerRanks] = useState<string[]>([])
 
   // Load stats from localStorage on mount
   useEffect(() => {
@@ -337,11 +339,45 @@ export default function StudyPage() {
   }
 
   function getCellOpacity(hand: string): number {
+    // Apply hand filters and blocker ranks first
+    if (isHandFiltered(hand)) return 0.08
+    if (isHandBlocked(hand)) return 0.15
     if (!isSolverMode) return 1.0
     const data = rangeData.get(hand)
     if (!data) return 0.3
     if (data.action === 'fold') return 0.3
     return 0.5 + data.frequency * 0.5
+  }
+
+  function getHandCategories(hand: string): string[] {
+    const cats: string[] = []
+    const r1 = hand[0], r2 = hand[1]
+    const isPair = r1 === r2
+    const isSuited = hand.length === 3 && hand[2] === 's'
+    const isOffsuit = hand.length === 3 && hand[2] === 'o'
+    if (isPair) cats.push('pair')
+    if (isSuited) cats.push('suited')
+    if (isOffsuit) cats.push('offsuit')
+    const broadwayRanks = new Set(['T','J','Q','K','A'])
+    if (broadwayRanks.has(r1) && broadwayRanks.has(r2)) cats.push('broadway')
+    if (r1 === 'A') cats.push('aceHigh')
+    return cats
+  }
+
+  function isHandFiltered(hand: string): boolean {
+    const cats = getHandCategories(hand)
+    if (!handFilters.pairs && cats.includes('pair')) return true
+    if (!handFilters.suited && cats.includes('suited')) return true
+    if (!handFilters.offsuit && cats.includes('offsuit')) return true
+    if (!handFilters.broadway && cats.includes('broadway')) return true
+    if (!handFilters.aceHigh && cats.includes('aceHigh')) return true
+    return false
+  }
+
+  function isHandBlocked(hand: string): boolean {
+    if (blockerRanks.length === 0) return false
+    const r1 = hand[0], r2 = hand[1]
+    return blockerRanks.includes(r1) || blockerRanks.includes(r2)
   }
 
   // Compute action summary from solver data
@@ -1634,12 +1670,71 @@ export default function StudyPage() {
                 {rightSubTab === 'filters' && (
                   <div>
                     <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                      Filters
+                      Hand Filters
                     </div>
-                    <div style={{ padding: '8px 0', fontSize: 11, color: '#666', textAlign: 'center' }}>
-                      Hand/blocker filters coming soon
-                      <div style={{ fontSize: 9, color: '#444', marginTop: 4 }}>Use the matrix to select specific hands</div>
-                    </div>
+                    {!isSolverMode ? (
+                      <div style={{ padding: '8px 0', fontSize: 11, color: '#666', textAlign: 'center' }}>
+                        Select a position to filter hands
+                      </div>
+                    ) : (
+                      <>
+                        {/* Category checkboxes */}
+                        {(['pairs','suited','offsuit','broadway','aceHigh'] as const).map(cat => (
+                          <label key={cat} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, fontSize: 11, color: '#ccc', cursor: 'pointer' }}>
+                            <input type="checkbox" checked={handFilters[cat]}
+                              onChange={() => setHandFilters(prev => ({...prev, [cat]: !prev[cat]}))}
+                              style={{ accentColor: '#00C853' }}
+                            />
+                            {cat === 'aceHigh' ? 'Ace High' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                          </label>
+                        ))}
+
+                        <div style={{ height: 1, background: '#262626', margin: '8px 0' }} />
+
+                        <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                          Blockers
+                        </div>
+                        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 4 }}>
+                          {['A','K','Q','J','T'].map(rank => (
+                            <button key={rank}
+                              onClick={() => {
+                                setBlockerRanks(prev =>
+                                  prev.includes(rank) ? prev.filter(r => r !== rank) : [...prev, rank]
+                                )
+                              }}
+                              style={{
+                                width: 26, height: 26, borderRadius: 4,
+                                background: blockerRanks.includes(rank) ? '#00C853' : '#2a2a2a',
+                                border: `1px solid ${blockerRanks.includes(rank) ? '#00C853' : '#333'}`,
+                                color: blockerRanks.includes(rank) ? '#000' : '#ccc',
+                                fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                              }}
+                            >{rank}</button>
+                          ))}
+                        </div>
+                        <div style={{ fontSize: 9, color: '#666' }}>
+                          Blocking a rank dims all hands containing it
+                        </div>
+
+                        <div style={{ height: 1, background: '#262626', margin: '8px 0' }} />
+
+                        {/* Hand count summary */}
+                        <div style={{ fontSize: 9, color: '#555' }}>
+                          {(() => {
+                            let filteredCount = 0
+                            let blockedCount = 0
+                            for (const row of MATRIX_HANDS) {
+                              for (const hand of row) {
+                                if (isHandFiltered(hand)) filteredCount++
+                                if (!isHandFiltered(hand) && isHandBlocked(hand)) blockedCount++
+                              }
+                            }
+                            const visible = 1326 - filteredCount - (blockerRanks.length > 0 ? blockedCount : 0)
+                            return `${visible} of 1326 hands shown`
+                          })()}
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
