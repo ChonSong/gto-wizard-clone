@@ -198,9 +198,16 @@
       "date": "2026-06-22",
       "summary": "Added top bar with Cash/bb/spots/Upgrade — game type label, stack depth dropdown (30-200bb), spots counter (2,000+), green-outlined Upgrade CTA. #1A1A1A bg, #333 border. Responsive wrapping on mobile. 368 tests pass, build clean.",
       "coach": "approved"
+    },
+    {
+      "task": "study-action-prompts-per-position",
+      "sha": "97018d7",
+      "date": "2026-06-22",
+      "summary": "Added action prompt header row between position tiles and hand matrix. Shows 'Your action: [RAISE/CALL/FOLD]' with GTO frequency from selected hand or most-frequent position action. Displays pot size (3.0bb) and effective stack. Color-coded action label, reactive to position/board/street changes. 368 tests pass, frontend build clean.",
+      "coach": "approved"
     }
   ],
-  "current_task": "study-action-prompts-per-position",
+  "current_task": "study-filters-sub-tab",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -221,19 +228,47 @@
       "type": "missing_feature",
       "priority": 3,
       "evidence": "Not implemented.",
-      "status": "pending"
+      "status": "complete"
+    },
+    {
+      "item": "Hand/blocker filters on Filters sub-tab",
+      "type": "stub",
+      "priority": 1,
+      "evidence": "Filters sub-tab shows 'Hand/blocker filters coming soon' placeholder text.",
+      "status": "open"
+    },
+    {
+      "item": "Blockers sub-tab with card removal analysis",
+      "type": "missing_feature",
+      "priority": 1,
+      "evidence": "No 'blockers' option in rightSubTab state. Interaction spec lists Blockers tab.",
+      "status": "open"
+    },
+    {
+      "item": "OOP EV column uses Math.random() placeholder",
+      "type": "bug",
+      "priority": 1,
+      "evidence": "study/page.tsx line 1682: Math.random().toFixed(1) instead of real solver EV.",
+      "status": "open"
+    },
+    {
+      "item": "E2E Playwright test runner broken (version conflict)",
+      "type": "infra_gap",
+      "priority": 1,
+      "evidence": "npx playwright test --list crashes: 'test.describe() not expected here' — duplicate @playwright/test in root node_modules.",
+      "status": "open"
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "95b677b",
+  "last_sha": "97018d7",
   "blocker": null,
-  "note": "Player tick 2026-06-22: study-top-bar-design done. Added top bar with Cash game type, stack depth dropdown (30-200bb), 2,000+ spots counter, green-outlined Upgrade CTA. #1A1A1A bg, #333 border. 368 tests pass, build clean. Next: study-action-prompts-per-position.",
+  "note": "Backlog generated — 4 new tasks (study-filters-sub-tab, study-blockers-sub-tab, study-oop-ev-real-values, fix-e2e-test-runner-version-conflict). Current task: study-filters-sub-tab. Spec gaps: Filters tab is stub, Blockers tab missing, OOP EV uses Math.random(), Playwright runner broken by @playwright/test dup.",
   "coach_review": {
-    "last_reviewed_sha": "95b677bf44b4f720c46576b55980915e59c806d3",
-    "last_reviewed_at": "2026-06-22T23:00:00Z",
+    "last_reviewed_sha": "97018d72187ef285ed5d170406461a02d2945b06",
+    "last_reviewed_at": "2026-06-22T16:40:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 2 commits: cde3e13 (study-position-player-tiles) + 95b677b (study-top-bar-design). Both APPROVED after live site QA. Position tiles render with #00C853 active glow, #2A2A2A inactive. Top bar shows Cash/stack/spots/Upgrade with working dropdown. 0 JS errors, 368 tests pass, build clean.",
-    "last_review": "2026-06-22T23:00:00Z",
+    "notes": "Reviewed commit 97018d7 (study-action-prompts-per-position). APPROVED. Backlog generated with 4 new tasks for player to pick up.",
+    "last_review": "2026-06-22T16:40:00Z",
     "status": "approved"
   }
 }
