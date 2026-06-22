@@ -46,7 +46,7 @@
       "sha": "4e0db55",
       "date": "2026-06-23",
       "summary": "Timed Drill mode: per-spot countdown timer (configurable 30s/60s/120s) with visual ⏱️ indicator, auto-advance on expiry (records as incorrect), response time tracking with speed bonus scoring (up to +50 pts per spot), drill summary with Score/Avg Time/Accuracy. Timer duration selector in setup. Spaced Repetition shows 'coming soon' notice. 368 tests pass, build clean, live 200.",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -98,19 +98,40 @@
       "priority": 1,
       "evidence": "npx playwright test --list crashes: 'test.describe() not expected here' — duplicate @playwright/test in root node_modules.",
       "status": "complete"
+    },
+    {
+      "item": "Right sidebar with analysis tabs on /study",
+      "type": "missing_feature",
+      "priority": 1,
+      "evidence": "Interaction spec (docs/reference-study-interaction-spec.md) describes Overview/Table/Equity chart tabs with sub-tabs (Hand, Summary, Filters, Actions, Blockers). Clone has no right sidebar.",
+      "status": "open"
+    },
+    {
+      "item": "Spot card bar with action prompts on /study",
+      "type": "visual_mismatch",
+      "priority": 1,
+      "evidence": "Interaction spec describes horizontal scrollable position cards with action prompts. Clone has flat position buttons with no card layout or action prompt text.",
+      "status": "open"
+    },
+    {
+      "item": "Spaced Repetition mode on /practice",
+      "type": "stub",
+      "priority": 2,
+      "evidence": "Shows 'coming soon' notice. Interaction spec confirms SR is a core training mode.",
+      "status": "open"
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "4e0db55",
-  "current_task": "tbd",
+  "last_sha": "0bebc60",
+  "current_task": "study-right-sidebar-analysis-tabs",
   "blocker": null,
-  "note": "practice-timed-drill-mode: Done. Per-spot countdown timer, auto-advance on expiry, speed bonus scoring, drill summary with Score/Avg Time/Accuracy. Spaced Repetition shows 'coming soon'. 368 tests pass, build clean, live 200. No tasks remaining in backlog — Coach needs to generate next batch.",
+  "note": "Backlog replenished: 3 new tasks. study-right-sidebar-analysis-tabs (1st), study-spot-card-bar-with-action-prompts (2nd), practice-spaced-repetition-mode (3rd).",
   "coach_review": {
-    "last_reviewed_sha": "ae3564f",
-    "last_reviewed_at": "2026-06-23T21:56:00Z",
+    "last_reviewed_sha": "0bebc60",
+    "last_reviewed_at": "2026-06-23T22:30:00Z",
     "verdict": "approved",
-    "notes": "study-postflop-action-selection-feedback: APPROVED. All 6 success criteria met. Browser QA confirms: (1) action button highlights green with glow on selection, (2) GTO-recommended action shows ✓ GTO badge, (3) feedback text shows 'Correct!' or 'Suboptimal (EV gap: X.X bb)', (4) 'Continue to Next Street' advances FLOP→TURN→RIVER with new board cards and pot updates, (5) 'Try Again' resets selection, (6) 0 console errors across entire workflow. 368 poker-core tests pass. Security: no secrets (false positive from checkpoint notes), no new deps, no new endpoints. Scope: clean — 2 files, both required by task. Perf: no N+1 patterns. Minor: Suboptimal EV gap shows 0.00 when EVs are equal but frequencies differ (correct behavior). Backlog: 1 task remaining (practice-timed-drill-mode). Will generate next batch when tasks exhaust.",
-    "last_review": "2026-06-23T21:56:00Z",
+    "notes": "practice-timed-drill-mode: APPROVED. All 5 success criteria met. Browser QA confirms: (1) Timed Drill mode starts with visible ⏱️ countdown, (2) auto-advance on expiry implemented via useEffect + expiryHandledRef, (3) session summary shows Score (402 for 3/3 fast answers = 300 base + ~102 speed bonus), Avg Time (9.8s), Accuracy (100%), (4) Spaced Repetition shows 'coming soon' notice with 🧠 emoji, (5) 0 console errors across all interactions. 368 poker-core tests pass, TypeScript compiles clean. Security: NO secrets in feature commit, NO new deps, NO new endpoints. Scope: clean — 1 file (practice/page.tsx), all changes directly required. Perf: N/A — frontend-only state management, no DB queries. Generating 3 new backlog tasks from spec gap analysis: right sidebar tabs, spot card bar, spaced repetition.",
+    "last_review": "2026-06-23T22:30:00Z",
     "status": "approved"
   }
 }

@@ -1484,3 +1484,70 @@ These tasks identified by comparing the live page at `https://wiz.codeovertcp.co
   - Complete drill and verify summary screen appears with stats
   - Click "Spaced Repetition" — verify it either works or shows a clear notice
   - Check 0 console errors
+
+### Task: study-right-sidebar-analysis-tabs
+- **Description**: The study page is missing the right sidebar with analysis tabs that the reference (GTO Wizard) has. Based on the interaction spec at `docs/reference-study-interaction-spec.md`, add a right sidebar with three main tabs: Overview, Table, and Equity chart. Under each main tab, implement the sub-tabs documented in the spec:
+  - **Overview → Hand**: Show the selected hand's EV, equity, and combo details
+  - **Overview → Summary**: Table showing all hands with strategy (action/range/EV)
+  - **Overview → Filters**: Hand/blocker filter controls (category, suit, combo type)
+  - **Overview → Actions**: Aggregate frequency display showing each action's percentage and combo count (e.g., "Raise 2.5 21.7% (287.11 combos)")
+  - **Overview → Blockers**: Card removal analysis showing how removed cards affect each action's frequency
+  - Use the interaction spec's layout: sidebar ~330px wide on the right side of the screen, adjacent to the hand matrix. Position info display at top (stacks, dead money, pot odds).
+- **Success criteria**:
+  - Right sidebar renders on the study page with visible main tabs (Overview, Table, Equity chart)
+  - Clicking each main tab switches the sidebar content
+  - At minimum, Actions sub-tab shows aggregate action frequencies with combo counts (the most important sub-tab for training)
+  - Blockers sub-tab shows usable card removal analysis
+  - 0 console errors, 0 TypeScript errors
+- **Coach checks**:
+  - Navigate to /study, verify right sidebar is visible with tabs
+  - Click each main tab (Overview, Table, Equity chart) — verify content switches
+  - Check that Actions sub-tab shows frequencies with combo counts matching the hand matrix
+  - Check Blockers sub-tab renders with card removal input/toggle
+  - Click a hand cell in the matrix — verify sidebar updates to show that hand's data
+  - Check 0 console errors
+
+### Task: study-spot-card-bar-with-action-prompts
+- **Description**: The study page has standalone position buttons (UTG/HJ/CO/BTN/SB/BB) with stack amounts, but the reference interaction spec shows a richer "spot card" layout: six position cards in a horizontal scrollable row, each showing the position's action state (Fold/Call/Raise/Allin) with GTO-recommended action highlighted, and "Take action" prompt on the active position. Replace the current position buttons with the spot card bar layout matching the interaction spec:
+  - Horizontal scrollable container with 6 position cards
+  - Each card shows: position title (e.g., "HJ"), stack amount, action buttons (Fold, Raise X, Allin Y)
+  - Active position shows "Take action" prompt, minimized positions show compact view
+  - GTO recommendation highlighted with active class on the recommended action
+  - Raise sizing differs by position: SB/BB = 3.5bb, others = 2.5bb
+  - Call action only appears for SB/BB positions
+- **Success criteria**:
+  - 6 position cards visible in scrollable row above the hand matrix
+  - Active position shows expanded card with "Take action" prompt and all action buttons
+  - Non-active positions show minimized view with position name + stack
+  - Clicking a position makes it active and updates the hand matrix
+  - Raise sizing correct: 2.5bb for UTG/HJ/CO/BTN, 3.5bb for SB/BB
+  - Call button only appears for SB/BB
+  - 0 console errors, 0 TypeScript errors
+- **Coach checks**:
+  - Navigate to /study, verify 6 position cards render in scrollable row
+  - Verify active position has "Take action" prompt and expanded buttons
+  - Verify minimized positions show name + stack
+  - Click a different position — verify active state transitions
+  - Check SB/BB have Call action; other positions don't
+  - Check 0 console errors
+
+### Task: practice-spaced-repetition-mode
+- **Description**: The practice page's "Spaced Repetition" mode currently shows a "coming soon" notice. Implement a working spaced repetition algorithm that improves the user's weakest spots over time. The implementation should:
+  - Draw spots from `GET /api/v1/quiz/random` like other modes
+  - Track per-spot performance (correct/incorrect, response time, number of attempts)
+  - After each answer, schedule the next review based on spaced repetition principles: correct answers increase interval, incorrect answers decrease interval
+  - Show next review time per spot in the session UI
+  - Use localStorage for the spaced repetition database (spot ID → { ease_factor, interval, next_review, history })
+  - Session summary shows: accuracy %, spots reviewed, next review schedule
+- **Success criteria**:
+  - Clicking "Spaced Repetition" → "Start Practice Session" starts a spaced repetition session with real spots from API
+  - After answering a spot, the interval is calculated and stored locally
+  - The next session preferentially shows spots that are due for review (overdue or soonest next_review)
+  - Summary at end shows stats including number of spots due for review
+  - 0 console errors, 0 TypeScript errors
+- **Coach checks**:
+  - Navigate to /practice, select Spaced Repetition, click Start — verify session starts with real spots
+  - Answer 2-3 spots correctly — verify intervals calculated and stored in localStorage
+  - Navigate away and back — verify due-for-review logic works
+  - Check summary screen appears with relevant stats
+  - Check 0 console errors
