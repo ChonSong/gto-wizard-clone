@@ -279,10 +279,22 @@ export default function PracticePage() {
   const [history, setHistory] = useState<SessionHistory[]>([])
   const [elapsed, setElapsed] = useState(0)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [drillDuration, setDrillDuration] = useState(30)
+  const [spotTimeLeft, setSpotTimeLeft] = useState<number | null>(null)
+  const [responseTimes, setResponseTimes] = useState<number[]>([])
+  const [totalScore, setTotalScore] = useState(0)
+  const [showComingSoon, setShowComingSoon] = useState(false)
+  const spotStartRef = useRef(0)
+  const expiryHandledRef = useRef(false)
 
   const fetchSpot = useCallback(async () => {
     setAnswered(false)
     setSelectedAction(null)
+    spotStartRef.current = Date.now()
+    expiryHandledRef.current = false
+    if (exerciseType === 'Timed Drill') {
+      setSpotTimeLeft(drillDuration)
+    }
     try {
       const params = new URLSearchParams()
       if (category !== 'All') params.set('category', category)
@@ -300,15 +312,31 @@ export default function PracticePage() {
     }
     // If quiz API unavailable, show error state instead of mock data
     setSpot(null)
-  }, [category, difficulty])
+  }, [category, difficulty, drillDuration, exerciseType])
 
   const startSession = () => {
+    if (exerciseType === 'Spaced Repetition') {
+      setShowComingSoon(true)
+      return
+    }
     setSessionActive(true)
     setStats({ total: 0, correct: 0, streak: 0, bestStreak: 0 })
     setHistory([])
+    setResponseTimes([])
+    setTotalScore(0)
     setElapsed(0)
+    if (exerciseType === 'Timed Drill') {
+      setSpotTimeLeft(drillDuration)
+    } else {
+      setSpotTimeLeft(null)
+    }
+    expiryHandledRef.current = false
+    spotStartRef.current = Date.now()
     if (timerRef.current) clearInterval(timerRef.current)
-    timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
+    timerRef.current = setInterval(() => {
+      setElapsed(e => e + 1)
+      setSpotTimeLeft(prev => prev !== null && prev > 0 ? prev - 1 : prev)
+    }, 1000)
     fetchSpot()
   }
 
@@ -326,11 +354,46 @@ export default function PracticePage() {
     }
   }, [])
 
+  // Auto-advance on timer expiry for Timed Drill
+  useEffect(() => {
+    if (exerciseType !== 'Timed Drill' || !sessionActive || !spot) return
+    if (spotTimeLeft === 0 && !answered && !expiryHandledRef.current) {
+      expiryHandledRef.current = true
+      const s = spot
+      setStats(prev => ({ ...prev, total: prev.total + 1 }))
+      setHistory(prev => [
+        ...prev,
+        {
+          category: s.category,
+          difficulty: s.difficulty,
+          position: s.position,
+          hero_hand: s.hero_hand,
+          correct: false,
+          gtoAction: s.gto_action,
+          selectedAction: 'Time expired',
+        },
+      ])
+      setResponseTimes(prev => [...prev, drillDuration])
+      fetchSpot()
+    }
+  }, [spotTimeLeft, exerciseType, sessionActive, answered, spot, drillDuration, fetchSpot])
+
   const handleAnswer = (actionName: string) => {
     if (answered || !spot) return
     setSelectedAction(actionName)
     setAnswered(true)
+    expiryHandledRef.current = true
     const isCorrect = spot.options.find(o => o.action === actionName)?.is_gto ?? false
+    const responseTime = (Date.now() - spotStartRef.current) / 1000
+    if (exerciseType === 'Timed Drill') {
+      setSpotTimeLeft(0)
+    }
+    setResponseTimes(prev => [...prev, responseTime])
+    const speedBonus = exerciseType === 'Timed Drill' && isCorrect
+      ? Math.round((Math.max(spotTimeLeft ?? 0, 0) / drillDuration) * 50)
+      : 0
+    const score = (isCorrect ? 100 : 0) + speedBonus
+    setTotalScore(prev => prev + score)
     setStats(prev => ({
       total: prev.total + 1,
       correct: prev.correct + (isCorrect ? 1 : 0),
@@ -392,12 +455,25 @@ export default function PracticePage() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-4 gap-3 mb-5">
-              {[
-                { label: 'Spots', value: stats.total, color: 'var(--text)' },
-                { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
-                { label: 'Best Streak', value: stats.bestStreak, color: stats.bestStreak >= 5 ? 'var(--green)' : 'var(--text)' },
-                { label: 'Correct', value: `${stats.correct}/${stats.total}`, color: 'var(--green)' },
-              ].map(s => (
+              {(exerciseType === 'Timed Drill'
+                ? [
+                    { label: 'Spots', value: stats.total, color: 'var(--text)' },
+                    { label: 'Score', value: totalScore, color: 'var(--green)' },
+                    {
+                      label: 'Avg Time',
+                      value: responseTimes.length > 0
+                        ? `${(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length).toFixed(1)}s`
+                        : '-',
+                      color: 'var(--text)',
+                    },
+                    { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
+                  ]
+                : [
+                    { label: 'Spots', value: stats.total, color: 'var(--text)' },
+                    { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
+                    { label: 'Best Streak', value: stats.bestStreak, color: stats.bestStreak >= 5 ? 'var(--green)' : 'var(--text)' },
+                    { label: 'Correct', value: `${stats.correct}/${stats.total}`, color: 'var(--green)' },
+                  ]).map(s => (
                 <div
                   key={s.label}
                   className="rounded-lg p-3 text-center"
@@ -547,7 +623,7 @@ export default function PracticePage() {
               </div>
 
               {/* Exercise Type */}
-              <div className="mb-5">
+              <div className="mb-3">
                 <div
                   className="text-[10px] font-bold uppercase tracking-wider mb-2"
                   style={{ color: 'var(--muted)' }}
@@ -556,10 +632,51 @@ export default function PracticePage() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {EXERCISE_TYPES.map(et => (
-                    <Pill key={et} label={et} active={exerciseType === et} onClick={() => setExerciseType(et)} />
+                    <Pill key={et} label={et} active={exerciseType === et} onClick={() => { setExerciseType(et); setShowComingSoon(false) }} />
                   ))}
                 </div>
               </div>
+
+              {/* Drill Duration Selector */}
+              {exerciseType === 'Timed Drill' && (
+                <div className="mb-3">
+                  <div
+                    className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                    style={{ color: 'var(--muted)' }}
+                  >
+                    Timer Duration
+                  </div>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {[30, 60, 120].map(d => (
+                      <FilterBtn
+                        key={d}
+                        label={d === 30 ? '30s' : d === 60 ? '60s' : '120s'}
+                        active={drillDuration === d}
+                        onClick={() => setDrillDuration(d)}
+                      />
+                    ))}
+                  </div>
+                  <div className="text-[10px] mt-1.5" style={{ color: 'var(--muted)' }}>
+                    Earn speed bonus: answer faster for up to +50 pts per spot
+                  </div>
+                </div>
+              )}
+
+              {/* Spaced Repetition Coming Soon */}
+              {showComingSoon && (
+                <div
+                  className="rounded-lg p-3 mb-3 text-center text-xs"
+                  style={{ background: 'var(--border)', border: '1px solid var(--border-light)' }}
+                >
+                  <div className="text-base mb-1">🧠</div>
+                  <div className="font-semibold mb-1" style={{ color: 'var(--text)' }}>
+                    Spaced Repetition — Coming Soon
+                  </div>
+                  <div style={{ color: 'var(--muted)' }}>
+                    This mode will intelligently retry your weakest spots over time.
+                  </div>
+                </div>
+              )}
 
               {/* Filters */}
               <div className="flex flex-col gap-4 mb-5">
@@ -635,6 +752,12 @@ export default function PracticePage() {
             Time:{' '}
             <b style={{ color: 'var(--text)' }}>{formatTime(elapsed)}</b>
           </span>
+          {exerciseType === 'Timed Drill' && spotTimeLeft !== null && (
+            <span>
+              ⏱️{' '}
+              <b style={{ color: spotTimeLeft <= 10 ? 'var(--red-bright)' : 'var(--green)' }}>{spotTimeLeft}s</b>
+            </span>
+          )}
         </div>
         <button
           onClick={endSession}
