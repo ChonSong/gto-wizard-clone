@@ -226,9 +226,15 @@
       "date": "2026-06-22",
       "summary": "Excluded playwright.config.ts and playwright.ci.ts from Next.js TypeScript build to resolve @playwright/test version conflict. Root copy (hoisted from Next.js transitive dep) conflicted with e2e-local copy. Fix makes root copy inert. 116/118 e2e tests pass (2 pre-existing failures), 368 poker-core tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "practice-page-replace-mock-data",
+      "sha": "74b7161",
+      "date": "2026-06-23",
+      "summary": "Replaced mockSpot() with real quiz API data. Added QuizSpot/QuizOption interfaces, quizToSpot() converter that derives is_gto from gto_action. API failure shows error state with Retry button instead of fake data. Build passes, 368 tests pass.",
+      "coach": "pending"
     }
   ],
-  "current_task": "tbd",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -281,10 +287,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "35accd5",
+  "last_sha": "74b7161",
   "current_task": "gto-frequency-microchips-on-action-buttons",
   "blocker": null,
-  "note": "Manual intervention 2026-06-22: Added 3 visual fidelity tasks (GTO frequency chips, post-action comparison overlay, blue call color). Coach also generated 7 tasks starting with api-response-time-optimization.",
+  "note": "practice-page-replace-mock-data complete. Replaced Math.random() mock data with real quiz API. 368 tests pass, build clean, live 200. Next: gto-frequency-microchips-on-action-buttons (visual polish).",
   "coach_review": {
     "last_reviewed_sha": "35accd5",
     "last_reviewed_at": "2026-06-22T23:59:00Z",
