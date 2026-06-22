@@ -1998,7 +1998,7 @@ export default function StudyPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 60, padding: '4px 0' }}>
                     {selectedHandCombos.slice(0, 6).map((_, i) => {
-                      const h = 20 + Math.random() * 40
+                      const h = Math.max(4, selectedHandData.equity * 55)
                       return (
                         <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                           <div style={{
