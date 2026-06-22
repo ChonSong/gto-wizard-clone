@@ -605,9 +605,12 @@ export default function StudyPage() {
             padding: 4px 4px 2px !important;
           }
           .study-position-btn {
-            min-width: 40px !important;
-            padding: 3px 6px !important;
+            min-width: 56px !important;
+            padding: 4px 8px !important;
             font-size: 10px !important;
+          }
+          .study-position-btn-stack {
+            font-size: 8px !important;
           }
           .study-action-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -634,11 +637,12 @@ export default function StudyPage() {
           .study-matrix-cell-freq {
             display: none !important;
           }
-          .study-position-btn-num {
-            display: none !important;
+          .study-position-btn-label {
+            font-size: 11px !important;
           }
           .study-position-btn-stack {
-            display: none !important;
+            font-size: 9px !important;
+            color: #999 !important;
           }
         }
         /* Accessibility: visible focus indicators */
@@ -795,22 +799,25 @@ export default function StudyPage() {
           {loading ? <span style={{ color: GREEN }}>●</span> : error ? <span style={{ color: RED }}>●</span> : <span style={{ color: GREEN }}>●</span>}
           {loading ? 'Solving...' : error ? 'Offline' : 'GTO'}
         </div>
-        {positions.map((pos, idx) => (
-          <button className="study-position-btn" key={pos.id} onClick={() => setActivePosition(pos.id)}
-            style={{
-              background: activePosition === pos.id ? '#16241a' : '#161616',
-              border: activePosition === pos.id ? `2px solid #7CFC7C` : '1px solid #262626',
-              color: activePosition === pos.id ? '#fff' : '#b5b5b5',
-              padding: '4px 12px', borderRadius: 8, fontSize: 12, whiteSpace: 'nowrap', cursor: 'pointer',
-              textAlign: 'center', minWidth: 56, lineHeight: 1.3,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1,
-            }}>
-            <span className="study-position-btn-num" style={{ fontSize: 9, color: activePosition === pos.id ? '#7CFC7C' : '#555', fontWeight: 500 }}>{idx + 1}</span>
-            <span style={{ fontWeight: 600 }}>{pos.label}</span>
-            {pos.stack !== stackDepth && <span className="study-position-btn-stack" style={{ fontSize: 9, color: '#888' }}>{pos.stack.toFixed(0)}bb</span>}
-            {activePosition === pos.id && <span style={{ fontSize: 8, color: '#7CFC7C', fontWeight: 600, marginTop: -1 }}>Acting</span>}
-          </button>
-        ))}
+        {positions.map((pos, idx) => {
+          const isActive = activePosition === pos.id
+          return (
+            <button className="study-position-btn" key={pos.id} onClick={() => setActivePosition(pos.id)}
+              style={{
+                background: isActive ? '#00C853' : '#2A2A2A',
+                border: isActive ? '2px solid #00C853' : '1px solid #3a3a3a',
+                color: '#fff',
+                padding: '6px 14px', borderRadius: 8, fontSize: 12, whiteSpace: 'nowrap', cursor: 'pointer',
+                textAlign: 'center', minWidth: 72, lineHeight: 1.3,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+                boxShadow: isActive ? '0 0 12px rgba(0,200,83,0.35)' : 'none',
+                transition: 'all 0.15s ease',
+              }}>
+              <span className="study-position-btn-label" style={{ fontWeight: 700, fontSize: 13, letterSpacing: '0.02em' }}>{pos.label}</span>
+              <span className="study-position-btn-stack" style={{ fontSize: 10, color: isActive ? 'rgba(255,255,255,0.85)' : '#bbb' }}>{pos.stack.toFixed(1)}bb</span>
+            </button>
+          )
+        })}
         <button onClick={handleRandomSpot}
           style={{
             background: '#1a1a2e', border: '1px solid #3a3a5e',
