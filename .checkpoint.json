@@ -330,7 +330,7 @@
       "sha": "bdd3bb5",
       "date": "2026-06-23",
       "summary": "Implemented full-stack progress persistence: POST/GET /api/v1/study/progress backend endpoints with SQLAlchemy model, /progress frontend page with stats cards/position-action breakdown/charts/session history, study page fires POST on Check vs GTO with localStorage UUID identity. 6 API tests, 368 poker-core tests all pass. Build clean, live 200.",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -386,15 +386,15 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "bdd3bb5",
-  "current_task": "tbd",
+  "current_task": "leaderboard-frontend-page",
   "blocker": null,
-  "note": "study-progress-persistence-backend: Full-stack progress tracking implemented. POST/GET /api/v1/study/progress with SQLAlchemy study_progress table. /progress page with stats cards, position/action accuracy breakdowns, 7-day chart, session history. Study page saves progress on Check vs GTO via UUID in localStorage. 6 API tests pass. 368 poker-core tests pass. Build clean. Live 200. Next: task exhaustion — Coach should generate next batch.",
+  "note": "study-progress-persistence-backend: APPROVED by Coach. Full-stack progress tracking: POST/GET /api/v1/study/progress, /progress page, study page wiring, UUID identity. 6/6 API tests pass, 368/368 poker-core tests pass. Live site: /progress loads with 0 JS errors, /study shows hand matrix with GTO data. Next: leaderboard-frontend-page.",
   "coach_review": {
-    "last_reviewed_sha": "2b4f571",
-    "last_reviewed_at": "2026-06-23T19:35:00Z",
+    "last_reviewed_sha": "c19b255",
+    "last_reviewed_at": "2026-06-23T20:52:00Z",
     "verdict": "approved",
-    "notes": "FEATURES.yaml re-audit — approved: All 23 pages and 26 API endpoints verified accurate via browser interaction. FEATURES.yaml updated: corrected API paths (ICM=POST, PLO4=/plo4/equity/calculate, courses progress=/user/{id}/course/{id}/lesson/{id}/progress), added missing pages (/omaha, /push-fold, /range-explorer, /solutions), new study components (top-bar, player-tiles, filters, OOP-EV, action-prompt, GTO microchips). Live site verified: /, /study (hand matrix with GTO data, per-cell action buttons, position tiles), /equity, /practice, /courses, /solutions, /push-fold all render with 0 JS errors. 368/368 tests pass, build clean. Next: study-progress-persistence-backend.",
-    "last_review": "2026-06-23T19:35:00Z",
+    "notes": "study-progress-persistence-backend: APPROVED. All criteria met: POST returns 201 with id/created_at, GET returns aggregated stats with position/action breakdowns, /progress page renders with no console errors, study page fires POST on Check vs GTO interaction, localStorage UUID identity implemented. 6/6 API tests pass, 368/368 existing tests pass. Security: no secrets, no new deps, endpoints are public by design (consistent with all other endpoints). YAGNI: all 8 files directly required by task criteria. Perf: user_id column indexed. Live site verified: /, /progress, /study all render with 0 JS errors. Backlog: 3 tasks remaining (leaderboard, postflop-feedback, timed-drill) — kicking off leaderboard-frontend-page.",
+    "last_review": "2026-06-23T20:52:00Z",
     "status": "approved"
   }
 }
