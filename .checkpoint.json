@@ -303,6 +303,13 @@
       "date": "2026-06-23",
       "summary": "Ran seed_preflop_strategies.py against PostgreSQL. Seed script existed (previously committed) but DB was empty. Now 28 preflop strategies in DB covering 6 positions (UTG/HJ/CO/BTN/SB/BB) at 100bb. Strategy-lookup returns 200 with 169 hands per position. 368 tests pass, build clean.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-spots-page-nan-values",
+      "sha": "fee7e61",
+      "date": "2026-06-23",
+      "summary": "Fixed NaN values in strategy heatmap avg computation — filter invalid entries (null/undefined/NaN) before computing averages, show em-dash when no valid data exists instead of NaN. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -357,10 +364,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "9c73224",
-  "current_task": "fix-spots-page-nan-values",
+  "last_sha": "fee7e61",
+  "current_task": "fix-web-search-billing-expired",
   "blocker": null,
-  "note": "solutions-page-visual-match-reference complete. Converted solutions page to GTO Wizard dark design system — viewport-filling layout, CSS variable colors, brand green accent, dark board cards. 368 tests pass, build clean, live 200. Next: fix-spots-page-nan-values — NaN bug on spots page heatmap. Also: fix-web-search-billing-expired, re-audit-features-yaml, study-progress-persistence-backend.",
+  "note": "fix-spots-page-nan-values: Fixed NaN values in strategy heatmap avg computation — filter invalid entries before computing averages, show '—' when no valid data. 368 tests pass, build clean. Next: fix-web-search-billing-expired.",
   "coach_review": {
     "last_reviewed_sha": "d7a4a13",
     "last_reviewed_at": "2026-06-23T18:25:00Z",
