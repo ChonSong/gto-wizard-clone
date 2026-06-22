@@ -1297,6 +1297,58 @@ Ordered by priority. Each task is one unit of work for one player tick.
 - **Coach checks**:
   - Navigate to `/study`, click Blockers sub-tab
   - Verify combo counts are displayed and show realistic values
+
+---
+
+## Next Batch — Manual Intervention (2026-06-22) — Visual Fidelity Tasks
+
+These tasks identified by comparing the live page at `https://wiz.codeovertcp.com/study` against `docs/reference-study-interface.png` via vision_analyze. The structural layout matches but specific visual elements are missing.
+
+### Task: gto-frequency-microchips-on-action-buttons
+- **Description**: Postflop action buttons show bet size and pot% (e.g., "BET 33%: 2.0 (36%)") but the reference shows GTO frequency chips alongside each action. For example, "BET 1.8 (33%)" should also display "GTO: 45%" in a colored micro-chip. Add a frequency chip overlay to each action button showing the GTO-recommended action frequency. Reference: `docs/reference-study-interface.png` shows action buttons with compact bet size + pot% + GTO frequency on one line.
+- **Success criteria**:
+  - Each action button shows: [action name] [size in bb] (pot%) [GTO frequency chip]
+  - GTO frequency chip is colored: green if GTO recommends this action >20% freq, yellow if 5-20%, gray if <5%
+  - Frequencies come from the solver API response (`POST /api/v1/solver/postflop-strategy`)
+  - Frequency updates when user changes position/board/street and re-fetches
+  - 0 console errors
+- **Coach checks**:
+  - Load /study, switch to Postflop Training, click Get GTO Strategy
+  - Verify each action button shows a GTO frequency chip with correct color
+  - Click a button, verify frequency persists in the comparison view
+  - Load reference image `docs/reference-study-interface.png` via vision_analyze — compare button layout against live
+
+### Task: post-action-gto-comparison-overlay
+- **Description**: After the user selects a postflop action (e.g., clicks "BET 33%"), no comparison feedback appears. The reference shows: (1) user's selected action highlighted, (2) GTO-recommended action highlighted in green, (3) EV difference between user's choice and GTO, (4) correct/incorrect indicator. Add an overlay panel below the action buttons that renders immediately after the user picks an action. Reference: `docs/reference-study-interface.png` shows a comparison panel with the user's pick vs GTO recommendation.
+- **Success criteria**:
+  - After clicking any action button, a feedback panel appears below the action bar
+  - Panel shows: user's action highlighted, GTO-recommended action highlighted in green
+  - Shows EV difference (user's EV vs GTO EV) with green/red coloring
+  - Shows "✓ Correct" or "✗ Suboptimal" with the frequency gap
+  - "Try Again" button that resets to action selection state
+  - Matches reference layout in `docs/reference-study-interface.png`
+  - 0 console errors
+- **Coach checks**:
+  - Load /study, Postflop Training, get strategy, click any action
+  - Verify comparison overlay renders immediately with correct/incorrect feedback
+  - Verify EV difference is shown
+  - Click "Try Again" — verify action buttons re-enable and overlay hides
+  - Load reference image and compare overlay layout
+
+### Task: preflop-hand-matrix-blue-call-color
+- **Description**: The preflop hand matrix uses red=raise and dark gray=fold, but the reference (and standard GTO wizard convention) uses a third color for mixed strategies where CALL is the primary action. Add blue (#3A6EA5) coloring for cells whose primary action is CALL. The matrix currently shows all folded hands as dark gray — some of these should be blue for hands that mix call/fold. Check the strategy API response — if `action: "call"` is the top action by frequency for a cell, color it blue instead of gray.
+- **Success criteria**:
+  - Hand matrix cells where the primary action is "call" display with blue background (#3A6EA5)
+  - Cells where primary action is "raise" remain red
+  - Cells where primary action is "fold" remain gray
+  - Legend updates to show blue = "Call" alongside existing red/gray
+  - Text contrast is readable on blue background
+  - 0 console errors
+- **Coach checks**:
+  - Load /study, verify some cells show blue background (hands like small pocket pairs that mix call/fold)
+  - Legend shows "Call" with blue indicator
+  - Blue cells have readable text
+  - Switch to 50bb — verify blue appears where calling is more frequent at lower stacks
   - Verify board card removal is reflected (e.g., if 5♠ on board, 55 combos reduced)
   - Check 0 console errors
 
