@@ -217,10 +217,18 @@
       "task": "study-oop-ev-real-values",
       "sha": "8ff6438",
       "date": "2026-06-22",
-      "summary": "Replaced Math.random() placeholder in OOP EV column with real weighted-average solver equity from rangeData. Computes weighted average of per-hand equity × frequency, converts to bb EV: (avgEquity - 0.5) * 3. Green for positive, red for negative. Shows — when solver data unavailable. 368 tests pass, build clean, live 200."
+      "summary": "Replaced Math.random() placeholder in OOP EV column with real weighted-average solver equity from rangeData. Computes weighted average of per-hand equity × frequency, converts to bb EV: (avgEquity - 0.5) * 3. Green for positive, red for negative. Shows — when solver data unavailable. 368 tests pass, build clean, live 200.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-e2e-test-runner-version-conflict",
+      "sha": "35accd5",
+      "date": "2026-06-22",
+      "summary": "Excluded playwright.config.ts and playwright.ci.ts from Next.js TypeScript build to resolve @playwright/test version conflict. Root copy (hoisted from Next.js transitive dep) conflicted with e2e-local copy. Fix makes root copy inert. 116/118 e2e tests pass (2 pre-existing failures), 368 poker-core tests pass, build clean, live 200.",
+      "coach": "approved"
     }
   ],
-  "current_task": "fix-e2e-test-runner-version-conflict",
+  "current_task": "tbd",
   "spec_gaps": [
     {
       "item": "Position selector as player tiles with stacks",
@@ -269,19 +277,19 @@
       "type": "infra_gap",
       "priority": 1,
       "evidence": "npx playwright test --list crashes: 'test.describe() not expected here' — duplicate @playwright/test in root node_modules.",
-      "status": "open"
+      "status": "complete"
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "8ff6438",
+  "last_sha": "35accd5",
   "blocker": null,
-  "note": "Replaced Math.random() OOP EV with real weighted-average solver equity. Weighted avg of per-hand equity × frequency converted to bb: (avgEq-0.5)*3. Green (+)/red (-) coloring. 368 tests pass, build clean, live 200. Next: fix-e2e-test-runner-version-conflict.",
+  "note": "fix-e2e-test-runner-version-conflict complete. Excluded playwright configs from Next.js tsconfig to resolve @playwright/test version conflict. 116/118 e2e tests pass, 368 poker-core pass, build clean, live 200. current_task: tbd — loop stalled, needs new tasks.",
   "coach_review": {
-    "last_reviewed_sha": null,
-    "last_reviewed_at": null,
-    "verdict": "pending",
-    "notes": "",
-    "last_review": null,
-    "status": "pending"
+    "last_reviewed_sha": "35accd5",
+    "last_reviewed_at": "2026-06-22T23:59:00Z",
+    "verdict": "approved",
+    "notes": "2 unreviewed commits (8ff6438, 35accd5) reviewed. Both approved.",
+    "last_review": "2026-06-22T23:59:00Z",
+    "status": "complete"
   }
 }
