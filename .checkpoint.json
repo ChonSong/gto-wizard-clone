@@ -309,7 +309,14 @@
       "sha": "fee7e61",
       "date": "2026-06-23",
       "summary": "Fixed NaN values in strategy heatmap avg computation — filter invalid entries (null/undefined/NaN) before computing averages, show em-dash when no valid data exists instead of NaN. 368 tests pass, build clean, live 200.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "fix-web-search-billing-expired",
+      "sha": "fee7e61",
+      "date": "2026-06-23",
+      "summary": "Installed ddgs (DuckDuckGo search) Python package in Hermes venv and set web.search_backend: ddgs in ~/.hermes/config.yaml. Firecrawl billing was exhausted (402 Payment Required). DuckDuckGo requires no API key. Verified: web_search() returns real results successfully. web_extract still on Firecrawl (separate issue). Next: re-audit-features-yaml.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -365,15 +372,15 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "fee7e61",
-  "current_task": "fix-web-search-billing-expired",
+  "current_task": "re-audit-features-yaml",
   "blocker": null,
-  "note": "fix-spots-page-nan-values: Fixed NaN values in strategy heatmap avg computation — filter invalid entries before computing averages, show '—' when no valid data. 368 tests pass, build clean. Next: fix-web-search-billing-expired.",
+  "note": "fix-web-search-billing-expired: Installed ddgs package in Hermes venv, set web.search_backend: ddgs in ~/.hermes/config.yaml. Firecrawl billing was exhausted (402). DuckDuckGo works with no API key. web_search returns real results. Next: re-audit-features-yaml.",
   "coach_review": {
-    "last_reviewed_sha": "d7a4a13",
-    "last_reviewed_at": "2026-06-23T18:25:00Z",
+    "last_reviewed_sha": "7201ea1",
+    "last_reviewed_at": "2026-06-23T19:30:00Z",
     "verdict": "approved",
-    "notes": "solutions-page-visual-match-reference — approved: solutions page converted to GTO Wizard dark design system (CSS variables, viewport-filling layout, brand green accent). /solutions loads with 0 JS errors, 3 solution cards render with GTO action breakdown. 368 tests pass, build clean, 41 pages generated. Next: backlog generation.",
-    "last_review": "2026-06-23T17:30:00Z",
+    "notes": "fix-spots-page-nan-values — approved: StrategyHeatmap.tsx filters null/undefined/NaN frequency and EV values before computing averages, shows em-dash when no valid data exists. Verified live: /spots shows 'Avg Freq:—', 'Avg EV:—' (no NaN). Switched action types, clicked AA cell, toggled Freq/EV/Mixed — 0 JS errors everywhere. 368 tests pass, build clean (42 static pages). fix-web-search-billing-expired also verified: web_search() returns real results via ddgs backend.",
+    "last_review": "2026-06-23T19:30:00Z",
     "status": "approved"
   }
 }

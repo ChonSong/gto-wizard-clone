@@ -7,7 +7,7 @@
 #   reference: optional path to reference screenshot
 #   evidence: how to verify (auto-populated by coach on audit)
 version: 1
-last_audited: 2026-06-20
+last_audited: 2026-06-23
 reference_base: docs/
 references:
   - page: /
@@ -83,10 +83,24 @@ pages:
         status: present
       - name: gto-comparison-overlay
         status: present
+      - name: top-bar-cash-bb-spots
+        status: present
+      - name: player-tile-position-selector
+        status: present
+      - name: action-prompt-header
+        status: present
+      - name: filters-sub-tab
+        status: present
+      - name: oop-ev-column
+        status: present
+      - name: gto-frequency-microchips
+        status: present
     apis:
       - endpoint: POST /api/v1/solver/preflop-range
         status: present
       - endpoint: POST /api/v1/solver/postflop-strategy
+        status: present
+      - endpoint: POST /api/v1/solver/solve
         status: present
   - route: /quiz
     title: Quiz Training
@@ -165,10 +179,17 @@ pages:
     apis:
       - endpoint: GET /api/v1/courses
         status: present
-      - endpoint: GET /api/v1/courses/{id}
+      - endpoint: GET /api/v1/courses/featured
         status: present
-        evidence: "Returns 200 with course data and lessons. Verified via curl on port 8001 (2026-06-20). Root cause was port mismatch: gto-wizard-api.service lacked DATABASE_URL= env var, falling back to SQLite with mismatched schema. Fixed by adding DATABASE_URL to gto-api.service on port 8001."
-      - endpoint: POST /api/v1/courses/{id}/progress
+      - endpoint: GET /api/v1/courses/categories
+        status: present
+      - endpoint: GET /api/v1/courses/{course_id}
+        status: present
+      - endpoint: GET /api/v1/courses/user/{user_id}/progress
+        status: present
+      - endpoint: POST /api/v1/courses/user/{user_id}/course/{course_id}/lesson/{lesson_id}/progress
+        status: present
+      - endpoint: GET /api/v1/courses/user/{user_id}/course/{course_id}/progress
         status: present
   - route: /icm
     title: ICM Calculator
@@ -181,7 +202,13 @@ pages:
       - name: icm-results
         status: present
     apis:
-      - endpoint: GET /api/v1/icm/calculate
+      - endpoint: POST /api/v1/icm/calculate
+        status: present
+      - endpoint: POST /api/v1/icm/bubble-factor
+        status: present
+      - endpoint: GET /api/v1/icm/scenarios
+        status: present
+      - endpoint: POST /api/v1/icm/scenarios
         status: present
   - route: /hand-history
     title: Hand History
@@ -198,7 +225,15 @@ pages:
     apis:
       - endpoint: GET /api/v1/hh/hands
         status: present
+      - endpoint: GET /api/v1/hh/hands/{hand_id}
+        status: present
       - endpoint: POST /api/v1/hh/import
+        status: present
+      - endpoint: POST /api/v1/hh/batch-upload
+        status: present
+      - endpoint: POST /api/v1/hh/parse
+        status: present
+      - endpoint: GET /api/v1/hh/stats
         status: present
   - route: /plo4
     title: PLO4 Calculator
@@ -207,7 +242,15 @@ pages:
       - name: equity-calculator
         status: present
     apis:
-      - endpoint: POST /api/v1/plo4/equity
+      - endpoint: POST /plo4/equity/calculate
+        status: present
+      - endpoint: POST /plo4/equity/range-vs-range
+        status: present
+      - endpoint: POST /plo4/ranges/parse
+        status: present
+      - endpoint: POST /plo4/ranges/expand
+        status: present
+      - endpoint: GET /plo4/ranges/push-fold-chart/{position}
         status: present
   - route: /variants
     title: Game Variants
@@ -223,6 +266,18 @@ pages:
     status: present
   - route: /double-board
     title: Double Board
+    status: present
+  - route: /omaha
+    title: Omaha Calculator
+    status: present
+  - route: /push-fold
+    title: Push/Fold Charts
+    status: present
+  - route: /range-explorer
+    title: Range Explorer
+    status: present
+  - route: /solutions
+    title: Solutions Browser
     status: present
 
 apis:
