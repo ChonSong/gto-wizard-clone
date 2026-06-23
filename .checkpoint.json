@@ -133,6 +133,13 @@
       "date": "2026-06-23",
       "summary": "Hamburger nav menu on mobile (<=640px), matrix horizontal scroll with overflow-x auto, responsive wraps for all panels (mode toggle, stats bar, panel header, sub-tab bar, street nav), action buttons meet 44px touch targets. Desktop layout unchanged. 368 tests pass, build clean, live 200.",
       "coach": "pending"
+    },
+    {
+      "task": "study-page-accessibility-baseline",
+      "sha": "0f51335",
+      "date": "2026-06-23",
+      "summary": "Accessibility baseline: aria-label on all position cards, mode toggle, stack depth buttons, stats bar buttons, blocker rank buttons. aria-pressed on toggle/stack/blocker/action buttons. scope='col' on table headers. PostflopTraining: role='navigation'+aria-label on street breadcrumb, aria-expanded+aria-label on Configure Spot, aria-label on GTO/Refresh button, aria-label+aria-pressed on all action buttons, aria-label on Try Again/Advance buttons, aria-label on all config inputs/select. Focus-visible indicators and keyboard navigation already existed. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -208,16 +215,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "d8b6e46",
-  "current_task": "study-page-accessibility-baseline",
+  "last_sha": "0f51335",
+  "current_task": "practice-spot-cross-navigation",
   "blocker": null,
-  "note": "study-page-mobile-responsive: COMPLETE — hamburger nav on mobile, matrix horizontal scroll, 44px touch targets, all responsive wraps. 368 tests pass, build clean, live 200. Next: study-page-accessibility-baseline.",
+  "note": "study-page-accessibility-baseline: COMPLETE — ARIA labels on all interactive elements, aria-pressed on toggle/action/blocker buttons, scope='col' on table headers, role='navigation'+aria-label on PostflopTraining street breadcrumb, expanded/aria-label on all config inputs/select/buttons. 368 tests pass, build clean, live 200. Next: practice-spot-cross-navigation.",
   "coach_review": {
-    "last_reviewed_sha": "d8b6e46",
-    "last_reviewed_at": "2026-06-23T14:45:00Z",
+    "last_reviewed_sha": "0f51335",
+    "last_reviewed_at": "2026-06-23T15:00:00Z",
     "verdict": "pending",
-    "notes": "study-page-mobile-responsive (d8b6e46): hamburger nav on mobile, matrix scroll, responsive wraps, touch targets. 368 tests pass, build clean, live 200.",
-    "last_review": "2026-06-23T14:45:00Z",
+    "notes": "study-page-accessibility-baseline (0f51335): ARIA labels on all interactive elements, aria-pressed, scope, role=navigation on street breadcrumb. 368 tests pass, build clean, live 200.",
+    "last_review": "2026-06-23T15:00:00Z",
     "status": "pending"
   }
 }
