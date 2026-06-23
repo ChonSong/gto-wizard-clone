@@ -310,6 +310,41 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
     }
   }, [boardStr, activePosition, currentStreet, potSize, stackDepth])
 
+  const handleRandomSpot = useCallback(() => {
+    // Random common board textures
+    const commonBoards = [
+      'KsKc3s', 'Ah8h3h', 'QdJdTc', '7c6c5c', 'AdKdQc',
+      'JsTs9s', '2h7hQh', 'KcQcJc', 'AsKs2s', 'Tc9c8c',
+      'AhKhQh', 'KdJdTd', 'QhTh9h', 'Jc9c8c', 'Td9d8d',
+    ]
+    const randBoard = commonBoards[Math.floor(Math.random() * commonBoards.length)]
+
+    // Random position
+    const posIds = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
+    const randPos = posIds[Math.floor(Math.random() * posIds.length)]
+
+    // Random pot size (3-20bb)
+    const randPot = Math.round((3 + Math.random() * 17) * 10) / 10
+
+    // Random stack depth
+    const depths = [50, 100, 150, 200]
+    const randDepth = depths[Math.floor(Math.random() * depths.length)]
+
+    // Random street (0=flop, 1=turn, 2=river)
+    const randStreet = Math.floor(Math.random() * 3)
+
+    // Update state
+    setBoardStr(randBoard)
+    setActivePosition(randPos)
+    setPotSize(randPot)
+    setStackDepth(randDepth)
+    setStreetIndex(randStreet)
+    setStreetActions([null, null, null])
+    setUserChoice(null)
+    setStrategy(null)
+    setError(null)
+  }, [])
+
   // Group strategy actions by type for display
   const groupedActions = strategy?.actions?.reduce((acc, a) => {
     const key = a.action.startsWith('bet') ? 'bet' :
@@ -645,6 +680,19 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
             <div style={{ fontSize: 18, fontWeight: 700, color: TEXT_BRIGHT }}>{potSize.toFixed(1)}</div>
           </div>
 
+          {/* Random Spot button */}
+          <button onClick={() => { handleRandomSpot(); setTimeout(fetchStrategy, 50) }}
+            disabled={loading}
+            aria-label="Generate random postflop spot"
+            style={{
+              background: '#1a1a2e', border: '1px solid #3a3a5e',
+              color: '#b0b0ff', padding: '8px 14px', borderRadius: 8,
+              fontSize: 12, fontWeight: 600, cursor: loading ? 'default' : 'pointer',
+              opacity: loading ? 0.6 : 1,
+              display: 'flex', alignItems: 'center', gap: 4,
+            }}>
+            <span style={{ fontSize: 14 }}>🎲</span> Random Spot
+          </button>
           {/* Refresh strategy */}
           <button onClick={fetchStrategy} disabled={loading} aria-label={loading ? 'Solving' : strategy ? 'Refresh GTO strategy' : 'Get GTO strategy'}
             style={{

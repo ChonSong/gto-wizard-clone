@@ -554,15 +554,20 @@ export default function StudyPage() {
     const randDepth = depths[Math.floor(Math.random() * depths.length)]
     setStackDepth(randDepth.value)
 
-    // Generate random board (flop)
-    const flop = generateRandomCards(3, [])
-    setBoardCards(flop)
-    setBoardStreet('flop')
-
     // Pick a random hand from the matrix
     const allHands = MATRIX_HANDS.flat()
     const randHand = allHands[Math.floor(Math.random() * allHands.length)]
     setSelectedCell(randHand)
+
+    // 50% chance to also generate a random flop board (triggers postflop mode)
+    if (Math.random() > 0.5) {
+      const flop = generateRandomCards(3, [])
+      setBoardCards(flop)
+      setBoardStreet('flop')
+    } else {
+      setBoardCards([])
+      setBoardStreet('preflop')
+    }
 
     // Reset user action state
     setUserAction(null)
@@ -899,6 +904,19 @@ export default function StudyPage() {
           <span style={{ color: '#aaa', fontWeight: 600 }}>2,000+</span>
           <span>spots</span>
         </div>
+        {/* Random Spot button */}
+        <button onClick={handleRandomSpot}
+          aria-label="Generate random training spot"
+          style={{
+            background: '#1a1a2e', border: '1px solid #3a3a5e',
+            color: '#b0b0ff', padding: '3px 10px', borderRadius: 6,
+            fontSize: 11, fontWeight: 600, cursor: 'pointer',
+            whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4,
+            lineHeight: 1.5,
+          }}>
+          <span style={{ fontSize: 13 }}>🎲</span> Random Spot
+        </button>
+        <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
         <div style={{ flex: 1 }} />
         {/* Upgrade CTA button */}
         <a
