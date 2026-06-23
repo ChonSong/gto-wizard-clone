@@ -30,9 +30,9 @@ test.describe("Workflow: Study Range Matrix", () => {
     await expect(page.locator("h1")).toContainText("GTO");
     await page.locator('a[href="/study"]').first().click();
     await page.waitForURL(/\/study/);
-    const utgButton = page.locator("button", { hasText: "UTG" });
-    await expect(utgButton).toBeVisible();
-    const btnButton = page.locator("button", { hasText: "BTN" });
+    const utgButton = page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^UTG/ });
+    await expect(utgButton).toBeVisible({ timeout: 10000 });
+    const btnButton = page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^BTN/ });
     await expect(btnButton).toBeVisible();
     await btnButton.click();
     await page.waitForTimeout(300);
@@ -48,8 +48,8 @@ test.describe("Workflow: Study Range Matrix", () => {
   test("user toggles solver mode on study page", async ({ page }) => {
     await page.goto("/study");
     await page.waitForLoadState("networkidle");
-    await expect(page.locator("button", { hasText: "UTG" })).toBeVisible();
-    await expect(page.locator("button", { hasText: "BTN" })).toBeVisible();
+    await expect(page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^UTG/ })).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^BTN/ })).toBeVisible();
   });
 });
 

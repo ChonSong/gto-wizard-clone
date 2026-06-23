@@ -1,5 +1,9 @@
 import { test, expect } from "@playwright/test";
 
+// Helper: position cards are <div role="button"> with class hspot-card
+const posCard = (position: string) =>
+  page.locator(`div[role="button"][class*="hspot-card"]`).filter({ hasText: new RegExp(`^${position}`) });
+
 test.describe("Study Preflop Flow", () => {
   test("user clicks position button and hand matrix renders", async ({ page }) => {
     const consoleErrors: string[] = [];
@@ -19,14 +23,15 @@ test.describe("Study Preflop Flow", () => {
     expect(response?.status()).toBe(200);
     await page.waitForLoadState("networkidle");
 
-    const positionButtons = page.locator("button").filter({
-      hasText: /UTG|HJ|CO|BTN|SB|BB/,
+    const positionButtons = page.locator('div[role="button"][class*="hspot-card"]').filter({
+      hasText: /^(UTG|HJ|CO|BTN|SB|BB)/,
     });
     const positionCount = await positionButtons.count();
     console.log("  Position buttons found: " + positionCount);
     expect(positionCount).toBeGreaterThanOrEqual(3);
 
-    const utgButton = page.locator("button", { hasText: "UTG" }).first();
+    // Use getByRole to find the UTG position card
+    const utgButton = page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^UTG/ }).first();
     await expect(utgButton).toBeVisible({ timeout: 10000 });
     await utgButton.click();
     await page.waitForTimeout(500);
@@ -39,7 +44,7 @@ test.describe("Study Preflop Flow", () => {
     const hasKK = await kkCell.isVisible().catch(() => false);
     console.log("  Hand matrix KK visible: " + hasKK);
 
-    const stackSelect = page.locator("select, button").filter({
+    const stackSelect = page.locator("select, button, [role='button']").filter({
       hasText: /100bb|75bb|50bb|Stack|Depth/i,
     });
     const hasStackSelector = await stackSelect.first().isVisible().catch(() => false);
@@ -68,12 +73,12 @@ test.describe("Study Preflop Flow", () => {
     await page.goto("/study");
     await page.waitForLoadState("networkidle");
 
-    const btnButton = page.locator("button", { hasText: "BTN" }).first();
+    const btnButton = page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^BTN/ }).first();
     await expect(btnButton).toBeVisible({ timeout: 10000 });
     await btnButton.click();
     await page.waitForTimeout(300);
 
-    const stackOptions = page.locator("select, button, [role='radio'], [role='tab']").filter({
+    const stackOptions = page.locator("select, button, [role='button'], [role='tab']").filter({
       hasText: /100bb|75bb|150bb|200bb/,
     });
     const stackOptionCount = await stackOptions.count();
@@ -114,7 +119,7 @@ test.describe("Study Preflop Flow", () => {
     await page.goto("/study");
     await page.waitForLoadState("networkidle");
 
-    const coButton = page.locator("button", { hasText: "CO" }).first();
+    const coButton = page.locator('div[role="button"][class*="hspot-card"]').filter({ hasText: /^CO/ }).first();
     await expect(coButton).toBeVisible({ timeout: 10000 });
     await coButton.click();
     await page.waitForTimeout(300);
@@ -125,7 +130,7 @@ test.describe("Study Preflop Flow", () => {
       await page.waitForTimeout(500);
       console.log("  Clicked AKs cell");
 
-      const actionButtons = page.locator("button").filter({
+      const actionButtons = page.locator("button, [role='button']").filter({
         hasText: /Fold|Call|Raise|All-in/i,
       });
       const actionCount = await actionButtons.count();
