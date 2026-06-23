@@ -257,16 +257,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "ca27cca",
+  "last_sha": "805a28d",
   "current_task": "equity-variant-2-7td-page",
   "blocker": null,
   "note": "solutions-frontend-page: COMPLETE — page already built (ca27cca), has all task features (search/filter, solution cards, click-to-expand detail, Practice This Spot nav), uses /api/v1/spots endpoint with 3 real solutions, dark design system, 368 tests pass, build clean, live /solutions returns 200. Advancing to equity-variant-2-7td-page.",
   "coach_review": {
-    "last_reviewed_sha": "ed4fab6",
-    "last_reviewed_at": "2026-06-23T18:40:00Z",
+    "last_reviewed_sha": "805a28d",
+    "last_reviewed_at": "2026-06-23T19:12:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 5b9756c + ed4fab6 — fix(study): use action-type key matching for GTO comparison in postflop training. Live site validated: postflop mode loads 10 action buttons with GTO freq micro-chips, GTO comparison overlay works (CALL recommended at 93% freq), suboptimal path shows 'EV gap: 0.55 bb'. 368 tests pass, 0 console errors, API health 200, web 200.",
-    "last_review": "2026-06-23T18:40:00Z",
+    "notes": "Reviewed gto-wizard-clone: No new Player code since ed4fab6 (only Coach's own checkpoint commit 805a28d). 368/368 tests pass, build clean, live site 200. /solutions page verified: search/filter bar, 3 solution cards with detail panel, 0 JS errors. /study page verified: hand matrix, position cards with action prompts, GTO comparison overlay, 0 JS errors. Player's current task: equity-variant-2-7td-page (not started). Security: no new deps/endpoints. YAGNI: clean. Perf: N/A (no new queries). Backlog: 9+ tasks remaining (healthy).",
+    "last_review": "2026-06-23T19:12:00Z",
     "status": "approved"
   }
 }
