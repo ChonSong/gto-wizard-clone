@@ -1635,41 +1635,53 @@ export default function StudyPage() {
                         </div>
 
                         <div style={{ fontSize: 11, color: '#999', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                          GTO Frequency
+                          GTO Frequency — All Actions
                         </div>
                         {(() => {
-                          const gtoAction = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
+                          const gtoActionBase = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
                           const gtoFreq = selectedHandData.frequency
-                          const otherFreq = 1 - gtoFreq
-                          const gtoIsMixed = gtoFreq < 0.99
-                          const actionColor = ACTION_COLORS[gtoAction] || '#888'
+                          // Build full distribution: all 4 actions, sorting GTO action first
+                          const allActions: { id: string; freq: number }[] = [
+                            { id: 'fold', freq: gtoActionBase === 'fold' ? gtoFreq : 0 },
+                            { id: 'call', freq: gtoActionBase === 'call' ? gtoFreq : 0 },
+                            { id: 'raise', freq: gtoActionBase === 'raise' ? gtoFreq : 0 },
+                            { id: 'all_in', freq: gtoActionBase === 'all_in' ? gtoFreq : 0 },
+                          ].sort((a, b) => b.freq - a.freq)
                           return (
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                <span style={{ fontSize: 11, color: actionColor, fontWeight: 600, width: 70 }}>
-                                  {actionLabels[gtoAction] || gtoAction}
-                                </span>
-                                <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
-                                  <div style={{ height: '100%', width: `${gtoFreq * 100}%`, background: actionColor, borderRadius: 5, transition: 'width 0.3s ease' }} />
-                                </div>
-                                <span style={{ fontSize: 11, color: '#ccc', fontWeight: 600, width: 40, textAlign: 'right' }}>
-                                  {(gtoFreq * 100).toFixed(0)}%
-                                </span>
-                              </div>
-                              {gtoIsMixed && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                  <span style={{ fontSize: 11, color: '#888', fontWeight: 600, width: 70 }}>Other</span>
-                                  <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
-                                    <div style={{ height: '100%', width: `${otherFreq * 100}%`, background: '#555', borderRadius: 5, transition: 'width 0.3s ease' }} />
+                              {allActions.map(({ id: act, freq }) => {
+                                const actionColor = ACTION_COLORS[act] || '#888'
+                                const isGto = act === gtoActionBase
+                                return (
+                                  <div key={act} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                    <span style={{
+                                      fontSize: 11, color: actionColor, fontWeight: isGto ? 700 : 500, width: 70,
+                                      opacity: isGto ? 1 : 0.5,
+                                    }}>
+                                      {isGto && '✓ '}{actionLabels[act] || act}
+                                    </span>
+                                    <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
+                                      <div style={{
+                                        height: '100%', width: `${Math.max(freq * 100, 1)}%`,
+                                        background: freq > 0 ? actionColor : '#333',
+                                        borderRadius: 5, transition: 'width 0.3s ease',
+                                        opacity: freq > 0 ? 1 : 0.3,
+                                      }} />
+                                    </div>
+                                    <span style={{
+                                      fontSize: 11, color: freq > 0 ? '#ccc' : '#555', fontWeight: isGto ? 700 : 500,
+                                      width: 40, textAlign: 'right',
+                                    }}>
+                                      {(freq * 100).toFixed(0)}%
+                                    </span>
                                   </div>
-                                  <span style={{ fontSize: 11, color: '#888', fontWeight: 600, width: 40, textAlign: 'right' }}>{(otherFreq * 100).toFixed(0)}%</span>
-                                </div>
-                              )}
+                                )
+                              })}
                               <div style={{ marginTop: 8, padding: '6px 8px', borderRadius: 4, background: '#151515', fontSize: 11, color: '#aaa' }}>
                                 <span style={{ color: '#888' }}>
                                   {actionFeedback === 'correct'
                                     ? 'Your pick matches the GTO action for this spot.'
-                                    : `GTO plays ${actionLabels[gtoAction] || gtoAction} ${(gtoFreq * 100).toFixed(0)}% of the time here.`
+                                    : `GTO plays ${actionLabels[gtoActionBase] || gtoActionBase} ${(gtoFreq * 100).toFixed(0)}% of the time here.`
                                   }
                                 </span>
                               </div>
