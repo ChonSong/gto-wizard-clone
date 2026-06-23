@@ -680,6 +680,17 @@ export default function StudyPage() {
           .study-matrix-grid {
             grid-template-columns: repeat(13, 1fr) !important;
           }
+          .study-matrix-wrap {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          .study-matrix-wrap::-webkit-scrollbar {
+            height: 4px !important;
+          }
+          .study-matrix-wrap::-webkit-scrollbar-thumb {
+            background: #333 !important;
+            border-radius: 2px !important;
+          }
           .study-matrix-cell {
             font-size: 6px !important;
             letter-spacing: -0.5px !important;
@@ -707,6 +718,12 @@ export default function StudyPage() {
           }
           .study-details-panel {
             min-height: 300px !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          .study-details-panel-table {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
           }
           .study-top-bar {
             flex-wrap: wrap !important;
@@ -715,6 +732,27 @@ export default function StudyPage() {
           }
           .study-top-bar-upgrade {
             margin-left: auto !important;
+          }
+          .study-mode-toggle {
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+          }
+          .study-stats-bar {
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+            padding: 3px 8px !important;
+          }
+          .study-panel-header {
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+          }
+          .study-sub-tab-bar {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          .study-street-nav {
+            flex-wrap: wrap !important;
+            gap: 3px !important;
           }
         }
         @media (max-width: 480px) {
@@ -730,6 +768,22 @@ export default function StudyPage() {
           }
           .study-spot-card-bar .hspotcrd_title {
             font-size: 9px !important;
+          }
+        }
+        @media (max-width: 375px) {
+          .study-top-bar {
+            gap: 4px !important;
+            padding: 4px 6px !important;
+          }
+          .study-top-bar > * {
+            font-size: 10px !important;
+          }
+          .study-action-btn {
+            padding: 10px 4px !important;
+            min-height: 44px !important;
+          }
+          .study-details-panel {
+            min-height: 250px !important;
           }
         }
         /* Accessibility: visible focus indicators */
@@ -832,7 +886,7 @@ export default function StudyPage() {
         </a>
       </div>
       {/* Mode Toggle — fixed height */}
-      <div style={{ display: 'flex', gap: 8, padding: '6px 12px', borderBottom: '1px solid #141414', background: '#0E0E0E', flexShrink: 0 }}>
+      <div className="study-mode-toggle" style={{ display: 'flex', gap: 8, padding: '6px 12px', borderBottom: '1px solid #141414', background: '#0E0E0E', flexShrink: 0 }}>
         <button onClick={() => setMode('preflop')}
           style={{
             background: mode === 'preflop' ? '#16241a' : '#161616',
@@ -856,7 +910,7 @@ export default function StudyPage() {
       </div>
 
       {/* Study Stats Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '3px 12px', background: '#111', borderBottom: '1px solid #1a1a1a', flexShrink: 0 }}>
+      <div className="study-stats-bar" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '3px 12px', background: '#111', borderBottom: '1px solid #1a1a1a', flexShrink: 0 }}>
         <span style={{ fontSize: 11, fontWeight: 600, color: studyStats.total > 0 ? '#7CFC7C' : '#666' }}>
           {studyStats.correct}/{studyStats.total} ({studyStats.total > 0 ? Math.round((studyStats.correct / studyStats.total) * 100) : 0}%)
         </span>
@@ -1110,7 +1164,7 @@ export default function StudyPage() {
       <div className="study-main-grid" style={{ flex: 1, display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(320px, 1fr)', gap: 8, padding: '0 12px', minHeight: 0 }}>
         {/* Matrix Panel */}
         <div style={{ background: '#1C1C1C', border: '1px solid #262626', borderRadius: 8, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-          <div role="tablist" aria-label="Strategy view tabs" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 8px', borderBottom: '1px solid #262626', flexShrink: 0 }}>
+          <div role="tablist" aria-label="Strategy view tabs" className="study-panel-header" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 8px', borderBottom: '1px solid #262626', flexShrink: 0 }}>
             {([
               { id: 'strategy' as const, label: 'Strategy ▾' },
               { id: 'ranges' as const, label: 'Ranges' },
@@ -1124,7 +1178,7 @@ export default function StudyPage() {
               </span>
             ))}
           </div>
-          <div style={{ flex: 1, overflow: 'auto', padding: 4 }}>
+          <div className="study-matrix-wrap" style={{ flex: 1, overflow: 'auto', padding: 4 }}>
             {activeTab === 'strategy' && (
             <div role="grid" aria-label="Hand matrix" className="study-matrix-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)', gap: 1, background: '#1a1a1a', borderRadius: 6, overflow: 'hidden', padding: 2 }}>
               {MATRIX_HANDS.map((row, rowIdx) => (
@@ -1423,7 +1477,7 @@ export default function StudyPage() {
                   <span>Pot odds: <strong style={{ color: '#7CFC7C' }}>40%</strong></span>
                 </div>
                 {/* Board display + street nav */}
-                <nav aria-label="Street navigation" style={{
+                <nav aria-label="Street navigation" className="study-street-nav" style={{
                   marginTop: 4, display: 'flex', alignItems: 'center', gap: 4,
                 }}>
                   <span style={{ fontSize: 9, color: '#7CFC7C', fontWeight: 600, marginRight: 2, textTransform: 'uppercase' }}>
@@ -1491,7 +1545,7 @@ export default function StudyPage() {
               </div>
 
               {/* Sub-tab bar: Hand | Summary | Filters | Actions | Blockers */}
-              <div role="tablist" aria-label="Detail sub-tabs" style={{
+              <div role="tablist" aria-label="Detail sub-tabs" className="study-sub-tab-bar" style={{
                 display: 'flex', borderBottom: '1px solid #262626',
                 padding: '0 2px', flexShrink: 0,
               }}>
@@ -2008,7 +2062,7 @@ export default function StudyPage() {
 
           {/* TABLE TAB: Position stacks, EV, combos */}
           {rightTopTab === 'table' && (
-            <div style={{ padding: '8px 10px', flex: 1, overflow: 'auto' }}>
+            <div className="study-details-panel-table" style={{ padding: '8px 10px', flex: 1, overflow: 'auto' }}>
               <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                 Position Table
               </div>
