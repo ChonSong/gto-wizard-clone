@@ -108,6 +108,14 @@ function formatActionButton(action: string, potSize: number, stackDepth: number)
   return { label: action.toUpperCase() }
 }
 
+/** Extract the action type key from an action string (e.g. 'all_in:98.185' → 'all_in'). */
+function getActionKey(action: string): string {
+  if (action.startsWith('bet')) return 'bet'
+  if (action.startsWith('raise')) return 'raise'
+  if (action.startsWith('all_in')) return 'all_in'
+  return action
+}
+
 // Compute the new pot size after a given action is taken
 function computeNextPot(action: string, currentPot: number, stackDepth: number): number {
   if (action === 'check' || action === 'fold') return currentPot
@@ -753,12 +761,12 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
             const isSelected = userChoice === btn.action
             const isDisabled = loading || (userChoice !== null && !isSelected)
             // Find GTO frequency for this action
-            const gtoAction = strategy?.actions?.find(a => a.action === btn.action)
+            const gtoAction = strategy?.actions?.find(a => getActionKey(a.action) === getActionKey(btn.action))
             const gtoFreq = gtoAction?.frequency ?? null
             const gtoEv = gtoAction?.ev ?? null
             // Determine if this action matches the top GTO recommendation
             const topGtoAction = bestActions[0]
-            const isGtoRecommended = topGtoAction && btn.action === topGtoAction.action
+            const isGtoRecommended = topGtoAction && getActionKey(btn.action) === getActionKey(topGtoAction.action)
             return (
               <div key={btn.action} style={{ position: 'relative' }}>
                 <button onClick={() => !isDisabled && handleAction(btn.action)}
@@ -842,11 +850,11 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
         {/* Feedback text below action row — shown after user picks */}
         {userChoice && strategy && !loading && (() => {
           const topGto = bestActions[0]
-          const userActionData = strategy.actions.find(a => a.action === userChoice)
+          const userActionData = strategy.actions.find(a => getActionKey(a.action) === getActionKey(userChoice))
           const userEv = userActionData?.ev ?? null
           const gtoEv = topGto?.ev ?? null
           const evDiff = (userEv !== null && gtoEv !== null) ? (userEv - gtoEv) : null
-          const userMatchesGto = topGto && userChoice === topGto.action
+          const userMatchesGto = topGto && getActionKey(userChoice) === getActionKey(topGto.action)
           return (
             <div style={{
               marginTop: 12, padding: '10px 14px', borderRadius: 8,
@@ -941,12 +949,12 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
             <>
               {/* User's pick vs GTO recommendation comparison */}
               {userChoice && (() => {
-                const userActionData = strategy.actions.find(a => a.action === userChoice)
+                const userActionData = strategy.actions.find(a => getActionKey(a.action) === getActionKey(userChoice))
                 const topGto = bestActions[0]
                 const userEv = userActionData?.ev ?? null
                 const gtoEv = topGto?.ev ?? null
                 const evDiff = (userEv !== null && gtoEv !== null) ? (userEv - gtoEv) : null
-                const userMatchesGto = topGto && userChoice === topGto.action
+                const userMatchesGto = topGto && getActionKey(userChoice) === getActionKey(topGto.action)
                 const userActionLabel = formatActionButton(userChoice, potSize, stackDepth).label
                 const gtoActionLabel = topGto ? formatActionButton(topGto.action, potSize, stackDepth).label : 'N/A'
 
