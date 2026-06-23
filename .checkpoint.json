@@ -278,7 +278,7 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "7d48368",
+  "last_sha": "f56df81",
   "current_task": "analyze-viewer-functional-page",
   "blocker": null,
   "note": "equity-variant-plo5-page: COMPLETE — already built (2609ba8), functional PLO5 equity calculator with Monte Carlo sim, 5-card hand input, optional board, equity bar, hand description. Frontend 200, API (port 8001) returns valid PLO5 equity, 368 tests pass, live 200. Advancing to analyze-viewer-functional-page.",
