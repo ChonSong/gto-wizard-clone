@@ -203,15 +203,11 @@ function getGtoActionBase(handData: HandData | undefined): string {
   return a
 }
 
-const POSITION_KEYS: Record<string, string> = {
-  '1': 'UTG', '2': 'HJ', '3': 'CO', '4': 'BTN', '5': 'SB', '6': 'BB',
-}
-
-const ACTION_HOTKEYS: Record<string, string> = {
-  'a': 'all_in',
-  's': 'fold',
-  'd': 'call',
-  'f': 'raise',
+const PREFOP_ACTION_HOTKEYS: Record<string, string> = {
+  '1': 'fold',
+  '2': 'raise',
+  '3': 'all_in',
+  '4': 'call',
 }
 
 const TAB_ORDER: Array<'strategy' | 'ranges' | 'breakdown'> = ['strategy', 'ranges', 'breakdown']
@@ -605,14 +601,6 @@ export default function StudyPage() {
 
       const key = e.key.toLowerCase()
 
-      // Position switching: 1-6
-      if (POSITION_KEYS[key] && mode === 'preflop') {
-        e.preventDefault()
-        setActivePosition(POSITION_KEYS[key])
-        showToast(`Position: ${POSITION_KEYS[key]}`)
-        return
-      }
-
       // Tab cycling: Tab
       if (key === 'tab' && mode === 'preflop') {
         e.preventDefault()
@@ -638,15 +626,8 @@ export default function StudyPage() {
         return
       }
 
-      // Random spot: Space
-      if (key === ' ' && mode === 'preflop') {
-        e.preventDefault()
-        handleRandomSpot()
-        return
-      }
-
-      // Check vs GTO: Enter
-      if (key === 'enter' && selectedHandData && userAction && !actionFeedback) {
+      // Check vs GTO: Enter / Space (preflop only)
+      if ((key === 'enter' || key === ' ') && mode === 'preflop' && selectedHandData && userAction && !actionFeedback) {
         e.preventDefault()
         handleCheckAction()
         return
@@ -665,11 +646,18 @@ export default function StudyPage() {
         return
       }
 
-      // Action hotkeys: a/s/d/f (only when hand selected and no feedback)
-      if (ACTION_HOTKEYS[key] && selectedHandData && !actionFeedback) {
+      // Preflop action hotkeys: 1=Fold, 2=Raise, 3=Allin, 4=Call (only when hand selected and no feedback)
+      if (PREFOP_ACTION_HOTKEYS[key] && mode === 'preflop' && selectedHandData && !actionFeedback) {
         e.preventDefault()
-        setUserAction(ACTION_HOTKEYS[key])
-        showToast(`${ACTION_HOTKEYS[key].replace('_', ' ').toUpperCase()}`)
+        setUserAction(PREFOP_ACTION_HOTKEYS[key])
+        showToast(PREFOP_ACTION_HOTKEYS[key].toUpperCase())
+        return
+      }
+
+      // ? key: toggle hotkeys overlay
+      if (key === '?' || key === '/') {
+        e.preventDefault()
+        setShowHotkeys(prev => !prev)
         return
       }
 
@@ -683,7 +671,7 @@ export default function StudyPage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [mode, boardStreet, boardCards.length, selectedCell, selectedHandData, userAction, actionFeedback, activeTab, activePosition, handleCheckAction, handleGenerateFlop, handleAdvanceStreet, handleResetBoard, handleRandomSpot])
+  }, [mode, boardStreet, boardCards.length, selectedCell, selectedHandData, userAction, actionFeedback, activeTab, activePosition, handleCheckAction, handleGenerateFlop, handleAdvanceStreet, handleResetBoard])
 
   // Close hotkey help popup on outside click
   useEffect(() => {
@@ -998,6 +986,47 @@ export default function StudyPage() {
             New Session
           </button>
         )}
+        <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 4 }} data-hotkeys-popup>
+          <button onClick={() => setShowHotkeys(!showHotkeys)}
+            aria-label={showHotkeys ? 'Hide keyboard shortcuts' : 'Show keyboard shortcuts'}
+            aria-expanded={showHotkeys}
+            style={{
+              background: showHotkeys ? '#1a3a2b' : '#161616',
+              border: '1px solid #262626',
+              color: showHotkeys ? GREEN : '#666',
+              width: 22, height: 22, borderRadius: 4,
+              fontSize: 11, fontWeight: 700, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>?</button>
+          {showHotkeys && (
+            <div style={{
+              position: 'absolute', right: 0, top: 28,
+              background: '#1C1C1C', border: '1px solid #262626',
+              borderRadius: 8, padding: '10px 12px',
+              fontSize: 10, color: '#aaa',
+              zIndex: 100, minWidth: 180,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
+            }}>
+              <div style={{ fontWeight: 600, color: '#ccc', marginBottom: 6, fontSize: 11 }}>Keyboard Shortcuts</div>
+              {[
+                ['1-4', 'Preflop: Fold/Raise/Allin/Call'],
+                ['1-6', 'Postflop: Check/Bet/Fold/Call/Raise/Allin'],
+                ['Enter / Space', 'Check vs GTO'],
+                ['↑↓←→', 'Navigate matrix'],
+                ['Tab', 'Cycle tabs'],
+                ['F', 'Deal flop / next street'],
+                ['R', 'Reset board'],
+                ['Esc', 'Deselect / close'],
+                ['?', 'Toggle shortcuts'],
+              ].map(([key, desc]) => (
+                <div key={key} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+                  <span style={{ color: '#7CFC7C', fontFamily: 'monospace', fontSize: 10 }}>{key}</span>
+                  <span style={{ color: '#888' }}>{desc}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Stats Detail Panel */}
@@ -1136,47 +1165,6 @@ export default function StudyPage() {
           }}>
           🎲 Random
         </button>
-        <div style={{ marginLeft: 'auto', position: 'relative', alignSelf: 'center', display: 'flex', alignItems: 'center' }} data-hotkeys-popup>
-          <button onClick={() => setShowHotkeys(!showHotkeys)}
-            aria-label={showHotkeys ? 'Hide keyboard shortcuts' : 'Show keyboard shortcuts'}
-            aria-expanded={showHotkeys}
-            style={{
-              background: showHotkeys ? '#1a3a2b' : '#161616',
-              border: '1px solid #262626',
-              color: showHotkeys ? GREEN : '#666',
-              width: 22, height: 22, borderRadius: 4,
-              fontSize: 11, fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>?</button>
-          {showHotkeys && (
-            <div style={{
-              position: 'absolute', right: 0, top: 28,
-              background: '#1C1C1C', border: '1px solid #262626',
-              borderRadius: 8, padding: '10px 12px',
-              fontSize: 10, color: '#aaa',
-              zIndex: 100, minWidth: 180,
-              boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
-            }}>
-              <div style={{ fontWeight: 600, color: '#ccc', marginBottom: 6, fontSize: 11 }}>Keyboard Shortcuts</div>
-              {[
-                ['1-6', 'Position'],
-                ['Tab', 'Cycle tabs'],
-                ['F', 'Deal flop/next street'],
-                ['R', 'Reset board'],
-                ['Space', 'Random spot'],
-                ['A / S / D / F', 'All-in / Fold / Call / Raise'],
-                ['↑↓←→', 'Navigate matrix'],
-                ['Enter', 'Check vs GTO'],
-                ['Esc', 'Deselect / close'],
-              ].map(([key, desc]) => (
-                <div key={key} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                  <span style={{ color: '#7CFC7C', fontFamily: 'monospace', fontSize: 10 }}>{key}</span>
-                  <span style={{ color: '#888' }}>{desc}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
 
       {/* Action Prompt Header Row — per-position GTO recommendation */}

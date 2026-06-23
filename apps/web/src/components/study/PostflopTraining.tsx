@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 // ── Colours ──────────────────────────────────────────────
 const RED = '#D32F2F'
@@ -382,6 +382,55 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
       fetchStrategy()
     }
   }
+
+  // Postflop hotkey handler: 1-6 for action types
+  useEffect(() => {
+    const POSTFLOP_KEY_MAP: Record<string, string> = {
+      '1': 'check',
+      '2': 'bet',
+      '3': 'fold',
+      '4': 'call',
+      '5': 'raise',
+      '6': 'all_in',
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+
+      const key = e.key.toLowerCase()
+      const actionType = POSTFLOP_KEY_MAP[key]
+      if (!actionType) return
+
+      // Don't fire if already selected something or loading
+      if (userChoice) return
+      if (loading) return
+
+      e.preventDefault()
+
+      // Find the first button matching this action type
+      const buttons = [
+        { action: 'check', label: 'CHECK' },
+        { action: 'bet:0.33', label: 'BET 33%' },
+        { action: 'bet:0.5', label: 'BET 50%' },
+        { action: 'bet:0.75', label: 'BET 75%' },
+        { action: 'bet:1.25', label: 'BET 125%' },
+        { action: 'fold', label: 'FOLD' },
+        { action: 'call', label: 'CALL' },
+        { action: 'raise:0.5', label: 'RAISE 50%' },
+        { action: 'raise:1.0', label: 'RAISE 100%' },
+        { action: 'all_in', label: `ALL IN ${stackDepth.toFixed(1)}` },
+      ]
+
+      const btn = buttons.find(b => getActionKey(b.action) === actionType)
+      if (btn) {
+        handleAction(btn.action)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [userChoice, loading, strategy, handleAction, stackDepth])
 
   const advanceToNextStreet = () => {
     if (isLastStreet) return
