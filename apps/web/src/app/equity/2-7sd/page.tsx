@@ -194,35 +194,19 @@ interface EquityResult {
 function calculateEquity(
   hand1: Card[],
   hand2: Card[],
-  samples: number
+  _samples: number
 ): EquityResult {
-  const deck = buildDeck([...hand1, ...hand2]);
-  let wins1 = 0;
-  let wins2 = 0;
-  let ties = 0;
-
-  for (let i = 0; i < samples; i++) {
-    const shuffled = shuffle(deck);
-    // In single draw, each player gets 5 cards, draws once (no board in draw poker)
-    const draw1 = shuffled.slice(0, 5);
-    const draw2 = shuffled.slice(5, 10);
-
-    const rank1 = evaluateHand(draw1);
-    const rank2 = evaluateHand(draw2);
-    const cmp = compareHands(rank1, rank2);
-
-    if (cmp < 0) wins1++;
-    else if (cmp > 0) wins2++;
-    else ties++;
-  }
+  const rank1 = evaluateHand(hand1);
+  const rank2 = evaluateHand(hand2);
+  const cmp = compareHands(rank1, rank2);
 
   return {
-    equity1: (wins1 / samples) * 100,
-    equity2: (wins2 / samples) * 100,
-    ties: (ties / samples) * 100,
-    samples,
-    hand1Name: CATEGORY_NAMES[evaluateHand(hand1).category],
-    hand2Name: CATEGORY_NAMES[evaluateHand(hand2).category],
+    equity1: cmp < 0 ? 100 : 0,
+    equity2: cmp > 0 ? 100 : 0,
+    ties: cmp === 0 ? 100 : 0,
+    samples: 1,
+    hand1Name: CATEGORY_NAMES[rank1.category],
+    hand2Name: CATEGORY_NAMES[rank2.category],
   };
 }
 
