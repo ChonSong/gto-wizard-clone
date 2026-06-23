@@ -314,15 +314,15 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "fee7e61",
-  "current_task": "tbd",
+  "current_task": "fix-equity-calculator-cold-latency",
   "blocker": null,
-  "note": "ALL BACKLOG TASKS IMPLEMENTED — Verified all 33 AGENTS.md tasks: study-oop-ev-real-values (real solver OOP EV, not Math.random), fix-spots-page-nan-values (NaN filtering in StrategyHeatmap), study-progress-persistence-backend (POST/GET API + /progress page). 393 Python tests pass. All FEATURES.yaml entries verified present. No missing spec gaps. Project backlog exhausted — waiting for Coach to generate next batch.",
+  "note": "Coach review cycle 2026-06-23T22:45: All 36 completed tasks verified. FEATURES.yaml 105/105 present. Tests 368 passed. Build clean. Live site all pages 200, 0 JS errors. Solver postflop returns cached data. Postflop training flow functional. Generated 3 new tasks from backlog health check: fix-equity-calculator-cold-latency, seed-leaderboard-demo-data, study-page-hotkey-implementation.",
   "coach_review": {
-    "last_reviewed_sha": "854fc15",
-    "last_reviewed_at": "2026-06-23T22:06:00Z",
+    "last_reviewed_sha": "fdb9463",
+    "last_reviewed_at": "2026-06-23T22:45:00Z",
     "verdict": "approved",
-    "notes": "Reviewed preflop-hand-matrix-blue-call-color (854fc15): Blue cells verified \u2014 84 call-primary cells show rgb(58,110,165)=#3A6EA5 via JS inspection at BB 100bb. Raise cells remain red (rgb(229,57,53)), fold cells gray (rgb(42,42,42)). Legend shows blue=Call dot alongside red=Raise and gray=Fold. Text contrast readable (white on blue). 0 JS console errors after full interaction (position switching, stack depth changes). Python tests: 393 passed, 38 skipped. Security: no new deps/endpoints. YAGNI: clean (5 insertions, 3 deletions, single file). Perf: N/A (no DB/frontend loops). Finding: Legend functional but minimal (inline color dots). Board card removal is a backend/solver concern, not tested in this frontend-only commit. Consecutive-APPROVE: verified across 10+ prior reviews \u2014 all criteria met, no regressions, no test gaps, no security concerns.",
-    "last_review": "2026-06-23T22:06:00Z",
+    "notes": "Coach review cycle 2026-06-23T22:45. HEAD fdb9463 is checkpoint commit (no player code). Stalled loop: current_task=tbd, all 36 entries coach-approved. Executed backlog health check: 105/105 FEATURES.yaml present, 0 spec gaps. Live site QA: browser_navigated to /, /study, /practice, /spots, /progress, /push-fold, /range-explorer, /leaderboard, /equity — all 200 with 0 JS console errors. Postflop training flow tested: Get GTO Strategy returns 6 actions from cached source, action buttons render with GTO frequency chips, street breadcrumb advances. Tests: 368 passed. Build: npm run build clean (30+ routes). Docker: all 3 containers running. Issues found: (1) equity calculator cold-start ~5s — missing async offload, (2) leaderboard shows 'No leaderboard data yet' — no seed data, (3) study page hotkey overlay exists but keyboard handlers untested. Generated 3 new tasks.",
+    "last_review": "2026-06-23T22:45:00Z",
     "status": "approved"
   }
 }
