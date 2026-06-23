@@ -191,7 +191,7 @@ function StreetBreadcrumb({
   )]
 
   return (
-    <div style={{
+    <div role="navigation" aria-label="Street progression" style={{
       display: 'flex', alignItems: 'center', gap: 4,
       marginBottom: 12, flexWrap: 'wrap',
     }}>
@@ -419,6 +419,8 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
       {/* Configure Spot Button & Panel */}
       <div style={{ marginBottom: 12, flexShrink: 0 }}>
         <button onClick={() => setConfigOpen(!configOpen)}
+          aria-expanded={configOpen}
+          aria-label={configOpen ? 'Close configure spot panel' : 'Open configure spot panel'}
           style={{
             background: configOpen ? '#1a3a2b' : '#161616',
             border: configOpen ? `1px solid ${GREEN}` : '1px solid #262626',
@@ -476,6 +478,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                   Active Position
                 </label>
                 <select value={activePosition} onChange={(e) => setActivePosition(e.target.value)}
+                  aria-label="Active position"
                   style={{
                     background: '#151515', border: `1px solid ${BORDER}`, borderRadius: 6,
                     color: TEXT_BRIGHT, padding: '6px 8px', fontSize: 12, width: '100%',
@@ -500,6 +503,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                   setStrategy(null)
                   setError(null)
                 }}
+                  aria-label="Board cards"
                   placeholder="KsKc3s5h9d"
                   style={{
                     background: '#151515', border: `1px solid ${BORDER}`, borderRadius: 6,
@@ -523,6 +527,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                   setStrategy(null)
                 }}
                   min={0} step={0.1}
+                  aria-label="Pot size in big blinds"
                   style={{
                     background: '#151515', border: `1px solid ${BORDER}`, borderRadius: 6,
                     color: TEXT_BRIGHT, padding: '6px 8px', fontSize: 12, width: '100%',
@@ -542,6 +547,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                   setStrategy(null)
                 }}
                   min={0} step={5}
+                  aria-label="Stack depth in big blinds"
                   style={{
                     background: '#151515', border: `1px solid ${BORDER}`, borderRadius: 6,
                     color: TEXT_BRIGHT, padding: '6px 8px', fontSize: 12, width: '100%',
@@ -572,6 +578,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                   setStreetActions([null, null, null])
                   setStrategy(null)
                 }}
+                  aria-label="Hero cards (optional)"
                   placeholder="e.g. AhKh"
                   style={{
                     background: '#151515', border: `1px solid ${BORDER}`, borderRadius: 6,
@@ -639,7 +646,8 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
           </div>
 
           {/* Refresh strategy */}
-          <button onClick={fetchStrategy} disabled={loading} style={{
+          <button onClick={fetchStrategy} disabled={loading} aria-label={loading ? 'Solving' : strategy ? 'Refresh GTO strategy' : 'Get GTO strategy'}
+            style={{
             background: '#16241a', border: `1px solid ${GREEN}33`, borderRadius: 8,
             color: GREEN, padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: 'pointer',
             marginLeft: 'auto', opacity: loading ? 0.6 : 1,
@@ -706,6 +714,8 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
             return (
               <div key={btn.action} style={{ position: 'relative' }}>
                 <button onClick={() => !isDisabled && handleAction(btn.action)}
+                  aria-label={`${btn.label}${isSelected ? ', selected' : ''}${isGtoRecommended ? ', GTO recommended' : ''}`}
+                  aria-pressed={isSelected}
                   style={{
                     background: isSelected ? btn.bg : '#1a1a1a',
                     border: isSelected
@@ -817,6 +827,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                   updated[streetIndex] = null
                   setStreetActions(updated)
                 }}
+                  aria-label="Try a different action"
                   style={{
                     background: '#2a2a2a', border: '1px solid #444', borderRadius: 6,
                     color: '#ccc', padding: '6px 14px', fontSize: 11, fontWeight: 600,
@@ -828,6 +839,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                 {/* Continue to Next Street button */}
                 {!isLastStreet && (
                   <button onClick={advanceToNextStreet}
+                    aria-label={`Advance to ${streetIndex === 0 ? 'turn' : 'river'}`}
                     style={{
                       background: '#1a3a2b', border: `1px solid ${GREEN}66`, borderRadius: 6,
                       color: GREEN, padding: '6px 14px', fontSize: 11, fontWeight: 600,

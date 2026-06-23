@@ -888,6 +888,8 @@ export default function StudyPage() {
       {/* Mode Toggle — fixed height */}
       <div className="study-mode-toggle" style={{ display: 'flex', gap: 8, padding: '6px 12px', borderBottom: '1px solid #141414', background: '#0E0E0E', flexShrink: 0 }}>
         <button onClick={() => setMode('preflop')}
+          aria-pressed={mode === 'preflop'}
+          aria-label="Preflop ranges mode"
           style={{
             background: mode === 'preflop' ? '#16241a' : '#161616',
             border: mode === 'preflop' ? `1px solid ${GREEN}` : '1px solid #262626',
@@ -898,6 +900,8 @@ export default function StudyPage() {
           Preflop Ranges
         </button>
         <button onClick={() => setMode('postflop')}
+          aria-pressed={mode === 'postflop'}
+          aria-label="Postflop training mode"
           style={{
             background: mode === 'postflop' ? '#16241a' : '#161616',
             border: mode === 'postflop' ? `1px solid ${GREEN}` : '1px solid #262626',
@@ -924,6 +928,7 @@ export default function StudyPage() {
         )}
         <span style={{ flex: 1 }} />
         <button onClick={() => setShowStatsPanel(p => !p)}
+          aria-label={showStatsPanel ? 'Hide stats panel' : 'Show stats panel'}
           style={{
             fontSize: 10, fontWeight: 600, color: showStatsPanel ? '#7CFC7C' : '#555',
             background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
@@ -932,6 +937,7 @@ export default function StudyPage() {
         </button>
         {studyStats.total > 0 && (
           <button onClick={() => { setStudyStats(emptyStats()); saveStats(emptyStats()) }}
+            aria-label="Reset study session stats"
             style={{
               fontSize: 10, fontWeight: 600, color: '#555',
               background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
@@ -991,6 +997,8 @@ export default function StudyPage() {
         <span style={{ color: '#999', fontSize: 11, fontWeight: 500, whiteSpace: 'nowrap' }}>Stack:</span>
         {availableDepths.map(d => (
           <button key={d.value} onClick={() => setStackDepth(d.value)}
+            aria-pressed={stackDepth === d.value}
+            aria-label={`${d.label} stack depth${stackDepth === d.value ? ', selected' : ''}`}
             style={{
               background: stackDepth === d.value ? '#16241a' : '#161616',
               border: stackDepth === d.value ? `1px solid ${GREEN}` : '1px solid #262626',
@@ -1021,6 +1029,7 @@ export default function StudyPage() {
             <div key={pos.id} onClick={() => setActivePosition(pos.id)}
               className={`hspot-card ${isActive ? 'hspotcrd_active' : 'hspotcrd_minimized'}`}
               role="button" tabIndex={0}
+              aria-label={`${pos.label} position, ${pos.stack.toFixed(1)}bb stack${isActive ? ', active' : ''}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActivePosition(pos.id) } }}
               style={{
                 cursor: 'pointer', borderRadius: 8,
@@ -1839,6 +1848,8 @@ export default function StudyPage() {
                                   prev.includes(rank) ? prev.filter(r => r !== rank) : [...prev, rank]
                                 )
                               }}
+                              aria-pressed={blockerRanks.includes(rank)}
+                              aria-label={`${rank} blocker${blockerRanks.includes(rank) ? ', active' : ''}`}
                               style={{
                                 width: 26, height: 26, borderRadius: 4,
                                 background: blockerRanks.includes(rank) ? '#00C853' : '#2a2a2a',
@@ -2069,10 +2080,10 @@ export default function StudyPage() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10 }}>
                 <thead>
                   <tr style={{ color: '#666', borderBottom: '1px solid #262626' }}>
-                    <th style={{ padding: '4px 6px', textAlign: 'left', fontWeight: 500 }}>Position</th>
-                    <th style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>Stack</th>
-                    <th style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>OOP EV</th>
-                    <th style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>Combos</th>
+                    <th scope="col" style={{ padding: '4px 6px', textAlign: 'left', fontWeight: 500 }}>Position</th>
+                    <th scope="col" style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>Stack</th>
+                    <th scope="col" style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>OOP EV</th>
+                    <th scope="col" style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 500 }}>Combos</th>
                   </tr>
                 </thead>
                 <tbody>
