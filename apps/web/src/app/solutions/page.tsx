@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 type Position = "BTN" | "SB" | "BB" | "CO" | "MP" | "UTG";
@@ -200,6 +201,7 @@ function getActionBarColor(action: string): string {
 
 export default function SolutionsPage() {
   const [solutions, setSolutions] = useState<SolutionSpot[]>([]);
+  const router = useRouter();
   const [filterPosition, setFilterPosition] = useState<Position | "all">("all");
   const [filterBoardType, setFilterBoardType] = useState<BoardType | "all">("all");
   const [filterStreet, setFilterStreet] = useState<Street | "all">("all");
@@ -749,6 +751,13 @@ export default function SolutionsPage() {
                       style={{
                       backgroundColor: "var(--green)",
                       color: "#0E0E0E",
+                    }}
+                    onClick={() => {
+                      const board = selectedSolution.board
+                      const position = selectedSolution.position
+                      const stack = selectedSolution.stack_depth
+                      const street = getStreetFromBoardType(selectedSolution.board_type)
+                      router.push(`/study?board=${board}&position=${position}&stack=${stack}&street=${street}`)
                     }}
                     >
                       Practice This Spot

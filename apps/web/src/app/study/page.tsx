@@ -439,6 +439,39 @@ export default function StudyPage() {
     return combos.slice(0, 12)
   }, [selectedCell])
 
+  // Auto-configure from URL params on mount (for cross-navigation from solutions/spots)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+
+    const pos = params.get('position')
+    const stack = params.get('stack')
+    const board = params.get('board')
+    const street = params.get('street')
+
+    if (pos && ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'].includes(pos)) {
+      setActivePosition(pos)
+    }
+
+    if (stack) {
+      const s = parseFloat(stack)
+      if (!isNaN(s) && s >= 10 && s <= 500) setStackDepth(Math.round(s))
+    }
+
+    if (board) {
+      const parsed = parseBoardString(board)
+      if (parsed.length >= 3) {
+        setBoardCards(parsed)
+        setMode('postflop')
+        if (street && ['preflop', 'flop', 'turn', 'river'].includes(street)) {
+          setBoardStreet(street as 'preflop' | 'flop' | 'turn' | 'river')
+        } else {
+          setBoardStreet('flop')
+        }
+      }
+    }
+  }, [])
+
   // Reset user selection when hand changes
   useEffect(() => {
     setUserAction(null)

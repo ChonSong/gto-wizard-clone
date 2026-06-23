@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { gtoTheme } from "@/styles/gto-tokens";
 import { StrategyCard } from "@/components/ui/StrategyCard";
@@ -39,6 +40,7 @@ const API_BASE = "/api/v1";
 
 export default function SpotsPage() {
   const [spots, setSpots] = useState<CommunitySpot[]>([]);
+  const router = useRouter();
   const [filterPosition, setFilterPosition] = useState<Position | "all">("all");
   const [filterBoardType, setFilterBoardType] = useState<BoardType | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -402,7 +404,18 @@ export default function SpotsPage() {
                 </div>
 
                 <div className="flex gap-3">
-                  <button className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                  <button
+                    className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                    onClick={() => {
+                      if (!selectedSpot) return
+                      const board = selectedSpot.board
+                      const position = selectedSpot.position
+                      const stack = selectedSpot.stack_depth
+                      const bt = selectedSpot.board_type ? selectedSpot.board_type.toLowerCase() : 'flop'
+                      const street = bt === 'turn' ? 'turn' : bt === 'river' ? 'river' : bt === 'preflop' ? 'preflop' : 'flop'
+                      router.push(`/study?board=${board}&position=${position}&stack=${stack}&street=${street}`)
+                    }}
+                  >
                     Practice This Spot
                   </button>
                   <button className="py-2 px-4 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 transition-colors border border-gray-700">
