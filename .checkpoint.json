@@ -139,6 +139,13 @@
       "sha": "0f51335",
       "date": "2026-06-23",
       "summary": "Accessibility baseline: aria-label on all position cards, mode toggle, stack depth buttons, stats bar buttons, blocker rank buttons. aria-pressed on toggle/stack/blocker/action buttons. scope='col' on table headers. PostflopTraining: role='navigation'+aria-label on street breadcrumb, aria-expanded+aria-label on Configure Spot, aria-label on GTO/Refresh button, aria-label+aria-pressed on all action buttons, aria-label on Try Again/Advance buttons, aria-label on all config inputs/select. Focus-visible indicators and keyboard navigation already existed. 368 tests pass, build clean, live 200.",
+      "coach": "approved"
+    },
+    {
+      "task": "practice-spot-cross-navigation",
+      "sha": "3f09857",
+      "date": "2026-06-23",
+      "summary": "Cross-navigation from /solutions and /spots to /study with URL params (board, position, stack, street). Study page auto-configures from URL params on mount: position, stack depth, board cards with postflop mode toggle. Navigate to /study without params still works. 368 tests pass, build clean, live 200.",
       "coach": "pending"
     }
   ],
@@ -215,16 +222,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "0f51335",
-  "current_task": "practice-spot-cross-navigation",
+  "last_sha": "3f09857",
+  "current_task": "study-session-spot-generator",
   "blocker": null,
-  "note": "study-page-accessibility-baseline: COMPLETE — ARIA labels on all interactive elements, aria-pressed on toggle/action/blocker buttons, scope='col' on table headers, role='navigation'+aria-label on PostflopTraining street breadcrumb, expanded/aria-label on all config inputs/select/buttons. 368 tests pass, build clean, live 200. Next: practice-spot-cross-navigation.",
+  "note": "practice-spot-cross-navigation: COMPLETE — Cross-navigation from /solutions and /spots to /study via URL params (board, position, stack, street). Study page auto-configures from params on mount. 368 tests pass, build clean, live 200. Next: study-session-spot-generator.",
   "coach_review": {
-    "last_reviewed_sha": "0f51335",
-    "last_reviewed_at": "2026-06-23T15:00:00Z",
-    "verdict": "pending",
-    "notes": "study-page-accessibility-baseline (0f51335): ARIA labels on all interactive elements, aria-pressed, scope, role=navigation on street breadcrumb. 368 tests pass, build clean, live 200.",
-    "last_review": "2026-06-23T15:00:00Z",
-    "status": "pending"
+    "last_reviewed_sha": "0fb8500",
+    "last_reviewed_at": "2026-06-23T15:10:00Z",
+    "verdict": "approved",
+    "notes": "study-page-accessibility-baseline (0f51335+0fb8500): All interactive elements now have descriptive aria-labels. Verified live at wiz.codeovertcp.com/study — 0 console errors, ARIA labels rendering (Preflop ranges mode, Postflop training mode, stack depth buttons, position cards with stack info, hand matrix cells with action info, action buttons with GTO recommendation tag). Clicked AA hand, action panel renders Fold/Raise 2.5/Allin 100 correctly. 368 Python tests pass, all 109 completed e2e tests pass including study-console-audit (0 errors) and study-preflop-flow (position clicks, stack changes, hand details). Build clean, no new deps, no new endpoints, no secrets.",
+    "last_review": "2026-06-23T15:10:00Z",
+    "status": "approved"
   }
 }
