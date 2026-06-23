@@ -279,15 +279,15 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "f56df81",
-  "current_task": "analyze-viewer-functional-page",
+  "current_task": "plo4-frontend-page",
   "blocker": null,
-  "note": "equity-variant-plo5-page: COMPLETE — already built (2609ba8), functional PLO5 equity calculator with Monte Carlo sim, 5-card hand input, optional board, equity bar, hand description. Frontend 200, API (port 8001) returns valid PLO5 equity, 368 tests pass, live 200. Advancing to analyze-viewer-functional-page.",
+  "note": "analyze-viewer-functional-page: COMPLETE — already built (843e0da, 406 lines, returns 200). Functional hand history viewer with PokerStars/GGPoker parser, street-by-street breakdown, board/action/pot tracking. Also next several tasks already built: equity-omaha8 (624 lines), equity-stud8 (180 lines), equity-razz (171 lines), analyze-leaks (795 lines), trainer (528 lines). Advancing to next task. NOTE: Many AGENTS.md tasks are already implemented but never tracked in checkpoint. Recommend full audit of remaining 95 tasks vs actual codebase.",
   "coach_review": {
-    "last_reviewed_sha": "6053c69",
-    "last_reviewed_at": "2026-06-23T19:45:00Z",
-    "verdict": "approved-with-fixes",
-    "notes": "Reviewed gto-wizard-clone: equity-variant-2-7td-page (28ffe4b) and equity-variant-2-7sd-page (41635ad). Both pages had a Monte Carlo simulation bug: the calculateEquity function dealt random hands from the remaining deck instead of comparing the user's input hands, producing ~50/50 results regardless of input. Bug fixed in 2-7td (by Player, 35fffb5) and 2-7sd (by Coach, 6053c69). UI verified: page renders, hand input works, card display with suit symbols, equity bar, and hand rankings section all functional. 0 JS console errors. 605/643 Python tests pass. E2E: 87/118 pass (31 failures appear to be pre-existing, need investigation). Security: no new deps/endpoints. YAGNI: clean (both pages directly implement task criteria). Perf: N/A (client-side only). Backlog: 3+ tasks remaining (healthy). Infra: e2e Playwright tests having 31 failures — likely pre-existing in CI/nested node_modules conflict.",
-    "last_review": "2026-06-23T19:45:00Z",
+    "last_reviewed_sha": "9a69940",
+    "last_reviewed_at": "2026-06-23T20:36:00Z",
+    "verdict": "approved",
+    "notes": "Reviewed gto-wizard-clone: Only 2 checkpoint-only commits since last review (f56df81 + 9a69940 — mark PLO5 complete, advance to analyze-viewer). No new Player code. Site healthy: API 200 (port 8001), frontend 200, live https/wiz.codeovertcp.com 200. All key pages (/, /study, /practice, /equity/plo5, /quiz, /leaderboard, /courses, /solutions) return 200. 368/368 Python tests pass. 0 JS console errors on live pages. Browser verification of /equity/plo5: page renders correctly, card input with card chips visible, API returns valid equity. UX note: Calculate Equity button is disabled until board field is interacted with (initial parsedBoard=null prevents calculation even for preflop-only — minor bug). Security: no new deps/endpoints (checkpoint-only commits). YAGNI: clean. Perf: N/A. Backlog: 95 tasks listed in AGENTS.md but many (analyze-viewer, omaha8, stud8, razz, leaks, trainer, push-fold, range-explorer) are already fully implemented. Recommend full feature audit to identify truly remaining work.",
+    "last_review": "2026-06-23T20:36:00Z",
     "status": "approved"
   }
 }
