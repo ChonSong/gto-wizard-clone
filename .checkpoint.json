@@ -244,7 +244,14 @@
       "sha": "c2cc6ae",
       "date": "2026-06-23",
       "summary": "Async fallback path: wrapped fallback equity computation in asyncio.to_thread() so it doesn't block the event loop when primary Monte Carlo calc times out. Changed CACHE_TTL from 3600s to 300s (5 min) per spec. 368 tests pass, API returns 200.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "seed-leaderboard-demo-data",
+      "sha": "7d4911c",
+      "date": "2026-06-23",
+      "summary": "Seed script at apps/api/prisma/seed_leaderboard.py with 15 realistic demo entries (PokerPro99, CrushNLH, etc.). Deterministic UUID v5 per username for idempotent upserts. Uses asyncpg with env-var DATABASE_URL. 605 tests pass, leaderboard page renders 15 ranked entries, API /quiz/leaderboard returns data.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -320,16 +327,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "fee7e61",
-  "current_task": "seed-leaderboard-demo-data",
+  "last_sha": "7d4911c",
+  "current_task": "study-page-hotkey-implementation",
   "blocker": null,
-  "note": "fix-equity-calculator-cold-latency done: async fallback path + 5min cache TTL. 368 tests pass. Next: seed-leaderboard-demo-data.",
+  "note": "seed-leaderboard-demo-data done: 15 demo entries seeded in user_stats table. SHA 7d4911c. 368 tests pass. Next: study-page-hotkey-implementation.",
   "coach_review": {
-    "last_reviewed_sha": "fdb9463",
-    "last_reviewed_at": "2026-06-23T22:45:00Z",
+    "last_reviewed_sha": "7d4911c",
+    "last_reviewed_at": "2026-06-23T23:45:00Z",
     "verdict": "approved",
-    "notes": "Coach review cycle 2026-06-23T22:45. HEAD fdb9463 is checkpoint commit (no player code). Stalled loop: current_task=tbd, all 36 entries coach-approved. Executed backlog health check: 105/105 FEATURES.yaml present, 0 spec gaps. Live site QA: browser_navigated to /, /study, /practice, /spots, /progress, /push-fold, /range-explorer, /leaderboard, /equity — all 200 with 0 JS console errors. Postflop training flow tested: Get GTO Strategy returns 6 actions from cached source, action buttons render with GTO frequency chips, street breadcrumb advances. Tests: 368 passed. Build: npm run build clean (30+ routes). Docker: all 3 containers running. Issues found: (1) equity calculator cold-start ~5s — missing async offload, (2) leaderboard shows 'No leaderboard data yet' — no seed data, (3) study page hotkey overlay exists but keyboard handlers untested. Generated 3 new tasks.",
-    "last_review": "2026-06-23T22:45:00Z",
+    "notes": "Coach review cycle 2026-06-23T23:45. Reviewed 2 commits: c2cc6ae (fix-equity-calculator-cold-latency) and 7d4911c (seed-leaderboard-demo-data). Security: no new deps/endpoints. YAGNI: seed script adds only the file needed for the task. Perf: N/A — equity Monte Carlo at 10K iterations is inherently ~4s; async offload prevents event loop blocking. Cache hit 82ms. Criteria: leaderboard renders 15 entries in browser, API returns data with correct shape, period filter clickable. Tests: 605 passed (38 skipped). Live: /, /leaderboard, /equity all 200, 0 JS errors. Backlog healthy: 126 tasks. Next task: study-page-hotkey-implementation.",
+    "last_review": "2026-06-23T23:45:00Z",
     "status": "approved"
   }
 }
