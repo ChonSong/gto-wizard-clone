@@ -125,7 +125,7 @@ test.describe("Postflop Training: Full Cycle Workflow", () => {
     await expect(page.locator("text=GTO Strategy Breakdown")).toBeVisible();
 
     // Card count should be >= 4 for turn (3 flop + 1 turn)
-    const turnCardCount = await page.locator('div[style*="width: 48px"]').count();
+    const turnCardCount = await page.locator('div[style*="width: 40px"]').count();
     expect(turnCardCount).toBeGreaterThanOrEqual(4);
 
     // ── Step 7 (Turn): Select action ────────────────────────
@@ -151,7 +151,7 @@ test.describe("Postflop Training: Full Cycle Workflow", () => {
     await expect(page.locator("text=river").first()).toBeVisible();
 
     // Card count should be >= 5 for river
-    const riverCardCount = await page.locator('div[style*="width: 48px"]').count();
+    const riverCardCount = await page.locator('div[style*="width: 40px"]').count();
     expect(riverCardCount).toBeGreaterThanOrEqual(5);
 
     // ── Step 9 (River): Final action + hand complete ────────

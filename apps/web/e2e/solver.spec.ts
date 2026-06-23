@@ -243,8 +243,8 @@ test.describe("Solver Integration: Postflop Training", () => {
     await expect(turnLabel).toBeVisible();
 
     // The board should now show at least 3 community cards
-    // Cards are rendered as CardDisplay components (div with width:48 containing rank + suit)
-    const cardDisplays = page.locator('div[style*="width: 48px"]');
+    // Cards are rendered as CardDisplay components (div with width:40 containing rank + suit)
+    const cardDisplays = page.locator('div[style*="width: 40px"]');
     const cardCount = await cardDisplays.count();
     expect(cardCount).toBeGreaterThanOrEqual(3);
 

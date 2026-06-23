@@ -834,7 +834,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                       cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
                     }}>
                     <span>▶</span>
-                    Continue to {streetIndex === 0 ? 'Turn' : 'River'}
+                    Advance to {streetIndex === 0 ? 'Turn' : 'River'}
                   </button>
                 )}
               </div>
