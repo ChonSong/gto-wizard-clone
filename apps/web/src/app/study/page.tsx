@@ -331,12 +331,14 @@ export default function StudyPage() {
     if (isSolverMode) {
       const data = rangeData.get(hand)
       if (!data || data.action === 'fold') return GRAY
-      return ACTION_COLORS[data.action] || RED
+      // Normalize action key: 'raise_2.5bb' → 'raise', 'raise_3bb' → 'raise', 'call' → 'call', 'all_in' → 'all_in'
+      const actionKey = data.action.startsWith('raise') ? 'raise' : data.action
+      return ACTION_COLORS[actionKey] || RED
     }
-    // Fallback to hardcoded colors
+    // Fallback to hardcoded colors (used when solver API is unavailable)
     const redSet = new Set(['AA','AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s','AKo','KK','KQs','KJs','KTs','K9s','K8s','K7s','AQo','KQo','QQ','QJs','QTs','AJo','KJo','JJ','JTs','ATo','TT','99','98s','88','87s'])
     if (redSet.has(hand)) return RED
-    return BLUE
+    return GRAY  // Default to fold-gray instead of blue when data isn't available
   }
 
   function getCellOpacity(hand: string): number {
