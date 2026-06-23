@@ -189,6 +189,13 @@
       "date": "2026-06-23",
       "summary": "Functional 2-7 Triple Draw equity calculator with Monte Carlo simulation (1K-100K samples), two 5-card hand inputs with card validation and duplicate detection, hand evaluator with correct 2-7 ranking (lower wins, straights/flushes count against), equity bar with % display, hand category names, How 2-7 TD Works rules section. Dark design system matching other equity pages. Live and frontend return 200. 368 tests pass.",
       "coach": "pending"
+    },
+    {
+      "task": "equity-variant-2-7sd-page",
+      "sha": "41635ad",
+      "date": "2026-06-23",
+      "summary": "Functional 2-7 Single Draw equity calculator with Monte Carlo simulation (1K-100K samples), two 5-card hand inputs with card validation and duplicate detection, hand evaluator with correct 2-7 ranking (lower wins, straights/flushes count against), equity bar with % display, hand category names, How 2-7 SD Works rules section. Dark design system matching other equity pages. Already implemented in commit 41635ad. Live and frontend return 200. 368 tests pass.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -264,10 +271,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "326b4d8",
-  "current_task": "equity-variant-2-7sd-page",
+  "last_sha": "5ef4302",
+  "current_task": "equity-variant-plo5-page",
   "blocker": null,
-  "note": "equity-variant-2-7td-page: COMPLETE — already built (28ffe4b), Monte Carlo equity calculator with proper 2-7 hand evaluator, input validation, results display, dark design system. Live 200, frontend 200, 368 tests pass. Advancing to equity-variant-2-7sd-page.",
+  "note": "equity-variant-2-7sd-page: COMPLETE — already built (41635ad), Monte Carlo equity calculator with proper 2-7 SD hand evaluator, input validation, results display, dark design system. Live 200, frontend 200, 368 tests pass. Advancing to equity-variant-plo5-page.",
   "coach_review": {
     "last_reviewed_sha": "805a28d",
     "last_reviewed_at": "2026-06-23T19:12:00Z",
