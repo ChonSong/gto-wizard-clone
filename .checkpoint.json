@@ -238,6 +238,13 @@
       "date": "2026-06-23",
       "summary": "Full study progress persistence: POST /api/v1/study/progress (hand, position, stack_depth, action_chosen, action_gto, correct, user_id), GET /api/v1/study/progress?user_id= returns aggregated stats (total_hands, correct_hands, overall_accuracy, current_streak, best_streak, by_position, by_action, recent_sessions, last_week). SQLAlchemy model at models/study_progress.py. Frontend /progress page renders with overall accuracy, streaks, position/action breakdown bar charts, session history, last_week chart. 6 API tests pass. API health 200 (port 8001). Live /progress returns 200.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-equity-calculator-cold-latency",
+      "sha": "c2cc6ae",
+      "date": "2026-06-23",
+      "summary": "Async fallback path: wrapped fallback equity computation in asyncio.to_thread() so it doesn't block the event loop when primary Monte Carlo calc times out. Changed CACHE_TTL from 3600s to 300s (5 min) per spec. 368 tests pass, API returns 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -314,9 +321,9 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "fee7e61",
-  "current_task": "fix-equity-calculator-cold-latency",
+  "current_task": "seed-leaderboard-demo-data",
   "blocker": null,
-  "note": "Coach review cycle 2026-06-23T22:45: All 36 completed tasks verified. FEATURES.yaml 105/105 present. Tests 368 passed. Build clean. Live site all pages 200, 0 JS errors. Solver postflop returns cached data. Postflop training flow functional. Generated 3 new tasks from backlog health check: fix-equity-calculator-cold-latency, seed-leaderboard-demo-data, study-page-hotkey-implementation.",
+  "note": "fix-equity-calculator-cold-latency done: async fallback path + 5min cache TTL. 368 tests pass. Next: seed-leaderboard-demo-data.",
   "coach_review": {
     "last_reviewed_sha": "fdb9463",
     "last_reviewed_at": "2026-06-23T22:45:00Z",
