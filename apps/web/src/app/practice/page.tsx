@@ -10,6 +10,7 @@ const POSITIONS = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
 const EXERCISE_TYPES = ['GTO Quiz', 'Timed Drill', 'Spaced Repetition']
 
 interface Spot {
+  id: string
   category: string
   difficulty: string
   position: string
@@ -61,6 +62,7 @@ interface QuizSpot {
 
 function quizToSpot(d: QuizSpot): Spot {
   return {
+    id: d.id,
     category: d.category,
     difficulty: d.difficulty,
     position: d.position,
@@ -77,6 +79,59 @@ function quizToSpot(d: QuizSpot): Spot {
       ev: o.ev,
       is_gto: o.action === d.gto_action,
     })),
+  }
+}
+
+// ── Spaced Repetition Types & Helpers ──
+
+interface SRSpotRecord {
+  easeFactor: number
+  interval: number
+  nextReview: number
+  totalAttempts: number
+  correctAttempts: number
+  lastResponseTime: number
+}
+
+const SR_STORAGE_KEY = 'gto-wizard-sr-db'
+const SR_MAX_INTERVAL_MS = 365 * 24 * 60 * 60 * 1000
+const SR_MIN_INTERVAL_MS = 1 * 24 * 60 * 60 * 1000
+
+function loadSRDatabase(): Record<string, SRSpotRecord> {
+  try {
+    const raw = localStorage.getItem(SR_STORAGE_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch { /* ignore */ }
+  return {}
+}
+
+function saveSRDatabase(db: Record<string, SRSpotRecord>) {
+  try {
+    localStorage.setItem(SR_STORAGE_KEY, JSON.stringify(db))
+  } catch {
+    console.warn('SR: localStorage write failed')
+  }
+}
+
+function calculateSRInterval(
+  record: SRSpotRecord | null,
+  correct: boolean,
+): { easeFactor: number; interval: number; nextReview: number } {
+  const ef = record?.easeFactor ?? 2.5
+  const prevInterval = record?.interval ?? 0
+
+  if (correct) {
+    let newInterval: number
+    if (prevInterval === 0) newInterval = 1
+    else if (prevInterval === 1) newInterval = 6
+    else newInterval = Math.round(prevInterval * ef)
+
+    const newEf = Math.max(1.3, ef + 0.15)
+    const capped = Math.min(newInterval * 24 * 60 * 60 * 1000, SR_MAX_INTERVAL_MS)
+    return { easeFactor: newEf, interval: newInterval, nextReview: Date.now() + capped }
+  } else {
+    const newEf = Math.max(1.3, ef - 0.2)
+    return { easeFactor: newEf, interval: 1, nextReview: Date.now() + SR_MIN_INTERVAL_MS }
   }
 }
 
@@ -283,9 +338,13 @@ export default function PracticePage() {
   const [spotTimeLeft, setSpotTimeLeft] = useState<number | null>(null)
   const [responseTimes, setResponseTimes] = useState<number[]>([])
   const [totalScore, setTotalScore] = useState(0)
-  const [showComingSoon, setShowComingSoon] = useState(false)
   const spotStartRef = useRef(0)
   const expiryHandledRef = useRef(false)
+  // ── Spaced Repetition State ──
+  const srDbRef = useRef<Record<string, SRSpotRecord>>({})
+  const [srDb, setSrDb] = useState<Record<string, SRSpotRecord>>({})
+  const [srSeenIds, setSrSeenIds] = useState<Set<string>>(new Set())
+  const [srSpotNextReview, setSrSpotNextReview] = useState<string | null>(null)
 
   const fetchSpot = useCallback(async () => {
     setAnswered(false)
@@ -315,10 +374,6 @@ export default function PracticePage() {
   }, [category, difficulty, drillDuration, exerciseType])
 
   const startSession = () => {
-    if (exerciseType === 'Spaced Repetition') {
-      setShowComingSoon(true)
-      return
-    }
     setSessionActive(true)
     setStats({ total: 0, correct: 0, streak: 0, bestStreak: 0 })
     setHistory([])
@@ -329,6 +384,13 @@ export default function PracticePage() {
       setSpotTimeLeft(drillDuration)
     } else {
       setSpotTimeLeft(null)
+    }
+    setSrSpotNextReview(null)
+    if (exerciseType === 'Spaced Repetition') {
+      const db = loadSRDatabase()
+      srDbRef.current = db
+      setSrDb(db)
+      setSrSeenIds(new Set())
     }
     expiryHandledRef.current = false
     spotStartRef.current = Date.now()
@@ -412,6 +474,35 @@ export default function PracticePage() {
         selectedAction: actionName,
       },
     ])
+    // ── Spaced Repetition: update database ──
+    if (exerciseType === 'Spaced Repetition') {
+      const db = { ...srDbRef.current }
+      const prevRecord = db[spot.id] ?? null
+      const result = calculateSRInterval(prevRecord, isCorrect)
+      db[spot.id] = {
+        easeFactor: result.easeFactor,
+        interval: result.interval,
+        nextReview: result.nextReview,
+        totalAttempts: (prevRecord?.totalAttempts ?? 0) + 1,
+        correctAttempts: (prevRecord?.correctAttempts ?? 0) + (isCorrect ? 1 : 0),
+        lastResponseTime: responseTime,
+      }
+      srDbRef.current = db
+      setSrDb(db)
+      saveSRDatabase(db)
+      setSrSeenIds(prev => new Set(prev).add(spot.id))
+      // Format next review time
+      const nextDate = new Date(result.nextReview)
+      const isToday = nextDate.toDateString() === new Date().toDateString()
+      const isTomorrow = nextDate.getDate() === new Date().getDate() + 1
+      if (isToday) {
+        setSrSpotNextReview(`Today at ${nextDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+      } else if (isTomorrow) {
+        setSrSpotNextReview(`Tomorrow`)
+      } else {
+        setSrSpotNextReview(nextDate.toLocaleDateString([], { month: 'short', day: 'numeric' }))
+      }
+    }
   }
 
   const formatTime = (s: number) => {
@@ -468,6 +559,17 @@ export default function PracticePage() {
                     },
                     { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
                   ]
+                : exerciseType === 'Spaced Repetition'
+                ? [
+                    { label: 'Spots', value: stats.total, color: 'var(--text)' },
+                    { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
+                    {
+                      label: 'Due Now',
+                      value: Object.values(srDb).filter(r => r.nextReview <= Date.now()).length,
+                      color: 'var(--green)',
+                    },
+                    { label: 'Correct', value: `${stats.correct}/${stats.total}`, color: 'var(--green)' },
+                  ]
                 : [
                     { label: 'Spots', value: stats.total, color: 'var(--text)' },
                     { label: 'Accuracy', value: `${accuracy}%`, color: accColor },
@@ -499,6 +601,60 @@ export default function PracticePage() {
                 </div>
               </div>
             </div>
+
+            {/* SR Next Review Schedule */}
+            {exerciseType === 'Spaced Repetition' && (
+              <div
+                className="rounded-lg p-4 mb-3"
+                style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+              >
+                <h3
+                  className="text-[11px] font-bold uppercase tracking-wider mb-3"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  Next Review Schedule
+                </h3>
+                {Object.entries(srDb).length > 0 ? (
+                  <div className="space-y-1">
+                    {Object.entries(srDb)
+                      .sort(([, a], [, b]) => a.nextReview - b.nextReview)
+                      .slice(0, 8)
+                      .map(([id, record]) => {
+                        const due = record.nextReview <= Date.now()
+                        const date = new Date(record.nextReview)
+                        return (
+                          <div
+                            key={id}
+                            className="flex items-center justify-between text-xs py-1"
+                            style={{ borderBottom: '1px solid var(--border)' }}
+                          >
+                            <span style={{ color: 'var(--text)' }} className="font-mono truncate max-w-[200px]">
+                              #{id.slice(0, 8)}
+                            </span>
+                            <span
+                              style={{ color: due ? 'var(--green)' : 'var(--muted)' }}
+                              className="font-medium shrink-0"
+                            >
+                              {due
+                                ? 'Due now'
+                                : date.toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    {Object.keys(srDb).length > 8 && (
+                      <div className="text-xs text-center pt-1" style={{ color: 'var(--muted)' }}>
+                        +{Object.keys(srDb).length - 8} more
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-xs" style={{ color: 'var(--muted)' }}>
+                    No completed spots yet — keep practicing!
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Breakdowns */}
             {[
@@ -632,7 +788,7 @@ export default function PracticePage() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {EXERCISE_TYPES.map(et => (
-                    <Pill key={et} label={et} active={exerciseType === et} onClick={() => { setExerciseType(et); setShowComingSoon(false) }} />
+                    <Pill key={et} label={et} active={exerciseType === et} onClick={() => setExerciseType(et)} />
                   ))}
                 </div>
               </div>
@@ -662,18 +818,23 @@ export default function PracticePage() {
                 </div>
               )}
 
-              {/* Spaced Repetition Coming Soon */}
-              {showComingSoon && (
+              {/* Spaced Repetition Info */}
+              {exerciseType === 'Spaced Repetition' && (
                 <div
                   className="rounded-lg p-3 mb-3 text-center text-xs"
                   style={{ background: 'var(--border)', border: '1px solid var(--border-light)' }}
                 >
                   <div className="text-base mb-1">🧠</div>
                   <div className="font-semibold mb-1" style={{ color: 'var(--text)' }}>
-                    Spaced Repetition — Coming Soon
+                    Spaced Repetition
                   </div>
                   <div style={{ color: 'var(--muted)' }}>
-                    This mode will intelligently retry your weakest spots over time.
+                    {(() => {
+                      const db = loadSRDatabase()
+                      const entries = Object.keys(db).length
+                      const due = Object.values(db).filter(r => r.nextReview <= Date.now()).length
+                      return `${entries} spot${entries !== 1 ? 's' : ''} tracked · ${due} due for review`
+                    })()}
                   </div>
                 </div>
               )}
@@ -1021,6 +1182,21 @@ export default function PracticePage() {
               color={accuracy >= 60 ? 'var(--green)' : '#e09b3d'}
             />
           </div>
+
+          {/* SR Next Review info */}
+          {exerciseType === 'Spaced Repetition' && srSpotNextReview && answered && (
+            <div
+              className="rounded-lg p-2.5 mb-4 text-center text-xs"
+              style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+            >
+              <div className="text-[10px] font-medium uppercase tracking-wider mb-0.5" style={{ color: 'var(--muted)' }}>
+                Next Review
+              </div>
+              <div className="font-bold text-sm" style={{ color: 'var(--green)' }}>
+                {srSpotNextReview}
+              </div>
+            </div>
+          )}
 
           {/* Recent History */}
           {history.length > 0 && (
