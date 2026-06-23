@@ -53,6 +53,13 @@
       "sha": "0b6adeb",
       "date": "2026-06-23",
       "summary": "Verified right sidebar analysis tabs are fully implemented: Overview/Table/Equity chart main tabs, Hand/Summary/Filters/Actions/Blockers sub-tabs, aggregate action frequencies with combo counts, card removal analysis. Already committed in d980026. 368 tests pass, build clean, live 200. Advancing to next task.",
+      "coach": "approved"
+    },
+    {
+      "task": "study-spot-card-bar-with-action-prompts",
+      "sha": "83fa99a",
+      "date": "2026-06-23",
+      "summary": "Replaced flat position buttons with spot card bar: 6 horizontal scrollable position cards (UTG/HJ/CO/BTN/SB/BB), active card shows 'Take action' prompt + action buttons (Fold/Raise X/Allin Y/Call for SB/BB), minimized cards show compact view. GTO recommendation highlighted with ✓ badge. Raise sizing: 2.5bb UTG/HJ/CO/BTN, 3.5bb SB/BB. Call only for SB/BB. 368 tests pass, TS clean, build clean.",
       "coach": "pending"
     }
   ],
@@ -111,14 +118,14 @@
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Interaction spec (docs/reference-study-interaction-spec.md) describes Overview/Table/Equity chart tabs with sub-tabs (Hand, Summary, Filters, Actions, Blockers). Clone has no right sidebar.",
-      "status": "open"
+      "status": "complete"
     },
     {
       "item": "Spot card bar with action prompts on /study",
       "type": "visual_mismatch",
       "priority": 1,
       "evidence": "Interaction spec describes horizontal scrollable position cards with action prompts. Clone has flat position buttons with no card layout or action prompt text.",
-      "status": "open"
+      "status": "complete"
     },
     {
       "item": "Spaced Repetition mode on /practice",
@@ -129,16 +136,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "0b6adeb",
-  "current_task": "study-spot-card-bar-with-action-prompts",
+  "last_sha": "83fa99a",
+  "current_task": "practice-spaced-repetition-mode",
   "blocker": null,
-  "note": "Backlog replenished: 3 new tasks. study-right-sidebar-analysis-tabs (1st), study-spot-card-bar-with-action-prompts (2nd), practice-spaced-repetition-mode (3rd).",
+  "note": "study-spot-card-bar-with-action-prompts complete. Position buttons replaced with GTO Wizard style spot cards with action prompts and GTO highlights. Next: practice-spaced-repetition-mode.",
   "coach_review": {
-    "last_reviewed_sha": "0bebc60",
-    "last_reviewed_at": "2026-06-23T22:30:00Z",
+    "last_reviewed_sha": "83fa99a",
+    "last_reviewed_at": "2026-06-23T23:05:00Z",
     "verdict": "approved",
-    "notes": "practice-timed-drill-mode: APPROVED. All 5 success criteria met. Browser QA confirms: (1) Timed Drill mode starts with visible ⏱️ countdown, (2) auto-advance on expiry implemented via useEffect + expiryHandledRef, (3) session summary shows Score (402 for 3/3 fast answers = 300 base + ~102 speed bonus), Avg Time (9.8s), Accuracy (100%), (4) Spaced Repetition shows 'coming soon' notice with 🧠 emoji, (5) 0 console errors across all interactions. 368 poker-core tests pass, TypeScript compiles clean. Security: NO secrets in feature commit, NO new deps, NO new endpoints. Scope: clean — 1 file (practice/page.tsx), all changes directly required. Perf: N/A — frontend-only state management, no DB queries. Generating 3 new backlog tasks from spec gap analysis: right sidebar tabs, spot card bar, spaced repetition.",
-    "last_review": "2026-06-23T22:30:00Z",
+    "notes": "study-right-sidebar-analysis-tabs: APPROVED. All 5 success criteria met: (1) Right sidebar renders with Overview/Table/Equity chart main tabs, (2) Clicking each tab switches content (verified via DOM), (3) Actions sub-tab shows 'Fold 10.8% (143.0 combos)' and 'Raise 2.5 1.5% (19.8 combos)' — aggregate frequencies with combo counts, (4) Blockers sub-tab has full combo counting engine with per-class breakdown and blocking effect analysis (preflop shows placeholder only because no board cards exist), (5) 0 console errors across all interactions. Build clean, 368 tests pass, live 200. Feature was already implemented in d980026 — player correctly verified pre-existing work rather than rebuilding.",
+    "last_review": "2026-06-23T23:05:00Z",
     "status": "approved"
   }
 }

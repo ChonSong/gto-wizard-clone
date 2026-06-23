@@ -684,17 +684,13 @@ export default function StudyPage() {
             font-size: 6px !important;
             letter-spacing: -0.5px !important;
           }
-          .study-position-bar {
-            gap: 4px !important;
-            padding: 4px 4px 2px !important;
+          .study-spot-card-bar {
+            gap: 3px !important;
+            padding: 3px 4px !important;
+            min-height: 44px !important;
           }
-          .study-position-btn {
-            min-width: 56px !important;
-            padding: 4px 8px !important;
+          .study-spot-card-bar .hspotcrd_title {
             font-size: 10px !important;
-          }
-          .study-position-btn-stack {
-            font-size: 8px !important;
           }
           .study-action-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -729,12 +725,11 @@ export default function StudyPage() {
           .study-matrix-cell-freq {
             display: none !important;
           }
-          .study-position-btn-label {
-            font-size: 11px !important;
+          .study-spot-card-bar {
+            min-height: 38px !important;
           }
-          .study-position-btn-stack {
+          .study-spot-card-bar .hspotcrd_title {
             font-size: 9px !important;
-            color: #999 !important;
           }
         }
         /* Accessibility: visible focus indicators */
@@ -953,41 +948,79 @@ export default function StudyPage() {
           </button>
         ))}
       </div>
-      {/* Position Bar — compact */}
-      <div className="study-position-bar" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px 4px', overflowX: 'auto', background: '#0E0E0E', borderBottom: '1px solid #141414', flexShrink: 0 }}>
-        <div style={{ background: '#1A1A1A', border: '1px solid #2a2a2a', color: '#d0d0d0', padding: '4px 8px', borderRadius: 6, fontSize: 11, display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
-          {loading ? <span style={{ color: GREEN }}>●</span> : error ? <span style={{ color: RED }}>●</span> : <span style={{ color: GREEN }}>●</span>}
-          {loading ? 'Solving...' : error ? 'Offline' : 'GTO'}
+      {/* Spot Card Bar — position cards with action prompts */}
+      <div className="study-spot-card-bar" style={{ display: 'flex', alignItems: 'stretch', gap: 4, padding: '4px 12px', overflowX: 'auto', overflowY: 'hidden', background: '#0E0E0E', borderBottom: '1px solid #141414', flexShrink: 0, minHeight: 50 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingRight: 6, flexShrink: 0 }}>
+          <div style={{ background: '#1A1A1A', border: '1px solid #2a2a2a', color: '#d0d0d0', padding: '4px 6px', borderRadius: 6, fontSize: 10, display: 'flex', alignItems: 'center', gap: 3, whiteSpace: 'nowrap' }}>
+            {loading ? <span style={{ color: GREEN }}>●</span> : error ? <span style={{ color: RED }}>●</span> : <span style={{ color: GREEN }}>●</span>}
+            {loading ? 'Solving...' : error ? 'Offline' : 'GTO'}
+          </div>
         </div>
-        {positions.map((pos, idx) => {
+        {positions.map((pos) => {
           const isActive = activePosition === pos.id
+          const posActions = POSITION_ACTIONS[pos.id] || []
+          // Determine the most frequent GTO action base for highlighting
+          const gtoActionBase = Object.entries(actionSummary)
+            .sort(([,a],[,b]) => b.totalFreq - a.totalFreq)
+            .map(([action]) => action)[0] || null
           return (
-            <button className="study-position-btn" key={pos.id} onClick={() => setActivePosition(pos.id)}
+            <div key={pos.id} onClick={() => setActivePosition(pos.id)}
+              className={`hspot-card ${isActive ? 'hspotcrd_active' : 'hspotcrd_minimized'}`}
+              role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActivePosition(pos.id) } }}
               style={{
-                background: isActive ? '#00C853' : '#2A2A2A',
-                border: isActive ? '2px solid #00C853' : '1px solid #3a3a3a',
-                color: '#fff',
-                padding: '6px 14px', borderRadius: 8, fontSize: 12, whiteSpace: 'nowrap', cursor: 'pointer',
-                textAlign: 'center', minWidth: 72, lineHeight: 1.3,
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-                boxShadow: isActive ? '0 0 12px rgba(0,200,83,0.35)' : 'none',
+                cursor: 'pointer', borderRadius: 8,
+                background: isActive ? '#1A2A1A' : '#161616',
+                border: isActive ? `1px solid ${GREEN}` : '1px solid #222',
+                display: 'flex', flexDirection: 'column',
+                flexShrink: 0,
+                minWidth: isActive ? 128 : 56,
+                padding: isActive ? '4px 6px 6px' : '5px 8px',
                 transition: 'all 0.15s ease',
               }}>
-              <span className="study-position-btn-label" style={{ fontWeight: 700, fontSize: 13, letterSpacing: '0.02em' }}>{pos.label}</span>
-              <span className="study-position-btn-stack" style={{ fontSize: 10, color: isActive ? 'rgba(255,255,255,0.85)' : '#bbb' }}>{pos.stack.toFixed(1)}bb</span>
-            </button>
+              {/* Card header: position name + stack */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isActive ? 3 : 0 }}>
+                <span className="hspotcrd_title" style={{ fontWeight: 700, fontSize: isActive ? 12 : 11, color: isActive ? '#fff' : '#aaa', letterSpacing: '0.02em' }}>{pos.label}</span>
+                <span style={{ fontSize: 9, color: '#666' }}>{pos.stack.toFixed(1)}</span>
+              </div>
+              {/* Active: "Take action" prompt */}
+              {isActive && (
+                <div className="hspotcrd_action_prompt" style={{ fontSize: 8, color: GREEN, fontWeight: 600, marginBottom: 3, letterSpacing: '0.02em' }}>
+                  Take action ▶
+                </div>
+              )}
+              {/* Action buttons row */}
+              <div className="hspotcrd_actions" style={{ display: 'flex', gap: 2, flexWrap: 'wrap', opacity: isActive ? 1 : 0.5, marginTop: isActive ? 0 : 1 }}>
+                {posActions.map(act => {
+                  const actionColor = ACTION_COLORS[act.actionBase] || GRAY
+                  const isGto = isActive && gtoActionBase && act.actionBase === gtoActionBase
+                  return (
+                    <div key={act.id} className={`hspotcrd_action${isGto ? ' hspotcrd_action_active' : ''}`}
+                      style={{
+                        fontSize: isActive ? 8 : 7, padding: '1px 4px', lineHeight: '14px',
+                        background: isGto ? `${actionColor}33` : 'rgba(255,255,255,0.04)',
+                        border: isGto ? `1px solid ${actionColor}` : '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: 3, color: isGto ? actionColor : '#999',
+                        fontWeight: isGto ? 700 : 500, whiteSpace: 'nowrap',
+                      }}>
+                      {isGto && '✓ '}{act.label}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           )
         })}
-        <button onClick={handleRandomSpot}
+        <button onClick={handleRandomSpot} aria-label="Generate random spot"
           style={{
             background: '#1a1a2e', border: '1px solid #3a3a5e',
-            color: '#b0b0ff', padding: '3px 10px', borderRadius: 6,
-            fontSize: 11, fontWeight: 600, cursor: 'pointer',
-            whiteSpace: 'nowrap',
+            color: '#b0b0ff', padding: '3px 8px', borderRadius: 6,
+            fontSize: 10, fontWeight: 600, cursor: 'pointer',
+            whiteSpace: 'nowrap', flexShrink: 0, alignSelf: 'center',
           }}>
-          🎲 Random Spot
+          🎲 Random
         </button>
-        <div style={{ marginLeft: 'auto', position: 'relative' }} data-hotkeys-popup>
+        <div style={{ marginLeft: 'auto', position: 'relative', alignSelf: 'center', display: 'flex', alignItems: 'center' }} data-hotkeys-popup>
           <button onClick={() => setShowHotkeys(!showHotkeys)}
             aria-label={showHotkeys ? 'Hide keyboard shortcuts' : 'Show keyboard shortcuts'}
             aria-expanded={showHotkeys}
