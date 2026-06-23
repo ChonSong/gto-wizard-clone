@@ -182,6 +182,13 @@
       "date": "2026-06-23",
       "summary": "Solutions frontend page exists at apps/web/src/app/solutions/page.tsx with: search/filter bar (position, board type, street), solution cards showing board/position/stack/top actions with frequency bars, click-to-expand detail panel with GTO strategy breakdown (hands or actions), Practice This Spot cross-navigation to /study, dark design system. API at /api/v1/spots returns 3 real solutions. 368 tests pass, build clean, live /solutions returns 200.",
       "coach": "approved"
+    },
+    {
+      "task": "equity-variant-2-7td-page",
+      "sha": "28ffe4b",
+      "date": "2026-06-23",
+      "summary": "Functional 2-7 Triple Draw equity calculator with Monte Carlo simulation (1K-100K samples), two 5-card hand inputs with card validation and duplicate detection, hand evaluator with correct 2-7 ranking (lower wins, straights/flushes count against), equity bar with % display, hand category names, How 2-7 TD Works rules section. Dark design system matching other equity pages. Live and frontend return 200. 368 tests pass.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -257,10 +264,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "805a28d",
-  "current_task": "equity-variant-2-7td-page",
+  "last_sha": "326b4d8",
+  "current_task": "equity-variant-2-7sd-page",
   "blocker": null,
-  "note": "solutions-frontend-page: COMPLETE — page already built (ca27cca), has all task features (search/filter, solution cards, click-to-expand detail, Practice This Spot nav), uses /api/v1/spots endpoint with 3 real solutions, dark design system, 368 tests pass, build clean, live /solutions returns 200. Advancing to equity-variant-2-7td-page.",
+  "note": "equity-variant-2-7td-page: COMPLETE — already built (28ffe4b), Monte Carlo equity calculator with proper 2-7 hand evaluator, input validation, results display, dark design system. Live 200, frontend 200, 368 tests pass. Advancing to equity-variant-2-7sd-page.",
   "coach_review": {
     "last_reviewed_sha": "805a28d",
     "last_reviewed_at": "2026-06-23T19:12:00Z",
