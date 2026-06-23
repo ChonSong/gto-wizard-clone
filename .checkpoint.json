@@ -61,6 +61,13 @@
       "date": "2026-06-23",
       "summary": "Replaced flat position buttons with spot card bar: 6 horizontal scrollable position cards (UTG/HJ/CO/BTN/SB/BB), active card shows 'Take action' prompt + action buttons (Fold/Raise X/Allin Y/Call for SB/BB), minimized cards show compact view. GTO recommendation highlighted with ✓ badge. Raise sizing: 2.5bb UTG/HJ/CO/BTN, 3.5bb SB/BB. Call only for SB/BB. 368 tests pass, TS clean, build clean.",
       "coach": "pending"
+    },
+    {
+      "task": "practice-spaced-repetition-mode",
+      "sha": "2768fed",
+      "date": "2026-06-23",
+      "summary": "Implemented spaced repetition mode with SM-2 algorithm: per-spot easeFactor/interval tracking, localStorage persistence, due-for-review count in setup, next review time in session sidebar, summary with Due Now stat and Next Review Schedule section. 368 tests pass, build clean.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -132,14 +139,14 @@
       "type": "stub",
       "priority": 2,
       "evidence": "Shows 'coming soon' notice. Interaction spec confirms SR is a core training mode.",
-      "status": "open"
+      "status": "complete"
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "83fa99a",
-  "current_task": "practice-spaced-repetition-mode",
+  "last_sha": "2768fed",
+  "current_task": "tbd",
   "blocker": null,
-  "note": "study-spot-card-bar-with-action-prompts complete. Position buttons replaced with GTO Wizard style spot cards with action prompts and GTO highlights. Next: practice-spaced-repetition-mode.",
+  "note": "practice-spaced-repetition-mode: COMPLETE. Implemented SM-2 spaced repetition on /practice. Next: pending — Coach should generate next batch on next review.",
   "coach_review": {
     "last_reviewed_sha": "83fa99a",
     "last_reviewed_at": "2026-06-23T23:05:00Z",
