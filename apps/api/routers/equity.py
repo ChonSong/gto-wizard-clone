@@ -25,7 +25,7 @@ router = APIRouter(prefix="/api/v1/equity", tags=["equity"])
 # Redis client will be injected via app state
 _redis_client = None
 
-CACHE_TTL_SECONDS = 3600  # 1 hour
+CACHE_TTL_SECONDS = 300  # 5 minutes
 DEFAULT_ITERATIONS = 10000
 MAX_ITERATIONS = 1000000
 
@@ -280,32 +280,31 @@ async def _calculate_equity_impl(
         wins, ties, total, equity = await asyncio.wait_for(asyncio.to_thread(_compute), timeout=5.0)
     except asyncio.TimeoutError:
         logger.warning(f"Equity calc timed out for {hero} vs {villain_str}, reducing iterations")
-        # Fallback: recompute with minimal iterations
+        # Fallback: recompute with minimal iterations (in thread pool to avoid blocking)
         fallback_iter = 5000
-        if len(villain_ranges) == 1:
-            result = calc.equity_vs_range(
-                hero_cards=hero_cards,
-                villain_range=villain_ranges,
-                board=board_cards,
-                iterations=fallback_iter,
-                n_threads=4,
-            )
-            wins = int(result * fallback_iter)
-            ties = 0
-            total = fallback_iter
-            equity = result
-        else:
-            villain_range_lists = [vr.split(",") for vr in villain_ranges]
-            equity = calc.equity_vs_range_multiway(
-                hero_cards=hero_cards,
-                villain_ranges=villain_range_lists,
-                board=board_cards,
-                iterations=fallback_iter,
-                n_threads=4,
-            )
-            wins = int(equity * fallback_iter)
-            ties = 0
-            total = fallback_iter
+
+        def _compute_fallback():
+            if len(villain_ranges) == 1:
+                result = calc.equity_vs_range(
+                    hero_cards=hero_cards,
+                    villain_range=villain_ranges,
+                    board=board_cards,
+                    iterations=fallback_iter,
+                    n_threads=4,
+                )
+                return int(result * fallback_iter), 0, fallback_iter, result
+            else:
+                villain_range_lists = [vr.split(",") for vr in villain_ranges]
+                equity = calc.equity_vs_range_multiway(
+                    hero_cards=hero_cards,
+                    villain_ranges=villain_range_lists,
+                    board=board_cards,
+                    iterations=fallback_iter,
+                    n_threads=4,
+                )
+                return int(equity * fallback_iter), 0, fallback_iter, equity
+
+        wins, ties, total, equity = await asyncio.to_thread(_compute_fallback)
 
     ev_per_hand = equity  # For basic equity, EV = equity
 
