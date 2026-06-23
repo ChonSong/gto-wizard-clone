@@ -2112,8 +2112,74 @@ export default function StudyPage() {
                   </div>
                 )}
 
-                {/* HANDS sub-tab: Fallback when no data */}
-                {rightSubTab === 'hand' && !selectedHandData && (
+                {/* Hand combo grid — individual card combos with styled suits */}
+                {rightSubTab === 'hand' && selectedCell && (
+                  <div style={{ marginTop: 8, borderTop: '1px solid #262626', paddingTop: 8 }}>
+                    <div style={{ fontSize: 9, color: '#999', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Combos
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      {(() => {
+                        if (!selectedCell) return null
+                        const suitSymbols: Record<string, string> = { s: '♠', h: '♥', d: '♦', c: '♣' }
+                        const suitColors: Record<string, string> = { s: '#fff', h: '#E53935', d: '#E53935', c: '#fff' }
+                        const suits = ['s', 'h', 'd', 'c']
+                        const hand = selectedCell
+                        const r1 = hand[0], r2 = hand[1]
+                        const isPair = r1 === r2
+                        const isSuited = hand.length === 3 && hand[2] === 's'
+                        const isOffsuit = hand.length === 3 && hand[2] === 'o'
+                        const combos: { s1: string; s2: string }[] = []
+
+                        if (isPair) {
+                          // Pair: C(4,2) = 6 combos — all unique suit pairs
+                          for (let i = 0; i < suits.length; i++) {
+                            for (let j = i + 1; j < suits.length; j++) {
+                              combos.push({ s1: suits[i], s2: suits[j] })
+                            }
+                          }
+                        } else if (isSuited) {
+                          // Suited: 4 combos — same suit
+                          for (const s of suits) combos.push({ s1: s, s2: s })
+                        } else {
+                          // Offsuit: 12 combos — different suits
+                          for (const s1 of suits) {
+                            for (const s2 of suits) {
+                              if (s1 !== s2) combos.push({ s1, s2 })
+                            }
+                          }
+                        }
+
+                        return combos.map((c, i) => (
+                          <div key={i} style={{
+                            display: 'flex', alignItems: 'center', gap: 2,
+                            padding: '3px 5px', borderRadius: 4,
+                            background: '#161616', border: '1px solid #262626',
+                            fontSize: 9, fontWeight: 700,
+                          }}>
+                            <span style={{ color: '#fff' }}>{r1}</span>
+                            <span style={{ color: suitColors[c.s1], fontSize: 8 }}>{suitSymbols[c.s1]}</span>
+                            <span style={{ color: '#fff' }}>{r2}</span>
+                            <span style={{ color: suitColors[c.s2], fontSize: 8 }}>{suitSymbols[c.s2]}</span>
+                          </div>
+                        ))
+                      })()}
+                    </div>
+                    <div style={{ fontSize: 8, color: '#555', marginTop: 3, textAlign: 'right' }}>
+                      {(() => {
+                        if (!selectedCell) return ''
+                        const hand = selectedCell
+                        const r1 = hand[0], r2 = hand[1]
+                        if (r1 === r2) return '6 combos'
+                        if (hand.length === 3 && hand[2] === 's') return '4 combos'
+                        return '12 combos'
+                      })()}
+                    </div>
+                  </div>
+                )}
+
+                {/* HANDS sub-tab: Fallback when no data and no cell selected */}
+                {rightSubTab === 'hand' && !selectedHandData && !selectedCell && (
                   <div style={{ color: '#888', fontSize: 12, textAlign: 'center', padding: '20px 0' }}>
                     Click a hand in the matrix to see details
                   </div>

@@ -53,11 +53,12 @@ export default function ActionSelector({
 
   return (
     <div>
-      {/* GTO frequency micro-chips — shown above buttons when locked */}
-      {locked && gtoAction && gtoFrequency !== undefined && (
+      {/* GTO frequency micro-chips — shown when GTO data available (always during active state) */}
+      {gtoAction && gtoFrequency !== undefined && !disabled && (
         <div style={{ display: 'flex', gap: 4, marginBottom: 8, flexWrap: 'wrap' }}>
           {ACTIONS.map(a => {
             const isGto = gtoAction === a.id
+            const isSelectable = !locked
             return (
               <div key={a.id} style={{
                 display: 'flex', alignItems: 'center', gap: 3,
@@ -66,7 +67,18 @@ export default function ActionSelector({
                 border: isGto ? `1px solid ${a.color}88` : '1px solid #2a2a2a',
                 fontSize: 10, fontWeight: isGto ? 700 : 500,
                 color: isGto ? '#fff' : '#888',
-              }}>
+                cursor: isSelectable && !isGto ? 'pointer' : 'default',
+                transition: 'all 0.12s',
+              }}
+                onClick={() => {
+                  if (isSelectable && !locked) {
+                    onSelect(a.id)
+                    if (a.id !== 'raise') {
+                      // Reset bet size when switching to non-raise action
+                    }
+                  }
+                }}
+              >
                 <span>{a.shortLabel}</span>
                 <span style={{ fontWeight: 700, color: isGto ? '#fff' : '#666' }}>
                   {isGto ? `${(gtoFrequency * 100).toFixed(0)}%` : ''}
