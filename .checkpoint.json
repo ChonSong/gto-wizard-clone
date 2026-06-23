@@ -168,6 +168,13 @@
       "date": "2026-06-23",
       "summary": "Hand combo grid with styled suits (6/4/12 combos for pairs/suited/offsuit) in right sidebar HAND sub-tab. GTO frequency micro-chips always visible on action buttons when hand selected. 368 tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "visual-study-postflop-match-reference",
+      "sha": "5b9756c",
+      "date": "2026-06-23",
+      "summary": "Postflop training visual match: GTO action-type key matching fixed (getActionKey helper) so all_in/bet/raise actions with API amount suffixes correctly match hardcoded buttons. Board cards as styled playing cards, street breadcrumb, all 10 action buttons (CHECK/BET 33-125%/FOLD/CALL/RAISE 50-100%/ALL IN) with chip amount+pot%+GTO frequency, position columns with active green highlight, GTO comparison overlay, Configure Spot panel. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -243,15 +250,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "48df725",
-  "current_task": "visual-study-postflop-match-reference",
+  "last_sha": "5b9756c",
+  "current_task": "solutions-frontend-page",
   "blocker": null,
-  "note": "visual-study-preflop-match-reference: COMPLETE — hand combo grid with styled suits in HAND sub-tab, GTO frequency micro-chips always visible. 368 tests pass, build clean, live 200. Next: visual-study-postflop-match-reference.",
+  "note": "visual-study-postflop-match-reference: COMPLETE — all 7 visual elements implemented (board cards, street breadcrumb, 10 action buttons with GTO chips/pot%/amount, position columns, GTO comparison overlay, config panel). GTO key-matching fix in 5b9756c. 368 tests pass, build clean, live 200. Advancing to solutions-frontend-page.",
   "coach_review": {
     "last_reviewed_sha": "48df725",
     "last_reviewed_at": "2026-06-23T17:54:00Z",
     "verdict": "approved",
-    "notes": "Reviewed 48df725 — feat(study): add hand combo grid and GTO frequency micro-chips to preflop study page. Hand combo grid: 6/4/12 combo counting with styled suit symbols (red hearts/diamonds, white spades/clubs) in right sidebar HAND sub-tab. GTO frequency micro-chips: now always visible on action buttons when hand selected (not just after locking), showed on Fold/Raise/Allin buttons in right panel. 368 Python tests pass. Live /study returns 200 with full hand matrix, right sidebar tabs (Overview/Table/Equity/Hand/Summary/Filters/Actions/Blockers), spot card bar, all interactive. 0 JS errors. No secrets/deps/endpoints. YAGNI clean (both changes directly match task criteria #6 and #7). Perf: N/A (frontend rendering only).",
+    "notes": "Reviewed 48df725 — feat(study): add hand combo grid and GTO frequency micro-chips to preflop study page.",
     "last_review": "2026-06-23T16:40:00Z",
     "status": "approved"
   }
