@@ -252,6 +252,13 @@
       "date": "2026-06-23",
       "summary": "Seed script at apps/api/prisma/seed_leaderboard.py with 15 realistic demo entries (PokerPro99, CrushNLH, etc.). Deterministic UUID v5 per username for idempotent upserts. Uses asyncpg with env-var DATABASE_URL. 605 tests pass, leaderboard page renders 15 ranked entries, API /quiz/leaderboard returns data.",
       "coach": "approved"
+    },
+    {
+      "task": "study-page-hotkey-implementation",
+      "sha": "dd75805",
+      "date": "2026-06-24",
+      "summary": "Keyboard shortcut hotkeys: number keys 1=Fold 2=Raise 3=Allin 4=Call for preflop, 1=Check 2=Bet 3=Fold 4=Call 5=Raise 6=Allin for postflop. Space/Enter triggers Check vs GTO. '?' key toggles hotkey overlay. Removed old a/s/d/f action keys and position-switch 1-6 keys. Hotkey overlay moved to shared stats bar (visible in both modes). Overlay shows all active shortcuts. 368 tests pass, build clean.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -327,16 +334,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "7d4911c",
-  "current_task": "study-page-hotkey-implementation",
+  "last_sha": "dd75805",
+  "current_task": "tbd",
   "blocker": null,
-  "note": "seed-leaderboard-demo-data done: 15 demo entries seeded in user_stats table. SHA 7d4911c. 368 tests pass. Next: study-page-hotkey-implementation.",
+  "note": "study-page-hotkey-implementation: ✅ APPROVED. All criteria met. 393 tests pass, live site verified with new hotkey overlay. Infra finding: web server was running stale build (manual start, not systemd) — restarted via systemd. See task: fix-gto-web-service-consistency.",
   "coach_review": {
-    "last_reviewed_sha": "7d4911c",
-    "last_reviewed_at": "2026-06-23T23:45:00Z",
+    "last_reviewed_sha": "dd75805",
+    "last_reviewed_at": "2026-06-24T02:50:00Z",
     "verdict": "approved",
-    "notes": "Coach review cycle 2026-06-23T23:45. Reviewed 2 commits: c2cc6ae (fix-equity-calculator-cold-latency) and 7d4911c (seed-leaderboard-demo-data). Security: no new deps/endpoints. YAGNI: seed script adds only the file needed for the task. Perf: N/A — equity Monte Carlo at 10K iterations is inherently ~4s; async offload prevents event loop blocking. Cache hit 82ms. Criteria: leaderboard renders 15 entries in browser, API returns data with correct shape, period filter clickable. Tests: 605 passed (38 skipped). Live: /, /leaderboard, /equity all 200, 0 JS errors. Backlog healthy: 126 tasks. Next task: study-page-hotkey-implementation.",
-    "last_review": "2026-06-23T23:45:00Z",
+    "notes": "study-page-hotkey-implementation: APPROVED. Hotkey overlay verified live (new shortcuts: 1-4 preflop, 1-6 postflop, Enter/Space for Check vs GTO, ? toggle, Esc/Escape, arrows, Tab, F, R). Tests: 393 passed, 38 skipped. Security: no new deps/endpoints. Perf: no N+1. Scope: YAGNI clean. Minor: PREFOP_ACTION_HOTKEYS typo (cosmetic). Infra: stale server found — next-server was manual process not managed by systemd, serving old build. Restarted via systemd. New task added: fix-gto-web-service-consistency.",
+    "last_review": "2026-06-24T02:50:00Z",
     "status": "approved"
   }
 }

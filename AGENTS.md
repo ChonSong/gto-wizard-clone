@@ -1671,3 +1671,16 @@ These tasks identified by comparing the live page at `https://wiz.codeovertcp.co
   - Navigate to /solutions, click "Practice This Spot" on any solution — verify URL changes and study page loads with spot configured
   - Verify position, stack depth, and board cards match the source spot
   - Navigate to /study directly — verify default behavior unchanged
+
+### Task: fix-gto-web-service-consistency
+- **Description**: The `gto-wizard-web.service` systemd unit exists but the next-server was started manually with `npx next start`, not via systemd. This means: (1) the server doesn't auto-restart on crash/reboot, (2) the deploy script's `systemctl --user restart gto-wizard-web.service` silently fails because the process isn't managed by systemd, (3) the server runs the old build after re-deployment until manually restarted. Fix by: (a) ensuring the web server is always started via `systemctl --user start gto-wizard-web.service` (not manual `npx next start`), (b) updating `deploy.sh` to check `systemctl --user is-active gto-wizard-web.service` and start it if inactive after build, (c) adding `Restart=on-failure` to the service unit if missing.
+- **Success criteria**:
+  - `systemctl --user show -p MainPID gto-wizard-web.service` returns a valid PID that matches `ps aux | grep next-server`
+  - After a new build, `systemctl --user restart gto-wizard-web.service` actually restarts the server with the new build
+  - Killing the next-server process results in auto-restart by systemd within 5 seconds
+  - `curl http://localhost:3000` returns 200 within 10 seconds of a restart
+- **Coach checks**:
+  - Verify the systemd service is active and the PID matches the running server
+  - Kill the next-server process, wait 5s, verify it auto-restarts and returns 200
+  - Run deploy.sh, verify the server restarts and serves the latest build
+  - Check journalctl for any startup errors
