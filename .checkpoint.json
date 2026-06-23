@@ -82,6 +82,20 @@
       "date": "2026-06-23",
       "summary": "Verified fix-strategy-lookup is already complete. The dict type mismatch bug was fixed in commit 86e37bb (pass StrategyFilters instead of raw dict, fix store_strategy cache metadata). Strategy data auto-seeded on API startup — preflop and flop lookups return valid GTO ranges at all stack depths. Endpoint returns 200 for valid queries, 404 for missing data. 368 tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "seed-preflop-strategies",
+      "sha": "5d03f6d",
+      "date": "2026-06-23",
+      "summary": "Verified seed-preflop-strategies is already complete. All 6 positions (UTG/HJ/CO/BTN/SB/BB) return 200 with strategy data at all 4 stack depths (50/100/150/200bb). Strategy data auto-seeded via main.py _auto_seed_strategies — 28 total preflop strategies in DB. make seed-preflop is idempotent. Advancing to next task.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-e2e-test-runner",
+      "sha": "5d03f6d",
+      "date": "2026-06-23",
+      "summary": "Fixed Playwright test runner: removed nested e2e/node_modules that conflicted with hoisted root @playwright/test (double-require error). Fixed 6 pre-existing test selector failures in study-preflop-flow.spec.ts and workflows.spec.ts (position buttons are <div role=\"button\"> not <button>). 115/118 tests pass (3 remaining failures are pre-existing postflop 'Advance to Turn' frontend bug).",
+      "coach": "human"
     }
   ],
   "spec_gaps": [
@@ -157,10 +171,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "47af3de",
-  "current_task": "seed-preflop-strategies",
+  "last_sha": "5d03f6d",
+  "current_task": "study-postflop-street-navigation",
   "blocker": null,
-  "note": "fix-strategy-lookup: COMPLETE. Bug was already fixed in commit 86e37bb (dict type mismatch). Strategy data auto-seeded — endpoint returns 200 for all valid queries, 404 for missing. 368 tests pass. Next: seed-preflop-strategies.",
+  "note": "fix-e2e-test-runner: COMPLETE (5d03f6d). Removed nested e2e/node_modules causing @playwright/test double-require. Fixed preflop position button selectors. 115/118 pass, 3 fail (postflop 'Advance to Turn' not appearing — frontend bug). Next: fix study-postflop-street-navigation (advance-to-turn button missing after action selection).",
   "coach_review": {
     "last_reviewed_sha": "47af3de",
     "last_reviewed_at": "2026-06-23T23:50:00Z",
