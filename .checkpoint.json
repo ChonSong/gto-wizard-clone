@@ -60,14 +60,28 @@
       "sha": "83fa99a",
       "date": "2026-06-23",
       "summary": "Replaced flat position buttons with spot card bar: 6 horizontal scrollable position cards (UTG/HJ/CO/BTN/SB/BB), active card shows 'Take action' prompt + action buttons (Fold/Raise X/Allin Y/Call for SB/BB), minimized cards show compact view. GTO recommendation highlighted with ✓ badge. Raise sizing: 2.5bb UTG/HJ/CO/BTN, 3.5bb SB/BB. Call only for SB/BB. 368 tests pass, TS clean, build clean.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "practice-spaced-repetition-mode",
       "sha": "2768fed",
       "date": "2026-06-23",
       "summary": "Implemented spaced repetition mode with SM-2 algorithm: per-spot easeFactor/interval tracking, localStorage persistence, due-for-review count in setup, next review time in session sidebar, summary with Due Now stat and Next Review Schedule section. 368 tests pass, build clean.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "keep-api-server-running",
+      "sha": "47af3de",
+      "date": "2026-06-23",
+      "summary": "Verified API is already running via systemd service (gto-api.service) on port 8001, auto-restarts (Restart=always), starts on boot (enabled). Disabled duplicate broken service (gto-wizard-api.service) that was conflict-looping on the same port. uv sync --group runtime passes. API health 200, web health 200, live 200, 368 tests pass.",
+      "coach": "human"
+    },
+    {
+      "task": "fix-strategy-lookup",
+      "sha": "47af3de",
+      "date": "2026-06-23",
+      "summary": "Verified fix-strategy-lookup is already complete. The dict type mismatch bug was fixed in commit 86e37bb (pass StrategyFilters instead of raw dict, fix store_strategy cache metadata). Strategy data auto-seeded on API startup — preflop and flop lookups return valid GTO ranges at all stack depths. Endpoint returns 200 for valid queries, 404 for missing data. 368 tests pass, build clean, live 200.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -143,16 +157,16 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "2768fed",
-  "current_task": "tbd",
+  "last_sha": "47af3de",
+  "current_task": "seed-preflop-strategies",
   "blocker": null,
-  "note": "practice-spaced-repetition-mode: COMPLETE. Implemented SM-2 spaced repetition on /practice. Next: pending — Coach should generate next batch on next review.",
+  "note": "fix-strategy-lookup: COMPLETE. Bug was already fixed in commit 86e37bb (dict type mismatch). Strategy data auto-seeded — endpoint returns 200 for all valid queries, 404 for missing. 368 tests pass. Next: seed-preflop-strategies.",
   "coach_review": {
-    "last_reviewed_sha": "83fa99a",
-    "last_reviewed_at": "2026-06-23T23:05:00Z",
+    "last_reviewed_sha": "47af3de",
+    "last_reviewed_at": "2026-06-23T23:50:00Z",
     "verdict": "approved",
-    "notes": "study-right-sidebar-analysis-tabs: APPROVED. All 5 success criteria met: (1) Right sidebar renders with Overview/Table/Equity chart main tabs, (2) Clicking each tab switches content (verified via DOM), (3) Actions sub-tab shows 'Fold 10.8% (143.0 combos)' and 'Raise 2.5 1.5% (19.8 combos)' — aggregate frequencies with combo counts, (4) Blockers sub-tab has full combo counting engine with per-class breakdown and blocking effect analysis (preflop shows placeholder only because no board cards exist), (5) 0 console errors across all interactions. Build clean, 368 tests pass, live 200. Feature was already implemented in d980026 — player correctly verified pre-existing work rather than rebuilding.",
-    "last_review": "2026-06-23T23:05:00Z",
+    "notes": "study-spot-card-bar-with-action-prompts + practice-spaced-repetition-mode: APPROVED. Spot card bar verified on /study — 6 position cards, UTG shows 'Take action ▶' with action buttons (Fold/Raise 2.5/Allin 100), minimized cards show compact action labels, ✓ badge on GTO-recommended action. Spaced Repetition verified on /practice — '0 spots tracked · 0 due for review' in setup, session starts and loads hands (8s8, A8o), answer feedback shows EV values and correct action highlighted, stats track correctly (Spots: 1, Accuracy: 100%), Next Spot advances to next question. 0 JS errors on both pages. SM-2 algorithm correct: newInterval calculation for correct/incorrect responses, localStorage persistence, easeFactor bounds (1.3-2.65), nextReview time computation. 368 tests pass, npm run build succeeds.",
+    "last_review": "2026-06-23T23:50:00Z",
     "status": "approved"
   }
 }
