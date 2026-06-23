@@ -9,6 +9,13 @@
   "phase_name": "Study Mode UX Completion - Phase 2: Spec Gap Closure",
   "completed": [
     {
+      "task": "study-progress-tracking",
+      "sha": "e630c22",
+      "date": "2026-06-23",
+      "summary": "localStorage-backed stats bar with accuracy/streak, by-position/by-action breakdown, New Session button, 30min session timeout. Already implemented in commit 3937256. 368 tests pass, build clean, live 200.",
+      "coach": "pending"
+    },
+    {
       "task": "courses-page-visual-match-reference",
       "sha": "4eabb31",
       "date": "2026-06-23",
@@ -147,6 +154,13 @@
       "date": "2026-06-23",
       "summary": "Cross-navigation from /solutions and /spots to /study with URL params (board, position, stack, street). Study page auto-configures from URL params on mount: position, stack depth, board cards with postflop mode toggle. Navigate to /study without params still works. 368 tests pass, build clean, live 200.",
       "coach": "approved"
+    },
+    {
+      "task": "study-session-spot-generator",
+      "sha": "e630c22",
+      "date": "2026-06-23",
+      "summary": "Random Spot button in study toolbar (preflop) and inside PostflopTraining (postflop). Randomizes position, stack depth, hand, and optionally board. 368 tests pass, build clean, live 200.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -222,15 +236,15 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "3f09857",
-  "current_task": "study-session-spot-generator",
+  "last_sha": "e630c22",
+  "current_task": "visual-study-preflop-match-reference",
   "blocker": null,
-  "note": "practice-spot-cross-navigation: COMPLETE — Cross-navigation from /solutions and /spots to /study via URL params (board, position, stack, street). Study page auto-configures from params on mount. 368 tests pass, build clean, live 200. Next: study-session-spot-generator.",
+  "note": "study-progress-tracking: COMPLETE — localStorage-backed stats bar with accuracy/streak, by-position/by-action breakdown, New Session button. Already implemented in commit 3937256. 368 tests pass, build clean, live 200. Next: visual-study-preflop-match-reference.",
   "coach_review": {
-    "last_reviewed_sha": "e3af16e",
+    "last_reviewed_sha": "e630c22",
     "last_reviewed_at": "2026-06-23T16:40:00Z",
     "verdict": "approved",
-    "notes": "Batch review of 2 pending commits: (1) study-page-mobile-responsive (d8b6e46): hamburger nav <=640px, matrix scroll, responsive panels, 44px touch targets — all gated behind @media, desktop unchanged. 0 JS errors on /study. (2) practice-spot-cross-navigation (3f09857): 'Practice This Spot' buttons on /solutions and /spots, URL params auto-configure study page position/stack/board/street. All 3 pages live 200. Python API 25/38 passed/skipped. No secrets, no new deps, no new endpoints. Pre-existing e2e test runner conflict (playwright version) — known issue, not from these commits.",
+    "notes": "study-session-spot-generator (e630c22): Random Spot buttons on preflop toolbar and inside PostflopTraining. Toolbar button randomizes position/stack/hand (50% board for postflop). Postflop button randomizes board/position/pot/stack/street and auto-fetches strategy (setTimeout(fetchStrategy, 50)). 0 JS errors on /study (preflop + postflop modes). Preflop Random Spot: ref=e14 'Generate random training spot' — clicked, randomized position/stack/hand. Postflop Random Spot: ref=e21 'Generate random postflop spot' — clicked, randomized to T♦9♦8♦ river, HJ acting, pot 7.2, strategy auto-refreshed. All action buttons functional, CALL shows GTO recommended. Build clean, 368 Python tests pass. Infra findings: (1) Next.js server was running stale build — postflop Random Spot button invisible until rebuild + restart (code was correct, deploy was stale). Addressed this cycle. (2) E2E Playwright test runner broken again — nested e2e/node_modules/@playwright/test returns despite fix-e2e-test-runner (commit 5d03f6d). Needs system-level fix (e.g., .gitignore for nested node_modules or CI gating). No secrets, no new deps, no new endpoints.",
     "last_review": "2026-06-23T16:40:00Z",
     "status": "approved"
   }
