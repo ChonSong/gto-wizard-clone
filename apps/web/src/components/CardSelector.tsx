@@ -33,10 +33,10 @@ interface CardSelectorProps {
 
 const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 const SUITS: Array<{ key: string; sym: string; color: string }> = [
-  { key: "s", sym: "♠", color: "text-gray-300" },
+  { key: "s", sym: "♠", color: "text-white" },
   { key: "h", sym: "♥", color: "text-red-400" },
-  { key: "d", sym: "♦", color: "text-blue-400" },
-  { key: "c", sym: "♣", color: "text-green-400" },
+  { key: "d", sym: "♦", color: "text-red-400" },
+  { key: "c", sym: "♣", color: "text-white" },
 ];
 
 const SUIT_MAP: Record<string, string> = {
