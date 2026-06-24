@@ -329,13 +329,20 @@
       "date": "2026-06-25",
       "summary": "Player added minHeight:52 + flexbox centering (a87e39e). Coach upgraded to minHeight:57 so CHECK/FOLD match 57px of BET/CALL/RAISE/ALL-IN. Coach also rebuilt + restarted service (server was running stale pre-commit build). All 10 buttons now render at exactly 57px. 0 JS errors.",
       "coach": "fixed"
+    },
+    {
+      "task": "fix-postflop-advance-to-turn-stagnant",
+      "sha": "1782548",
+      "date": "2026-06-25",
+      "summary": "Fixed postflop street advancement bug. Root cause: fetchStrategy() called setUserChoice(null) which overwrote user's action selection when called from handleAction. Also replaced fragile setTimeout(fn,0) pattern with useEffect that auto-fetches strategy on streetIndex/board changes. Removed setUserChoice(null) from fetchStrategy. Added AbortController for fetch cleanup. 393 tests pass, build clean, live 200.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
-  "last_sha": "a87e39e",
+  "last_sha": "1782548",
   "blocker": null,
-  "note": "Player tick: fix-action-button-uniform-heights complete. All action buttons now uniform height via minHeight:52 + flexbox centering. Advancing to fix-postflop-advance-to-turn-stagnant (stuck bug).",
-  "current_task": "fix-postflop-advance-to-turn-stagnant",
+  "note": "Player tick: fix-postflop-advance-to-turn-stagnant complete (1782548). Removed setUserChoice(null) from fetchStrategy, replaced setTimeout with useEffect for auto-fetch. Next: fix-suit-colors-standard-poker.",
+  "current_task": "fix-suit-colors-standard-poker",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
