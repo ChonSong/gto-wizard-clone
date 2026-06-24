@@ -306,7 +306,7 @@
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "5a72beb",
   "blocker": null,
-  "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Visual gap tasks pending Coach generation.",
+  "note": "Coach-driven visual comparison COMPLETE (2026-06-24). Compared reference-study.png and reference-study-interface.png against live site. Found 4 major + 1 moderate + 7 minor visual gaps. Generated 5 AGENTS.md gap tasks: fix-matrix-legend-call-color, fix-action-summary-strip-position-aggregate, fix-position-buttons-range-percentage, fix-action-button-uniform-heights, fix-suit-colors-standard-poker.",
   "current_task": "fix-postflop-advance-turn-flow",
   "spec_gaps": [
     {
@@ -413,14 +413,49 @@
       "priority": 2,
       "evidence": "All 3 default flop cards are 'Kd' (King of diamonds) — impossible in poker. Causes '0 spots found' and disabled 'Solve' button. 0 console errors.",
       "status": "open"
+    },
+    {
+      "item": "Matrix legend missing Blue=Call entry",
+      "type": "visual_mismatch",
+      "priority": 2,
+      "evidence": "Coach visual comparison (2026-06-24): hand matrix legend shows 'Red=Raise, Dark=Fold' but omits 'Blue=Call'. Reference shows tri-color legend. UTG preflop range shows no blue cells at all.",
+      "status": "open"
+    },
+    {
+      "item": "Action summary strip shows single action instead of 6-position aggregate",
+      "type": "visual_mismatch",
+      "priority": 2,
+      "evidence": "Coach visual comparison: shows 'Your action: RAISE 2.5 100% | Pot: 3.0bb | Eff: 100bb' instead of per-position Fold/Call/Raise % aggregate for all 6 positions.",
+      "status": "open"
+    },
+    {
+      "item": "Position buttons show stack bb not range %",
+      "type": "visual_mismatch",
+      "priority": 2,
+      "evidence": "Coach visual comparison: position buttons show stack values (100.0, 99.5, 99.0) instead of range play frequency % (e.g., UTG 16.7%).",
+      "status": "open"
+    },
+    {
+      "item": "Action button heights inconsistent in postflop mode",
+      "type": "visual_mismatch",
+      "priority": 2,
+      "evidence": "Coach visual comparison: CHECK/FOLD at 40px vs BET/CALL/RAISE/ALL-IN at 57px (42% difference). Reference shows uniform heights.",
+      "status": "open"
+    },
+    {
+      "item": "Suit colors non-standard (green clubs, blue diamonds)",
+      "type": "visual_mismatch",
+      "priority": 3,
+      "evidence": "Coach visual comparison: HAND tab combo grid shows Clubs in green and Diamonds in blue instead of standard red/black poker convention.",
+      "status": "open"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "5a72beb",
-    "last_reviewed_at": "2026-06-24T18:21:00Z",
-    "verdict": "approved",
-    "notes": "No new player commits since last review. Stalled loop detected (current_task: tbd, all 42 completed entries approved). Investigation of live site (wiz.codeovertcp.com) found: all routes 200, 0 console errors on all pages, but 3 new bugs discovered: (1) Postflop 'Advance to Turn' flow completely broken — root cause: fetchStrategy() calls setUserChoice(null) which clears user action before strategy loads, preventing feedback/advance buttons from rendering (P0). (2) ICM calculator button stuck in perpetual 'Calculating...' state (P2). (3) Strategies page defaults to 3 identical 'Kd' flop cards (P2). AGENTS.md updated with 3 new GTO tasks + 1 cross-project polytopia test task. current_task set to fix-postflop-advance-turn-flow. 2 new spec_gap entries added. GTO backend tests 368/368 pass. Polytopia: reviewed fix-game-speed-control (704df66), site restored (was 502 due to vite port fallback, fixed with --strictPort).",
-    "last_review": "2026-06-24T18:21:00Z",
-    "status": "approved"
+    "last_reviewed_sha": "fafedcf",
+    "last_reviewed_at": "2026-06-24T09:06:00Z",
+    "verdict": "visual-gaps-generated",
+    "notes": "No new player commits since last review (still at 5a72beb). Executed Coach-driven visual comparison (FIRST-STEP): compared docs/reference-study.png (preflop) and docs/reference-study-interface.png (postflop) against live wiz.codeovertcp.com via delegated browser subagent. Found 4 major gaps: (1) matrix legend missing Blue=Call, (2) action summary strip shows single action instead of 6-position aggregate, (3) position buttons show stack bb instead of range %, (4) action button heights inconsistent (CHECK/FOLD 40px vs others 57px). 1 moderate: suit colors non-standard (green clubs, blue diamonds). 7 minor gaps documented. Generated 5 AGENTS.md gap tasks. 5 new spec_gap entries. Polytopia: reviewed and APPROVED a505805 (add-speed-control-tests, 24 tests, 481 total). Player progressing on polytopia. GTO current_task still fix-postflop-advance-turn-flow.",
+    "last_review": "2026-06-24T09:06:00Z",
+    "status": "visual-gaps-generated"
   }
 }
