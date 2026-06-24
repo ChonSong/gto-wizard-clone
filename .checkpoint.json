@@ -294,8 +294,20 @@
       "date": "2026-06-24",
       "summary": "Fixed 502 on live site: added 'e2e' to tsconfig.json exclude list so Next.js doesn't try to compile Playwright test types during production build. Also removed accidentally-committed backup dirs (.next.bak/, node_modules.bak2/) from tracking via .gitignore update. Build now passes, live 200, postflop solver works end-to-end.",
       "coach": "approved"
+    },
+    {
+      "task": "e2e-video-recording-on",
+      "sha": "5a72beb",
+      "date": "2026-06-24",
+      "summary": "Enable Playwright video recording for ALL tests (video: 'on'). Combined commits 913e79d (retain-on-failure) + 5a72beb (on). Helps debug flaky E2E tests. Config-only change, 1 line.",
+      "coach": "approved"
     }
   ],
+  "health": "build_passes_site_200_0_js_errors",
+  "last_sha": "5a72beb",
+  "blocker": null,
+  "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Visual gap tasks pending Coach generation.",
+  "current_task": "tbd",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
@@ -373,18 +385,27 @@
       "priority": 2,
       "evidence": "Shows 'coming soon' notice. Interaction spec confirms SR is a core training mode.",
       "status": "complete"
+    },
+    {
+      "item": "Postflop 'Advance to Turn' does not advance street",
+      "type": "bug",
+      "priority": 1,
+      "evidence": "Clicking 'Advance to Turn' button after action selection on flop — button fires but state doesn't transition to TURN. 0 JS console errors. Board cards stay at flop, pot unchanged. Pre-existing bug noted across 3+ review cycles but never tasked.",
+      "status": "open"
+    },
+    {
+      "item": "E2E test runner has ongoing nested node_modules version conflict",
+      "type": "infra_gap",
+      "priority": 2,
+      "evidence": "npx playwright test from apps/web/ fails with nested @playwright/test version conflict. Only works from e2e/ subdirectory. Problem returns after each npm install.",
+      "status": "open"
     }
   ],
-  "health": "build_passes_site_200_0_js_errors",
-  "last_sha": "ce56bb0",
-  "blocker": null,
-  "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Visual gap tasks pending Coach generation.",
-  "current_task": "tbd",
   "coach_review": {
-    "last_reviewed_sha": "ce56bb0",
-    "last_reviewed_at": "2026-06-24T17:00:00Z",
+    "last_reviewed_sha": "5a72beb",
+    "last_reviewed_at": "2026-06-24T17:35:00Z",
     "verdict": "approved",
-    "notes": "3 player commits reviewed: cb0994c (refactor study→pure range viewer, -760 lines), 4292152 (AGENTS.md reorder), ce56bb0 (architecture correction). Security: no new deps/endpoints. YAGNI: clean — removes quiz/training from study page (correct architecture). Perf: N/A. Tests: API 25/38 skip, vitest 53/53 (14 removed with ActionSelector), E2E 13/13 study tests pass in e2e/ directory. Browser QA: preflop range viewer loads with matrix + position switching, postflop GTO solver returns real EV values, action feedback works, 0 console errors across all interactions. Actionable: (1) Visual comparison tasks pending — Coach needs to load reference screenshots and generate gap tasks. (2) Study progress backend endpoints orphaned by frontend changes — clean up or document. (3) E2E runner broken from root apps/web/ (version conflict) but works from e2e/.",
+    "notes": "2 player commits reviewed: 913e79d (Playwright video: retain-on-failure) + 5a72beb (Playwright video: on — record all). Combined: video recording enabled for all E2E tests. Security: no new deps/endpoints. YAGNI: clean — config change for better test debugging. Perf: N/A. Tests: API 25/38 skip (normal), vitest 53/53, E2E smoke 6/6 passed. Full E2E suite times out (too many tests). Browser QA: Full workflow tested — preflop position selection with GTO matrix, postflop solver returns real EV values (CALL 93% EV:2.75, BET 33% 25% EV:3.30), action feedback '✓ Correct!' with GTO comparison overlay. 0 console errors throughout. Pre-existing bug: 'Advance to Turn' button doesn't advance street (0 JS errors — state bug). New backlog tasks generated (2 open spec gaps added). Coach visual comparison pending — will generate gap tasks next cycle.",
     "last_review": "2026-06-24T17:00:00Z",
     "status": "approved"
   }
