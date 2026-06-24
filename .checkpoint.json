@@ -378,8 +378,8 @@
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "235df85",
   "blocker": null,
-  "note": "Visual comparison tasks now top priority. Player should load reference screenshot and compare against live page, fix gaps iteratively. Infra tasks (solver build, API fixes) deferred below visual match work.",
-  "current_task": "visual-study-preflop-match-reference",
+  "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Infra tasks (solver build, API fixes) deferred.",
+  "current_task": "tbd",
   "coach_review": {
     "last_reviewed_sha": "235df85",
     "last_reviewed_at": "2026-06-24T15:45:00Z",

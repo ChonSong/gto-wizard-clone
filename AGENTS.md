@@ -110,46 +110,49 @@ These skills are loaded automatically when the Player works on this project:
 
 Ordered by priority. Each task is one unit of work for one player tick.
 
-## Visual Comparison Tasks (do these FIRST — they unblock everything)
+## Visual Comparison Tasks
 
-### Task: visual-study-preflop-match-reference
-- **Description**: Load `docs/reference-study.png` via `vision_analyze` to understand the target preflop study interface. Then load `https://wiz.codeovertcp.com/study` via `browser_navigate` and take a screenshot with `browser_vision`. Compare the two and fix ALL visual gaps. Key elements the reference likely includes:
-  1. **Styled card suits** — hearts/diamonds in red, spades/clubs in white/black on dark background
-  2. **Proper hand matrix** — 13×13 grid with clear color coding, proper font sizes, hover states
-  3. **Position buttons — large, clear labels**, active position with green border/highlight
-  4. **Stack depth selector — pill buttons** with active state
-  5. **Right panel — "Your Action" section** with large FOLD/CALL/RAISE/ALL IN buttons
-  6. **Action buttons should show GTO frequency micro-chips** (small colored badges with %)
-  7. **Hand combo grid** showing individual card combos with styled suits
-  8. **Check vs GTO flow** working end-to-end
-  9. **Overall spacing and typography** matching the reference density
+> **Coach-driven**: The Coach compares reference screenshots against the live page, identifies specific visual gaps, and generates concrete fix tasks. The Player then implements those gaps. Player does NOT do the comparison — that's the Coach's validation role.
+
+### Coach Task: compare-study-preflop-vs-reference
+- **Run by**: Coach (during review cycle)
+- **Description**: Load `docs/reference-study.png` via `vision_analyze`. Load `https://wiz.codeovertcp.com/study` via `browser_navigate` + `browser_vision`. Compare the two systematically. For each visual gap found, generate a specific fix task in AGENTS.md.
   
-  Make as many commits as needed — each visual fix should be a separate commit.
-- **Success criteria**:
-  - Live `/study` page visually matches `docs/reference-study.png` for the preflop mode
-  - All interactive elements (buttons, matrix, action selector) work correctly
-  - No elements are cut off or below the fold
-- **Coach checks**:
-  - `vision_analyze` the reference screenshot and the live page side by side
-  - Verify color coding, spacing, button sizes, card rendering all match
-  - Test the full interaction flow: click hand → select action → check vs GTO → feedback
+  **Checklist — compare each element against reference:**
+  1. **Hand matrix** — 13×13 grid cells: color coding (red=raise, blue=call, gray=fold), font sizes, hover states, cell spacing
+  2. **Position buttons** — UTG/HJ/CO/BTN/SB/BB: active position green highlight, stack labels, "Take action" prompt on active
+  3. **Stack depth selector** — pill buttons for 50-200bb, active state styling
+  4. **Right sidebar** — HAND sub-tab: styled card suits (♥♦ red, ♠♣ white), combo grid with suit colors
+  5. **Typography & spacing** — font sizes, padding, overall density matching reference
+  6. **GTO frequency display** — chips/badges on matrix cells showing action frequency %
+  7. **Action summary strip** — per-position aggregate (Fold/Call/Raise % and combo counts)
+  
+  **Output:** For each gap, create a task entry like:
+  ```
+  ### Task: fix-matrix-cell-font-size
+  - **Description**: Matrix cell font is 10px in clone, reference shows 12px. Update font-size in `.study-matrix-cell`.
+  - **Location**: `page.tsx` line X
+  - **Success criteria**: Matrix cells render at same visual scale as reference
+  ```
+  
+  Number each gap task and add them to the active task list (above this section).
+- **Priority**: CRITICAL — unblocks all subsequent visual polish work
 
-### Task: visual-study-postflop-match-reference
-- **Description**: Load `docs/reference-study-interface.png` via `vision_analyze`. Switch `/study` to "Postflop Training" mode via browser. Compare and fix ALL visual gaps. Key elements:
-  1. **Board cards** — styled playing cards with rank + suit, proper colors
-  2. **Street breadcrumb** — PREFLOP → FLOP → TURN → RIVER with active street highlighted
-  3. **Action buttons** — CHECK, BET 33%/50%/75%/125%, FOLD, CALL, RAISE 50%/100%, ALL IN
-  4. **Each button shows** chip amount + pot % + GTO frequency
-  5. **Position column** with active player green highlight
-  6. **GTO comparison overlay** after selecting an action
-  7. **Configure Spot panel** for custom scenarios
-- **Success criteria**:
-  - Live `/study` postflop mode visually matches `docs/reference-study-interface.png`
-  - All action buttons render with correct labels and GTO frequencies
-  - Board cards render as styled playing cards
-- **Coach checks**:
-  - `vision_analyze` reference vs live page
-  - Test full postflop flow: configure spot → get GTO → select action → compare
+### Coach Task: compare-study-postflop-vs-reference
+- **Run by**: Coach (during review cycle)
+- **Description**: Load `docs/reference-study-interface.png` via `vision_analyze`. Switch `/study` to "Postflop Training" mode, capture with `browser_vision`. Compare systematically and generate fix tasks.
+  
+  **Checklist:**
+  1. **Board cards** — styled playing cards: rank + suit symbols, red for ♥♦, proper font size and padding
+  2. **Street breadcrumb** — PREFLOP → FLOP → TURN → RIVER: active street green highlight, spacing, font
+  3. **Action buttons** — CHECK, BET 33%/50%/75%/125%, FOLD, CALL, RAISE 50%/100%, ALL IN: sizing, spacing, colors, chip amount + pot % format
+  4. **Position columns** — UTG-HJ-CO-BTN-SB-BB: active player green border, "Acting" label
+  5. **Pot size display** — format, position, font weight
+  6. **Configure Spot panel** — layout, input fields, toggle behavior
+  7. **GTO frequency display** — action frequency chips, alignment
+  
+  **Output:** One task per gap found, added to AGENTS.md active list.
+- **Priority**: CRITICAL
 
 ---
 
