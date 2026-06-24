@@ -338,6 +338,13 @@
       "coach": "approved"
     },
     {
+      "task": "fix-strategies-placeholder-cards",
+      "sha": "e722a14",
+      "date": "2026-06-26",
+      "summary": "Changed board card placeholders from duplicate 'Kd' to distinct cards: Ks, 7h, 2c, Td, 3s for flop/turn/river inputs. 368 tests pass, TS compiles clean.",
+      "coach": "pending"
+    },
+    {
       "task": "fix-suit-colors-standard-poker",
       "sha": "0b9cab5",
       "date": "2026-06-25",
@@ -346,10 +353,10 @@
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
-  "last_sha": "0b9cab5",
+  "last_sha": "e722a14",
   "blocker": null,
-  "note": "Player tick: Task Exhaustion Recovery — added 4 recovery tasks. fix-matrix-legend-visual-key marked resolved (code exists at page.tsx:1287-1292). Now working fix-strategies-placeholder-cards. Marked resolved: ICM, deploy automation, solutions count, course metadata, matrix legend.",
-  "current_task": "fix-strategies-placeholder-cards",
+  "note": "Player tick: fix-strategies-placeholder-cards complete (e722a14). Distinct placeholders: Ks/7h/2c/Td/3s. 368 tests pass. Next: fix-solutions-card-text-formatting.",
+  "current_task": "fix-solutions-card-text-formatting",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
