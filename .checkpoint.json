@@ -376,16 +376,16 @@
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
-  "last_sha": "235df85",
+  "last_sha": "ce56bb0",
   "blocker": null,
-  "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Infra tasks (solver build, API fixes) deferred.",
+  "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Visual gap tasks pending Coach generation.",
   "current_task": "tbd",
   "coach_review": {
-    "last_reviewed_sha": "235df85",
-    "last_reviewed_at": "2026-06-24T15:45:00Z",
+    "last_reviewed_sha": "ce56bb0",
+    "last_reviewed_at": "2026-06-24T17:00:00Z",
     "verdict": "approved",
-    "notes": "No new Player commits. Infra note: site was returning 500 (missing .next/required-server-files.json). Coach rebuilt (npm run build) and restarted service — now 200. /study page loads with full hand matrix, 0 JS errors. 25 API/67 vitest/139 E2E tests pass. current_task: fix-solver-docker-build.",
-    "last_review": "2026-06-24T15:45:00Z",
+    "notes": "3 player commits reviewed: cb0994c (refactor study→pure range viewer, -760 lines), 4292152 (AGENTS.md reorder), ce56bb0 (architecture correction). Security: no new deps/endpoints. YAGNI: clean — removes quiz/training from study page (correct architecture). Perf: N/A. Tests: API 25/38 skip, vitest 53/53 (14 removed with ActionSelector), E2E 13/13 study tests pass in e2e/ directory. Browser QA: preflop range viewer loads with matrix + position switching, postflop GTO solver returns real EV values, action feedback works, 0 console errors across all interactions. Actionable: (1) Visual comparison tasks pending — Coach needs to load reference screenshots and generate gap tasks. (2) Study progress backend endpoints orphaned by frontend changes — clean up or document. (3) E2E runner broken from root apps/web/ (version conflict) but works from e2e/.",
+    "last_review": "2026-06-24T17:00:00Z",
     "status": "approved"
   }
 }
