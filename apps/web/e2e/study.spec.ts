@@ -10,7 +10,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { StudyPage } from './pom/StudyPage';
+import { StudyPage } from './pages/StudyPage';
 
 // ── Helpers ────────────────────────────────────────────────────
 

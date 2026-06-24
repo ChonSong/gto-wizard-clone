@@ -9,7 +9,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { PracticePage, type ExerciseType } from './pom/PracticePage';
+import { PracticePage } from './pages/PracticePage';
 
 // ── Helpers ────────────────────────────────────────────────────
 
