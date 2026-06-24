@@ -2,89 +2,6 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PostflopTraining from '@/components/study/PostflopTraining'
-import ActionSelector from '@/components/study/ActionSelector'
-import { getUserId } from '@/lib/user-id'
-
-// --- Study Stats (localStorage-backed) ---
-
-interface StudyStats {
-  total: number
-  correct: number
-  streak: number
-  bestStreak: number
-  byPosition: Record<string, { total: number; correct: number }>
-  byAction: Record<string, { total: number; correct: number }>
-  lastActiveTs: number // for session timeout
-}
-
-const STATS_KEY = 'gto-study-stats'
-const SESSION_TIMEOUT_MS = 30 * 60 * 1000 // 30 minutes
-
-function loadStats(): StudyStats {
-  if (typeof window === 'undefined') return emptyStats()
-  try {
-    const raw = localStorage.getItem(STATS_KEY)
-    if (!raw) return emptyStats()
-    const parsed = JSON.parse(raw) as StudyStats
-    // Session timeout check
-    if (parsed.lastActiveTs && Date.now() - parsed.lastActiveTs > SESSION_TIMEOUT_MS) {
-      return emptyStats()
-    }
-    return parsed
-  } catch {
-    return emptyStats()
-  }
-}
-
-function emptyStats(): StudyStats {
-  return {
-    total: 0,
-    correct: 0,
-    streak: 0,
-    bestStreak: 0,
-    byPosition: {},
-    byAction: {},
-    lastActiveTs: Date.now(),
-  }
-}
-
-function saveStats(stats: StudyStats) {
-  if (typeof window === 'undefined') return
-  try {
-    localStorage.setItem(STATS_KEY, JSON.stringify({ ...stats, lastActiveTs: Date.now() }))
-  } catch {
-    // localStorage full or unavailable — silently ignore
-  }
-}
-
-function incrementStats(
-  stats: StudyStats,
-  isCorrect: boolean,
-  position: string,
-  action: string,
-): StudyStats {
-  const next = { ...stats, total: stats.total + 1, lastActiveTs: Date.now() }
-  if (isCorrect) {
-    next.correct = stats.correct + 1
-    next.streak = stats.streak + 1
-    next.bestStreak = Math.max(next.streak, stats.bestStreak)
-  } else {
-    next.streak = 0
-  }
-  // By position
-  const prevPos = stats.byPosition[position] || { total: 0, correct: 0 }
-  next.byPosition = {
-    ...stats.byPosition,
-    [position]: { total: prevPos.total + 1, correct: prevPos.correct + (isCorrect ? 1 : 0) },
-  }
-  // By action
-  const prevAction = stats.byAction[action] || { total: 0, correct: 0 }
-  next.byAction = {
-    ...stats.byAction,
-    [action]: { total: prevAction.total + 1, correct: prevAction.correct + (isCorrect ? 1 : 0) },
-  }
-  return next
-}
 
 const RED = '#D32F2F'
 const RED_BRIGHT = '#E53935'
@@ -203,12 +120,6 @@ function getGtoActionBase(handData: HandData | undefined): string {
   return a
 }
 
-const PREFOP_ACTION_HOTKEYS: Record<string, string> = {
-  '1': 'fold',
-  '2': 'raise',
-  '3': 'all_in',
-  '4': 'call',
-}
 
 const TAB_ORDER: Array<'strategy' | 'ranges' | 'breakdown'> = ['strategy', 'ranges', 'breakdown']
 
@@ -220,9 +131,6 @@ export default function StudyPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isSolverMode, setIsSolverMode] = useState(false)
-  const [userAction, setUserAction] = useState<string | null>(null)
-  const [actionFeedback, setActionFeedback] = useState<'correct' | 'incorrect' | null>(null)
-  const [betSize, setBetSize] = useState<number | null>(null)
   const [stackDepth, setStackDepth] = useState(100)
   const [boardCards, setBoardCards] = useState<BoardCard[]>([])
   const [boardStreet, setBoardStreet] = useState<'preflop' | 'flop' | 'turn' | 'river'>('preflop')
@@ -235,17 +143,10 @@ export default function StudyPage() {
   const [activeTab, setActiveTab] = useState<'strategy' | 'ranges' | 'breakdown'>('strategy')
   const [hotkeyToast, setHotkeyToast] = useState<string | null>(null)
   const [showHotkeys, setShowHotkeys] = useState(false)
-  const [studyStats, setStudyStats] = useState<StudyStats>(emptyStats)
-  const [showStatsPanel, setShowStatsPanel] = useState(false)
   const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
   const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'blockers'>('actions')
   const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
   const [blockerRanks, setBlockerRanks] = useState<string[]>([])
-
-  // Load stats from localStorage on mount
-  useEffect(() => {
-    setStudyStats(loadStats())
-  }, [])
 
   const positions = useMemo(() => [
     { id: 'UTG', label: 'UTG', stack: stackDepth },
@@ -304,7 +205,7 @@ export default function StudyPage() {
         }
         setRangeData(map)
         setIsSolverMode(true)
-        // Auto-select strongest non-fold hand so ActionSelector is immediately usable
+        // Auto-select strongest non-fold hand so the range display is immediately usable
         const firstActionable = data.hands?.find((h: any) => h.action !== 'fold')
         if (firstActionable) {
           setSelectedCell(firstActionable.hand)
@@ -419,12 +320,6 @@ export default function StudyPage() {
     all_in: 'All In',
   }
 
-  const actionLabelsShort: Record<string, string> = {
-    raise: 'RAISE',
-    call: 'CALL',
-    fold: 'FOLD',
-    all_in: 'ALL IN',
-  }
   const selectedHandData = useMemo(() => {
     if (!selectedCell) return null
     return rangeData.get(selectedCell) || null
@@ -469,55 +364,6 @@ export default function StudyPage() {
       }
     }
   }, [])
-
-  // Reset user selection when hand changes
-  useEffect(() => {
-    setUserAction(null)
-    setActionFeedback(null)
-    setBetSize(null)
-  }, [selectedCell])
-
-  const handleCheckAction = useCallback(() => {
-    if (!userAction || !selectedHandData) return
-    const gtoBase = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
-    let isCorrect: boolean
-    // If both are raise, also compare size
-    if (userAction === 'raise' && gtoBase === 'raise') {
-      const gtoSizeStr = selectedHandData.action.replace('raise_', '').replace('bb', '')
-      const gtoSize = parseFloat(gtoSizeStr)
-      const userSize = betSize || 2.5
-      const sizeDiff = Math.abs(userSize - gtoSize)
-      // Accept close sizes (within 1bb) as correct
-      isCorrect = sizeDiff <= 1.0
-    } else {
-      isCorrect = userAction === gtoBase
-    }
-    setActionFeedback(isCorrect ? 'correct' : 'incorrect')
-    // Record stats
-    setStudyStats(prev => {
-      const updated = incrementStats(prev, isCorrect, activePosition, userAction)
-      saveStats(updated)
-      return updated
-    })
-    // Save progress to backend (fire-and-forget)
-    const gtoAction = selectedHandData.action
-    const userActionDisplay = userAction === 'raise' ? `raise_${betSize || 2.5}bb` : userAction
-    fetch(`${API_BASE}/study/progress`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        hand: selectedCell,
-        position: activePosition,
-        stack_depth: stackDepth,
-        action_chosen: userActionDisplay,
-        action_gto: gtoAction,
-        correct: isCorrect,
-        user_id: getUserId(),
-      }),
-    }).catch(() => {
-      // Silently ignore — backend may be down, local stats still work
-    })
-  }, [userAction, selectedHandData, betSize, activePosition, selectedCell, stackDepth])
 
   const handleGenerateFlop = useCallback(() => {
     const flop = generateRandomCards(3, [])
@@ -567,10 +413,6 @@ export default function StudyPage() {
       setBoardStreet('preflop')
     }
 
-    // Reset user action state
-    setUserAction(null)
-    setActionFeedback(null)
-    setBetSize(null)
   }, [availableDepths])
 
   // Hotkey handler
@@ -626,31 +468,12 @@ export default function StudyPage() {
         return
       }
 
-      // Check vs GTO: Enter / Space (preflop only)
-      if ((key === 'enter' || key === ' ') && mode === 'preflop' && selectedHandData && userAction && !actionFeedback) {
-        e.preventDefault()
-        handleCheckAction()
-        return
-      }
-
-      // Escape: deselect / close feedback
+      // Escape: deselect
       if (key === 'escape') {
         e.preventDefault()
-        if (actionFeedback) {
-          setUserAction(null)
-          setActionFeedback(null)
-          setBetSize(null)
-        } else if (selectedCell) {
+        if (selectedCell) {
           setSelectedCell(null)
         }
-        return
-      }
-
-      // Preflop action hotkeys: 1=Fold, 2=Raise, 3=Allin, 4=Call (only when hand selected and no feedback)
-      if (PREFOP_ACTION_HOTKEYS[key] && mode === 'preflop' && selectedHandData && !actionFeedback) {
-        e.preventDefault()
-        setUserAction(PREFOP_ACTION_HOTKEYS[key])
-        showToast(PREFOP_ACTION_HOTKEYS[key].toUpperCase())
         return
       }
 
@@ -671,7 +494,7 @@ export default function StudyPage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [mode, boardStreet, boardCards.length, selectedCell, selectedHandData, userAction, actionFeedback, activeTab, activePosition, handleCheckAction, handleGenerateFlop, handleAdvanceStreet, handleResetBoard])
+  }, [mode, boardStreet, boardCards.length, selectedCell, selectedHandData, activeTab, activePosition, handleGenerateFlop, handleAdvanceStreet, handleResetBoard])
 
   // Close hotkey help popup on outside click
   useEffect(() => {
@@ -953,39 +776,6 @@ export default function StudyPage() {
           Postflop Training
         </button>
       </div>
-
-      {/* Study Stats Bar */}
-      <div className="study-stats-bar" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '3px 12px', background: '#111', borderBottom: '1px solid #1a1a1a', flexShrink: 0 }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: studyStats.total > 0 ? '#7CFC7C' : '#666' }}>
-          {studyStats.correct}/{studyStats.total} ({studyStats.total > 0 ? Math.round((studyStats.correct / studyStats.total) * 100) : 0}%)
-        </span>
-        {studyStats.streak > 0 && (
-          <span style={{ fontSize: 11, color: '#FFD700', fontWeight: 600 }}>
-            Streak: {studyStats.streak}
-          </span>
-        )}
-        {studyStats.bestStreak > 0 && studyStats.bestStreak !== studyStats.streak && (
-          <span style={{ fontSize: 10, color: '#666' }}>Best: {studyStats.bestStreak}</span>
-        )}
-        <span style={{ flex: 1 }} />
-        <button onClick={() => setShowStatsPanel(p => !p)}
-          aria-label={showStatsPanel ? 'Hide stats panel' : 'Show stats panel'}
-          style={{
-            fontSize: 10, fontWeight: 600, color: showStatsPanel ? '#7CFC7C' : '#555',
-            background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
-          }}>
-          {showStatsPanel ? '▾ Stats' : '▸ Stats'}
-        </button>
-        {studyStats.total > 0 && (
-          <button onClick={() => { setStudyStats(emptyStats()); saveStats(emptyStats()) }}
-            aria-label="Reset study session stats"
-            style={{
-              fontSize: 10, fontWeight: 600, color: '#555',
-              background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
-            }}>
-            New Session
-          </button>
-        )}
         <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 4 }} data-hotkeys-popup>
           <button onClick={() => setShowHotkeys(!showHotkeys)}
             aria-label={showHotkeys ? 'Hide keyboard shortcuts' : 'Show keyboard shortcuts'}
@@ -1009,10 +799,9 @@ export default function StudyPage() {
             }}>
               <div style={{ fontWeight: 600, color: '#ccc', marginBottom: 6, fontSize: 11 }}>Keyboard Shortcuts</div>
               {[
-                ['1-4', 'Preflop: Fold/Raise/Allin/Call'],
                 ['1-6', 'Postflop: Check/Bet/Fold/Call/Raise/Allin'],
-                ['Enter / Space', 'Check vs GTO'],
-                ['↑↓←→', 'Navigate matrix'],
+                ['1-6', 'Postflop: Check/Bet/Fold/Call/Raise/Allin'],
+                                ['↑↓←→', 'Navigate matrix'],
                 ['Tab', 'Cycle tabs'],
                 ['F', 'Deal flop / next street'],
                 ['R', 'Reset board'],
@@ -1027,51 +816,6 @@ export default function StudyPage() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Stats Detail Panel */}
-      {showStatsPanel && (
-        <div style={{ background: '#141414', borderBottom: '1px solid #1a1a1a', padding: '8px 12px', flexShrink: 0, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          {/* By position */}
-          <div style={{ minWidth: 140, flex: 1 }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: '#888', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>By Position</div>
-            {Object.entries(studyStats.byPosition).length === 0 ? (
-              <div style={{ fontSize: 10, color: '#555' }}>No data yet</div>
-            ) : (
-              Object.entries(studyStats.byPosition)
-                .sort(([,a],[,b]) => b.total - a.total)
-                .map(([pos, d]) => (
-                  <div key={pos} style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
-                    <span style={{ fontSize: 10, width: 30, color: '#aaa', fontWeight: 600 }}>{pos}</span>
-                    <div style={{ flex: 1, height: 5, background: '#222', borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${d.total > 0 ? (d.correct / d.total) * 100 : 0}%`, background: '#00C853', borderRadius: 3, opacity: 0.7 }} />
-                    </div>
-                    <span style={{ fontSize: 10, color: '#666', width: 38, textAlign: 'right' }}>{d.correct}/{d.total}</span>
-                  </div>
-                ))
-            )}
-          </div>
-          {/* By action */}
-          <div style={{ minWidth: 140, flex: 1 }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: '#888', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>By Action</div>
-            {Object.entries(studyStats.byAction).length === 0 ? (
-              <div style={{ fontSize: 10, color: '#555' }}>No data yet</div>
-            ) : (
-              Object.entries(studyStats.byAction)
-                .sort(([,a],[,b]) => b.total - a.total)
-                .map(([action, d]) => (
-                  <div key={action} style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
-                    <span style={{ fontSize: 10, width: 44, color: '#aaa', fontWeight: 600 }}>{actionLabelsShort[action] || action}</span>
-                    <div style={{ flex: 1, height: 5, background: '#222', borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${d.total > 0 ? (d.correct / d.total) * 100 : 0}%`, background: ACTION_COLORS[action] || '#00C853', borderRadius: 3, opacity: 0.7 }} />
-                    </div>
-                    <span style={{ fontSize: 10, color: '#666', width: 38, textAlign: 'right' }}>{d.correct}/{d.total}</span>
-                  </div>
-                ))
-            )}
-          </div>
-        </div>
-      )}
 
       {mode === 'preflop' ? (<div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       {/* Stack Depth Selector — compact */}
@@ -1195,7 +939,7 @@ export default function StudyPage() {
             const actionColor = ACTION_COLORS[gtoAction] || GRAY
             return (
               <span style={{ color: actionColor, fontWeight: 700 }}>
-                {actionLabelsShort[gtoAction] || gtoAction}
+                {(actionLabels[gtoAction] || gtoAction).toUpperCase()}
                 {gtoFreq !== null && (
                   <span style={{ fontWeight: 400, color: '#aaa', marginLeft: 3 }}>
                     {(gtoFreq * 100).toFixed(0)}%
@@ -1282,22 +1026,15 @@ export default function StudyPage() {
                               if (action.actionBase === 'raise') { bg = 'rgba(229,57,53,0.35)'; borderColor = '#E53935' }
                               if (action.actionBase === 'all_in') { bg = 'rgba(123,30,30,0.5)'; borderColor = '#7B1E1E' }
                               if (isGtoRecommended) { bg = 'rgba(255,255,255,0.22)'; borderColor = '#fff' }
-                              const isUserAction = userAction === action.actionBase
                               return (
                                 <div key={action.id}
                                   className={`hspotcrd_action${isGtoRecommended ? ' hspotcrd_action_active' : ''}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    setUserAction(action.actionBase)
-                                    if (action.size) setBetSize(action.size)
-                                    else setBetSize(null)
-                                  }}
                                   style={{
                                     fontSize: 6.5, lineHeight: 1.3,
                                     padding: '1.5px 3px', borderRadius: 2,
-                                    background: isUserAction ? 'rgba(255,255,255,0.35)' : bg,
-                                    border: `1px solid ${isUserAction ? '#fff' : borderColor}`,
-                                    color: isUserAction || isGtoRecommended ? '#fff' : '#ccc',
+                                    background: bg,
+                                    border: `1px solid ${borderColor}`,
+                                    color: isGtoRecommended ? '#fff' : '#ccc',
                                     fontWeight: isGtoRecommended ? 700 : 500,
                                     cursor: 'pointer', textAlign: 'center',
                                     whiteSpace: 'nowrap', overflow: 'hidden',
@@ -1666,146 +1403,78 @@ export default function StudyPage() {
                   </div>
                 )}
 
-                {/* HAND sub-tab: Selected hand + ActionSelector + feedback */}
+                {/* HAND sub-tab: Selected hand GTO data */}
                 {rightSubTab === 'hand' && (
                   <div>
-                    {/* Selected hand info + actions */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#c8c8c8', margin: '4px 0', fontWeight: 500 }}>
                       {selectedHandData ? (
-                        <>
-                          <span style={{ fontWeight: 700, color: '#7CFC7C', fontSize: 14 }}>{selectedCell}</span>
-                          {' · Pick Your Action'}
-                        </>
+                        <span style={{ fontWeight: 700, color: '#7CFC7C', fontSize: 14 }}>{selectedCell}</span>
                       ) : (
                         <>Select a hand</>
                       )}
                       {selectedHandData && (
                         <span style={{ fontSize: 10, color: '#888', fontWeight: 400, marginLeft: 'auto' }}>
-                          Eq: {(selectedHandData.equity * 100).toFixed(0)}% · Freq: {(selectedHandData.frequency * 100).toFixed(0)}%
+                          Eq: {(selectedHandData.equity * 100).toFixed(0)}% &middot; Freq: {(selectedHandData.frequency * 100).toFixed(0)}%
                         </span>
                       )}
                     </div>
 
-                    <ActionSelector
-                      selectedAction={userAction}
-                      onSelect={(action) => {
-                        setUserAction(action)
-                        setActionFeedback(null)
-                      }}
-                      selectedSize={betSize}
-                      onSelectSize={(bb) => setBetSize(bb)}
-                      gtoAction={selectedHandData ? (selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action) : undefined}
-                      gtoFrequency={selectedHandData ? selectedHandData.frequency : undefined}
-                      disabled={!selectedHandData}
-                      locked={actionFeedback !== null}
-                      feedback={actionFeedback}
-                    />
-
-                    {selectedHandData && !actionFeedback && (
-                      <button
-                        onClick={handleCheckAction}
-                        disabled={!userAction}
-                        aria-label={userAction ? `Check ${userAction} against GTO` : 'Select an action first'}
-                        style={{
-                          width: '100%', marginTop: 8,
-                          padding: '8px', borderRadius: 6,
-                          background: userAction ? '#16241a' : '#1a1a1a',
-                          border: userAction ? `1px solid ${GREEN}` : '1px solid #333',
-                          color: userAction ? '#fff' : '#666',
-                          fontSize: 12, fontWeight: 600,
-                          cursor: userAction ? 'pointer' : 'default',
-                        }}
-                      >
-                        {userAction ? 'Check vs GTO' : 'Select an action above'}
-                      </button>
-                    )}
-
-                    {actionFeedback && selectedHandData && (
-                      <div style={{
-                        marginTop: 10, padding: '12px 14px', borderRadius: 8,
-                        background: actionFeedback === 'correct' ? '#0a2e1a' : '#2a0a0a',
-                        border: `1px solid ${actionFeedback === 'correct' ? '#00C85355' : '#E5393555'}`,
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                          <span style={{ fontSize: 16, fontWeight: 700, color: actionFeedback === 'correct' ? GREEN : RED_BRIGHT }}>
-                            {actionFeedback === 'correct' ? '✓ Correct' : '✗ Incorrect'}
-                          </span>
-                          <span style={{ fontSize: 11, color: '#888' }}>
-                            {(() => {
-                              const displayAction = userAction === 'raise' ? `Raise ${betSize || 2.5}bb` : (actionLabelsShort[userAction!] || userAction)
-                              return <>— Your pick: <strong style={{ color: '#ccc' }}>{displayAction}</strong></>
-                            })()}
-                          </span>
-                        </div>
-
-                        <div style={{ fontSize: 11, color: '#999', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                          GTO Frequency — All Actions
-                        </div>
-                        {(() => {
-                          const gtoActionBase = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
-                          const gtoFreq = selectedHandData.frequency
-                          // Build full distribution: all 4 actions, sorting GTO action first
-                          const allActions: { id: string; freq: number }[] = [
-                            { id: 'fold', freq: gtoActionBase === 'fold' ? gtoFreq : 0 },
-                            { id: 'call', freq: gtoActionBase === 'call' ? gtoFreq : 0 },
-                            { id: 'raise', freq: gtoActionBase === 'raise' ? gtoFreq : 0 },
-                            { id: 'all_in', freq: gtoActionBase === 'all_in' ? gtoFreq : 0 },
-                          ].sort((a, b) => b.freq - a.freq)
-                          return (
-                            <div>
-                              {allActions.map(({ id: act, freq }) => {
-                                const actionColor = ACTION_COLORS[act] || '#888'
-                                const isGto = act === gtoActionBase
-                                return (
-                                  <div key={act} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                    <span style={{
-                                      fontSize: 11, color: actionColor, fontWeight: isGto ? 700 : 500, width: 70,
-                                      opacity: isGto ? 1 : 0.5,
-                                    }}>
-                                      {isGto && '✓ '}{actionLabels[act] || act}
-                                    </span>
-                                    <div style={{ flex: 1, height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
-                                      <div style={{
-                                        height: '100%', width: `${Math.max(freq * 100, 1)}%`,
-                                        background: freq > 0 ? actionColor : '#333',
-                                        borderRadius: 5, transition: 'width 0.3s ease',
-                                        opacity: freq > 0 ? 1 : 0.3,
-                                      }} />
-                                    </div>
-                                    <span style={{
-                                      fontSize: 11, color: freq > 0 ? '#ccc' : '#555', fontWeight: isGto ? 700 : 500,
-                                      width: 40, textAlign: 'right',
-                                    }}>
-                                      {(freq * 100).toFixed(0)}%
-                                    </span>
-                                  </div>
-                                )
-                              })}
-                              <div style={{ marginTop: 8, padding: '6px 8px', borderRadius: 4, background: '#151515', fontSize: 11, color: '#aaa' }}>
-                                <span style={{ color: '#888' }}>
-                                  {actionFeedback === 'correct'
-                                    ? 'Your pick matches the GTO action for this spot.'
-                                    : `GTO plays ${actionLabels[gtoActionBase] || gtoActionBase} ${(gtoFreq * 100).toFixed(0)}% of the time here.`
-                                  }
-                                </span>
+                    {selectedHandData && (
+                      <>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 6 }}>
+                          {(['fold', 'call', 'raise'] as const).map(action => {
+                            const gtoActionBase = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
+                            const isGto = action === gtoActionBase
+                            const freq = isGto ? selectedHandData.frequency : 0
+                            const combos = isGto ? Math.round(freq * 6) : 0
+                            const actionColor = ACTION_COLORS[action] || '#2a2a2a'
+                            return (
+                              <div key={action} style={{
+                                borderRadius: 8, padding: '10px 8px', color: '#fff',
+                                background: isGto ? actionColor : '#141414',
+                                border: isGto ? 'none' : '1px solid #2a2a2a',
+                                textAlign: 'center',
+                              }}>
+                                <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, opacity: 0.9 }}>
+                                  {actionLabels[action] || action}
+                                  {isGto && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.7, fontWeight: 400 }}>GTO</span>}
+                                </div>
+                                <div style={{ fontSize: 22, fontWeight: 750, lineHeight: 1.2, marginTop: 2 }}>
+                                  {isGto ? `${(freq * 100).toFixed(0)}%` : '-'}
+                                </div>
+                                <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>
+                                  {isGto ? `${combos} combo${combos !== 1 ? 's' : ''}` : ''}
+                                </div>
                               </div>
-                            </div>
-                          )
-                        })()}
+                            )
+                          })}
+                        </div>
 
-                        <button
-                          onClick={() => { setUserAction(null); setActionFeedback(null); setBetSize(null) }}
-                          aria-label="Try again with a new action"
-                          style={{
-                            width: '100%', marginTop: 10, padding: '8px', borderRadius: 6,
-                            background: '#1a1a1a', border: '1px solid #333',
-                            color: '#aaa', fontSize: 12, fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          ↻ Try Again
-                        </button>
-                      </div>
+                        {selectedHandData.action === 'all_in' && (
+                          <div style={{ marginTop: 6, borderRadius: 8, padding: '10px 8px', color: '#fff', background: RED_DARK, textAlign: 'center' }}>
+                            <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, opacity: 0.9 }}>
+                              All In <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.7, fontWeight: 400 }}>GTO</span>
+                            </div>
+                            <div style={{ fontSize: 22, fontWeight: 750, lineHeight: 1.2, marginTop: 2 }}>{(selectedHandData.frequency * 100).toFixed(0)}%</div>
+                            <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>{Math.round(selectedHandData.frequency * 6)} combos</div>
+                          </div>
+                        )}
+
+                        {selectedHandData.action.startsWith('raise') && (
+                          <div style={{ marginTop: 8, fontSize: 11, color: '#aaa', textAlign: 'center', padding: '4px 8px', background: '#151515', borderRadius: 6 }}>
+                            GTO sizing: <strong style={{ color: RED_BRIGHT }}>{selectedHandData.action.replace('raise_', '').replace('bb', '')}bb</strong> &middot; {(selectedHandData.frequency * 100).toFixed(0)}% frequency
+                          </div>
+                        )}
+
+                        <div style={{ marginTop: 6, padding: '6px 8px', borderRadius: 4, background: '#111', fontSize: 10, color: '#777', lineHeight: 1.4 }}>
+                          The GTO solution for this spot{' '}
+                          {selectedHandData.frequency >= 0.9
+                            ? 'always plays this action with this hand.'
+                            : selectedHandData.frequency >= 0.5
+                              ? 'prefers this action most of the time with this hand.'
+                              : 'mixes between actions, with this being the primary line.'}
+                        </div>
+                      </>
                     )}
                   </div>
                 )}
