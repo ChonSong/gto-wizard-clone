@@ -79,7 +79,7 @@ export class StudyPage {
   }
 
   async selectStackDepth(depth: 50 | 75 | 100 | 125 | 150 | 200): Promise<void> {
-    await this.page.getByRole('button', { name: `${depth}bb stack depth` }).click();
+    await this.page.getByRole('button', { name: `${depth}bb stack depth`, exact: true }).click();
     await this.page.waitForTimeout(300);
   }
 
@@ -110,13 +110,16 @@ export class StudyPage {
 
     for (let i = 0; i < count; i++) {
       const cell = cells.nth(i);
-      const text = await cell.textContent();
-      // Format: "AA FoldRaise 2.5Allin 100" or "AKs87%"
-      const handMatch = text?.match(/^(AA|KK|QQ|JJ|TT|99|88|77|66|55|44|33|22|AKs|AQs|AJs|ATs|A9s|A8s|A7s|A6s|A5s|A4s|A3s|A2s|AKo|AQo|AJo|ATo|A9o|A8o|A7o|A6o|A5o|A4o|A3o|A2o|KQs|KJs|KTs|K9s|K8s|K7s|K6s|K5s|K4s|K3s|K2s|KQo|KJo|KTo|K9o|K8o|K7o|K6o|K5o|K4o|K3o|K2o|QJs|QTs|Q9s|Q8s|Q7s|Q6s|Q5s|Q4s|Q3s|Q2s|QJo|QTo|Q9o|Q8o|Q7o|Q6o|Q5o|Q4o|Q3o|Q2o|JTs|J9s|J8s|J7s|J6s|J5s|J4s|J3s|J2s|JTo|J9o|J8o|J7o|J6o|J5o|J4o|J3o|J2o|T9s|T8s|T7s|T6s|T5s|T4s|T3s|T2s|T9o|T8o|T7o|T6o|T5o|T4o|T3o|T2o|98s|97s|96s|95s|94s|93s|92s|98o|97o|96o|95o|94o|93o|92o|87s|86s|85s|84s|83s|82s|87o|86o|85o|84o|83o|82o|76s|75s|74s|73s|72s|76o|75o|74o|73o|72o|65s|64s|63s|62s|65o|64o|63o|62o|54s|53s|52s|54o|53o|52o|43s|42s|43o|42o|32s|32o)/);
+      // Use aria-label instead of textContent — gridcell's accessible name
+      // contains hand data (e.g. "AA, raise_2.5bb 100 percent") while
+      // textContent returns child button texts only
+      const label = await cell.evaluate(el => el.getAttribute('aria-label') || el.textContent || '');
+      // Format: "AA, raise_2.5bb 100 percent"
+      const handMatch = label.match(/^([A-Z0-9]+[s]?[o]?|[A-Z0-9]+)\b/);
       if (!handMatch) continue;
 
       const hand = handMatch[1];
-      const cellText = text || '';
+      const cellText = label;
 
       // Determine action from text
       let action = 'fold';
@@ -127,9 +130,10 @@ export class StudyPage {
         action = 'call';
       }
 
-      // Extract frequency
-      const freqMatch = cellText.match(/(\d+)%/);
-      const frequency = freqMatch ? parseInt(freqMatch[1]) : (action === 'fold' ? 100 : 0);
+      // Extract frequency: gridcell aria-label format is "AA, raise_2.5bb 100 percent"
+      const freqMatch = cellText.match(/(\d+)\s*percent/);
+      const freqPctMatch = cellText.match(/(\d+)%/);
+      const frequency = freqMatch ? parseInt(freqMatch[1]) : (freqPctMatch ? parseInt(freqPctMatch[1]) : (action === 'fold' ? 100 : 0));
 
       matrix[hand] = { hand, action, frequency };
     }
@@ -241,7 +245,8 @@ export class StudyPage {
 
   async getGTOStrategy(): Promise<GTOAction[]> {
     await this.switchToPostflopMode();
-    await this.page.getByRole('button', { name: 'Get GTO strategy' }).click();
+    const gtoBtn = this.page.getByRole('button', { name: /GTO strategy|Refresh/ });
+    await gtoBtn.click();
     // Wait for strategy to load
     await this.page.waitForTimeout(2000);
 
@@ -257,8 +262,8 @@ export class StudyPage {
         const text = await btn.textContent();
         const isGTORecommended = text?.includes('✓ GTO') || false;
 
-        // Parse frequency and EV from text like "BET 33%2.0 (36%)" or "CALL3.0 (55%)"
-        const freqMatch = text?.match(/\((\d+)%\)/);
+        // Parse GTO frequency from leading text like "25%BET 33%2.0 (36%)" or "93%✓ GTOCALL3.0 (55%)"
+        const freqMatch = text?.match(/^(\d+)%/);
         const frequency = freqMatch ? parseInt(freqMatch[1]) : 0;
 
         const evMatch = text?.match(/EV:\s*([\d.]+)/);
@@ -289,18 +294,26 @@ export class StudyPage {
 
   async getStreetBreadcrumb(): Promise<{ current: string; available: string[] }> {
     await this.switchToPostflopMode();
-    const nav = this.page.getByRole('navigation', { name: 'Street navigation' });
-    const text = await nav.textContent();
+    await this.page.waitForTimeout(1000);
+    // Read street breadcrumb text from the page body — the street progression
+    // may render as a generic div without navigation role in some builds
+    const text = await this.page.evaluate(() => {
+      const nav = document.querySelector('[aria-label="Street progression"]');
+      if (nav) return nav.textContent || '';
+      const body = document.body.innerText;
+      if (body.includes('Preflop') || body.includes('PREFLOP')) return body;
+      return '';
+    });
 
+    const textUpper = (text || '').toUpperCase();
     const streets = ['PREFLOP', 'FLOP', 'TURN', 'RIVER'];
     const available: string[] = [];
     let current = 'FLOP';
 
     for (const street of streets) {
-      if (text?.includes(street)) {
+      if (textUpper.includes(street)) {
         available.push(street);
-        // Current street is the one without 🔒
-        if (!text?.includes(street + '🔒') && !text?.includes(street + ' 🔒')) {
+        if (!textUpper.includes(street + '🔒') && !textUpper.includes('🔒' + street)) {
           current = street;
         }
       }
@@ -311,7 +324,7 @@ export class StudyPage {
 
   async advanceToStreet(street: 'FLOP' | 'TURN' | 'RIVER'): Promise<boolean> {
     await this.switchToPostflopMode();
-    const nav = this.page.getByRole('navigation', { name: 'Street navigation' });
+    const nav = this.page.getByRole('navigation', { name: 'Street progression' });
     const text = await nav.textContent();
 
     // Check if street is locked

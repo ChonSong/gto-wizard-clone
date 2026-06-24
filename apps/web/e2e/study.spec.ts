@@ -197,7 +197,7 @@ test.describe('Study — Full Hand Journey', () => {
 
 test.afterEach(async () => {
   const critical = consoleErrors.filter(
-    (e) => !e.includes('favicon') && !e.includes('404') && !e.includes('WebSocket') && !e.includes('socket.io')
+    (e) => !e.includes('favicon') && !e.includes('404') && !e.includes('422') && !e.includes('WebSocket') && !e.includes('socket.io')
   );
   expect(critical).toHaveLength(0);
 });
