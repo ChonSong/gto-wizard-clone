@@ -1,7 +1,0 @@
-{
-  "/equity/page": "app/equity/page.js",
-  "/icm/page": "app/icm/page.js",
-  "/push-fold/page": "app/push-fold/page.js",
-  "/page": "app/page.js",
-  "/practice/page": "app/practice/page.js"
-}

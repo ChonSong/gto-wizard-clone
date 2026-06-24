@@ -13,4 +13,6 @@ tsconfig.tsbuildinfo
 apps/web/public/sw.js
 apps/web/public/workbox-*.js
 apps/web/e2e/node_modules.bak
+apps/web/e2e/node_modules.bak2/
 .next_old/
+apps/web/.next.bak/
