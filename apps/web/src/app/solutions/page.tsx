@@ -64,17 +64,6 @@ const POSITION_LABELS: Record<Position, string> = {
   UTG: "UTG",
 };
 
-function formatBoardDisplay(board: string): string {
-  if (!board) return "—";
-  // Handle formats like "Kd-Qh-2c" or "KdQh2c"
-  const cleaned = board.replace(/-/g, "");
-  const cards: string[] = [];
-  for (let i = 0; i < cleaned.length - 1; i += 2) {
-    cards.push(cleaned.slice(i, i + 2));
-  }
-  return cards.length > 0 ? cards.join(" ") : board;
-}
-
 function getSuitSymbol(card: string): string {
   if (card.length < 2) return "";
   const suit = card[card.length - 1]?.toLowerCase();
@@ -449,7 +438,6 @@ export default function SolutionsPage() {
               {filteredSolutions.map((sol) => {
                 const topActions = getTopActions(sol.strategy_json, 3);
                 const isSelected = selectedSolution?.id === sol.id;
-                const street = getStreetFromBoardType(sol.board_type);
 
                 return (
                   <button
@@ -476,9 +464,6 @@ export default function SolutionsPage() {
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="font-mono text-sm font-bold text-white">
-                            {formatBoardDisplay(sol.board)}
-                          </span>
                           <span
                             className="px-1.5 py-0.5 rounded text-[10px] font-semibold"
                             style={{
@@ -490,9 +475,6 @@ export default function SolutionsPage() {
                           </span>
                           <span className="px-1.5 py-0.5 rounded text-[10px] capitalize" style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}>
                             {sol.board_type}
-                          </span>
-                          <span className="px-1.5 py-0.5 rounded text-[10px] capitalize" style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}>
-                            {street}
                           </span>
                         </div>
 
