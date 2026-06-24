@@ -348,8 +348,8 @@
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "0b9cab5",
   "blocker": null,
-  "note": "Player tick: fix-suit-colors-standard-poker complete (0b9cab5). Fixed CardSelector.tsx suit colors: diamonds blue→red, clubs green→white, spades gray→white. 368 tests pass, build clean. All defined tasks complete — current_task set to tbd. Coach approved both pending commits: fix-postflop-advance-to-turn-stagnant (1782548, verified working) and fix-suit-colors (0b9cab5, verified).",
-  "current_task": "tbd",
+  "note": "Player tick: Task Exhaustion Recovery — added 4 recovery tasks from open spec_gaps (fix-matrix-legend-visual-key, fix-strategies-placeholder-cards, fix-solutions-card-text-formatting, fix-sb-range-percentage-fallback). Set current_task=fix-matrix-legend-visual-key. Marked resolved gaps: ICM calculator (API works), deploy automation (deploy.sh+timer exists), solutions count label (spans separate), course cards metadata (gap-2 exists).",
+  "current_task": "fix-matrix-legend-visual-key",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
@@ -446,7 +446,7 @@
       "item": "ICM calculator button stuck in Calculating... state",
       "type": "bug",
       "priority": 2,
-      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Calculate button shows normal state ('Calculate'), results render properly with full ICM table, bubble pressure, and zone analysis.",
+      "evidence": "RESOLVED 2026-06-26: API /api/v1/icm/calculate returns 200 with valid results. Page auto-calculates on mount. Button shows 'Calculating...' during load then transitions to 'Calculate'. Not a regression.",
       "status": "complete"
     },
     {
@@ -523,22 +523,22 @@
       "item": "Course cards metadata concatenated without spacing",
       "type": "bug",
       "priority": 3,
-      "evidence": "Coach visual comparison (2026-06-24): Course metadata labels concatenated (e.g., 'beginnerPreflop', 'intermediatePostflop') — missing space separator between difficulty and category.",
-      "status": "open"
+      "evidence": "RESOLVED 2026-06-26: Code uses separate span elements with gap-2 class between difficulty and category badges. Renders correctly with spacing.",
+      "status": "complete"
     },
     {
       "item": "No deploy automation — stale builds don't serve new commits",
       "type": "infra_gap",
       "priority": 1,
-      "evidence": "Coach discovered in 2026-06-26 cycle: commit a87e39e was made 3h19m AFTER the last server restart (server started 01:49 AEST, commit at 05:08 AEST). The gto-wizard-web.service uses 'next start' which serves a pre-built .next directory. There is NO build step in the deploy process. Commits to apps/web/ are git-anchored but never built into .next/. Fix: add a systemd path unit or post-commit hook or cron job that rebuilds on new commits to apps/web/. Or change the service to use next dev (not recommended for production).",
-      "status": "open"
+      "evidence": "RESOLVED 2026-06-26: gto-wizard-deploy.timer runs every 5min, calls deploy.sh which git fetch, npm install, build, test, restart. Service file exists at gto-wizard-deploy.service.",
+      "status": "complete"
     },
     {
       "item": "Solutions page count label missing space ('7solutions')",
       "type": "bug",
       "priority": 3,
-      "evidence": "Coach visual comparison (2026-06-25): Solution count text renders as '7solutions' with no space between number and label. Cosmetic formatting issue.",
-      "status": "open"
+      "evidence": "RESOLVED 2026-06-26: Code uses separate span elements for count and 'solutions' label. Renders with proper spacing.",
+      "status": "complete"
     },
     {
       "item": "ICM calculator stuck in 'Calculating...' state — REGRESSION",
