@@ -378,8 +378,8 @@
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "235df85",
   "blocker": null,
-  "note": "fix-deploy-502-clean-build: APPROVED. Build now passes (e2e/ excluded from tsconfig), live site 200, postflop solver works. Commit 7714a53 cleaned up backup dirs accidentally committed earlier. 3 pre-existing E2E failures (courses filter, ICM, solver comparison).",
-  "current_task": "fix-solver-docker-build",
+  "note": "Visual comparison tasks now top priority. Player should load reference screenshot and compare against live page, fix gaps iteratively. Infra tasks (solver build, API fixes) deferred below visual match work.",
+  "current_task": "visual-study-preflop-match-reference",
   "coach_review": {
     "last_reviewed_sha": "235df85",
     "last_reviewed_at": "2026-06-24T15:45:00Z",

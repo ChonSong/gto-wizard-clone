@@ -110,6 +110,51 @@ These skills are loaded automatically when the Player works on this project:
 
 Ordered by priority. Each task is one unit of work for one player tick.
 
+## Visual Comparison Tasks (do these FIRST — they unblock everything)
+
+### Task: visual-study-preflop-match-reference
+- **Description**: Load `docs/reference-study.png` via `vision_analyze` to understand the target preflop study interface. Then load `https://wiz.codeovertcp.com/study` via `browser_navigate` and take a screenshot with `browser_vision`. Compare the two and fix ALL visual gaps. Key elements the reference likely includes:
+  1. **Styled card suits** — hearts/diamonds in red, spades/clubs in white/black on dark background
+  2. **Proper hand matrix** — 13×13 grid with clear color coding, proper font sizes, hover states
+  3. **Position buttons — large, clear labels**, active position with green border/highlight
+  4. **Stack depth selector — pill buttons** with active state
+  5. **Right panel — "Your Action" section** with large FOLD/CALL/RAISE/ALL IN buttons
+  6. **Action buttons should show GTO frequency micro-chips** (small colored badges with %)
+  7. **Hand combo grid** showing individual card combos with styled suits
+  8. **Check vs GTO flow** working end-to-end
+  9. **Overall spacing and typography** matching the reference density
+  
+  Make as many commits as needed — each visual fix should be a separate commit.
+- **Success criteria**:
+  - Live `/study` page visually matches `docs/reference-study.png` for the preflop mode
+  - All interactive elements (buttons, matrix, action selector) work correctly
+  - No elements are cut off or below the fold
+- **Coach checks**:
+  - `vision_analyze` the reference screenshot and the live page side by side
+  - Verify color coding, spacing, button sizes, card rendering all match
+  - Test the full interaction flow: click hand → select action → check vs GTO → feedback
+
+### Task: visual-study-postflop-match-reference
+- **Description**: Load `docs/reference-study-interface.png` via `vision_analyze`. Switch `/study` to "Postflop Training" mode via browser. Compare and fix ALL visual gaps. Key elements:
+  1. **Board cards** — styled playing cards with rank + suit, proper colors
+  2. **Street breadcrumb** — PREFLOP → FLOP → TURN → RIVER with active street highlighted
+  3. **Action buttons** — CHECK, BET 33%/50%/75%/125%, FOLD, CALL, RAISE 50%/100%, ALL IN
+  4. **Each button shows** chip amount + pot % + GTO frequency
+  5. **Position column** with active player green highlight
+  6. **GTO comparison overlay** after selecting an action
+  7. **Configure Spot panel** for custom scenarios
+- **Success criteria**:
+  - Live `/study` postflop mode visually matches `docs/reference-study-interface.png`
+  - All action buttons render with correct labels and GTO frequencies
+  - Board cards render as styled playing cards
+- **Coach checks**:
+  - `vision_analyze` reference vs live page
+  - Test full postflop flow: configure spot → get GTO → select action → compare
+
+---
+
+> **Deferred infra tasks** (below) — solver build, API route fixes, seed scripts. Focus on visual match first.
+
 ### Task: fix-deploy-502-clean-build
 - **Description**: `wiz.codeovertcp.com` returns 502. The root cause is a stale `.next` build cache — `apps/web/.next/` had stale manifest files from a prior build with a different hash. Run a clean build and restart the web service. Also add a `clean-build` npm script so the Player doesn't hit this again.
   
@@ -553,48 +598,6 @@ Ordered by priority. Each task is one unit of work for one player tick.
 
 ---
 
-## Visual Comparison Tasks (do these FIRST — they unblock everything)
-
-### Task: visual-study-preflop-match-reference
-- **Description**: Load `docs/reference-study.png` via `vision_analyze` to understand the target preflop study interface. Then load `https://wiz.codeovertcp.com/study` via `browser_navigate` and take a screenshot with `browser_vision`. Compare the two and fix ALL visual gaps. Key elements the reference likely includes:
-  1. **Styled card suits** — hearts/diamonds in red, spades/clubs in white/black on dark background
-  2. **Proper hand matrix** — 13×13 grid with clear color coding, proper font sizes, hover states
-  3. **Position buttons — large, clear labels**, active position with green border/highlight
-  4. **Stack depth selector — pill buttons** with active state
-  5. **Right panel — "Your Action" section** with large FOLD/CALL/RAISE/ALL IN buttons
-  6. **Action buttons should show GTO frequency micro-chips** (small colored badges with %)
-  7. **Hand combo grid** showing individual card combos with styled suits
-  8. **Check vs GTO flow** working end-to-end
-  9. **Overall spacing and typography** matching the reference density
-  
-  Make as many commits as needed — each visual fix should be a separate commit.
-- **Success criteria**:
-  - Live `/study` page visually matches `docs/reference-study.png` for the preflop mode
-  - All interactive elements (buttons, matrix, action selector) work correctly
-  - No elements are cut off or below the fold
-- **Coach checks**:
-  - `vision_analyze` the reference screenshot and the live page side by side
-  - Verify color coding, spacing, button sizes, card rendering all match
-  - Test the full interaction flow: click hand → select action → check vs GTO → feedback
-
-### Task: visual-study-postflop-match-reference
-- **Description**: Load `docs/reference-study-interface.png` via `vision_analyze`. Switch `/study` to "Postflop Training" mode via browser. Compare and fix ALL visual gaps. Key elements:
-  1. **Board cards** — styled playing cards with rank + suit, proper colors
-  2. **Street breadcrumb** — PREFLOP → FLOP → TURN → RIVER with active street highlighted
-  3. **Action buttons** — CHECK, BET 33%/50%/75%/125%, FOLD, CALL, RAISE 50%/100%, ALL IN
-  4. **Each button shows** chip amount + pot % + GTO frequency
-  5. **Position column** with active player green highlight
-  6. **GTO comparison overlay** after selecting an action
-  7. **Configure Spot panel** for custom scenarios
-- **Success criteria**:
-  - Live `/study` postflop mode visually matches `docs/reference-study-interface.png`
-  - All action buttons render with correct labels and GTO frequencies
-  - Board cards render as styled playing cards
-- **Coach checks**:
-  - `vision_analyze` reference vs live page
-  - Test full postflop flow: configure spot → get GTO → select action → compare
-
----
 
 ## Next Batch — Generated by Coach (2026-06-19)
 
