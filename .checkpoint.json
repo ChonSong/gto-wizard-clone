@@ -335,20 +335,20 @@
       "sha": "1782548",
       "date": "2026-06-25",
       "summary": "Fixed postflop street advancement bug. Root cause: fetchStrategy() called setUserChoice(null) which overwrote user's action selection when called from handleAction. Also replaced fragile setTimeout(fn,0) pattern with useEffect that auto-fetches strategy on streetIndex/board changes. Removed setUserChoice(null) from fetchStrategy. Added AbortController for fetch cleanup. 393 tests pass, build clean, live 200.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "fix-suit-colors-standard-poker",
       "sha": "0b9cab5",
       "date": "2026-06-25",
       "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray→white (text-white), Diamonds blue→red (text-red-400), Clubs green→white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
-      "coach": "pending"
+      "coach": "approved"
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "0b9cab5",
   "blocker": null,
-  "note": "Player tick: fix-suit-colors-standard-poker complete (0b9cab5). Fixed CardSelector.tsx suit colors: diamonds blue→red, clubs green→white, spades gray→white. 368 tests pass, build clean. All defined tasks complete — current_task set to tbd.",
+  "note": "Player tick: fix-suit-colors-standard-poker complete (0b9cab5). Fixed CardSelector.tsx suit colors: diamonds blue→red, clubs green→white, spades gray→white. 368 tests pass, build clean. All defined tasks complete — current_task set to tbd. Coach approved both pending commits: fix-postflop-advance-to-turn-stagnant (1782548, verified working) and fix-suit-colors (0b9cab5, verified).",
   "current_task": "tbd",
   "spec_gaps": [
     {
@@ -432,8 +432,8 @@
       "item": "Postflop 'Advance to Turn' does not advance street",
       "type": "bug",
       "priority": 1,
-      "evidence": "Clicking 'Advance to Turn' button after action selection on flop — button fires but state doesn't transition to TURN. 0 JS console errors. Board cards stay at flop, pot unchanged. Pre-existing bug noted across 3+ review cycles but never tasked.",
-      "status": "open"
+      "evidence": "FIXED by commit 1782548 — root cause was fetchStrategy() calling setUserChoice(null) which overwrote user's action selection. Replaced setTimeout(fn,0) with useEffect + AbortController. Coach verified live: FLOP→TURN advancement works with new board card, pot update.",
+      "status": "complete"
     },
     {
       "item": "E2E test runner has ongoing nested node_modules version conflict",
@@ -556,9 +556,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "a87e39e",
-    "last_reviewed_at": "2026-06-26T01:35:00Z",
-    "verdict": "fixed",
-    "notes": "CYCLE: 2026-06-26T01:35 UTC — Player commit a87e39e (fix: make all postflop action buttons uniform height). Player added minHeight:52 + flexbox centering. Coach discovered the live server was running a stale build (server started 3h19m before commit was made). Coach corrected the fix (minHeight:52→57 for true 57px uniform height), rebuilt .next/, and restarted gto-wizard-web. All 10 action buttons now render at exactly 57px. 368 Python tests pass, 0 JS errors on all pages. NEW CRITICAL FINDING: checkpoint incorrectly claimed matrix legend was fixed in e8105ed5 — that commit was actually a REVERT that removed the legend. Legend is still missing. Also discovered: NO deploy automation — commits are git-anchored but never built into .next/ (no build step in service). NEW spec_gaps added: deploy automation gap (p1), matrix legend re-opened (p1). 7 open issues remain: (1) postflop street advancement broken; (2) matrix legend missing; (3) solutions board cards duplicated; (4) SB shows stack bb not range %; (5) course metadata concatenated; (6) strategies duplicate Kd cards; (7) deploy automation gap."
+    "last_reviewed_sha": "0b9cab5",
+    "last_reviewed_at": "2026-06-26T06:35:00Z",
+    "verdict": "approved",
+    "notes": "CYCLE: 2026-06-26T06:35 UTC — Visual comparison + pending commit review. fix-postflop-advance (1782548): VERIFIED WORKING LIVE. Navigated /study → postflop mode → selected CALL → clicked 'Advance to Turn' → street advanced FLOP→TURN, new board card 5♥ appeared, pot updated 5.5→11.0. fix-suit-colors (0b9cab5): VERIFIED — ♠♣ white (rgb(255,255,255)), ♥♦ red (rgb(229,57,53)). 0 JS console errors on all pages. 8 open spec_gaps remain (E2E runner, strategies Kd dupes, matrix legend, SB range %, solutions formatting, course metadata spacing, deploy automation, ICM calculator stuck). No regressions."
   }
 }
