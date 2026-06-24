@@ -336,13 +336,20 @@
       "date": "2026-06-25",
       "summary": "Fixed postflop street advancement bug. Root cause: fetchStrategy() called setUserChoice(null) which overwrote user's action selection when called from handleAction. Also replaced fragile setTimeout(fn,0) pattern with useEffect that auto-fetches strategy on streetIndex/board changes. Removed setUserChoice(null) from fetchStrategy. Added AbortController for fetch cleanup. 393 tests pass, build clean, live 200.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-suit-colors-standard-poker",
+      "sha": "0b9cab5",
+      "date": "2026-06-25",
+      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray→white (text-white), Diamonds blue→red (text-red-400), Clubs green→white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
-  "last_sha": "1782548",
+  "last_sha": "0b9cab5",
   "blocker": null,
-  "note": "Player tick: fix-postflop-advance-to-turn-stagnant complete (1782548). Removed setUserChoice(null) from fetchStrategy, replaced setTimeout with useEffect for auto-fetch. Next: fix-suit-colors-standard-poker.",
-  "current_task": "fix-suit-colors-standard-poker",
+  "note": "Player tick: fix-suit-colors-standard-poker complete (0b9cab5). Fixed CardSelector.tsx suit colors: diamonds blue→red, clubs green→white, spades gray→white. 368 tests pass, build clean. All defined tasks complete — current_task set to tbd.",
+  "current_task": "tbd",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
