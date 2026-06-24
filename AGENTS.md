@@ -1684,3 +1684,65 @@ These tasks identified by comparing the live page at `https://wiz.codeovertcp.co
   - Kill the next-server process, wait 5s, verify it auto-restarts and returns 200
   - Run deploy.sh, verify the server restarts and serves the latest build
   - Check journalctl for any startup errors
+
+### Task: practice-page-gto-quiz-flow-end-to-end
+- **Description**: The /practice page has a "Start Practice Session" flow that generates GTO quiz spots, but the quiz flow has never been verified end-to-end by the coach. Navigate to /practice, start a practice session, verify spots load with board/position/stack data, answer a spot (fold/call/raise), verify feedback renders (correct/incorrect with EV gap), and verify the session advances to the next spot. If the quiz flow is broken (no spots load, feedback doesn't render, session doesn't advance), fix it. This task also covers the postflop quiz mode where the user selects postflop actions.
+- **Success criteria**:
+  - /practice loads and shows session setup options (position selection, spot count, timer)
+  - Starting a session loads spots and displays position/board/action choices
+  - Answering a spot shows immediate feedback (correct/incorrect, EV comparison)
+  - Session advances to next spot after answering
+  - 0 console errors throughout the flow
+- **Coach checks**:
+  - Navigate to /practice, click "Start Practice Session" — verify spots load
+  - Click an action button — verify feedback renders
+  - Verify session advances to next spot
+  - Complete all spots in session — verify summary screen
+
+### Task: frontend-vitest-study-components
+- **Description**: The project has 605 backend/solver tests but zero frontend component tests. Add vitest unit tests for the study page's core components: PostflopTraining (action selection, street navigation, feedback rendering), hand matrix (cell color logic, click handlers, GTO frequency display), and action buttons (chip amounts, pot%, GTO frequency chips). This prevents regressions when refactoring the study page. Aim for 2-3 test cases per component (happy path, edge case, error state).
+- **Success criteria**:
+  - vitest is configured (or already configured) in `apps/web` for component tests
+  - At least 6 component tests total (PostflopTraining, hand matrix, action buttons)
+  - Tests pass with `npx vitest run`
+  - Existing tests still pass
+- **Coach checks**:
+  - Verify vitest config exists in apps/web
+  - Run `npx vitest run` — verify new tests pass
+  - Verify tests actually exercise component logic (not snapshot-only)
+
+### Task: visual-reference-study-page-comparison
+- **Description**: The AGENTS.md specifies visual comparison of live pages against reference screenshots in `docs/reference-study.png` and `docs/reference-study-interface.png`. This task loads the live /study page via browser_vision and compares against the reference files via vision_analyze. Document specific visual gaps as spec_gap entries in .checkpoint.json. Fix the identified gaps: e.g., action button styling, GTO frequency chip placement, board card rendering, position card layout, hand matrix colors.
+- **Success criteria**:
+  - Load `docs/reference-study.png` and `docs/reference-study-interface.png` and analyze with vision_analyze
+  - Load live /study page and capture screenshot with browser_vision
+  - Document all visual differences as spec_gaps in .checkpoint.json
+  - Fix at least 3 visual gaps found
+- **Coach checks**:
+  - Run vision_analyze on reference screenshots
+  - Run browser_vision on live /study page
+  - Compare results — verify gaps are documented and fixed
+
+### Task: deploy-health-check-retry-loop
+- **Description**: The deploy.sh script does a single `systemctl --user restart` and a single `curl` check. If the server is slow to start (e.g., cold start after cache clear, or during high load), the deploy script reports failure even though the restart is in progress. Add a retry loop: after restart, poll `curl http://localhost:3000` up to 5 times with 3-second intervals until HTTP 200, then report success. If all retries fail, exit 1 with error message. This prevents false-positive deploy failures.
+- **Success criteria**:
+  - deploy.sh polls curl http://localhost:3000 up to 5 times (3s apart)
+  - If any poll returns 200, script exits 0 with success message
+  - If all 5 polls fail, script exits 1 with error message
+  - Existing functionality preserved (build, test, seed, restart)
+- **Coach checks**:
+  - Read updated deploy.sh — verify retry loop exists
+  - Run deploy.sh — verify it exits 0 on success
+  - (Optional) Simulate slow start to verify retry behavior
+
+### Task: equity-calculator-error-boundary
+- **Description**: The equity calculator (/equity) can produce NaN or Infinity values when the Monte Carlo simulation is interrupted or when invalid range input produces degenerate results. Currently there's no user-friendly error UI — the page may show "NaN%" or broken charts. Add an error boundary or error state handler that catches calculation errors and displays a user-friendly message (e.g., "Calculation failed — try again or adjust your ranges"). Clear the error state on next calculation attempt.
+- **Success criteria**:
+  - Entering invalid ranges produces a user-friendly error message (not NaN/broken UI)
+  - Error clears automatically on next calculation
+  - Normal calculations continue to work
+  - 0 new console errors
+- **Coach checks**:
+  - Enter an invalid range (e.g., "XX" or empty) and calculate — verify error message appears
+  - Enter valid ranges and calculate — verify results display correctly
+  - Check for any new console errors

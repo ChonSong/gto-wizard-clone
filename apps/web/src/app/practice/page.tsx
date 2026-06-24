@@ -139,8 +139,11 @@ const SUIT_SYMBOLS: Record<string, string> = { h: '♥', d: '♦', c: '♣', s: 
 
 const DIFFICULTY_COLOR: Record<string, string> = {
   Beginner: '#AAFBB2',
+  beginner: '#AAFBB2',
   Intermediate: '#e09b3d',
+  intermediate: '#e09b3d',
   Advanced: '#e05a5a',
+  advanced: '#e05a5a',
 }
 
 const ACTION_COLORS: Record<string, string> = {

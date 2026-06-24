@@ -259,6 +259,13 @@
       "date": "2026-06-24",
       "summary": "Keyboard shortcut hotkeys: number keys 1=Fold 2=Raise 3=Allin 4=Call for preflop, 1=Check 2=Bet 3=Fold 4=Call 5=Raise 6=Allin for postflop. Space/Enter triggers Check vs GTO. '?' key toggles hotkey overlay. Removed old a/s/d/f action keys and position-switch 1-6 keys. Hotkey overlay moved to shared stats bar (visible in both modes). Overlay shows all active shortcuts. 368 tests pass, build clean.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-gto-web-service-consistency",
+      "sha": "dd75805",
+      "date": "2026-06-24",
+      "summary": "Verified gto-wizard-web.service already managed by systemd: MainPID=1879825 matches next-server PID, Restart=always, enabled, auto-restart on failure. All 3 services active (api/web/tunnel). API health 200, web 200, live 200, 368 tests pass. Stopped duplicate gto-wizard-api.service (was in auto-restart loop on same port). Infrastructure verification only — no code change needed.",
+      "coach": "approved"
     }
   ],
   "spec_gaps": [
@@ -335,15 +342,15 @@
   ],
   "health": "build_ok_site_200_no_errors",
   "last_sha": "dd75805",
-  "current_task": "tbd",
   "blocker": null,
-  "note": "study-page-hotkey-implementation: ✅ APPROVED. All criteria met. 393 tests pass, live site verified with new hotkey overlay. Infra finding: web server was running stale build (manual start, not systemd) — restarted via systemd. See task: fix-gto-web-service-consistency.",
+  "note": "fix-gto-web-service-consistency: ✅ Coach approved. 5 new backlog tasks generated (practice-page-gto-quiz-flow, frontend-vitest-study-components, visual-reference-study-page-comparison, deploy-health-check-retry-loop, equity-calculator-error-boundary). Loop un-stalled.",
+  "current_task": "practice-page-gto-quiz-flow-end-to-end",
   "coach_review": {
     "last_reviewed_sha": "dd75805",
-    "last_reviewed_at": "2026-06-24T02:50:00Z",
+    "last_reviewed_at": "2026-06-24T04:11:00Z",
     "verdict": "approved",
-    "notes": "study-page-hotkey-implementation: APPROVED. Hotkey overlay verified live (new shortcuts: 1-4 preflop, 1-6 postflop, Enter/Space for Check vs GTO, ? toggle, Esc/Escape, arrows, Tab, F, R). Tests: 393 passed, 38 skipped. Security: no new deps/endpoints. Perf: no N+1. Scope: YAGNI clean. Minor: PREFOP_ACTION_HOTKEYS typo (cosmetic). Infra: stale server found — next-server was manual process not managed by systemd, serving old build. Restarted via systemd. New task added: fix-gto-web-service-consistency.",
-    "last_review": "2026-06-24T02:50:00Z",
+    "notes": "fix-gto-web-service-consistency: APPROVED. Systemd service fully managed (MainPID matches next-server, Restart=always, enabled, auto-restart on failure). deploy.sh properly uses systemctl --user restart. API health 200, web health 200, live 200, 605 tests pass. Infrastructure verification only — no code change needed. Backlog exhausted → generated 5 new tasks.",
+    "last_review": "2026-06-24T04:11:00Z",
     "status": "approved"
   }
 }
