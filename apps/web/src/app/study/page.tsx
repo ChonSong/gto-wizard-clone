@@ -916,7 +916,7 @@ export default function StudyPage() {
             <div key={pos.id} onClick={() => setActivePosition(pos.id)}
               className={`hspot-card ${isActive ? 'hspotcrd_active' : 'hspotcrd_minimized'}`}
               role="button" tabIndex={0}
-              aria-label={`${pos.label} position, ${pos.stack.toFixed(1)}bb stack${isActive ? ', active' : ''}`}
+              aria-label={`${pos.label} position, ${(() => { const a = positionAggregates[pos.id]; return a && a.total > 0 ? `${((a.total / 1326) * 100).toFixed(1)}% range` : `${pos.stack.toFixed(1)}bb stack` })()}${isActive ? ', active' : ''}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActivePosition(pos.id) } }}
               style={{
                 cursor: 'pointer', borderRadius: 8,
@@ -928,10 +928,19 @@ export default function StudyPage() {
                 padding: isActive ? '4px 6px 6px' : '5px 8px',
                 transition: 'all 0.15s ease',
               }}>
-              {/* Card header: position name + stack */}
+              {/* Card header: position name + range frequency % / stack */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isActive ? 3 : 0 }}>
                 <span className="hspotcrd_title" style={{ fontWeight: 700, fontSize: isActive ? 12 : 11, color: isActive ? '#fff' : '#aaa', letterSpacing: '0.02em' }}>{pos.label}</span>
-                <span style={{ fontSize: 9, color: '#666' }}>{pos.stack.toFixed(1)}</span>
+                <span style={{ fontSize: 9, color: '#666' }}>
+                  {(() => {
+                    const agg = positionAggregates[pos.id]
+                    if (agg && agg.total > 0) {
+                      const pct = ((agg.total / 1326) * 100).toFixed(1)
+                      return `${pct}%`
+                    }
+                    return `${pos.stack.toFixed(1)}bb`
+                  })()}
+                </span>
               </div>
               {/* Active: "Take action" prompt */}
               {isActive && (
