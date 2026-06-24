@@ -9,6 +9,13 @@
   "phase_name": "Study Mode UX Completion - Phase 2: Spec Gap Closure",
   "completed": [
     {
+      "task": "fix-matrix-legend-call-color",
+      "sha": "e8105ed5",
+      "date": "2026-06-24",
+      "summary": "Already implemented in e8105ed5 (legend tri-color at line 1222) and 854fc15 (ACTION_COLORS call→BLUE at line 74-76). Legend shows Red=Raise, Blue=Call, Dark=Fold. Cell coloring returns BLUE via ACTION_COLORS['call']. API correctly returns 'call' action for BB position only — UTG showing no blue cells is correct GTO RFI behavior. No code change needed this tick.",
+      "coach": "pending"
+    },
+    {
       "task": "executable-playwright-specs-with-poms",
       "sha": "a0129d7",
       "date": "2026-06-24",
@@ -306,8 +313,8 @@
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "5a72beb",
   "blocker": null,
-  "note": "Coach-driven visual comparison COMPLETE (2026-06-24). Compared reference-study.png and reference-study-interface.png against live site. Found 4 major + 1 moderate + 7 minor visual gaps. Generated 5 AGENTS.md gap tasks: fix-matrix-legend-call-color, fix-action-summary-strip-position-aggregate, fix-position-buttons-range-percentage, fix-action-button-uniform-heights, fix-suit-colors-standard-poker.",
-  "current_task": "fix-postflop-advance-turn-flow",
+  "note": "Player tick: fix-matrix-legend-call-color was already implemented (legend tri-color in e8105ed5, call→blue in 854fc15). Marked complete, current_task advanced to fix-action-summary-strip-position-aggregate. 4 visual gap tasks remain.",
+  "current_task": "fix-action-summary-strip-position-aggregate",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
@@ -451,11 +458,11 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "fafedcf",
-    "last_reviewed_at": "2026-06-24T09:06:00Z",
-    "verdict": "visual-gaps-generated",
-    "notes": "No new player commits since last review (still at 5a72beb). Executed Coach-driven visual comparison (FIRST-STEP): compared docs/reference-study.png (preflop) and docs/reference-study-interface.png (postflop) against live wiz.codeovertcp.com via delegated browser subagent. Found 4 major gaps: (1) matrix legend missing Blue=Call, (2) action summary strip shows single action instead of 6-position aggregate, (3) position buttons show stack bb instead of range %, (4) action button heights inconsistent (CHECK/FOLD 40px vs others 57px). 1 moderate: suit colors non-standard (green clubs, blue diamonds). 7 minor gaps documented. Generated 5 AGENTS.md gap tasks. 5 new spec_gap entries. Polytopia: reviewed and APPROVED a505805 (add-speed-control-tests, 24 tests, 481 total). Player progressing on polytopia. GTO current_task still fix-postflop-advance-turn-flow.",
-    "last_review": "2026-06-24T09:06:00Z",
-    "status": "visual-gaps-generated"
+    "last_reviewed_sha": "5a57d7a",
+    "last_reviewed_at": "2026-06-25T03:35:00Z",
+    "verdict": "no-op",
+    "notes": "No new Player commits since last review. Last Player commit still 5a72beb. Coach's own commit 5a57d7a (visual comparison gap tasks) is HEAD. 5 visual gap tasks remain unstarted (fix-matrix-legend-call-color, fix-action-summary-strip-position-aggregate, fix-position-buttons-range-percentage, fix-action-button-uniform-heights, fix-suit-colors-standard-poker). current_task still fix-postflop-advance-turn-flow. 9 open spec_gaps. Polytopia backlog: 2 remaining. No action needed this cycle.",
+    "last_review": "2026-06-25T03:35:00Z",
+    "status": "no-op"
   }
 }
