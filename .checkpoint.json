@@ -294,8 +294,8 @@
       "item": "Production build fails \u2014 e2e/ TS files not excluded",
       "type": "infra_gap",
       "priority": 1,
-      "evidence": "tsconfig.json includes **/*.ts but doesn't exclude e2e/. POM file StudyPage.ts:116 triggers 'Parameter el implicitly has any type'. npm run build fails \u2192 next start can't start \u2192 gto-wizard-web.service in restart loop (265+ attempts) \u2192 wiz.codeovertcp.com returns 502.",
-      "status": "open"
+      "evidence": "Stale .next cache caused build failure. Clean build (rm -rf .next && npm run build) succeeds. 43 routes compile cleanly.",
+      "status": "complete"
     },
     {
       "item": "Position selector as player tiles with stacks",
@@ -368,11 +368,11 @@
       "status": "complete"
     }
   ],
-  "health": "build_fails_site_502_build_excludes_e2e",
+  "health": "build_passes_site_502_needs_redeploy",
   "last_sha": "df88f2a",
-  "blocker": "next build fails \u2014 tsconfig.json needs e2e/ exclusion",
+  "blocker": "site 502 — build passes but stale .next cache caused failure; needs clean rebuild + systemctl restart",
   "note": "frontend-vitest-study-components: FIXED by Coach (see coach_review). 193 backup/vendor files (.next.bak/, node_modules.bak2/) were committed alongside test infra. These have been removed from tracking and added to .gitignore. 67 vitest component tests covering ActionSelector, PostflopTraining helpers, and handMatrixLogic. 67/67 pass, 368/368 existing API tests pass, 25/25 server tests pass. Live site 502 pre-existing (fix-e2e-build-exclusion task needed).",
-  "current_task": "fix-solver-docker-build",
+  "current_task": "fix-deploy-502-clean-build",
   "coach_review": {
     "last_reviewed_sha": "df88f2a",
     "last_reviewed_at": "2026-06-24T13:08:00Z",

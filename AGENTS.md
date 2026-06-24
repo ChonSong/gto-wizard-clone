@@ -110,6 +110,27 @@ These skills are loaded automatically when the Player works on this project:
 
 Ordered by priority. Each task is one unit of work for one player tick.
 
+### Task: fix-deploy-502-clean-build
+- **Description**: `wiz.codeovertcp.com` returns 502. The root cause is a stale `.next` build cache — `apps/web/.next/` had stale manifest files from a prior build with a different hash. Run a clean build and restart the web service. Also add a `clean-build` npm script so the Player doesn't hit this again.
+  
+  **Fix steps:**
+  1. `cd apps/web && rm -rf .next && npm run build` — verify exit 0 with all 43 routes
+  2. `systemctl --user restart gto-wizard-web` — restart the Next.js server
+  3. Verify: `curl -s -o /dev/null -w '%{http_code}' https://wiz.codeovertcp.com` returns 200
+  4. Verify: `browser_navigate` to `/study` — no console errors, matrix renders
+  
+  **Prevention:** Add a `clean-build` script in `apps/web/package.json`: `"clean-build": "rm -rf .next && next build"`. Update the deploy process to always run `clean-build` instead of `build`.
+- **Success criteria**:
+  - `curl https://wiz.codeovertcp.com` returns 200
+  - `browser_navigate` to `/study` loads without console errors, hand matrix renders
+  - `npm run clean-build` exits 0
+  - `package.json` has `clean-build` script
+- **Coach checks**:
+  - Verify 200 on live URL
+  - Run 3-step workflow: select position → verify matrix updates → check console (0 errors)
+  - Verify `clean-build` script exists in package.json
+- **Priority**: CRITICAL — site is down, blocks all browser QA for this project
+
 ### Task: keep-api-server-running
 - **Description**: The FastAPI backend on port 8000 crashes on container restart or host reboot. Set up a systemd --user service (or screen/tmux wrapper) that auto-restarts the API when it dies. The API runs from the repo root with `PYTHONPATH=apps/api uv run uvicorn main:app --host 0.0.0.0 --port 8000`. Also install fakeredis (already done) and ensure `uv sync --group runtime` has all needed deps.
 - **Success criteria**:
