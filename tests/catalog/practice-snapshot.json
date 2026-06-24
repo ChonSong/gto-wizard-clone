@@ -1,0 +1,141 @@
+{
+  "version": "1",
+  "generated": "2026-06-24T10:30:00+10:00",
+  "app": "GTO Wizard Clone",
+  "url": "https://wiz.codeovertcp.com",
+  "page": "/practice",
+  "title": "Practice",
+  "description": "Structured GTO training exercises with configurable type, category, and difficulty",
+  "console_errors": 0,
+  "console_warnings": 0,
+  "notes": [
+    "Default initial state: GTO Quiz selected (no Timer Duration section)",
+    "Timed Drill selection reveals Timer Duration section (30s/60s/120s)",
+    "Spaced Repetition shows progress stats: '0 spots tracked · 0 due for review'",
+    "Selection state tracked via CSS class (not aria-pressed) — use visibility of conditionally-rendered sections as state indicator",
+    "No JavaScript errors across all states"
+  ],
+  "route": "/practice",
+  "elements": {
+    "navigation": {
+      "type": "nav-links",
+      "common_to_all_pages": true,
+      "items": [
+        { "role": "link", "name": "W", "href": "/" },
+        { "role": "link", "name": "Hold'em", "href": "/holdem" },
+        { "role": "link", "name": "PLO" },
+        { "role": "link", "name": "Stud" },
+        { "role": "link", "name": "Razz" },
+        { "role": "link", "name": "Badugi" },
+        { "role": "link", "name": "Play", "href": "/play" },
+        { "role": "link", "name": "Study", "href": "/study" },
+        { "role": "link", "name": "Push/Fold NEW" },
+        { "role": "link", "name": "Range NEW" },
+        { "role": "link", "name": "Practice", "href": "/practice", "current": true },
+        { "role": "link", "name": "Analyze", "href": "/analyze" },
+        { "role": "button", "name": "Upgrade" }
+      ],
+      "selectors": [ "nav link", "nav button" ]
+    },
+    "exercise_type_selector": {
+      "type": "toggle-selector",
+      "label": "Exercise Type",
+      "pattern": "one-of-many toggle (CSS class based, no aria-pressed)",
+      "default": "GTO Quiz",
+      "items": [
+        { "role": "button", "name": "GTO Quiz", "ref": "e16" },
+        { "role": "button", "name": "Timed Drill", "ref": "e17" },
+        { "role": "button", "name": "Spaced Repetition", "ref": "e18" }
+      ],
+      "state_transitions": {
+        "GTO Quiz": { "visible_sections": ["category", "difficulty"], "hidden_sections": ["timer_duration", "spaced_repetition_stats"] },
+        "Timed Drill": { "visible_sections": ["category", "difficulty", "timer_duration"], "hidden_sections": ["spaced_repetition_stats"] },
+        "Spaced Repetition": { "visible_sections": ["category", "difficulty", "spaced_repetition_stats"], "hidden_sections": ["timer_duration"] }
+      },
+      "assertions": [
+        "Clicking a different exercise type hides the old type's specific sections and shows new ones",
+        "Default selection is GTO Quiz on first load"
+      ]
+    },
+    "timer_duration": {
+      "type": "toggle-selector",
+      "label": "Timer Duration",
+      "visible_when": { "exercise_type": "Timed Drill" },
+      "items": [
+        { "role": "button", "name": "30s", "ref": "e19" },
+        { "role": "button", "name": "60s", "ref": "e20" },
+        { "role": "button", "name": "120s", "ref": "e21" }
+      ],
+      "description": "Earn speed bonus: answer faster for up to +50 pts per spot",
+      "assertions": [
+        "Timer Duration section is only visible when Exercise Type = Timed Drill",
+        "Timer buttons exist only when Timed Drill is selected"
+      ]
+    },
+    "spaced_repetition_stats": {
+      "type": "info-display",
+      "label": "Spaced Repetition",
+      "visible_when": { "exercise_type": "Spaced Repetition" },
+      "content": "🧠 Spaced Repetition — {N} spots tracked · {N} due for review",
+      "assertions": [
+        "Progress stats only visible when Exercise Type = Spaced Repetition",
+        "Stats show two numbers: spots tracked and due for review"
+      ]
+    },
+    "category_selector": {
+      "type": "toggle-selector",
+      "label": "Category",
+      "visible": true,
+      "items": [
+        { "role": "button", "name": "All" },
+        { "role": "button", "name": "3-bet pot" },
+        { "role": "button", "name": "Open-raise pot" },
+        { "role": "button", "name": "Overcard board" },
+        { "role": "button", "name": "Monoboard" },
+        { "role": "button", "name": "Paired board" },
+        { "role": "button", "name": "Wet board" }
+      ],
+      "state_tracking": "CSS class based"
+    },
+    "difficulty_selector": {
+      "type": "toggle-selector",
+      "label": "Difficulty",
+      "visible": true,
+      "items": [
+        { "role": "button", "name": "All" },
+        { "role": "button", "name": "Beginner" },
+        { "role": "button", "name": "Intermediate" },
+        { "role": "button", "name": "Advanced" }
+      ],
+      "state_tracking": "CSS class based"
+    },
+    "start_button": {
+      "type": "action-trigger",
+      "label": "Start Practice Session",
+      "role": "button",
+      "ref": "e15",
+      "navigates_to": "practice session (new page/overlay — verify URL change)",
+      "assertions": [
+        "Clicking Start navigates to the practice session view",
+        "Button is always visible when any exercise type is selected"
+      ]
+    }
+  },
+  "state_machine": {
+    "entry": { "exercise_type": "GTO Quiz", "category": "All", "difficulty": "All" },
+    "transitions": [
+      { "action": "change exercise type", "effect": "shows/hides conditional sections" },
+      { "action": "change category", "effect": "category filter updated" },
+      { "action": "change difficulty", "effect": "difficulty filter updated" },
+      { "action": "change timer duration", "effect": "timer filter updated (only when Timed Drill)" },
+      { "action": "click Start", "effect": "navigates to practice session" }
+    ]
+  },
+  "selectors_guide": {
+    "strategy": "Use button text content to identify elements since no aria-label or aria-pressed attributes exist. CSS classes indicate selection state but are unstable — rely on conditional section visibility instead.",
+    "example_selectors": [
+      "button that contains the text 'GTO Quiz'",
+      "button that contains the text 'Start Practice Session'"
+    ]
+  }
+}
