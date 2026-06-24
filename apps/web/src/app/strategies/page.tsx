@@ -320,7 +320,7 @@ function BoardCardInput({ cards, onChange, disabled }: BoardCardInputProps) {
             value={card}
             onChange={(e) => handleChange(index, e.target.value)}
             disabled={disabled}
-            placeholder={index < 3 ? "Kd" : index === 3 ? "7h" : "2c"}
+            placeholder={index === 0 ? "Ks" : index === 1 ? "7h" : index === 2 ? "2c" : index === 3 ? "Td" : "3s"}
             className="w-16 px-2 py-2 bg-gray-800 border border-gray-700 rounded text-center font-mono text-sm text-white placeholder:text-gray-600 disabled:opacity-50"
             maxLength={2}
           />
