@@ -284,6 +284,13 @@
   ],
   "spec_gaps": [
     {
+      "item": "Production build fails — e2e/ TS files not excluded",
+      "type": "infra_gap",
+      "priority": 1,
+      "evidence": "tsconfig.json includes **/*.ts but doesn't exclude e2e/. POM file StudyPage.ts:116 triggers 'Parameter el implicitly has any type'. npm run build fails → next start can't start → gto-wizard-web.service in restart loop (265+ attempts) → wiz.codeovertcp.com returns 502.",
+      "status": "open"
+    },
+    {
       "item": "Position selector as player tiles with stacks",
       "type": "visual_mismatch",
       "priority": 2,
@@ -354,10 +361,10 @@
       "status": "complete"
     }
   ],
-  "health": "build_ok_site_200_no_errors",
-  "last_sha": "8d35fa6",
-  "blocker": null,
-  "note": "executable-playwright-specs-with-poms: FIXED — added executable e2e specs (24 tests), hardened 5 pre-existing POM selectors. 24/24 e2e pass, 25/25 API tests pass, live 200, 0 JS errors. Next task: frontend-vitest-study-components.",
+  "health": "build_fails_site_502_build_excludes_e2e",
+  "last_sha": "3fe5ff2",
+  "blocker": "next build fails — tsconfig.json needs e2e/ exclusion",
+  "note": "fix-e2e-build-exclusion: NEW TASK. Production build fails with TS error in e2e/pages/StudyPage.ts:116 (parameter el implicitly has any type). Root cause: tsconfig.json includes **/*.ts but doesn't exclude e2e/ directory. Added as new high-priority task in AGENTS.md and spec_gaps. Polytopia fix-deploy-systemd-execstartpre: APPROVED (service file confirmed with ExecStartPre).",
   "current_task": "frontend-vitest-study-components",
   "coach_review": {
     "last_reviewed_sha": "8d35fa6",
