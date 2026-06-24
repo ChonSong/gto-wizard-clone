@@ -142,7 +142,7 @@ Ordered by priority. Each task is one unit of work for one player tick.
   - Active position retains green highlight + "Take action" prompt
 - **Coach checks**: Verify position buttons show % values, not stack bb. Verify the values match actual range data from the solver/strategy API.
 
-### Task: fix-action-button-uniform-heights
+### Task: fix-action-button-uniform-heights ✅ Coach fixed (corrected minHeight: 52→57)
 - **Description**: Postflop action buttons have inconsistent heights: CHECK and FOLD are 40px while BET/CALL/RAISE/ALL-IN buttons are 57px (42% difference). Reference shows uniform heights for all action buttons. Make all action buttons the same height (57px target) with consistent vertical alignment.
 - **Location**: `apps/web/src/components/study/PostflopTraining.tsx` — action button styling
 - **Success criteria**:

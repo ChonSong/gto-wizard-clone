@@ -831,7 +831,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
                     color: isSelected ? '#fff' : btn.bg,
                     borderRadius: 8, padding: '10px 14px', cursor: isDisabled ? 'default' : 'pointer',
                     fontSize: 12, fontWeight: 600, transition: 'all .1s',
-                    textAlign: 'center', minWidth: 80, minHeight: 52,
+                    textAlign: 'center', minWidth: 80, minHeight: 57,
                     display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
                     opacity: isDisabled ? 0.5 : 1,
                     position: 'relative',
