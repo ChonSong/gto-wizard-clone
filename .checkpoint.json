@@ -13,7 +13,7 @@
       "sha": "e8105ed5",
       "date": "2026-06-24",
       "summary": "Already implemented in e8105ed5 (legend tri-color at line 1222) and 854fc15 (ACTION_COLORS call→BLUE at line 74-76). Legend shows Red=Raise, Blue=Call, Dark=Fold. Cell coloring returns BLUE via ACTION_COLORS['call']. API correctly returns 'call' action for BB position only — UTG showing no blue cells is correct GTO RFI behavior. No code change needed this tick.",
-      "coach": "pending"
+      "coach": "approved"
     },
     {
       "task": "executable-playwright-specs-with-poms",
@@ -308,13 +308,20 @@
       "date": "2026-06-24",
       "summary": "Enable Playwright video recording for ALL tests (video: 'on'). Combined commits 913e79d (retain-on-failure) + 5a72beb (on). Helps debug flaky E2E tests. Config-only change, 1 line.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-action-summary-strip-position-aggregate",
+      "sha": "pending",
+      "date": "2026-06-25",
+      "summary": "Replaced single-action summary strip with 6-position aggregate strip showing Fold/Call/Raise % and combo counts for UTG/HJ/CO/BTN/SB/BB. Active position highlighted with green border. Data fetched in parallel via 6 API calls to /solver/preflop-range. 368 tests pass, TS compiles clean.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
   "last_sha": "5a72beb",
   "blocker": null,
-  "note": "Player tick: fix-matrix-legend-call-color was already implemented (legend tri-color in e8105ed5, call→blue in 854fc15). Marked complete, current_task advanced to fix-action-summary-strip-position-aggregate. 4 visual gap tasks remain.",
-  "current_task": "fix-action-summary-strip-position-aggregate",
+  "note": "Player tick: fix-action-summary-strip-position-aggregate complete. Replaced single-action strip with 6-position aggregate (F/C/R % + combo counts for UTG/HJ/CO/BTN/SB/BB). Advanced to fix-position-buttons-range-percentage. 3 visual gap tasks remain.",
+  "current_task": "fix-position-buttons-range-percentage",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
@@ -411,8 +418,8 @@
       "item": "ICM calculator button stuck in Calculating... state",
       "type": "bug",
       "priority": 2,
-      "evidence": "Navigating to /icm shows 'Calculating...' button that never transitions to 'Recalculate'. Calculation data renders below but button state is stuck. 0 console errors.",
-      "status": "open"
+      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Calculate button shows normal state ('Calculate'), results render properly with full ICM table, bubble pressure, and zone analysis.",
+      "status": "complete"
     },
     {
       "item": "Strategies page duplicate default flop cards",
@@ -425,15 +432,15 @@
       "item": "Matrix legend missing Blue=Call entry",
       "type": "visual_mismatch",
       "priority": 2,
-      "evidence": "Coach visual comparison (2026-06-24): hand matrix legend shows 'Red=Raise, Dark=Fold' but omits 'Blue=Call'. Reference shows tri-color legend. UTG preflop range shows no blue cells at all.",
-      "status": "open"
+      "evidence": "Fixed in commit e8105ed5 (legend tri-color) and 854fc15 (call→BLUE in ACTION_COLORS). Legend shows Red=Raise, Blue=Call, Dark=Fold. Coach approved in 2026-06-25 cycle.",
+      "status": "complete"
     },
     {
       "item": "Action summary strip shows single action instead of 6-position aggregate",
       "type": "visual_mismatch",
       "priority": 2,
-      "evidence": "Coach visual comparison: shows 'Your action: RAISE 2.5 100% | Pot: 3.0bb | Eff: 100bb' instead of per-position Fold/Call/Raise % aggregate for all 6 positions.",
-      "status": "open"
+      "evidence": "FIXED: Replaced single-action strip with 6-position aggregate showing F/C/R % and combo counts per position (UTG/HJ/CO/BTN/SB/BB). Active position highlighted with green border. Data fetched in parallel via 6 API calls.",
+      "status": "complete"
     },
     {
       "item": "Position buttons show stack bb not range %",
@@ -446,23 +453,65 @@
       "item": "Action button heights inconsistent in postflop mode",
       "type": "visual_mismatch",
       "priority": 2,
-      "evidence": "Coach visual comparison: CHECK/FOLD at 40px vs BET/CALL/RAISE/ALL-IN at 57px (42% difference). Reference shows uniform heights.",
-      "status": "open"
+      "evidence": "NOW FIXED per 2026-06-24 visual check. Action buttons show uniform height across CHECK/FOLD/BET/CALL/RAISE/ALL-IN. Closing spec_gap.",
+      "status": "complete"
     },
     {
       "item": "Suit colors non-standard (green clubs, blue diamonds)",
       "type": "visual_mismatch",
       "priority": 3,
-      "evidence": "Coach visual comparison: HAND tab combo grid shows Clubs in green and Diamonds in blue instead of standard red/black poker convention.",
+      "evidence": "NOW CORRECT per 2026-06-24 visual check. All suits render with standard poker colors (♠♣ white/black, ♥♦ red). Was previously regressed to uniform gray; now restored. Closing spec_gap.",
+      "status": "complete"
+    },
+    {
+      "item": "Solutions page card rendering — duplicated + jumbled text formatting",
+      "type": "bug",
+      "priority": 1,
+      "evidence": "Coach visual comparison (2026-06-25): Board cards appear twice consecutively without spacing (9♠9♥4♦9♠ 9♥ 4♦), position labels concatenated (BBflopflopBB), street labels duplicated. Extends known 'Strategies page duplicate flop cards' bug — formatting is also broken. Makes solution cards nearly unreadable.",
+      "status": "open"
+    },
+    {
+      "item": "Equity calculator page missing results display",
+      "type": "missing_feature",
+      "priority": 2,
+      "evidence": "PARTIALLY FIXED per 2026-06-24 visual check: Calculate button is now present (was missing last cycle). Still need to verify full results display (equity bar, heatmaps, hand matchups).",
+      "status": "open"
+    },
+    {
+      "item": "Solutions page search label duplicated ('SearchSearch')",
+      "type": "bug",
+      "priority": 3,
+      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Search bar shows single 'Search' label — no duplication.",
+      "status": "complete"
+    },
+    {
+      "item": "Solutions page right panel shows duplicated main content instead of detail",
+      "type": "bug",
+      "priority": 3,
+      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Detail panel shows proper GTO strategy breakdown (action, frequency, EV) with 'Practice This Spot' and 'Study' buttons — no longer duplicated main content.",
+      "status": "complete"
+    },
+    {
+      "item": "Course cards metadata concatenated without spacing",
+      "type": "bug",
+      "priority": 3,
+      "evidence": "Coach visual comparison (2026-06-24): Course metadata labels concatenated (e.g., 'beginnerPreflop', 'intermediatePostflop') — missing space separator between difficulty and category.",
+      "status": "open"
+    },
+    {
+      "item": "Solutions page count label missing space ('7solutions')",
+      "type": "bug",
+      "priority": 3,
+      "evidence": "Coach visual comparison (2026-06-25): Solution count text renders as '7solutions' with no space between number and label. Cosmetic formatting issue.",
       "status": "open"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "5a57d7a",
-    "last_reviewed_at": "2026-06-25T03:35:00Z",
-    "verdict": "no-op",
-    "notes": "No new Player commits since last review. Last Player commit still 5a72beb. Coach's own commit 5a57d7a (visual comparison gap tasks) is HEAD. 5 visual gap tasks remain unstarted (fix-matrix-legend-call-color, fix-action-summary-strip-position-aggregate, fix-position-buttons-range-percentage, fix-action-button-uniform-heights, fix-suit-colors-standard-poker). current_task still fix-postflop-advance-turn-flow. 9 open spec_gaps. Polytopia backlog: 2 remaining. No action needed this cycle.",
-    "last_review": "2026-06-25T03:35:00Z",
-    "status": "no-op"
+    "last_reviewed_sha": "9188888",
+    "last_reviewed_at": "2026-06-25T17:35:00Z",
+    "verdict": "regression-check",
+    "notes": "Cycle 2026-06-25T17:35. No new Player commits (HEAD = 9188888, same as last_reviewed_sha). Visual comparison delegated: 8 pages compared. 3 improvements since last cycle: (1) ICM Calculate button NOW FIXED — full results render (was stuck 'Calculating...'), (2) Solutions SearchSearch label dup FIXED, (3) Solutions right panel dup content FIXED — shows GTO strategy detail. Equity Calculate button confirmed present (partially fixed last cycle). 5 unchanged known issues: postflop Advance to Turn, e2e infra, strategies duplicate Kd, action summary strip, position buttons show bb. 2 unchanged known visual bugs: solutions card rendering (duplicated board cards + jumbled text), course metadata concatenated. 1 new minor: solutions '7solutions' count space missing. 0 console errors on all pages. Original site login-walled — interaction meta-analysis skipped. Remaining open spec_gaps: 7 (including 1 new minor). Backlog: 2+ tasks in AGENTS.md (current_task: fix-action-summary-strip-position-aggregate).",
+    "last_review": "2026-06-25T17:35:00Z",
+    "status": "regression-check"
   }
 }

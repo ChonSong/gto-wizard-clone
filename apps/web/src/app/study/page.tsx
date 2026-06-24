@@ -147,6 +147,10 @@ export default function StudyPage() {
   const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'blockers'>('actions')
   const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
   const [blockerRanks, setBlockerRanks] = useState<string[]>([])
+  const [allPositionData, setAllPositionData] = useState<Map<string, Map<string, HandData>>>(new Map())
+  const [allPositionLoading, setAllPositionLoading] = useState(false)
+
+  const ALL_POSITIONS = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const
 
   const positions = useMemo(() => [
     { id: 'UTG', label: 'UTG', stack: stackDepth },
@@ -221,6 +225,63 @@ export default function StudyPage() {
     }
     fetchRange()
   }, [activePosition, stackDepth])
+
+  // Fetch all 6 positions' data in parallel for the aggregate summary strip
+  useEffect(() => {
+    if (mode !== 'preflop') return
+    let cancelled = false
+    async function fetchAllPositions() {
+      setAllPositionLoading(true)
+      try {
+        const results = await Promise.all(
+          ALL_POSITIONS.map(async (pos) => {
+            const stackForPos = pos === 'SB' ? stackDepth - 0.5 : pos === 'BB' ? stackDepth - 1 : stackDepth
+            const res = await fetch(`${API_BASE}/solver/preflop-range`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ position: pos, stack_depth: stackForPos }),
+            })
+            if (!res.ok) return { pos, data: new Map<string, HandData>() }
+            const json = await res.json()
+            const map = new Map<string, HandData>()
+            for (const h of json.hands || []) map.set(h.hand, h)
+            return { pos, data: map }
+          })
+        )
+        if (cancelled) return
+        const newMap = new Map<string, Map<string, HandData>>()
+        for (const { pos, data } of results) newMap.set(pos, data)
+        setAllPositionData(newMap)
+      } catch {
+        // Silently fail — summary strip will show "—"
+      } finally {
+        if (!cancelled) setAllPositionLoading(false)
+      }
+    }
+    fetchAllPositions()
+    return () => { cancelled = true }
+  }, [stackDepth, mode])
+
+  // Compute per-position aggregate stats for the summary strip
+  const positionAggregates = useMemo(() => {
+    const agg: Record<string, { fold: number; call: number; raise: number; total: number }> = {}
+    for (const pos of ALL_POSITIONS) {
+      const data = allPositionData.get(pos)
+      if (!data || data.size === 0) {
+        agg[pos] = { fold: 0, call: 0, raise: 0, total: 0 }
+        continue
+      }
+      let fold = 0, call = 0, raise = 0
+      data.forEach((h) => {
+        const action = h.action.startsWith('raise') ? 'raise' : h.action
+        if (action === 'fold') fold++
+        else if (action === 'call') call++
+        else if (action === 'raise' || action === 'all_in') raise++
+      })
+      agg[pos] = { fold, call, raise, total: data.size }
+    }
+    return agg
+  }, [allPositionData])
 
   const handCells = MATRIX_HANDS.flat()
 
@@ -911,47 +972,45 @@ export default function StudyPage() {
         </button>
       </div>
 
-      {/* Action Prompt Header Row — per-position GTO recommendation */}
+      {/* Per-Position Aggregate Summary Strip */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '5px 12px', background: '#0E0E0E',
+        display: 'flex', alignItems: 'stretch', gap: 0,
+        padding: '4px 8px', background: '#0E0E0E',
         borderBottom: '1px solid #1a1a1a', flexShrink: 0,
-        fontSize: 11, fontWeight: 500, color: '#888',
-        whiteSpace: 'nowrap', overflow: 'hidden',
+        fontSize: 10, fontWeight: 500, color: '#888',
+        overflow: 'hidden',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span>Your action:</span>
-          {(() => {
-            if (!isSolverMode) return <span style={{ color: '#555' }}>—</span>
-            // Use selected hand's GTO action, or fall back to most frequent position action
-            let gtoAction: string | null = null
-            let gtoFreq: number | null = null
-            if (selectedHandData) {
-              gtoAction = selectedHandData.action.startsWith('raise') ? 'raise' : selectedHandData.action
-              gtoFreq = selectedHandData.frequency
-            } else {
-              const entries = Object.entries(actionSummary).sort(([,a],[,b]) => b.totalFreq - a.totalFreq)
-              if (entries.length > 0) {
-                gtoAction = entries[0][0]
-              }
-            }
-            if (!gtoAction) return <span style={{ color: '#555' }}>Select a hand</span>
-            const actionColor = ACTION_COLORS[gtoAction] || GRAY
-            return (
-              <span style={{ color: actionColor, fontWeight: 700 }}>
-                {(actionLabels[gtoAction] || gtoAction).toUpperCase()}
-                {gtoFreq !== null && (
-                  <span style={{ fontWeight: 400, color: '#aaa', marginLeft: 3 }}>
-                    {(gtoFreq * 100).toFixed(0)}%
-                  </span>
-                )}
+        {ALL_POSITIONS.map((pos) => {
+          const agg = positionAggregates[pos]
+          const isActive = pos === activePosition
+          const hasData = agg.total > 0
+          const foldPct = hasData ? Math.round((agg.fold / 1326) * 100) : 0
+          const callPct = hasData ? Math.round((agg.call / 1326) * 100) : 0
+          const raisePct = hasData ? Math.round((agg.raise / 1326) * 100) : 0
+          return (
+            <div key={pos} style={{
+              flex: 1, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', gap: 1,
+              padding: '2px 4px',
+              borderBottom: isActive ? `2px solid ${GREEN}` : '2px solid transparent',
+              opacity: hasData ? 1 : 0.4,
+            }}>
+              <span style={{
+                fontSize: 10, fontWeight: 700,
+                color: isActive ? GREEN : '#666',
+                letterSpacing: 0.3,
+              }}>{pos}</span>
+              <div style={{ display: 'flex', gap: 3, alignItems: 'center', fontSize: 9 }}>
+                <span style={{ color: GRAY }}>F:{foldPct}%</span>
+                <span style={{ color: BLUE }}>C:{callPct}%</span>
+                <span style={{ color: RED_BRIGHT }}>R:{raisePct}%</span>
+              </div>
+              <span style={{ fontSize: 8, color: '#555' }}>
+                {hasData ? `${agg.fold + agg.call + agg.raise} combos` : (allPositionLoading ? '...' : '—')}
               </span>
-            )
-          })()}
-        </div>
-        <div style={{ width: 1, height: 12, background: '#262626', flexShrink: 0 }} />
-        <span>Pot: <strong style={{ color: '#ccc', fontWeight: 600 }}>3.0</strong>bb</span>
-        <span>Eff: <strong style={{ color: '#ccc', fontWeight: 600 }}>{stackDepth}</strong>bb</span>
+            </div>
+          )
+        })}
       </div>
 
       {/* Main Grid — fills remaining space, grid scrolls internally */}
