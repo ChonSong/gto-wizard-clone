@@ -382,10 +382,10 @@
   "current_task": "fix-solver-docker-build",
   "coach_review": {
     "last_reviewed_sha": "235df85",
-    "last_reviewed_at": "2026-06-24T14:39:00Z",
+    "last_reviewed_at": "2026-06-24T15:45:00Z",
     "verdict": "approved",
-    "notes": "fix-deploy-502-clean-build: APPROVED. 2-line fix adds 'e2e' to tsconfig.json exclude. Build passes, site 200, preflop matrix renders, postflop solver works end-to-end. Security: no new deps/endpoints. YAGNI: only required changes. Perf: N/A. Tests: 25 API/67 vitest/139 E2E pass, 3 pre-existing E2E failures. Minor: clean-build npm script not added as task asked. Backlog: 130+ tasks remaining (healthy).",
-    "last_review": "2026-06-24T14:39:00Z",
+    "notes": "No new Player commits. Infra note: site was returning 500 (missing .next/required-server-files.json). Coach rebuilt (npm run build) and restarted service — now 200. /study page loads with full hand matrix, 0 JS errors. 25 API/67 vitest/139 E2E tests pass. current_task: fix-solver-docker-build.",
+    "last_review": "2026-06-24T15:45:00Z",
     "status": "approved"
   }
 }
