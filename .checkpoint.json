@@ -266,6 +266,13 @@
       "date": "2026-06-24",
       "summary": "Verified gto-wizard-web.service already managed by systemd: MainPID=1879825 matches next-server PID, Restart=always, enabled, auto-restart on failure. All 3 services active (api/web/tunnel). API health 200, web 200, live 200, 368 tests pass. Stopped duplicate gto-wizard-api.service (was in auto-restart loop on same port). Infrastructure verification only — no code change needed.",
       "coach": "approved"
+    },
+    {
+      "task": "practice-page-gto-quiz-flow-end-to-end",
+      "sha": "c823060",
+      "date": "2026-06-24",
+      "summary": "Verified quiz flow works end-to-end: /practice loads setup screen, Start Practice Session fetches spots from /api/v1/quiz/random (confirmed 200 with valid data), action selection triggers feedback (correct/incorrect with EV comparison), Next Spot advances session, End Session shows summary. Fixed DIFFICULTY_COLOR case mismatch: API returns lowercase ('intermediate') but map only had capitalized keys — added lowercase variants so difficulty tags render correct colors. 368 Python tests pass, build clean, 11/11 health checks pass, live 200.",
+      "coach": "pending"
     }
   ],
   "spec_gaps": [
@@ -341,10 +348,10 @@
     }
   ],
   "health": "build_ok_site_200_no_errors",
-  "last_sha": "dd75805",
+  "last_sha": "c823060",
   "blocker": null,
-  "note": "fix-gto-web-service-consistency: ✅ Coach approved. 5 new backlog tasks generated (practice-page-gto-quiz-flow, frontend-vitest-study-components, visual-reference-study-page-comparison, deploy-health-check-retry-loop, equity-calculator-error-boundary). Loop un-stalled.",
-  "current_task": "practice-page-gto-quiz-flow-end-to-end",
+  "note": "practice-page-gto-quiz-flow-end-to-end: ✅ Quiz flow verified end-to-end. Fixed DIFFICULTY_COLOR case mismatch. 368 tests pass, build clean, 11/11 health checks pass, live 200. Next task: frontend-vitest-study-components.",
+  "current_task": "frontend-vitest-study-components",
   "coach_review": {
     "last_reviewed_sha": "dd75805",
     "last_reviewed_at": "2026-06-24T04:11:00Z",
