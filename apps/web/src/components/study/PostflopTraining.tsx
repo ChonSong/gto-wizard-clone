@@ -294,7 +294,6 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
   const fetchStrategy = useCallback(async () => {
     setLoading(true)
     setError(null)
-    setUserChoice(null)
     try {
       const res = await fetch(`${API_BASE}/solver/postflop-strategy`, {
         method: 'POST',
@@ -432,20 +431,15 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [userChoice, loading, strategy, handleAction, stackDepth])
 
-  const advanceToNextStreet = () => {
-    if (isLastStreet) return
-
-    // Calculate new pot based on the action taken
+  // Compute next street info (derived from current state)
+  const nextStreetInfo = (() => {
+    if (isLastStreet) return null
     const currentAction: string = streetActions[streetIndex] ?? 'check'
     const nextPot = computeNextPot(currentAction, potSize, stackDepth)
-    setPotSize(nextPot)
-
-    // Advance to next street
     const nextIndex = streetIndex + 1
     const nextStreet = STREET_NAMES[nextIndex + 1]
-    const cardsNeeded = nextIndex === 1 ? 4 : 5 // 4 for turn, 5 for river
+    const cardsNeeded = nextIndex === 1 ? 4 : 5
 
-    // Auto-generate random cards if the board is too short for the next street
     const parsed = parseBoardCards(boardStr)
     let updatedBoard = boardStr
     if (parsed.length < cardsNeeded) {
@@ -458,42 +452,55 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
         updatedBoard += card
         used.push(card)
       }
-      setBoardStr(updatedBoard)
     }
+    return { nextIndex, nextStreet, nextPot, updatedBoard }
+  })()
 
-    setStreetIndex(nextIndex)
+  // Effect: auto-fetch strategy when street or board state changes
+  useEffect(() => {
+    const ctrl = new AbortController()
+    const doFetch = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(`${API_BASE}/solver/postflop-strategy`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            board: boardStr,
+            position: activePosition,
+            street: currentStreet,
+            pot_size: potSize,
+            stack_depth: stackDepth,
+          }),
+          signal: ctrl.signal,
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data: StrategyResponse = await res.json()
+        if (!ctrl.signal.aborted) {
+          setStrategy(data)
+          setLoading(false)
+        }
+      } catch (err: any) {
+        if (!ctrl.signal.aborted && err.name !== 'AbortError') {
+          setError(err.message)
+          setLoading(false)
+        }
+      }
+    }
+    doFetch()
+    return () => ctrl.abort()
+  }, [streetIndex, boardStr, activePosition, currentStreet, potSize, stackDepth])
+
+  const advanceToNextStreet = () => {
+    if (!nextStreetInfo) return
+
+    setPotSize(nextStreetInfo.nextPot)
+    setBoardStr(nextStreetInfo.updatedBoard)
+    setStreetIndex(nextStreetInfo.nextIndex)
     setUserChoice(null)
     setStrategy(null)
     setError(null)
-
-    // Fetch strategy for the new street on next render
-    // Use setTimeout to let state settle
-    setTimeout(() => {
-      setLoading(true)
-      fetch(`${API_BASE}/solver/postflop-strategy`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          board: updatedBoard,
-          position: activePosition,
-          street: nextStreet,
-          pot_size: nextPot,
-          stack_depth: stackDepth,
-        }),
-      })
-        .then(res => {
-          if (!res.ok) throw new Error(`HTTP ${res.status}`)
-          return res.json()
-        })
-        .then((data: StrategyResponse) => {
-          setStrategy(data)
-          setLoading(false)
-        })
-        .catch((err: any) => {
-          setError(err.message)
-          setLoading(false)
-        })
-    }, 0)
   }
 
   return (
@@ -738,7 +745,7 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
           </div>
 
           {/* Random Spot button */}
-          <button onClick={() => { handleRandomSpot(); setTimeout(fetchStrategy, 50) }}
+          <button onClick={handleRandomSpot}
             disabled={loading}
             aria-label="Generate random postflop spot"
             style={{
