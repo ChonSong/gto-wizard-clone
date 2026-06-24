@@ -57,7 +57,7 @@ const DEFAULT_PREFLOP: StreetRecord = {
 }
 
 // ── Helpers ──────────────────────────────────────────────
-function parseBoardCards(boardStr: string): { rank: string; suit: string }[] {
+export function parseBoardCards(boardStr: string): { rank: string; suit: string }[] {
   const cards: { rank: string; suit: string }[] = []
   const cleaned = boardStr.replace(/[^2-9TJQKAtshdch]/gi, '')
   for (let i = 0; i < cleaned.length; i += 2) {
@@ -89,7 +89,7 @@ function boardCardsToString(cards: { rank: string; suit: string }[]): string {
   return cards.map(c => c.rank + c.suit).join('')
 }
 
-function formatActionButton(action: string, potSize: number, stackDepth: number): { label: string; amount?: number } {
+export function formatActionButton(action: string, potSize: number, stackDepth: number): { label: string; amount?: number } {
   if (action === 'check') return { label: 'CHECK' }
   if (action === 'fold') return { label: 'FOLD' }
   if (action === 'call') return { label: 'CALL', amount: Math.round(potSize * 0.5) }
@@ -109,7 +109,7 @@ function formatActionButton(action: string, potSize: number, stackDepth: number)
 }
 
 /** Extract the action type key from an action string (e.g. 'all_in:98.185' → 'all_in'). */
-function getActionKey(action: string): string {
+export function getActionKey(action: string): string {
   if (action.startsWith('bet')) return 'bet'
   if (action.startsWith('raise')) return 'raise'
   if (action.startsWith('all_in')) return 'all_in'
@@ -117,7 +117,7 @@ function getActionKey(action: string): string {
 }
 
 // Compute the new pot size after a given action is taken
-function computeNextPot(action: string, currentPot: number, stackDepth: number): number {
+export function computeNextPot(action: string, currentPot: number, stackDepth: number): number {
   if (action === 'check' || action === 'fold') return currentPot
   if (action === 'call') return currentPot * 2
   if (action.startsWith('bet:')) {
@@ -133,7 +133,7 @@ function computeNextPot(action: string, currentPot: number, stackDepth: number):
 }
 
 // Get the display label and amount for a street's action
-function streetActionLabel(action: string, potSize: number, stackDepth: number): string {
+export function streetActionLabel(action: string, potSize: number, stackDepth: number): string {
   if (action === 'check') return 'Check'
   if (action === 'fold') return 'Fold'
   if (action === 'call') return 'Call'
@@ -150,7 +150,7 @@ function streetActionLabel(action: string, potSize: number, stackDepth: number):
 }
 
 // Button color based on action type
-function actionColor(action: string): string {
+export function actionColor(action: string): string {
   if (action === 'fold') return GRAY
   if (action === 'check') return '#555'
   if (action === 'call') return BLUE

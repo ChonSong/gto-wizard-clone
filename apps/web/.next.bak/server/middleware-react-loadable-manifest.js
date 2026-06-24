@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST='{"app/icm/page.tsx -> @/components/icm/ICMResults":{"id":87158,"files":["static/chunks/3726-63d7f4c4485dbb93.js","static/chunks/7158.9d0483e4fd725b65.js"]},"app/strategies/page.tsx -> @/components/ui/StrategyHeatmap":{"id":60101,"files":["static/chunks/101-fc39bf6f3b2b3ffd.js"]}}';
