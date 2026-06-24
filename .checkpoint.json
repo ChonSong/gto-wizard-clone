@@ -12,7 +12,7 @@
       "task": "fix-matrix-legend-call-color",
       "sha": "e8105ed5",
       "date": "2026-06-24",
-      "summary": "Already implemented in e8105ed5 (legend tri-color at line 1222) and 854fc15 (ACTION_COLORS call→BLUE at line 74-76). Legend shows Red=Raise, Blue=Call, Dark=Fold. Cell coloring returns BLUE via ACTION_COLORS['call']. API correctly returns 'call' action for BB position only — UTG showing no blue cells is correct GTO RFI behavior. No code change needed this tick.",
+      "summary": "Already implemented in e8105ed5 (legend tri-color at line 1222) and 854fc15 (ACTION_COLORS call\u2192BLUE at line 74-76). Legend shows Red=Raise, Blue=Call, Dark=Fold. Cell coloring returns BLUE via ACTION_COLORS['call']. API correctly returns 'call' action for BB position only \u2014 UTG showing no blue cells is correct GTO RFI behavior. No code change needed this tick.",
       "coach": "approved"
     },
     {
@@ -26,7 +26,7 @@
       "task": "preflop-hand-matrix-blue-call-color",
       "sha": "854fc15",
       "date": "2026-06-23",
-      "summary": "Added blue (#3A6EA5) coloring for call-primary hand matrix cells. Normalized action keys in getCellColor (raise_2.5bb/raise_3bb → raise) for robust ACTION_COLORS lookup. Fixed fallback path: non-raise cells default to GRAY (fold) instead of BLUE when solver API is unavailable. Existing solver mode already handled call→BLUE via ACTION_COLORS (pre-existing), action normalization and fallback fix complete the implementation. 368+25 tests pass, live 200.",
+      "summary": "Added blue (#3A6EA5) coloring for call-primary hand matrix cells. Normalized action keys in getCellColor (raise_2.5bb/raise_3bb \u2192 raise) for robust ACTION_COLORS lookup. Fixed fallback path: non-raise cells default to GRAY (fold) instead of BLUE when solver API is unavailable. Existing solver mode already handled call\u2192BLUE via ACTION_COLORS (pre-existing), action normalization and fallback fix complete the implementation. 368+25 tests pass, live 200.",
       "coach": "approved"
     },
     {
@@ -68,14 +68,14 @@
       "task": "study-postflop-action-selection-feedback",
       "sha": "ae3564f",
       "date": "2026-06-23",
-      "summary": "Postflop action selection feedback: selected button highlights with green border/glow, GTO-recommended action shows ✓ GTO badge, feedback text below action row shows 'Correct!' or 'Suboptimal (EV gap: X.X bb)', 'Try Again' button resets selection, 'Continue to Next Street' button advances street. Unselected buttons disabled after pick. 368 tests pass, build clean, live 200.",
+      "summary": "Postflop action selection feedback: selected button highlights with green border/glow, GTO-recommended action shows \u2713 GTO badge, feedback text below action row shows 'Correct!' or 'Suboptimal (EV gap: X.X bb)', 'Try Again' button resets selection, 'Continue to Next Street' button advances street. Unselected buttons disabled after pick. 368 tests pass, build clean, live 200.",
       "coach": "approved"
     },
     {
       "task": "practice-timed-drill-mode",
       "sha": "4e0db55",
       "date": "2026-06-23",
-      "summary": "Timed Drill mode: per-spot countdown timer (configurable 30s/60s/120s) with visual ⏱️ indicator, auto-advance on expiry (records as incorrect), response time tracking with speed bonus scoring (up to +50 pts per spot), drill summary with Score/Avg Time/Accuracy. Timer duration selector in setup. Spaced Repetition shows 'coming soon' notice. 368 tests pass, build clean, live 200.",
+      "summary": "Timed Drill mode: per-spot countdown timer (configurable 30s/60s/120s) with visual \u23f1\ufe0f indicator, auto-advance on expiry (records as incorrect), response time tracking with speed bonus scoring (up to +50 pts per spot), drill summary with Score/Avg Time/Accuracy. Timer duration selector in setup. Spaced Repetition shows 'coming soon' notice. 368 tests pass, build clean, live 200.",
       "coach": "approved"
     },
     {
@@ -89,7 +89,7 @@
       "task": "study-spot-card-bar-with-action-prompts",
       "sha": "83fa99a",
       "date": "2026-06-23",
-      "summary": "Replaced flat position buttons with spot card bar: 6 horizontal scrollable position cards (UTG/HJ/CO/BTN/SB/BB), active card shows 'Take action' prompt + action buttons (Fold/Raise X/Allin Y/Call for SB/BB), minimized cards show compact view. GTO recommendation highlighted with ✓ badge. Raise sizing: 2.5bb UTG/HJ/CO/BTN, 3.5bb SB/BB. Call only for SB/BB. 368 tests pass, TS clean, build clean.",
+      "summary": "Replaced flat position buttons with spot card bar: 6 horizontal scrollable position cards (UTG/HJ/CO/BTN/SB/BB), active card shows 'Take action' prompt + action buttons (Fold/Raise X/Allin Y/Call for SB/BB), minimized cards show compact view. GTO recommendation highlighted with \u2713 badge. Raise sizing: 2.5bb UTG/HJ/CO/BTN, 3.5bb SB/BB. Call only for SB/BB. 368 tests pass, TS clean, build clean.",
       "coach": "approved"
     },
     {
@@ -110,14 +110,14 @@
       "task": "fix-strategy-lookup",
       "sha": "47af3de",
       "date": "2026-06-23",
-      "summary": "Verified fix-strategy-lookup is already complete. The dict type mismatch bug was fixed in commit 86e37bb (pass StrategyFilters instead of raw dict, fix store_strategy cache metadata). Strategy data auto-seeded on API startup — preflop and flop lookups return valid GTO ranges at all stack depths. Endpoint returns 200 for valid queries, 404 for missing data. 368 tests pass, build clean, live 200.",
+      "summary": "Verified fix-strategy-lookup is already complete. The dict type mismatch bug was fixed in commit 86e37bb (pass StrategyFilters instead of raw dict, fix store_strategy cache metadata). Strategy data auto-seeded on API startup \u2014 preflop and flop lookups return valid GTO ranges at all stack depths. Endpoint returns 200 for valid queries, 404 for missing data. 368 tests pass, build clean, live 200.",
       "coach": "approved"
     },
     {
       "task": "seed-preflop-strategies",
       "sha": "5d03f6d",
       "date": "2026-06-23",
-      "summary": "Verified seed-preflop-strategies is already complete. All 6 positions (UTG/HJ/CO/BTN/SB/BB) return 200 with strategy data at all 4 stack depths (50/100/150/200bb). Strategy data auto-seeded via main.py _auto_seed_strategies — 28 total preflop strategies in DB. make seed-preflop is idempotent. Advancing to next task.",
+      "summary": "Verified seed-preflop-strategies is already complete. All 6 positions (UTG/HJ/CO/BTN/SB/BB) return 200 with strategy data at all 4 stack depths (50/100/150/200bb). Strategy data auto-seeded via main.py _auto_seed_strategies \u2014 28 total preflop strategies in DB. make seed-preflop is idempotent. Advancing to next task.",
       "coach": "approved"
     },
     {
@@ -131,28 +131,28 @@
       "task": "study-postflop-street-navigation",
       "sha": "729e7e8",
       "date": "2026-06-23",
-      "summary": "Fixed postflop street navigation e2e tests: renamed 'Continue to Turn/River' button to 'Advance to Turn/River' to match test expectations. Fixed card width selectors in e2e tests (48px→40px) to match actual CardDisplay rendered width. All 118 e2e tests pass (up from 115), 368 Python tests pass. Build clean, live 200.",
+      "summary": "Fixed postflop street navigation e2e tests: renamed 'Continue to Turn/River' button to 'Advance to Turn/River' to match test expectations. Fixed card width selectors in e2e tests (48px\u219240px) to match actual CardDisplay rendered width. All 118 e2e tests pass (up from 115), 368 Python tests pass. Build clean, live 200.",
       "coach": "approved"
     },
     {
       "task": "fix-omaha-api-url",
       "sha": "729e7e8",
       "date": "2026-06-23",
-      "summary": "Verified fix-omaha-api-url is COMPLETE. Frontend endpoints already correct (commit 7803ad6 merged into HEAD). Omaha PLO5, Hi-Lo, and Shortdeck endpoints all return 200. Strategy data re-seeded (96 rows, 28 preflop + 68 flop). All 368 Python tests pass, deploy health check 11/11 pass. Backlog exhausted — all AGENTS.md tasks implemented.",
+      "summary": "Verified fix-omaha-api-url is COMPLETE. Frontend endpoints already correct (commit 7803ad6 merged into HEAD). Omaha PLO5, Hi-Lo, and Shortdeck endpoints all return 200. Strategy data re-seeded (96 rows, 28 preflop + 68 flop). All 368 Python tests pass, deploy health check 11/11 pass. Backlog exhausted \u2014 all AGENTS.md tasks implemented.",
       "coach": "approved"
     },
     {
       "task": "preflop-action-feedback-panel",
       "sha": "ead1e22",
       "date": "2026-06-23",
-      "summary": "Full GTO frequency distribution across all 4 actions (Fold/Call/Raise/All In) in feedback panel. Replaced single-bar GTO action display with complete 4-action bars, sorted by frequency, GTO action highlighted with ✓ badge. Progress stats already incrementing. 368 tests pass, build clean, live 200.",
+      "summary": "Full GTO frequency distribution across all 4 actions (Fold/Call/Raise/All In) in feedback panel. Replaced single-bar GTO action display with complete 4-action bars, sorted by frequency, GTO action highlighted with \u2713 badge. Progress stats already incrementing. 368 tests pass, build clean, live 200.",
       "coach": "approved"
     },
     {
       "task": "postflop-continue-next-street-flow",
       "sha": "ead1e22",
       "date": "2026-06-23",
-      "summary": "POSTFLOP-CONTINUE-NEXT-STREET-FLOW: COMPLETE (no code changes needed). PostflopTraining.tsx already has all 4 features: (1) green border/glow on selected action button, (2) 'Advance to Turn' advances FLOP→TURN→RIVER with auto-generated board cards, (3) 'Try Again' resets selection, (4) feedback shows 'Correct!' with EV comparison. 368 tests pass, build clean, live 200.",
+      "summary": "POSTFLOP-CONTINUE-NEXT-STREET-FLOW: COMPLETE (no code changes needed). PostflopTraining.tsx already has all 4 features: (1) green border/glow on selected action button, (2) 'Advance to Turn' advances FLOP\u2192TURN\u2192RIVER with auto-generated board cards, (3) 'Try Again' resets selection, (4) feedback shows 'Correct!' with EV comparison. 368 tests pass, build clean, live 200.",
       "coach": "approved"
     },
     {
@@ -236,14 +236,14 @@
       "task": "study-oop-ev-real-values",
       "sha": "854fc15",
       "date": "2026-06-23",
-      "summary": "OOP EV column in study Table tab already uses real solver equity data (weighted average across all hands: h.equity * h.frequency / sum(frequency)) converted to bb EV via (avgEquity - 0.5) * 3. Displayed as +X.X green / -X.X red, falls back to '—' when solver unavailable. Verified: study/page.tsx lines 398-415 compute from real rangeData, lines 2217-2223 render correctly. No Math.random() in OOP EV path. 393 tests pass, live 200.",
+      "summary": "OOP EV column in study Table tab already uses real solver equity data (weighted average across all hands: h.equity * h.frequency / sum(frequency)) converted to bb EV via (avgEquity - 0.5) * 3. Displayed as +X.X green / -X.X red, falls back to '\u2014' when solver unavailable. Verified: study/page.tsx lines 398-415 compute from real rangeData, lines 2217-2223 render correctly. No Math.random() in OOP EV path. 393 tests pass, live 200.",
       "coach": "approved"
     },
     {
       "task": "fix-spots-page-nan-values",
       "sha": "fee7e61",
       "date": "2026-06-23",
-      "summary": "StrategyHeatmap component NaN filtering already implemented in commit fee7e61. Object.values(strategy) entries filtered to exclude null/undefined/NaN/Infinity before computing avg frequency and avg EV. Falls back to null/'—' when no valid data. Action type switching preserves safe boundary: switches between Raise/Call/Fold, Bet/Call/Check, Push/Fold, Bet/Raise/Call/Check without ever showing NaN. Verified: StrategyHeatmap.tsx lines 710-723 filter, lines 876-892 display safely. 393 tests pass, live 200.",
+      "summary": "StrategyHeatmap component NaN filtering already implemented in commit fee7e61. Object.values(strategy) entries filtered to exclude null/undefined/NaN/Infinity before computing avg frequency and avg EV. Falls back to null/'\u2014' when no valid data. Action type switching preserves safe boundary: switches between Raise/Call/Fold, Bet/Call/Check, Push/Fold, Bet/Raise/Call/Check without ever showing NaN. Verified: StrategyHeatmap.tsx lines 710-723 filter, lines 876-892 display safely. 393 tests pass, live 200.",
       "coach": "approved"
     },
     {
@@ -311,20 +311,27 @@
     },
     {
       "task": "fix-action-summary-strip-position-aggregate",
-      "sha": "pending",
+      "sha": "c70b45f",
       "date": "2026-06-25",
-      "summary": "Replaced single-action summary strip with 6-position aggregate strip showing Fold/Call/Raise % and combo counts for UTG/HJ/CO/BTN/SB/BB. Active position highlighted with green border. Data fetched in parallel via 6 API calls to /solver/preflop-range. 368 tests pass, TS compiles clean.",
-      "coach": "pending"
+      "summary": "Replaced single-action summary strip with 6-position aggregate strip showing Fold/Call/Raise % and combo counts for UTG/HJ/CO/BTN/SB/BB. Active position highlighted with green border. Data fetched in parallel via 6 API calls to /solver/preflop-range. 368 tests pass, TS compiles clean. Deployed and verified live.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-position-buttons-range-percentage",
+      "sha": "8e563b7",
+      "date": "2026-06-25",
+      "summary": "Position cards in spot card bar now show range frequency % (e.g. 12.7%) instead of stack bb as the secondary label. Falls back to stack bb when no range data available. 368 tests pass, build clean. Deployed and verified live.",
+      "coach": "approved"
     }
   ],
   "health": "build_passes_site_200_0_js_errors",
-  "last_sha": "5a72beb",
+  "last_sha": "8e563b7",
   "blocker": null,
-  "note": "Player tick: fix-action-summary-strip-position-aggregate complete. Replaced single-action strip with 6-position aggregate (F/C/R % + combo counts for UTG/HJ/CO/BTN/SB/BB). Advanced to fix-position-buttons-range-percentage. 3 visual gap tasks remain.",
-  "current_task": "fix-position-buttons-range-percentage",
+  "note": "Player tick: fix-position-buttons-range-percentage complete. Position cards now show range frequency % instead of stack bb. Advancing to fix-action-button-uniform-heights.",
+  "current_task": "fix-action-button-uniform-heights",
   "spec_gaps": [
     {
-      "item": "Production build fails — e2e/ TS files not excluded",
+      "item": "Production build fails \u2014 e2e/ TS files not excluded",
       "type": "infra_gap",
       "priority": 1,
       "evidence": "Fixed by Player commit 235df85: added 'e2e' to tsconfig.json exclude list. Build now passes, live site 200, postflop solver works.",
@@ -404,7 +411,7 @@
       "item": "Postflop 'Advance to Turn' does not advance street",
       "type": "bug",
       "priority": 1,
-      "evidence": "Clicking 'Advance to Turn' button after action selection on flop — button fires but state doesn't transition to TURN. 0 JS console errors. Board cards stay at flop, pot unchanged. Pre-existing bug noted across 3+ review cycles but never tasked.",
+      "evidence": "Clicking 'Advance to Turn' button after action selection on flop \u2014 button fires but state doesn't transition to TURN. 0 JS console errors. Board cards stay at flop, pot unchanged. Pre-existing bug noted across 3+ review cycles but never tasked.",
       "status": "open"
     },
     {
@@ -425,14 +432,14 @@
       "item": "Strategies page duplicate default flop cards",
       "type": "bug",
       "priority": 2,
-      "evidence": "All 3 default flop cards are 'Kd' (King of diamonds) — impossible in poker. Causes '0 spots found' and disabled 'Solve' button. 0 console errors.",
+      "evidence": "All 3 default flop cards are 'Kd' (King of diamonds) \u2014 impossible in poker. Causes '0 spots found' and disabled 'Solve' button. 0 console errors.",
       "status": "open"
     },
     {
       "item": "Matrix legend missing Blue=Call entry",
       "type": "visual_mismatch",
       "priority": 2,
-      "evidence": "Fixed in commit e8105ed5 (legend tri-color) and 854fc15 (call→BLUE in ACTION_COLORS). Legend shows Red=Raise, Blue=Call, Dark=Fold. Coach approved in 2026-06-25 cycle.",
+      "evidence": "Fixed in commit e8105ed5 (legend tri-color) and 854fc15 (call\u2192BLUE in ACTION_COLORS). Legend shows Red=Raise, Blue=Call, Dark=Fold. Coach approved in 2026-06-25 cycle.",
       "status": "complete"
     },
     {
@@ -460,14 +467,14 @@
       "item": "Suit colors non-standard (green clubs, blue diamonds)",
       "type": "visual_mismatch",
       "priority": 3,
-      "evidence": "NOW CORRECT per 2026-06-24 visual check. All suits render with standard poker colors (♠♣ white/black, ♥♦ red). Was previously regressed to uniform gray; now restored. Closing spec_gap.",
+      "evidence": "NOW CORRECT per 2026-06-24 visual check. All suits render with standard poker colors (\u2660\u2663 white/black, \u2665\u2666 red). Was previously regressed to uniform gray; now restored. Closing spec_gap.",
       "status": "complete"
     },
     {
-      "item": "Solutions page card rendering — duplicated + jumbled text formatting",
+      "item": "Solutions page card rendering \u2014 duplicated + jumbled text formatting",
       "type": "bug",
       "priority": 1,
-      "evidence": "Coach visual comparison (2026-06-25): Board cards appear twice consecutively without spacing (9♠9♥4♦9♠ 9♥ 4♦), position labels concatenated (BBflopflopBB), street labels duplicated. Extends known 'Strategies page duplicate flop cards' bug — formatting is also broken. Makes solution cards nearly unreadable.",
+      "evidence": "Coach visual comparison (2026-06-25): Board cards appear twice consecutively without spacing (9\u26609\u26654\u26669\u2660 9\u2665 4\u2666), position labels concatenated (BBflopflopBB), street labels duplicated. Extends known 'Strategies page duplicate flop cards' bug \u2014 formatting is also broken. Makes solution cards nearly unreadable.",
       "status": "open"
     },
     {
@@ -481,21 +488,21 @@
       "item": "Solutions page search label duplicated ('SearchSearch')",
       "type": "bug",
       "priority": 3,
-      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Search bar shows single 'Search' label — no duplication.",
+      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Search bar shows single 'Search' label \u2014 no duplication.",
       "status": "complete"
     },
     {
       "item": "Solutions page right panel shows duplicated main content instead of detail",
       "type": "bug",
       "priority": 3,
-      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Detail panel shows proper GTO strategy breakdown (action, frequency, EV) with 'Practice This Spot' and 'Study' buttons — no longer duplicated main content.",
+      "evidence": "NOW FIXED per 2026-06-25 visual comparison. Detail panel shows proper GTO strategy breakdown (action, frequency, EV) with 'Practice This Spot' and 'Study' buttons \u2014 no longer duplicated main content.",
       "status": "complete"
     },
     {
       "item": "Course cards metadata concatenated without spacing",
       "type": "bug",
       "priority": 3,
-      "evidence": "Coach visual comparison (2026-06-24): Course metadata labels concatenated (e.g., 'beginnerPreflop', 'intermediatePostflop') — missing space separator between difficulty and category.",
+      "evidence": "Coach visual comparison (2026-06-24): Course metadata labels concatenated (e.g., 'beginnerPreflop', 'intermediatePostflop') \u2014 missing space separator between difficulty and category.",
       "status": "open"
     },
     {
@@ -507,11 +514,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "9188888",
-    "last_reviewed_at": "2026-06-25T17:35:00Z",
-    "verdict": "regression-check",
-    "notes": "Cycle 2026-06-25T17:35. No new Player commits (HEAD = 9188888, same as last_reviewed_sha). Visual comparison delegated: 8 pages compared. 3 improvements since last cycle: (1) ICM Calculate button NOW FIXED — full results render (was stuck 'Calculating...'), (2) Solutions SearchSearch label dup FIXED, (3) Solutions right panel dup content FIXED — shows GTO strategy detail. Equity Calculate button confirmed present (partially fixed last cycle). 5 unchanged known issues: postflop Advance to Turn, e2e infra, strategies duplicate Kd, action summary strip, position buttons show bb. 2 unchanged known visual bugs: solutions card rendering (duplicated board cards + jumbled text), course metadata concatenated. 1 new minor: solutions '7solutions' count space missing. 0 console errors on all pages. Original site login-walled — interaction meta-analysis skipped. Remaining open spec_gaps: 7 (including 1 new minor). Backlog: 2+ tasks in AGENTS.md (current_task: fix-action-summary-strip-position-aggregate).",
-    "last_review": "2026-06-25T17:35:00Z",
-    "status": "regression-check"
+    "last_reviewed_sha": "8e563b7",
+    "last_reviewed_at": "2026-06-26T01:35:00Z",
+    "verdict": "approved",
+    "notes": "CYCLE: 2026-06-26 01:35 UTC. 2 Player commits approved: c70b45f (6-position aggregate strip) and 8e563b7 (range frequency % on position cards). Both deployed via clean build + service restart (was running stale build from 16:49 previous day). Live site now shows: position buttons with 12.7% range frequency (not 100.0 stack bb), 6-position F/C/R aggregate strip with combo counts. 368 Python tests pass, 0 JS console errors on /study. Open bugs unchanged: advance-to-turn stagnant (p1), strategies duplicate Kd cards (p2), solutions page jumbled/duplicated cards (p2), course metadata concatenated (p3), solutions count '7solutions'(p3). Current task remains fix-action-button-uniform-heights."
   }
 }
