@@ -307,7 +307,7 @@
   "last_sha": "5a72beb",
   "blocker": null,
   "note": "Coach-driven visual comparison: Coach compares reference screenshots against live page, generates gap tasks. Player waits for generated tasks. Visual gap tasks pending Coach generation.",
-  "current_task": "tbd",
+  "current_task": "fix-postflop-advance-turn-flow",
   "spec_gaps": [
     {
       "item": "Production build fails — e2e/ TS files not excluded",
@@ -399,14 +399,28 @@
       "priority": 2,
       "evidence": "npx playwright test from apps/web/ fails with nested @playwright/test version conflict. Only works from e2e/ subdirectory. Problem returns after each npm install.",
       "status": "open"
+    },
+    {
+      "item": "ICM calculator button stuck in Calculating... state",
+      "type": "bug",
+      "priority": 2,
+      "evidence": "Navigating to /icm shows 'Calculating...' button that never transitions to 'Recalculate'. Calculation data renders below but button state is stuck. 0 console errors.",
+      "status": "open"
+    },
+    {
+      "item": "Strategies page duplicate default flop cards",
+      "type": "bug",
+      "priority": 2,
+      "evidence": "All 3 default flop cards are 'Kd' (King of diamonds) — impossible in poker. Causes '0 spots found' and disabled 'Solve' button. 0 console errors.",
+      "status": "open"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "5a72beb",
-    "last_reviewed_at": "2026-06-24T17:35:00Z",
+    "last_reviewed_at": "2026-06-24T18:21:00Z",
     "verdict": "approved",
-    "notes": "2 player commits reviewed: 913e79d (Playwright video: retain-on-failure) + 5a72beb (Playwright video: on — record all). Combined: video recording enabled for all E2E tests. Security: no new deps/endpoints. YAGNI: clean — config change for better test debugging. Perf: N/A. Tests: API 25/38 skip (normal), vitest 53/53, E2E smoke 6/6 passed. Full E2E suite times out (too many tests). Browser QA: Full workflow tested — preflop position selection with GTO matrix, postflop solver returns real EV values (CALL 93% EV:2.75, BET 33% 25% EV:3.30), action feedback '✓ Correct!' with GTO comparison overlay. 0 console errors throughout. Pre-existing bug: 'Advance to Turn' button doesn't advance street (0 JS errors — state bug). New backlog tasks generated (2 open spec gaps added). Coach visual comparison pending — will generate gap tasks next cycle.",
-    "last_review": "2026-06-24T17:00:00Z",
+    "notes": "No new player commits since last review. Stalled loop detected (current_task: tbd, all 42 completed entries approved). Investigation of live site (wiz.codeovertcp.com) found: all routes 200, 0 console errors on all pages, but 3 new bugs discovered: (1) Postflop 'Advance to Turn' flow completely broken — root cause: fetchStrategy() calls setUserChoice(null) which clears user action before strategy loads, preventing feedback/advance buttons from rendering (P0). (2) ICM calculator button stuck in perpetual 'Calculating...' state (P2). (3) Strategies page defaults to 3 identical 'Kd' flop cards (P2). AGENTS.md updated with 3 new GTO tasks + 1 cross-project polytopia test task. current_task set to fix-postflop-advance-turn-flow. 2 new spec_gap entries added. GTO backend tests 368/368 pass. Polytopia: reviewed fix-game-speed-control (704df66), site restored (was 502 due to vite port fallback, fixed with --strictPort).",
+    "last_review": "2026-06-24T18:21:00Z",
     "status": "approved"
   }
 }
