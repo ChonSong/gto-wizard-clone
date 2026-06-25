@@ -356,14 +356,21 @@
       "sha": "0478b35",
       "date": "2026-06-25",
       "summary": "Remove duplicate board text rendering (formatBoardDisplay) and redundant street badge from solution cards. Board was shown twice (visual cards + text), street badge duplicated board_type. Removed unused formatBoardDisplay function. 368 tests pass, TS compiles clean.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-sb-range-percentage-fallback",
+      "sha": "d40ad33",
+      "date": "2026-06-26",
+      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('—') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
       "coach": "pending"
     }
   ],
-  "health": "build_passes_368_tests_pass_live_200",
-  "last_sha": "0478b35",
+  "health": "build_passes_368_tests_pass_live_200_0_js_errors",
+  "last_sha": "d40ad33",
   "blocker": null,
-  "note": "Player tick: fix-strategies-placeholder-cards complete (e722a14). Distinct placeholders: Ks/7h/2c/Td/3s. 368 tests pass. Next: fix-solutions-card-text-formatting.",
-  "current_task": "fix-sb-range-percentage-fallback",
+  "note": "Player tick: fix-sb-range-percentage-fallback complete (d40ad33). SB card now shows '—' instead of '99.5bb' when no range data. 368 tests pass. All 4 recovery tasks complete. No remaining tasks in AGENTS.md.",
+  "current_task": "tbd",
   "spec_gaps": [
     {
       "item": "Production build fails \u2014 e2e/ TS files not excluded",
@@ -467,8 +474,8 @@
       "item": "Strategies page duplicate default flop cards",
       "type": "bug",
       "priority": 2,
-      "evidence": "All 3 default flop cards are 'Kd' (King of diamonds) \u2014 impossible in poker. Causes '0 spots found' and disabled 'Solve' button. 0 console errors.",
-      "status": "open"
+      "evidence": "FIXED by commit e722a14: distinct placeholders Ks/7h/2c/Td/3s. Verified live: all 5 inputs show different cards.",
+      "status": "complete"
     },
     {
       "item": "Matrix legend missing entirely (was reverted, not fixed)",
@@ -488,8 +495,8 @@
       "item": "Position buttons show stack bb not range % (SB only)",
       "type": "visual_mismatch",
       "priority": 2,
-      "evidence": "PARTIALLY FIXED: UTG/HJ/CO/BTN/BB all correctly show range frequency % (12.7%). Only SB shows '99.5bb' (stack) instead of range %. Root cause: SB position aggregate data returns total=0 (API has no SB preflop range data), triggering stack bb fallback in position card rendering at page.tsx:935-942.",
-      "status": "open"
+      "evidence": "FIXED by commit d40ad33: SB position card now shows '—' (em-dash) instead of stack bb ('99.5bb') when API returns total=0. Positions with valid data (UTG/HJ/CO/BTN/BB) continue showing range %.",
+      "status": "complete"
     },
     {
       "item": "Action button heights inconsistent in postflop mode",
@@ -570,9 +577,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "0478b35",
-    "last_reviewed_at": "2026-06-25T23:05:00Z",
-    "verdict": "pending",
-    "notes": ""
+    "last_reviewed_sha": "05db20b",
+    "last_reviewed_at": "2026-06-25T09:36:00+10:00",
+    "verdict": "approved",
+    "notes": "Coach cycle 2026-06-25 09:36 AEST. Player: fix-solutions-card-text-formatting (0478b35) ✅ clean on /solutions — no duplicate board text. fix-deploy-stale-build (05db20b) ✅ introduces .deployed-hash marker. Visual comparison: 0 regressions. Legend renders correctly (tri-color Raise/Call/Fold). Blue cells present for BB (UTG no-call is correct GTO). Action buttons uniform 57px. 0 JS errors all pages. Fixes needed: fix-sb-range-percentage-fallback (SB shows 99.5bb not range %), ICM calculator stuck, E2E node_modules conflict."
   }
 }
