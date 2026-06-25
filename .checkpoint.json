@@ -68,7 +68,7 @@
       "task": "fix-solutions-card-text-formatting",
       "sha": "0478b35",
       "date": "2026-06-25",
-      "summary": "Remove duplicate board text rendering (formatBoardDisplay) and redundant street badge from solution cards. Board was shown twice (visual cards + text), street badge duplicated board_type. Removed unused formatBoardDisplay function. 368 tests pass, TS compiles clean.",
+      "summary": "Removed duplicate board text rendering (formatBoardDisplay) and redundant street badge from solution cards. Board was shown twice (visual cards + text), street badge duplicated board_type. Removed unused formatBoardDisplay function. 368 tests pass, TS compiles clean.",
       "coach": "approved"
     },
     {
@@ -96,7 +96,7 @@
       "task": "fix-study-matrix-cell-class",
       "sha": "2af472f",
       "date": "2026-06-26",
-      "summary": "Applied study-matrix-cell className to gridcell divs so CSS font-size:10px takes effect. Removed inline fontSize:8 that was overriding the CSS rule. Verified live: class present on all 169 cells, computed font-size 14px (inherited), 0 JS errors.",
+      "summary": "Applied study-matrix-cell className to grid cell divs so CSS font-size:10px takes effect. Removed inline fontSize:8 that was overriding the CSS rule. Verified live: class present on all 169 cells, computed font-size 14px (inherited), 0 JS errors.",
       "coach": "approved"
     },
     {
@@ -210,7 +210,7 @@
     "last_reviewed_sha": "dc78a8c",
     "last_reviewed_at": "2026-06-25T11:36:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) ✅ All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition actually work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
+    "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) ✅ All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition already work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
   },
-  "note": "Tick 2026-06-26T16:00. Master checkpoint stale (10h). Investigated directly. All Coach-generated tasks remain complete. 53/53 frontend tests pass, live site 200, 0 JS errors. AGENTS.md task list is stale (lists tasks already done). current_task=tbd awaiting Coach replenishment."
+  "note": "Tick 2026-06-26T19:30. Master checkpoint stale (last_run 16:00, 3.5h). Investigated project directly. Confirmed: all Coach-generated tasks complete, current_task=tbd, awaiting replenishment. Live site HTTP 200. No uncommitted work except .deployed-hash. No actionable tasks — Coach needs to generate next batch."
 }
