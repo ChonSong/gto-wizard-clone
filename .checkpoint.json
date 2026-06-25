@@ -26,14 +26,14 @@
       "task": "fix-study-matrix-font-size",
       "sha": "fc77b25",
       "date": "2026-06-25",
-      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px→8px, restored mobile frequency display (none→block). 53 frontend tests pass, 368 Python tests pass, build clean.",
+      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px\u21928px, restored mobile frequency display (none\u2192block). 53 frontend tests pass, 368 Python tests pass, build clean.",
       "coach": "approved"
     },
     {
       "task": "fix-sb-range-percentage-fallback",
       "sha": "d40ad33",
       "date": "2026-06-26",
-      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('—') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
+      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('\u2014') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
       "coach": "approved"
     },
     {
@@ -47,7 +47,7 @@
       "task": "fix-suit-colors-standard-poker",
       "sha": "0b9cab5",
       "date": "2026-06-25",
-      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray→white (text-white), Diamonds blue→red (text-red-400), Clubs green→white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
+      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray\u2192white (text-white), Diamonds blue\u2192red (text-red-400), Clubs green\u2192white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
       "coach": "approved"
     },
     {
@@ -84,75 +84,90 @@
       "date": "2026-06-25",
       "summary": "Replaced single-action summary strip with 6-position aggregate strip showing Fold/Call/Raise % and combo counts for UTG/HJ/CO/BTN/SB/BB. Active position highlighted with green border. Data fetched in parallel via 6 API calls to /solver/preflop-range. 368 tests pass, TS compiles clean. Deployed and verified live.",
       "coach": "approved"
+    },
+    {
+      "task": "add-missing-right-sidebar-sub-tabs",
+      "sha": "dc78a8c",
+      "date": "2026-06-26",
+      "summary": "Added 4 missing right sidebar sub-tabs from interaction spec (line 82): Actions chart (horizontal bar chart of GTO frequencies), Range compare (side-by-side raise freq across 6 positions), Equity chart (histogram of equity distribution in 5 buckets), Compare EV (EV comparison across positions in bb). Tab bar now scrollable with 9 tabs total. 368 Python tests pass, 53 frontend tests pass, TS compiles clean.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_pass_live_200_0_js_errors",
-  "last_sha": "24f5d8d",
+  "last_sha": "dc78a8c",
   "blocker": null,
-  "current_task": "fix-filters-sub-tab-stub",
+  "current_task": "tbd",
   "spec_gaps": [
     {
-      "item": "Hand/blocker filters on Filters sub-tab — 'coming soon' placeholder",
+      "item": "Hand/blocker filters on Filters sub-tab — RESOLVED in ac3a20b (category checkboxes + blocker rank buttons)",
       "type": "stub",
       "priority": 1,
-      "evidence": "Filters sub-tab still shows 'Hand/blocker filters coming soon' placeholder text. No functional filter controls implemented.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "evidence": "RESOLVED: Filters sub-tab has functional category checkboxes (pairs/suited/offsuit/broadway/aceHigh) and blocker rank selectors (A/K/Q/J/T). Hand count summary updates dynamically.",
+      "cycles_stagnant": 0,
+      "status": "resolved"
     },
     {
-      "item": "Blockers sub-tab with card removal analysis — not implemented",
+      "item": "Blockers sub-tab with card removal analysis — RESOLVED in ac3a20b",
       "type": "missing_feature",
       "priority": 1,
-      "evidence": "No 'blockers' option in rightSubTab state. Interaction spec lists Blockers tab with card removal analysis.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "evidence": "RESOLVED: Blockers sub-tab shows card removal analysis with combo counting, per-class breakdown, and board card blocking display.",
+      "cycles_stagnant": 0,
+      "status": "resolved"
+    },
+    {
+      "item": "Actions chart, Range compare, Equity chart, Compare EV sub-tabs — RESOLVED in dc78a8c",
+      "type": "missing_feature",
+      "priority": 1,
+      "evidence": "RESOLVED: All 4 sub-tabs added with visual charts (bar chart, position comparison, equity histogram, EV comparison).",
+      "cycles_stagnant": 0,
+      "status": "resolved"
     },
     {
       "item": "Top bar with Cash/bb/spots-remaining/Upgrade — not implemented",
       "type": "missing_feature",
       "priority": 2,
       "evidence": "No top bar with Cash game selector, bb/spots count, or Upgrade link.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     },
     {
-      "item": "Top bar action prompts per position header row — not implemented",
+      "item": "Top bar action prompts per position header row \u2014 not implemented",
       "type": "missing_feature",
       "priority": 3,
       "evidence": "No action prompt header row above position cards.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     },
     {
-      "item": "Spaced Repetition mode on /practice — shows 'coming soon'",
+      "item": "Spaced Repetition mode on /practice \u2014 shows 'coming soon'",
       "type": "stub",
       "priority": 2,
       "evidence": "Spaced Repetition training mode still shows 'coming soon' notice. Interaction spec confirms SR is a core training mode.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     },
     {
       "item": "E2E test runner nested node_modules version conflict",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "npx playwright test from apps/web/ fails with nested @playwright/test version conflict. Only works from e2e/ subdirectory. Problem returns after each npm install.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     },
     {
       "item": "Position selector uses card layout instead of player tiles with stacks",
       "type": "visual_mismatch",
       "priority": 2,
       "evidence": "Uses spot card bar (cards with range % + action prompts) instead of player tiles with stack sizes. Partially addressed by spot card bar implementation but visual mismatch remains.",
-      "cycles_stagnant": 3,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "24f5d8d",
     "last_reviewed_at": "2026-06-25T19:35:00+10:00",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-25 19:35 AEST. fix-variants-listing-missing-links (24f5d8d) ✅ Added omaha8/stud8/2-7td/2-7sd to hasDedicatedPage(). Verified live: all 10 variants show '🎯 Open Equity Calculator' links, all linked pages return 200, 0 JS errors. 53 frontend tests pass, 368 Python tests pass. Methodology gate: clean. Verified matrix legend renders (Raise/Call/Fold tri-color). ICM calculator auto-loads correctly (not stuck)."
+    "notes": "Coach cycle 2026-06-25 19:35 AEST. fix-variants-listing-missing-links (24f5d8d) \u2705 Added omaha8/stud8/2-7td/2-7sd to hasDedicatedPage(). Verified live: all 10 variants show '\ud83c\udfaf Open Equity Calculator' links, all linked pages return 200, 0 JS errors. 53 frontend tests pass, 368 Python tests pass. Methodology gate: clean. Verified matrix legend renders (Raise/Call/Fold tri-color). ICM calculator auto-loads correctly (not stuck)."
   },
-  "note": "fix-variants-listing-missing-links done (24f5d8d). Verified live: all variants linked correctly. Cleaned up stale spec_gaps (resolved items removed). Pending: Filters stub, Blockers missing, top bar missing, spaced repetition stub."
+  "note": "add-missing-right-sidebar-sub-tabs done (dc78a8c). Added Actions chart, Range compare, Equity chart, Compare EV sub-tabs. All 9 interaction spec sub-tabs now implemented. 368 Python + 53 frontend tests pass. Coach review pending."
 }
