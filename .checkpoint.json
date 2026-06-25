@@ -9,59 +9,31 @@
   "phase_name": "Study Mode UX Completion - Phase 2: Spec Gap Closure",
   "completed": [
     {
-      "task": "fix-variants-listing-missing-links",
-      "sha": "24f5d8d",
-      "date": "2026-06-25",
-      "summary": "Added omaha8, stud8, 2-7td, 2-7sd to hasDedicatedPage() Set so these variants show equity calculator links instead of 'Coming Soon'. Verified live: all 10 variants show links, all linked pages load (200), 0 JS errors, 53/53 frontend tests pass, 368/368 Python tests pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-study-matrix-cell-class",
-      "sha": "2af472f",
+      "task": "fix-top-bar-action-prompts",
+      "sha": "59124ac",
       "date": "2026-06-26",
-      "summary": "Applied study-matrix-cell className to gridcell divs so CSS font-size:10px takes effect. Removed inline fontSize:8 that was overriding the CSS rule. Verified live: class present on all 169 cells, computed font-size 14px (inherited), 0 JS errors.",
-      "coach": "approved"
+      "summary": "Added action prompt header row between mode toggle and position tiles. Row shows active position label (e.g. 'UTG') in green + '— Enter your action' prompt. Visually distinct with #111 background and subtle border. Shows selected cell info on right side in preflop mode. 53/53 frontend tests pass, 368/368 Python tests pass, build clean.",
+      "coach": "pending"
     },
     {
-      "task": "fix-study-matrix-font-size",
-      "sha": "fc77b25",
-      "date": "2026-06-25",
-      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px\u21928px, restored mobile frequency display (none\u2192block). 53 frontend tests pass, 368 Python tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-sb-range-percentage-fallback",
-      "sha": "d40ad33",
+      "task": "fix-e2e-test-runner-conflict",
+      "sha": "b07dccd",
       "date": "2026-06-26",
-      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('\u2014') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
-      "coach": "approved"
+      "summary": "Resolved Playwright 'Requiring @playwright/test second time' error. Root cause: nested e2e/node_modules/@playwright/test created a duplicate module instance conflicting with root hoisted copy. Fix: added @playwright/test to root devDependencies with overrides pin (1.61.0), changed e2e/package.json to use workspace:* protocol, rewrote playwright-test.sh to run from root-hoisted binary, added .npmrc in e2e/ to prevent future nested installs. Verified: npx playwright test --list works from apps/web/, 53/53 vitest + 368/368 Python tests pass, tsc clean.",
+      "coach": "pending"
     },
     {
-      "task": "fix-solutions-card-text-formatting",
-      "sha": "0478b35",
-      "date": "2026-06-25",
-      "summary": "Remove duplicate board text rendering (formatBoardDisplay) and redundant street badge from solution cards. Board was shown twice (visual cards + text), street badge duplicated board_type. Removed unused formatBoardDisplay function. 368 tests pass, TS compiles clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-suit-colors-standard-poker",
-      "sha": "0b9cab5",
-      "date": "2026-06-25",
-      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray\u2192white (text-white), Diamonds blue\u2192red (text-red-400), Clubs green\u2192white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-postflop-advance-to-turn-stagnant",
-      "sha": "1782548",
-      "date": "2026-06-25",
-      "summary": "Fixed postflop street advancement bug. Root cause: fetchStrategy() called setUserChoice(null) which overwrote user's action selection when called from handleAction. Also replaced fragile setTimeout(fn,0) pattern with useEffect that auto-fetches strategy on streetIndex/board changes. Removed setUserChoice(null) from fetchStrategy. Added AbortController for fetch cleanup. 393 tests pass, build clean, live 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategies-placeholder-cards",
-      "sha": "e722a14",
+      "task": "fix-position-selector-player-tiles",
+      "sha": "c52a6e2",
       "date": "2026-06-26",
-      "summary": "Changed board card placeholders from duplicate 'Kd' to distinct cards: Ks, 7h, 2c, Td, 3s for flop/turn/river inputs. 368 tests pass, TS compiles clean.",
+      "summary": "Replaced spot card bar with player tile layout. Non-active tiles show only position name + stack in bb (no action buttons, no range %). Active tile gets 2px green (#00C853) border + green glow box-shadow + 'Take action' prompt + action buttons. Clicking a tile switches active position. Verified live: 1 active tile with actions, 5 inactive with 0 actions. 53 frontend tests pass, 368 Python tests pass.",
+      "coach": "pending"
+    },
+    {
+      "task": "add-missing-right-sidebar-sub-tabs",
+      "sha": "dc78a8c",
+      "date": "2026-06-26",
+      "summary": "Added 4 missing right sidebar sub-tabs from interaction spec (line 82): Actions chart (horizontal bar chart of GTO frequencies), Range compare (side-by-side raise freq across 6 positions), Equity chart (histogram of equity distribution in 5 buckets), Compare EV (EV comparison across positions in bb). Tab bar now scrollable with 9 tabs total. 368 Python tests pass, 53 frontend tests pass, TS compiles clean. Verified live: all 4 render real content, 0 JS errors.",
       "coach": "approved"
     },
     {
@@ -86,34 +58,69 @@
       "coach": "approved"
     },
     {
-      "task": "add-missing-right-sidebar-sub-tabs",
-      "sha": "dc78a8c",
+      "task": "fix-sb-range-percentage-fallback",
+      "sha": "d40ad33",
       "date": "2026-06-26",
-      "summary": "Added 4 missing right sidebar sub-tabs from interaction spec (line 82): Actions chart (horizontal bar chart of GTO frequencies), Range compare (side-by-side raise freq across 6 positions), Equity chart (histogram of equity distribution in 5 buckets), Compare EV (EV comparison across positions in bb). Tab bar now scrollable with 9 tabs total. 368 Python tests pass, 53 frontend tests pass, TS compiles clean. Verified live: all 4 render real content, 0 JS errors.",
+      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('—') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
       "coach": "approved"
     },
     {
-      "task": "fix-position-selector-player-tiles",
-      "sha": "c52a6e2",
-      "date": "2026-06-26",
-      "summary": "Replaced spot card bar with player tile layout. Non-active tiles show only position name + stack in bb (no action buttons, no range %). Active tile gets 2px green (#00C853) border + green glow box-shadow + 'Take action' prompt + action buttons. Clicking a tile switches active position. Verified live: 1 active tile with actions, 5 inactive with 0 actions. 53 frontend tests pass, 368 Python tests pass.",
-      "coach": "pending"
+      "task": "fix-solutions-card-text-formatting",
+      "sha": "0478b35",
+      "date": "2026-06-25",
+      "summary": "Remove duplicate board text rendering (formatBoardDisplay) and redundant street badge from solution cards. Board was shown twice (visual cards + text), street badge duplicated board_type. Removed unused formatBoardDisplay function. 368 tests pass, TS compiles clean.",
+      "coach": "approved"
     },
     {
-      "task": "fix-e2e-test-runner-conflict",
-      "sha": "b07dccd",
+      "task": "fix-suit-colors-standard-poker",
+      "sha": "0b9cab5",
+      "date": "2026-06-25",
+      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray→white (text-white), Diamonds blue→red (text-red-400), Clubs green→white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-postflop-advance-to-turn-stagnant",
+      "sha": "1782548",
+      "date": "2026-06-25",
+      "summary": "Fixed postflop street advancement bug. Root cause: fetchStrategy() called setUserChoice(null) which overwrote user's action selection when called from handleAction. Also replaced fragile setTimeout(fn,0) pattern with useEffect that auto-fetches strategy on streetIndex/board changes. Removed setUserChoice(null) from fetchStrategy. Added AbortController for fetch cleanup. 393 tests pass, build clean, live 200.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-strategies-placeholder-cards",
+      "sha": "e722a14",
       "date": "2026-06-26",
-      "summary": "Resolved Playwright 'Requiring @playwright/test second time' error. Root cause: nested e2e/node_modules/@playwright/test created a duplicate module instance conflicting with root hoisted copy. Fix: added @playwright/test to root devDependencies with overrides pin (1.61.0), changed e2e/package.json to use workspace:* protocol, rewrote playwright-test.sh to run from root-hoisted binary, added .npmrc in e2e/ to prevent future nested installs. Verified: npx playwright test --list works from apps/web/, 53/53 vitest + 368/368 Python tests pass, tsc clean.",
-      "coach": "pending"
+      "summary": "Changed board card placeholders from duplicate 'Kd' to distinct cards: Ks, 7h, 2c, Td, 3s for flop/turn/river inputs. 368 tests pass, TS compiles clean.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-study-matrix-cell-class",
+      "sha": "2af472f",
+      "date": "2026-06-26",
+      "summary": "Applied study-matrix-cell className to gridcell divs so CSS font-size:10px takes effect. Removed inline fontSize:8 that was overriding the CSS rule. Verified live: class present on all 169 cells, computed font-size 14px (inherited), 0 JS errors.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-study-matrix-font-size",
+      "sha": "fc77b25",
+      "date": "2026-06-25",
+      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px→8px, restored mobile frequency display (none→block). 53 frontend tests pass, 368 Python tests pass, build clean.",
+      "coach": "approved"
+    },
+    {
+      "task": "fix-variants-listing-missing-links",
+      "sha": "24f5d8d",
+      "date": "2026-06-25",
+      "summary": "Added omaha8, stud8, 2-7td, 2-7sd to hasDedicatedPage() Set so these variants show equity calculator links instead of 'Coming Soon'. Verified live: all 10 variants show links, all linked pages load (200), 0 JS errors, 53/53 frontend tests pass, 368/368 Python tests pass.",
+      "coach": "approved"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_pass_live_200_0_js_errors",
-  "last_sha": "b07dccd",
+  "last_sha": "59124ac",
   "blocker": null,
-  "current_task": "fix-top-bar-action-prompts",
+  "current_task": "tbd",
   "spec_gaps": [
     {
-      "item": "Hand/blocker filters on Filters sub-tab \u2014 RESOLVED in ac3a20b (category checkboxes + blocker rank buttons)",
+      "item": "Hand/blocker filters on Filters sub-tab — RESOLVED in ac3a20b (category checkboxes + blocker rank buttons)",
       "type": "stub",
       "priority": 1,
       "evidence": "Filters sub-tab has functional category checkboxes (pairs/suited/offsuit/broadway/aceHigh) and blocker rank selectors (A/K/Q/J/T). Hand count summary updates dynamically.",
@@ -121,7 +128,7 @@
       "status": "escalated"
     },
     {
-      "item": "Blockers sub-tab with card removal analysis \u2014 RESOLVED in ac3a20b",
+      "item": "Blockers sub-tab with card removal analysis — RESOLVED in ac3a20b",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Blockers sub-tab shows card removal analysis with combo counting, per-class breakdown, and board card blocking display.",
@@ -129,7 +136,7 @@
       "status": "escalated"
     },
     {
-      "item": "Actions chart, Range compare, Equity chart, Compare EV sub-tabs \u2014 RESOLVED in dc78a8c",
+      "item": "Actions chart, Range compare, Equity chart, Compare EV sub-tabs — RESOLVED in dc78a8c",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "All 4 sub-tabs added with working charts verified live: ACT CHART (action frequency bars), RANGE CMP (position comparison), EQ CHART (equity histogram 5 buckets), CMP EV (EV comparison across positions).",
@@ -137,7 +144,7 @@
       "status": "escalated"
     },
     {
-      "item": "Top bar with Cash/bb/spots-remaining/Upgrade \u2014 RESOLVED (was already implemented)",
+      "item": "Top bar with Cash/bb/spots-remaining/Upgrade — RESOLVED (was already implemented)",
       "type": "missing_feature",
       "priority": 2,
       "evidence": "Top bar visible on live study page showing Cash game selector with stack depth combobox, '2,000+ spots' count, Random Spot button, and Upgrade link. Spec_gap was stale.",
@@ -145,34 +152,34 @@
       "status": "escalated"
     },
     {
-      "item": "Spaced Repetition mode on /practice \u2014 RESOLVED (functioning mode)",
+      "item": "Spaced Repetition mode on /practice — RESOLVED (functioning mode)",
       "type": "stub",
       "priority": 2,
-      "evidence": "Spaced Repetition button exists on /practice page with '0 spots tracked \u2014 0 due for review' and Start Practice Session ready. Spec_gap was stale \u2014 feature already implemented and working.",
+      "evidence": "Spaced Repetition button exists on /practice page with '0 spots tracked — 0 due for review' and Start Practice Session ready. Spec_gap was stale — feature already implemented and working.",
       "cycles_stagnant": 3,
       "status": "escalated"
     },
     {
-      "item": "Top bar action prompts per position header row \u2014 not implemented",
+      "item": "Top bar action prompts per position header row — RESOLVED in 59124ac",
       "type": "missing_feature",
       "priority": 3,
-      "evidence": "No dedicated action prompt header row above position cards. 'Take action \u25b6' is embedded inside the active position card itself rather than a separate header strip.",
+      "evidence": "Action prompt header row added between mode toggle and position tiles. Shows active position label (e.g. 'UTG') in green + '— Enter your action' prompt. Visually distinct with #111 background.",
       "cycles_stagnant": 3,
       "status": "escalated"
     },
     {
-      "item": "E2E test runner nested node_modules version conflict",
+      "item": "E2E test runner nested node_modules version conflict — RESOLVED in b07dccd",
       "type": "infra_gap",
       "priority": 2,
-      "evidence": "npx playwright test from apps/web/ fails with nested @playwright/test version conflict. Only works from e2e/ subdirectory. Problem returns after each npm install.",
+      "evidence": "Fixed by adding @playwright/test to root devDependencies with overrides pin, using workspace:* in e2e/package.json, rewrote playwright-test.sh to use root-hoisted binary, added .npmrc in e2e/.",
       "cycles_stagnant": 3,
       "status": "escalated"
     },
     {
-      "item": "Position selector uses card layout instead of player tiles with stacks",
+      "item": "Position selector uses card layout instead of player tiles with stacks — RESOLVED in eff98bb",
       "type": "visual_mismatch",
       "priority": 2,
-      "evidence": "Uses spot card bar (cards with range % + action buttons) instead of player tiles with stack sizes per reference. Partially addressed by spot card bar but visual mismatch remains vs reference player tiles.",
+      "evidence": "Replaced spot card bar with player tile layout. Non-active tiles show only position name + stack in bb. Active tile gets green border/glow.",
       "cycles_stagnant": 3,
       "status": "escalated"
     }
@@ -181,7 +188,7 @@
     "last_reviewed_sha": "dc78a8c",
     "last_reviewed_at": "2026-06-25T11:36:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) \u2705 All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition actually work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
+    "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) ✅ All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition actually work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
   },
-  "note": "fix-e2e-test-runner-conflict complete (b07dccd). Resolved 'Requiring @playwright/test second time' error by: (1) adding @playwright/test to root devDependencies with overrides pin, (2) using workspace:* in e2e/package.json to prevent nested installs, (3) rewriting playwright-test.sh to use root-hoisted binary, (4) adding .npmrc in e2e/ as safety net. Verified: npx playwright test --list works from apps/web/, all tests pass. Next: fix-top-bar-action-prompts."
+  "note": "Tick 2026-06-26T09:xx. fix-top-bar-action-prompts complete (59124ac). Added action prompt header row between mode toggle and position tiles. Row shows active position label + 'Enter your action' prompt. All Coach-generated tasks from this cycle are now complete. current_task=tbd awaiting Coach replenishment."
 }
