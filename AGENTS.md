@@ -145,7 +145,49 @@ Ordered by priority. Each task is one unit of work for one player tick.
   - Session shows due-for-review spots at start
   - Summary shows due-now reviews and next review schedule
   - No regression to Timed Drill or Standard practice modes
-- **Coach checks**: Navigate to /practice, select Spaced Repetition mode, verify setup shows due-for-review count. Complete training, verify summary shows next review schedule.
+|- **Coach checks**: Navigate to /practice, select Spaced Repetition mode, verify setup shows due-for-review count. Complete training, verify summary shows next review schedule.
+
+## Spec Gap Tasks (2026-06-25 Coach Update)
+
+> Remaining open spec_gaps from .checkpoint.json that were not resolved in prior cycles. These gaps are genuine visual mismatches or infra issues vs the reference application that block completion of Phase 2.
+
+### Task: fix-position-selector-player-tiles
+- **Description**: The study page position selector uses a spot card bar layout — cards showing range frequency % and action buttons (Fold/Call/Raise) per position (lines 901-970). The reference GTO Wizard shows a row of player seat tiles: compact rectangles with position label and stack size in bb (e.g., "100bb") as the primary info. The active tile has a green (#00C853) border/glow and inactive tiles show muted stack info only (no action buttons). Replace the current card-style position buttons with a player tile layout: each tile shows position name + stack size in bb, active tile gets a green border/glow, inactive tiles show only name + stack (no action buttons). Remove per-position action buttons from non-active tiles — those are now displayed in the separate position action panel below. Keep the "Take action ▶" prompt in the active tile only.
+- **Location**: `apps/web/src/app/study/page.tsx` lines 901-970 — spot card bar render section (the `hspot-card` / `hspotcrd_*` components)
+- **Success criteria**:
+  - Position selector renders as compact player tiles (not card-style with action buttons)
+  - Each tile shows position name (UTG/HJ/CO/BTN/SB/BB) + stack size in bb (e.g., "100bb")
+  - Active position tile has green (#00C853) border/glow
+  - Non-active tiles show only name + stack (no action buttons, no range %)
+  - Clicking a tile switches the active position and updates the hand matrix
+  - Container scrolls horizontally if 6 tiles don't fit the viewport
+  - No console errors
+  - 53/53 frontend tests pass, 368/368 Python tests pass
+- **Coach checks**: Load /study, verify player tiles render (not cards with action buttons). Verify each tile shows stack size. Click a different position — verify active state transitions with green highlight. Verify hand matrix updates to match. Compare against reference screenshot for tile layout match.
+
+### Task: fix-e2e-test-runner-conflict
+- **Description**: `npx playwright test` from `apps/web/` fails with a nested `@playwright/test` version conflict. Two copies exist: root `node_modules/@playwright/test` and `apps/web/e2e/node_modules/@playwright/test` (or similar nested path). When Node resolves imports from the e2e config, the wrong copy is used, producing type errors (e.g., `Cannot find module '@playwright/test'` or version mismatch errors). Fix by: (a) deduplicating via workspace protocol — ensure root `package.json` declares `@playwright/test` at `"^1.61.0"` (or the correct version) and the nested copy is removed, (b) or configuring module resolution in the e2e `tsconfig.json` to prefer the correct workspace copy, (c) or running `npx dedupe` to flatten the dependency tree. After fix, `npx playwright test --list` from `apps/web/` should list all E2E test files without errors.
+- **Location**: Root `package.json` (workspace configuration), `apps/web/package.json` (devDependencies), `apps/web/e2e/` directory
+- **Success criteria**:
+  - `cd apps/web && npx playwright test --list` lists all E2E test files (no version conflict or module resolution errors)
+  - `cd apps/web && npx playwright test --reporter=list` runs tests (individual tests may pass/fail depending on env, but the runner no longer crashes)
+  - `cd apps/web && npx vitest run` still passes all existing unit tests (no regression)
+  - `cd apps/web && npm run build` still succeeds (no regression)
+  - No changes to test file content — only package resolution/deduplication fixes
+- **Coach checks**: Run `npx playwright test --list` from apps/web/ — verify no version conflict error. Run `npx vitest run` — verify all existing tests still pass. Run `npm run build` from apps/web/ — verify no breakage. Check package.json files for correct @playwright/test version alignment.
+
+### Task: fix-top-bar-action-prompts
+- **Description**: The study page has a top bar (Cash/stack/spots/Upgrade, lines 733-813) followed by a mode toggle (lines 815-840), then directly the position selector (line 901+). There is no dedicated action prompt header row between these sections. The reference shows a contextual header row like "HJ — Enter your action" that clearly states whose turn it is above the position tiles. Currently the only "Take action ▶" text is embedded inside the active position card (line 946-950), making it easy to miss. Add a header row between the mode toggle and position cards that: shows the active position label (e.g., "HJ"), a contextual action prompt (e.g., "Action" or "Enter your action"), and optionally the current hand/spot summary text. The row should be visually distinct (subtle background divider or border) to separate the top chrome from the interactive area.
+- **First verify**: Load `https://wiz.codeovertcp.com/study` and visually check if an action prompt header row already exists between the mode toggle and position cards. If already present, note it and mark this task as already completed.
+- **Location**: `apps/web/src/app/study/page.tsx` — insert between the mode toggle container (line ~840) and the preflop/postflop content section (line ~882), or between the mode toggle and the spot card bar
+- **Success criteria** (if not already implemented):
+  - A header row renders between the mode toggle and position cards
+  - The prompt text updates to match the active position (e.g., "UTG Action" | "HJ Action" | "CO Action")
+  - The row is visually distinct from surrounding sections (different background or subtle divider)
+  - No console errors
+  - No regression in top bar, mode toggle, or position card behavior
+  - 53/53 frontend tests pass, 368/368 Python tests pass
+- **Coach checks**: Load /study — verify the action prompt header row is visible (or confirm already implemented and mark done). Switch between positions — verify prompt text updates accordingly. Verify no layout shift introduced. Verify 0 console errors.
 
 ## Generated Visual Gap Tasks (2026-06-24 Coach Cycle)
 
