@@ -98,12 +98,19 @@
       "date": "2026-06-26",
       "summary": "Replaced spot card bar with player tile layout. Non-active tiles show only position name + stack in bb (no action buttons, no range %). Active tile gets 2px green (#00C853) border + green glow box-shadow + 'Take action' prompt + action buttons. Clicking a tile switches active position. Verified live: 1 active tile with actions, 5 inactive with 0 actions. 53 frontend tests pass, 368 Python tests pass.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-e2e-test-runner-conflict",
+      "sha": "b07dccd",
+      "date": "2026-06-26",
+      "summary": "Resolved Playwright 'Requiring @playwright/test second time' error. Root cause: nested e2e/node_modules/@playwright/test created a duplicate module instance conflicting with root hoisted copy. Fix: added @playwright/test to root devDependencies with overrides pin (1.61.0), changed e2e/package.json to use workspace:* protocol, rewrote playwright-test.sh to run from root-hoisted binary, added .npmrc in e2e/ to prevent future nested installs. Verified: npx playwright test --list works from apps/web/, 53/53 vitest + 368/368 Python tests pass, tsc clean.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_pass_live_200_0_js_errors",
-  "last_sha": "c52a6e2",
+  "last_sha": "b07dccd",
   "blocker": null,
-  "current_task": "fix-e2e-test-runner-conflict",
+  "current_task": "fix-top-bar-action-prompts",
   "spec_gaps": [
     {
       "item": "Hand/blocker filters on Filters sub-tab \u2014 RESOLVED in ac3a20b (category checkboxes + blocker rank buttons)",
@@ -176,5 +183,5 @@
     "verdict": "approved",
     "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) \u2705 All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition actually work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
   },
-  "note": "fix-position-selector-player-tiles complete. Player tile layout: non-active tiles show name + stack only (no action buttons). Active tile: 2px green border + glow + 'Take action' prompt + action buttons. Verified live: 1 active with actions, 5 inactive with 0 actions. 53 frontend + 368 Python tests pass. Next: fix-e2e-test-runner-conflict."
+  "note": "fix-e2e-test-runner-conflict complete (b07dccd). Resolved 'Requiring @playwright/test second time' error by: (1) adding @playwright/test to root devDependencies with overrides pin, (2) using workspace:* in e2e/package.json to prevent nested installs, (3) rewriting playwright-test.sh to use root-hoisted binary, (4) adding .npmrc in e2e/ as safety net. Verified: npx playwright test --list works from apps/web/, all tests pass. Next: fix-top-bar-action-prompts."
 }
