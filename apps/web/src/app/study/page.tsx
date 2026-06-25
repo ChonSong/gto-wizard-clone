@@ -938,7 +938,7 @@ export default function StudyPage() {
                       const pct = ((agg.total / 1326) * 100).toFixed(1)
                       return `${pct}%`
                     }
-                    return `${pos.stack.toFixed(1)}bb`
+                    return '\u2014'
                   })()}
                 </span>
               </div>
