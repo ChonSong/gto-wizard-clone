@@ -604,8 +604,8 @@ export default function StudyPage() {
             border-radius: 2px !important;
           }
           .study-matrix-cell {
-            font-size: 6px !important;
-            letter-spacing: -0.5px !important;
+            font-size: 10px !important;
+            letter-spacing: 0 !important;
           }
           .study-spot-card-bar {
             gap: 3px !important;
@@ -669,11 +669,12 @@ export default function StudyPage() {
         }
         @media (max-width: 480px) {
           .study-matrix-cell {
-            font-size: 5px !important;
-            letter-spacing: -0.8px !important;
+            font-size: 9px !important;
+            letter-spacing: 0 !important;
           }
           .study-matrix-cell-freq {
-            display: none !important;
+            display: block !important;
+            font-size: 8px !important;
           }
           .study-spot-card-bar {
             min-height: 38px !important;
@@ -1098,7 +1099,7 @@ export default function StudyPage() {
                                 <div key={action.id}
                                   className={`hspotcrd_action${isGtoRecommended ? ' hspotcrd_action_active' : ''}`}
                                   style={{
-                                    fontSize: 6.5, lineHeight: 1.3,
+                                    fontSize: 8, lineHeight: 1.3,
                                     padding: '1.5px 3px', borderRadius: 2,
                                     background: bg,
                                     border: `1px solid ${borderColor}`,
@@ -1121,7 +1122,7 @@ export default function StudyPage() {
                         {data && data.action !== 'fold' && !isSelected && (
                           <span className="study-matrix-cell-freq" style={{
                             position: 'absolute', bottom: 1, right: 2,
-                            fontSize: 6, fontWeight: 600, opacity: 0.7,
+                            fontSize: 8, fontWeight: 600, opacity: 0.7,
                             color: '#fff',
                           }}>
                             {(data.frequency * 100).toFixed(0)}%
