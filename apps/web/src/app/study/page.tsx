@@ -898,7 +898,7 @@ export default function StudyPage() {
           </button>
         ))}
       </div>
-      {/* Spot Card Bar — position cards with action prompts */}
+      {/* Player Tiles — compact position tiles (active = green glow + actions, inactive = name + stack only) */}
       <div className="study-spot-card-bar" style={{ display: 'flex', alignItems: 'stretch', gap: 4, padding: '4px 12px', overflowX: 'auto', overflowY: 'hidden', background: '#0E0E0E', borderBottom: '1px solid #141414', flexShrink: 0, minHeight: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingRight: 6, flexShrink: 0 }}>
           <div style={{ background: '#1A1A1A', border: '1px solid #2a2a2a', color: '#d0d0d0', padding: '4px 6px', borderRadius: 6, fontSize: 10, display: 'flex', alignItems: 'center', gap: 3, whiteSpace: 'nowrap' }}>
@@ -922,45 +922,47 @@ export default function StudyPage() {
               style={{
                 cursor: 'pointer', borderRadius: 8,
                 background: isActive ? '#1A2A1A' : '#161616',
-                border: isActive ? `1px solid ${GREEN}` : '1px solid #222',
+                border: isActive ? `2px solid ${GREEN}` : '1px solid #222',
                 display: 'flex', flexDirection: 'column',
                 flexShrink: 0,
                 minWidth: isActive ? 128 : 56,
-                padding: isActive ? '4px 6px 6px' : '5px 8px',
+                padding: isActive ? '4px 6px 6px' : '6px 10px',
                 transition: 'all 0.15s ease',
+                boxShadow: isActive ? `0 0 8px ${GREEN}44` : 'none',
               }}>
-              {/* Card header: position name + stack in bb (per reference interaction spec) */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isActive ? 3 : 0 }}>
+              {/* Tile header: position name + stack in bb */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: isActive ? 3 : 0 }}>
                 <span className="hspotcrd_title" style={{ fontWeight: 700, fontSize: isActive ? 12 : 11, color: isActive ? '#fff' : '#aaa', letterSpacing: '0.02em' }}>{pos.label}</span>
-                <span style={{ fontSize: 9, color: '#666' }}>
+                <span style={{ fontSize: 9, color: isActive ? '#ccc' : '#666', whiteSpace: 'nowrap' }}>
                   {pos.stack != null && pos.stack > 0 ? `${pos.stack}bb` : '\u2014'}
                 </span>
               </div>
-              {/* Active: "Take action" prompt */}
+              {/* Active only: "Take action" prompt + action buttons */}
               {isActive && (
-                <div className="hspotcrd_action_prompt" style={{ fontSize: 8, color: GREEN, fontWeight: 600, marginBottom: 3, letterSpacing: '0.02em' }}>
-                  Take action ▶
-                </div>
+                <>
+                  <div className="hspotcrd_action_prompt" style={{ fontSize: 8, color: GREEN, fontWeight: 600, marginBottom: 3, letterSpacing: '0.02em' }}>
+                    Take action ▶
+                  </div>
+                  <div className="hspotcrd_actions" style={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                    {posActions.map(act => {
+                      const actionColor = ACTION_COLORS[act.actionBase] || GRAY
+                      const isGto = gtoActionBase && act.actionBase === gtoActionBase
+                      return (
+                        <div key={act.id} className={`hspotcrd_action${isGto ? ' hspotcrd_action_active' : ''}`}
+                          style={{
+                            fontSize: 8, padding: '1px 4px', lineHeight: '14px',
+                            background: isGto ? `${actionColor}33` : 'rgba(255,255,255,0.04)',
+                            border: isGto ? `1px solid ${actionColor}` : '1px solid rgba(255,255,255,0.08)',
+                            borderRadius: 3, color: isGto ? actionColor : '#999',
+                            fontWeight: isGto ? 700 : 500, whiteSpace: 'nowrap',
+                          }}>
+                          {isGto && '✓ '}{act.label}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </>
               )}
-              {/* Action buttons row */}
-              <div className="hspotcrd_actions" style={{ display: 'flex', gap: 2, flexWrap: 'wrap', opacity: isActive ? 1 : 0.5, marginTop: isActive ? 0 : 1 }}>
-                {posActions.map(act => {
-                  const actionColor = ACTION_COLORS[act.actionBase] || GRAY
-                  const isGto = isActive && gtoActionBase && act.actionBase === gtoActionBase
-                  return (
-                    <div key={act.id} className={`hspotcrd_action${isGto ? ' hspotcrd_action_active' : ''}`}
-                      style={{
-                        fontSize: isActive ? 8 : 7, padding: '1px 4px', lineHeight: '14px',
-                        background: isGto ? `${actionColor}33` : 'rgba(255,255,255,0.04)',
-                        border: isGto ? `1px solid ${actionColor}` : '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: 3, color: isGto ? actionColor : '#999',
-                        fontWeight: isGto ? 700 : 500, whiteSpace: 'nowrap',
-                      }}>
-                      {isGto && '✓ '}{act.label}
-                    </div>
-                  )
-                })}
-              </div>
             </div>
           )
         })}

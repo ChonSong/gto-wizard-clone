@@ -26,14 +26,14 @@
       "task": "fix-study-matrix-font-size",
       "sha": "fc77b25",
       "date": "2026-06-25",
-      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px→8px, restored mobile frequency display (none→block). 53 frontend tests pass, 368 Python tests pass, build clean.",
+      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px\u21928px, restored mobile frequency display (none\u2192block). 53 frontend tests pass, 368 Python tests pass, build clean.",
       "coach": "approved"
     },
     {
       "task": "fix-sb-range-percentage-fallback",
       "sha": "d40ad33",
       "date": "2026-06-26",
-      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('—') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
+      "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('\u2014') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
       "coach": "approved"
     },
     {
@@ -47,7 +47,7 @@
       "task": "fix-suit-colors-standard-poker",
       "sha": "0b9cab5",
       "date": "2026-06-25",
-      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray→white (text-white), Diamonds blue→red (text-red-400), Clubs green→white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
+      "summary": "Fixed CardSelector.tsx suit colors to standard poker conventions: Spades gray\u2192white (text-white), Diamonds blue\u2192red (text-red-400), Clubs green\u2192white (text-white). Hearts remain red (unchanged). 368 tests pass, build clean.",
       "coach": "approved"
     },
     {
@@ -91,83 +91,90 @@
       "date": "2026-06-26",
       "summary": "Added 4 missing right sidebar sub-tabs from interaction spec (line 82): Actions chart (horizontal bar chart of GTO frequencies), Range compare (side-by-side raise freq across 6 positions), Equity chart (histogram of equity distribution in 5 buckets), Compare EV (EV comparison across positions in bb). Tab bar now scrollable with 9 tabs total. 368 Python tests pass, 53 frontend tests pass, TS compiles clean. Verified live: all 4 render real content, 0 JS errors.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-position-selector-player-tiles",
+      "sha": "c52a6e2",
+      "date": "2026-06-26",
+      "summary": "Replaced spot card bar with player tile layout. Non-active tiles show only position name + stack in bb (no action buttons, no range %). Active tile gets 2px green (#00C853) border + green glow box-shadow + 'Take action' prompt + action buttons. Clicking a tile switches active position. Verified live: 1 active tile with actions, 5 inactive with 0 actions. 53 frontend tests pass, 368 Python tests pass.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_pass_live_200_0_js_errors",
-  "last_sha": "dc78a8c",
+  "last_sha": "c52a6e2",
   "blocker": null,
-  "current_task": "fix-position-selector-player-tiles",
+  "current_task": "fix-e2e-test-runner-conflict",
   "spec_gaps": [
     {
-      "item": "Hand/blocker filters on Filters sub-tab — RESOLVED in ac3a20b (category checkboxes + blocker rank buttons)",
+      "item": "Hand/blocker filters on Filters sub-tab \u2014 RESOLVED in ac3a20b (category checkboxes + blocker rank buttons)",
       "type": "stub",
       "priority": 1,
       "evidence": "Filters sub-tab has functional category checkboxes (pairs/suited/offsuit/broadway/aceHigh) and blocker rank selectors (A/K/Q/J/T). Hand count summary updates dynamically.",
-      "cycles_stagnant": 0,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
-      "item": "Blockers sub-tab with card removal analysis — RESOLVED in ac3a20b",
+      "item": "Blockers sub-tab with card removal analysis \u2014 RESOLVED in ac3a20b",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Blockers sub-tab shows card removal analysis with combo counting, per-class breakdown, and board card blocking display.",
-      "cycles_stagnant": 0,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
-      "item": "Actions chart, Range compare, Equity chart, Compare EV sub-tabs — RESOLVED in dc78a8c",
+      "item": "Actions chart, Range compare, Equity chart, Compare EV sub-tabs \u2014 RESOLVED in dc78a8c",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "All 4 sub-tabs added with working charts verified live: ACT CHART (action frequency bars), RANGE CMP (position comparison), EQ CHART (equity histogram 5 buckets), CMP EV (EV comparison across positions).",
-      "cycles_stagnant": 0,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
-      "item": "Top bar with Cash/bb/spots-remaining/Upgrade — RESOLVED (was already implemented)",
+      "item": "Top bar with Cash/bb/spots-remaining/Upgrade \u2014 RESOLVED (was already implemented)",
       "type": "missing_feature",
       "priority": 2,
       "evidence": "Top bar visible on live study page showing Cash game selector with stack depth combobox, '2,000+ spots' count, Random Spot button, and Upgrade link. Spec_gap was stale.",
-      "cycles_stagnant": 0,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
-      "item": "Spaced Repetition mode on /practice — RESOLVED (functioning mode)",
+      "item": "Spaced Repetition mode on /practice \u2014 RESOLVED (functioning mode)",
       "type": "stub",
       "priority": 2,
-      "evidence": "Spaced Repetition button exists on /practice page with '0 spots tracked — 0 due for review' and Start Practice Session ready. Spec_gap was stale — feature already implemented and working.",
-      "cycles_stagnant": 0,
-      "status": "resolved"
+      "evidence": "Spaced Repetition button exists on /practice page with '0 spots tracked \u2014 0 due for review' and Start Practice Session ready. Spec_gap was stale \u2014 feature already implemented and working.",
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
-      "item": "Top bar action prompts per position header row — not implemented",
+      "item": "Top bar action prompts per position header row \u2014 not implemented",
       "type": "missing_feature",
       "priority": 3,
-      "evidence": "No dedicated action prompt header row above position cards. 'Take action ▶' is embedded inside the active position card itself rather than a separate header strip.",
-      "cycles_stagnant": 0,
-      "status": "open"
+      "evidence": "No dedicated action prompt header row above position cards. 'Take action \u25b6' is embedded inside the active position card itself rather than a separate header strip.",
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
       "item": "E2E test runner nested node_modules version conflict",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "npx playwright test from apps/web/ fails with nested @playwright/test version conflict. Only works from e2e/ subdirectory. Problem returns after each npm install.",
-      "cycles_stagnant": 0,
-      "status": "open"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
       "item": "Position selector uses card layout instead of player tiles with stacks",
       "type": "visual_mismatch",
       "priority": 2,
       "evidence": "Uses spot card bar (cards with range % + action buttons) instead of player tiles with stack sizes per reference. Partially addressed by spot card bar but visual mismatch remains vs reference player tiles.",
-      "cycles_stagnant": 0,
-      "status": "open"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "dc78a8c",
     "last_reviewed_at": "2026-06-25T11:36:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) ✅ All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition actually work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
+    "notes": "Coach cycle 2026-06-25. add-missing-right-sidebar-sub-tabs (dc78a8c) \u2705 All 9 sub-tabs visible and working. Verified live: ACT CHART (Fold 10.8%, Raise 2.5 1.5% bars), RANGE CMP (UTG 11.7%, HJ 15.7% comparison), EQ CHART (5-bucket histogram, Avg 54.9%), CMP EV (UTG +0.1, HJ +0.1, CO +0.1). No JS errors. 368 Python + 53 frontend tests pass. Methodology gate: clean. 3 stale spec_gaps resolved (top bar, spaced repetition actually work). 3 new tasks generated in AGENTS.md: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts."
   },
-  "note": "add-missing-right-sidebar-sub-tabs approved (dc78a8c). All 9 sub-tabs verified with real rendered content, 0 JS errors, all tests pass. 3 stale spec_gaps cleaned up (top bar, spaced repetition already working). 3 new AGENTS.md tasks: fix-position-selector-player-tiles, fix-e2e-test-runner-conflict, fix-top-bar-action-prompts. current_task=fix-position-selector-player-tiles."
+  "note": "fix-position-selector-player-tiles complete. Player tile layout: non-active tiles show name + stack only (no action buttons). Active tile: 2px green border + glow + 'Take action' prompt + action buttons. Verified live: 1 active with actions, 5 inactive with 0 actions. 53 frontend + 368 Python tests pass. Next: fix-e2e-test-runner-conflict."
 }
