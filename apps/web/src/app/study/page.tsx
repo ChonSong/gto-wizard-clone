@@ -1052,7 +1052,7 @@ export default function StudyPage() {
                     const isSelected = selectedCell === hand
                     const color = getCellColor(hand)
                     return (
-                      <div key={hand} role="gridcell" tabIndex={isSelected ? 0 : -1}
+                      <div key={hand} role="gridcell" className="study-matrix-cell" tabIndex={isSelected ? 0 : -1}
                         aria-label={`${hand}${data ? `, ${data.action} ${(data.frequency * 100).toFixed(0)} percent` : ''}`}
                         aria-selected={isSelected}
                         onClick={() => setSelectedCell(isSelected ? null : hand)}
@@ -1068,7 +1068,7 @@ export default function StudyPage() {
                           display: 'flex', flexDirection: isSelected ? 'column' : undefined,
                           alignItems: isSelected ? 'stretch' : 'center',
                           justifyContent: isSelected ? 'flex-start' : 'center',
-                          fontSize: 8, fontWeight: 700, color: '#fff', letterSpacing: -0.3,
+                          fontWeight: 700, color: '#fff', letterSpacing: -0.3,
                           textShadow: '0 1px 2px rgba(0,0,0,.8)', cursor: 'pointer', userSelect: 'none',
                           background: color, opacity,
                           border: isSelected ? '2px solid #fff' : '1px solid rgba(255,255,255,0.06)',
