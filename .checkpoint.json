@@ -363,11 +363,18 @@
       "sha": "d40ad33",
       "date": "2026-06-26",
       "summary": "Changed SB position card fallback from stack bb ('99.5bb') to em-dash ('—') when API returns total=0 for SB preflop range data. Prevents confusing display of stack size as if it were a range frequency. 368 tests pass, TS compiles clean.",
-      "coach": "pending"
+      "coach": "approved"
+    },
+    {
+      "task": "fix-study-matrix-font-size",
+      "sha": "fc77b25",
+      "date": "2026-06-25",
+      "summary": "Increased matrix cell font size from 6px to 10px for readability, action button font 6.5px→8px, restored mobile frequency display (none→block). 53 frontend tests pass, 368 Python tests pass, build clean.",
+      "coach": "approved"
     }
   ],
-  "health": "build_passes_368_tests_pass_live_200_0_js_errors",
-  "last_sha": "d40ad33",
+  "health": "build_passes_368_py_tests_53_frontend_tests_pass_live_200_0_js_errors",
+  "last_sha": "fc77b25",
   "blocker": null,
   "note": "Player tick: fix-sb-range-percentage-fallback complete (d40ad33). SB card now shows '—' instead of '99.5bb' when no range data. 368 tests pass. All 4 recovery tasks complete. No remaining tasks in AGENTS.md.",
   "current_task": "tbd",
@@ -577,9 +584,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "05db20b",
-    "last_reviewed_at": "2026-06-25T09:36:00+10:00",
+    "last_reviewed_sha": "fc77b25",
+    "last_reviewed_at": "2026-06-25T14:15:00+10:00",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-25 09:36 AEST. Player: fix-solutions-card-text-formatting (0478b35) ✅ clean on /solutions — no duplicate board text. fix-deploy-stale-build (05db20b) ✅ introduces .deployed-hash marker. Visual comparison: 0 regressions. Legend renders correctly (tri-color Raise/Call/Fold). Blue cells present for BB (UTG no-call is correct GTO). Action buttons uniform 57px. 0 JS errors all pages. Fixes needed: fix-sb-range-percentage-fallback (SB shows 99.5bb not range %), ICM calculator stuck, E2E node_modules conflict."
+    "notes": "Coach cycle 2026-06-25 14:15 AEST. Player: fix-sb-range-percentage-fallback (d40ad33) ✅ SB card shows '—' not '99.5bb', aria-label updated (399d24a). fix-study-matrix-font-size (fc77b25) ✅ 6px→10px matrix font, restored mobile freq display. Visual: legend renders, SB em-dash confirmed, 0 JS errors. Tests: 368 Python, 53 frontend. Build clean. Open issues: ICM calculator stuck, E2E node_modules conflict."
   }
 }
