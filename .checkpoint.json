@@ -280,20 +280,36 @@
       "date": "2026-06-25",
       "summary": "GTO breakdown shows cached strategy data with frequencies and EV. Solver health endpoint returns 200.",
       "coach": "approved"
+    },
+    {
+      "task": "fix-sb-preflop-stack-depth-integer",
+      "sha": "31ce522",
+      "date": "2026-06-26",
+      "summary": "Fixed SB stack_depth integer type for primary preflop-range API call via Math.round().",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-25T23:35:00Z"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "3e3bc82",
+  "last_sha": "8d00dbf",
   "blocker": null,
-  "current_task": "start-solver-docker-service",
+  "current_task": "fix-sb-aggregate-stack-depth",
   "all_coach_tasks_done": false,
   "spec_gaps": [
+    {
+      "item": "SB aggregate summary strip shows 0% instead of real data",
+      "type": "bug",
+      "priority": 1,
+      "evidence": "Line 238 in study/page.tsx still sends stackDepth - 0.5 for SB (99.5 float) which backend rejects with 422. Primary API path (line 201 with positions[].stack) was fixed in 31ce522 but aggregate path was missed. Verified live: SB shows F:0% C:0% R:0% while other positions show real data. Console performance API confirms 422 on /api/v1/solver/preflop-range.",
+      "cycles_stagnant": 0,
+      "status": "open"
+    },
     {
       "item": "Solver Docker container not running",
       "type": "infra_gap",
       "priority": 1,
       "evidence": "docker compose ps shows only postgres and redis. No solver container. Build and start needed.",
-      "cycles_stagnant": 0,
+      "cycles_stagnant": 1,
       "status": "open"
     },
     {
@@ -301,7 +317,7 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 0,
+      "cycles_stagnant": 1,
       "status": "open"
     },
     {
@@ -309,15 +325,15 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No gto-wizard-health-check cron job found. Health check script exists but runs only manually.",
-      "cycles_stagnant": 0,
+      "cycles_stagnant": 1,
       "status": "open"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "3e3bc82",
-    "last_reviewed_at": "2026-06-25T23:10:00Z",
+    "last_reviewed_sha": "8d00dbf",
+    "last_reviewed_at": "2026-06-25T23:35:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 09:10 AEST. No new player commits. Comprehensive audit of all AGENTS.md tasks revealed ~30 stale/completed tasks that were never marked done. Cleaned AGENTS.md from 1941 lines to ~260 lines with fresh Phase 3 backlog. Key findings: matrix legend shows 3 colors ✓, suit colors standard ✓, strategy lookup works ✓, preflop data seeded ✓, all frontend pages (quiz, hand-history, plo4, omaha, bomb-pot, double-board, strategies) load 200 with functional UIs ✓, postflop training mode fully working ✓, health check passes 11/11 ✓, API server running as systemd on port 8001 ✓. Remaining: solver docker not running, clean-build script missing, no health check cron."
+    "notes": "Coach cycle 2026-06-26 09:35 AEST. Reviewed new Player commit 31ce522 (fix sb stack_depth integer). Fix is correct for the primary interaction path (line 160 positions[] -> API call on position click). However, the aggregate summary strip fetchAllPositions at line 238 still sends stackDepth - 0.5 (float) which the backend rejects with 422. The error is silently swallowed, so SB shows 'F:0% C:0% R:0%' in the summary strip while every other position shows real data. Verified via browser snapshot and performance API. New P1 task 'fix-sb-aggregate-stack-depth' added to AGENTS.md. Existing gaps incremented cycles_stagnant. Polytopia: no new commits, site 200."
   },
-  "note": "Tick 2026-06-26 09:10 AEST. Phase 2 fully complete. Comprehensive audit revealed ~30 tasks already done but not marked. AGENTS.md cleaned and Phase 3 backlog generated (5 tasks: solver docker, clean-build script, health check cron, visual reference comparison, tandem comparison, E2E validation)."
+  "note": "Tick 2026-06-26 09:35 AEST. Reviewed fix-sb-preflop-stack-depth-integer (31ce522). Approved with finding: aggregate path at line 238 still broken — SB shows 0% in summary strip. New P1 task added to AGENTS.md."
 }

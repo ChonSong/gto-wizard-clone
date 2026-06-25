@@ -23,6 +23,7 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 ## Architecture
 
 ### Stack
+- **Game Engine**: Phaser v3.90.0 (WebGL + Web Audio)
 - **Frontend**: Next.js 15 + React 19 + TypeScript + Tailwind CSS v4 + shadcn/ui
 - **Backend**: Python 3.12 FastAPI on port 8001
 - **Solver**: Python MCCFR engine (apps/solver/) with gRPC (Docker, not currently running)
@@ -90,6 +91,16 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - `curl http://localhost:8001/api/v1/solver/health` returns 200
 - Solver gRPC port 50051 is listening
 **Coach checks:** Verify solver container is running, health endpoint responds, no protobuf/gencode errors in container logs.
+
+### Task: fix-sb-aggregate-stack-depth
+**Priority:** P1
+**Description:** The `fix(study): ensure SB stack_depth is integer` commit (31ce522) fixed the primary preflop-range API call for SB position (line 160), but the aggregate summary strip fetch (line 238) still sends `stackDepth - 0.5` (99.5 for 100bb) which the backend rejects with 422. The error is silently swallowed, causing SB to show "F: 0% C: 0% R: 0%" in the summary strip while every other position shows real data. Verified live at wiz.codeovertcp.com — SB shows zeros, UTG/HJ/CO/BTN/BB all show real data. Console shows a 422 on `/api/v1/solver/preflop-range`.
+**Success criteria:**
+- SB summary strip shows real F/C/R percentages matching the hand matrix
+- Console shows no 422 errors for SB preflop-range API calls
+- Line 238 `stackForPos` wraps SB's `stackDepth - 0.5` with `Math.round()` matching the pattern on line 160
+- Deploy and verify the summary strip
+**Coach checks:** Load wiz.codeovertcp.com/study, click SB, verify summary strip shows non-zero F/C/R. Open console — no 422 errors.
 
 ### Task: add-clean-build-npm-script
 **Priority:** P2
