@@ -916,7 +916,7 @@ export default function StudyPage() {
             <div key={pos.id} onClick={() => setActivePosition(pos.id)}
               className={`hspot-card ${isActive ? 'hspotcrd_active' : 'hspotcrd_minimized'}`}
               role="button" tabIndex={0}
-              aria-label={`${pos.label} position, ${(() => { const a = positionAggregates[pos.id]; return a && a.total > 0 ? `${((a.total / 1326) * 100).toFixed(1)}% range` : `${pos.stack.toFixed(1)}bb stack` })()}${isActive ? ', active' : ''}`}
+              aria-label={`${pos.label} position, ${(() => { const a = positionAggregates[pos.id]; return a && a.total > 0 ? `${((a.total / 1326) * 100).toFixed(1)}% range` : '\u2014' })()}${isActive ? ', active' : ''}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActivePosition(pos.id) } }}
               style={{
                 cursor: 'pointer', borderRadius: 8,
