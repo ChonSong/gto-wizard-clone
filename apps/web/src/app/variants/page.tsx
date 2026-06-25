@@ -67,7 +67,7 @@ function getEquityUrl(variant: VariantInfo): string {
 }
 
 function hasDedicatedPage(variant: VariantInfo): boolean {
-  const dedicated = new Set(["nlh", "plo4", "stud", "razz", "badugi", "plo5"]);
+  const dedicated = new Set(["nlh", "plo4", "plo5", "omaha8", "stud", "stud8", "razz", "2-7td", "2-7sd", "badugi"]);
   return dedicated.has(variant.key);
 }
 
