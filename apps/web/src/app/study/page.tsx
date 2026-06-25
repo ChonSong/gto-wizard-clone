@@ -157,7 +157,7 @@ export default function StudyPage() {
     { id: 'HJ', label: 'HJ', stack: stackDepth },
     { id: 'CO', label: 'CO', stack: stackDepth },
     { id: 'BTN', label: 'BTN', stack: stackDepth },
-    { id: 'SB', label: 'SB', stack: stackDepth - 0.5 },
+    { id: 'SB', label: 'SB', stack: Math.round(stackDepth - 0.5) },
     { id: 'BB', label: 'BB', stack: stackDepth - 1 },
   ], [stackDepth])
 
