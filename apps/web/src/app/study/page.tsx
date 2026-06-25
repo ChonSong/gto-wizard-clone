@@ -144,7 +144,7 @@ export default function StudyPage() {
   const [hotkeyToast, setHotkeyToast] = useState<string | null>(null)
   const [showHotkeys, setShowHotkeys] = useState(false)
   const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
-  const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'blockers'>('actions')
+  const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'actions_chart' | 'range_compare' | 'blockers' | 'equity_chart' | 'compare_ev'>('actions')
   const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
   const [blockerRanks, setBlockerRanks] = useState<string[]>([])
   const [allPositionData, setAllPositionData] = useState<Map<string, Map<string, HandData>>>(new Map())
@@ -1400,22 +1400,32 @@ export default function StudyPage() {
                 </nav>
               </div>
 
-              {/* Sub-tab bar: Hand | Summary | Filters | Actions | Blockers */}
+              {/* Sub-tab bar: Hand | Summary | Filters | Actions | Actions chart | Range compare | Blockers | Equity chart | Compare EV */}
               <div role="tablist" aria-label="Detail sub-tabs" className="study-sub-tab-bar" style={{
                 display: 'flex', borderBottom: '1px solid #262626',
-                padding: '0 2px', flexShrink: 0,
+                padding: '0 2px', flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none',
               }}>
-                {(['hand', 'summary', 'filters', 'actions', 'blockers'] as const).map(tab => (
-                  <button key={tab} role="tab" aria-selected={rightSubTab === tab}
-                    onClick={() => setRightSubTab(tab)}
+                {([
+                  { id: 'hand', label: 'Hand' },
+                  { id: 'summary', label: 'Summary' },
+                  { id: 'filters', label: 'Filters' },
+                  { id: 'actions', label: 'Actions' },
+                  { id: 'actions_chart', label: 'Act chart' },
+                  { id: 'range_compare', label: 'Range cmp' },
+                  { id: 'blockers', label: 'Blockers' },
+                  { id: 'equity_chart', label: 'Eq chart' },
+                  { id: 'compare_ev', label: 'Cmp EV' },
+                ] as const).map(({ id, label }) => (
+                  <button key={id} role="tab" aria-selected={rightSubTab === id}
+                    onClick={() => setRightSubTab(id as typeof rightSubTab)}
                     style={{
-                      padding: '4px 8px', fontSize: 9, fontWeight: 600,
-                      background: 'none', border: 'none',
-                      borderBottom: rightSubTab === tab ? '2px solid #7CFC7C' : '2px solid transparent',
-                      color: rightSubTab === tab ? '#fff' : '#777',
+                      padding: '4px 6px', fontSize: 9, fontWeight: 600,
+                      background: 'none', border: 'none', whiteSpace: 'nowrap',
+                      borderBottom: rightSubTab === id ? '2px solid #7CFC7C' : '2px solid transparent',
+                      color: rightSubTab === id ? '#fff' : '#777',
                       cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.3,
                     }}>
-                    {tab === 'actions' ? 'Actions' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {label}
                   </button>
                 ))}
               </div>
@@ -1837,6 +1847,253 @@ export default function StudyPage() {
                         </>
                       )
                     })()}
+                  </div>
+                )}
+
+                {/* ACTIONS CHART sub-tab: Visual horizontal bar chart of action frequencies */}
+                {rightSubTab === 'actions_chart' && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Actions Chart
+                    </div>
+                    {!isSolverMode ? (
+                      <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+                        Select a position to view action distribution
+                      </div>
+                    ) : (
+                      <>
+                        {Object.entries(actionSummary)
+                          .sort(([,a], [,b]) => b.totalFreq - a.totalFreq)
+                          .map(([action, data]) => {
+                            const pct = totalCombos > 0 ? ((data.totalFreq / totalCombos) * 100) : 0
+                            if (pct < 0.5) return null
+                            const barPct = Math.min(pct, 100)
+                            const actionColor = ACTION_COLORS[action] || '#888'
+                            const comboCount = (data.totalFreq / totalCombos) * totalCombos
+                            const labelInside = barPct > 15
+                            return (
+                              <div key={action} style={{ marginBottom: 10 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                                  <span style={{ fontSize: 11, color: '#ccc', fontWeight: 600 }}>
+                                    {actionLabels[action] || action}
+                                  </span>
+                                  <span style={{ fontSize: 11, color: '#888', fontWeight: 500 }}>
+                                    {pct.toFixed(1)}% ({comboCount.toFixed(1)}c)
+                                  </span>
+                                </div>
+                                <div style={{
+                                  height: 22,
+                                  background: '#1a1a1a',
+                                  borderRadius: 4,
+                                  overflow: 'hidden',
+                                  position: 'relative',
+                                }}>
+                                  <div style={{
+                                    height: '100%',
+                                    width: `${Math.max(barPct, 3)}%`,
+                                    background: `linear-gradient(90deg, ${actionColor}, ${actionColor}dd)`,
+                                    borderRadius: 4,
+                                    transition: 'width 0.3s ease',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+                                    paddingRight: 6,
+                                  }}>
+                                    {labelInside && <span style={{ fontSize: 9, color: '#fff', fontWeight: 700 }}>{pct.toFixed(0)}%</span>}
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        <div style={{ height: 1, background: '#262626', margin: '8px 0' }} />
+                        <div style={{ fontSize: 9, color: '#666', textAlign: 'center' }}>
+                          Horizontal bar chart — GTO frequency distribution
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* RANGE COMPARE sub-tab: Side-by-side position range comparison */}
+                {rightSubTab === 'range_compare' && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Range Compare
+                    </div>
+                    <div style={{ fontSize: 9, color: '#777', marginBottom: 8 }}>
+                      Compare raise frequency across positions
+                    </div>
+                    {!isSolverMode ? (
+                      <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+                        Select a position to compare ranges
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        {ALL_POSITIONS.map(pos => {
+                          const posData = allPositionData.get(pos)
+                          const posRangeData = posData || rangeData
+                          const posActionSummary: Record<string, number> = {}
+                          posRangeData.forEach((h) => {
+                            const a = h.action.startsWith('raise') ? 'raise' : h.action
+                            posActionSummary[a] = (posActionSummary[a] || 0) + h.frequency
+                          })
+                          const raiseFreq = posRangeData.size > 0 ? (posActionSummary['raise'] || 0) / posRangeData.size * 100 : 0
+                          const isActive = activePosition === pos
+                          return (
+                            <div key={pos} style={{
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '4px 6px', borderRadius: 4,
+                              background: isActive ? '#1a3a2b' : '#1a1a1a',
+                              border: isActive ? '1px solid #2a6b4a' : '1px solid #262626',
+                            }}>
+                              <span style={{
+                                fontSize: 10, fontWeight: 700, width: 30,
+                                color: isActive ? '#7CFC7C' : '#999',
+                              }}>{pos}</span>
+                              <div style={{
+                                flex: 1, height: 14,
+                                background: '#0e0e0e', borderRadius: 3, overflow: 'hidden',
+                              }}>
+                                <div style={{
+                                  height: '100%', width: `${Math.min(raiseFreq, 100)}%`,
+                                  background: isActive ? '#7CFC7C' : '#3A6EA5',
+                                  borderRadius: 3, transition: 'width 0.3s ease',
+                                }} />
+                              </div>
+                              <span style={{ fontSize: 9, color: '#888', width: 35, textAlign: 'right' }}>
+                                {raiseFreq.toFixed(1)}%
+                              </span>
+                            </div>
+                          )
+                        })}
+                        <div style={{ fontSize: 8, color: '#555', textAlign: 'center', marginTop: 4 }}>
+                          Raise frequency by position — green = active
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* EQUITY CHART SUB-TAB: Equity distribution histogram */}
+                {rightSubTab === 'equity_chart' && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Equity Chart
+                    </div>
+                    {!isSolverMode ? (
+                      <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+                        Select a position to view equity distribution
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 80, padding: '8px 0' }}>
+                          {(() => {
+                            const buckets = [
+                              { label: '0-20%', min: 0, max: 0.2, color: '#555' },
+                              { label: '20-40%', min: 0.2, max: 0.4, color: '#3A6EA5' },
+                              { label: '40-60%', min: 0.4, max: 0.6, color: '#7CFC7C' },
+                              { label: '60-80%', min: 0.6, max: 0.8, color: '#3A6EA5' },
+                              { label: '80-100%', min: 0.8, max: 1.0, color: '#E53935' },
+                            ]
+                            let maxCount = 1
+                            const counts = buckets.map(b => {
+                              let count = 0
+                              rangeData.forEach(h => {
+                                if (h.equity >= b.min && h.equity < b.max) count++
+                              })
+                              if (count > maxCount) maxCount = count
+                              return { ...b, count }
+                            })
+                            return counts.map((bucket, i) => {
+                              const h = (bucket.count / maxCount) * 70
+                              return (
+                                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                                  <div style={{
+                                    width: '100%', height: Math.max(h, 2),
+                                    background: bucket.color, borderRadius: '3px 3px 0 0',
+                                    opacity: 0.85,
+                                  }} />
+                                  <span style={{ fontSize: 7, color: '#777', textAlign: 'center' }}>{bucket.label}</span>
+                                </div>
+                              )
+                            })
+                          })()}
+                        </div>
+                        <div style={{ height: 1, background: '#262626', margin: '4px 0' }} />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#888' }}>
+                          <span>Avg equity: <strong style={{ color: '#ccc' }}>
+                            {rangeData.size > 0
+                              ? (Array.from(rangeData.values()).reduce((s, h) => s + h.equity, 0) / rangeData.size * 100).toFixed(1)
+                              : '0'
+                            }%
+                          </strong></span>
+                          <span>{rangeData.size} hands</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* COMPARE EV sub-tab: EV comparison across positions */}
+                {rightSubTab === 'compare_ev' && (
+                  <div>
+                    <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      Compare EV
+                    </div>
+                    <div style={{ fontSize: 9, color: '#777', marginBottom: 8 }}>
+                      Expected value by position (bb)
+                    </div>
+                    {!isSolverMode ? (
+                      <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+                        Select a position to compare EV
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        {ALL_POSITIONS.map(pos => {
+                          const posData = allPositionData.get(pos)
+                          const posRangeData = posData || rangeData
+                          let avgEquity = 0.5
+                          if (posRangeData.size > 0) {
+                            let weightedSum = 0, weightSum = 0
+                            posRangeData.forEach(h => { weightedSum += h.equity * h.frequency; weightSum += h.frequency })
+                            avgEquity = weightSum > 0 ? weightedSum / weightSum : 0.5
+                          }
+                          const ev = (avgEquity - 0.5) * 3
+                          const isActive = activePosition === pos
+                          const barWidth = Math.min(Math.abs(ev) * 20, 100)
+                          return (
+                            <div key={pos} style={{
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '3px 6px', borderRadius: 4,
+                              background: isActive ? '#1a3a2b' : '#1a1a1a',
+                              border: isActive ? '1px solid #2a6b4a' : '1px solid #262626',
+                            }}>
+                              <span style={{
+                                fontSize: 10, fontWeight: 700, width: 30,
+                                color: isActive ? '#7CFC7C' : '#999',
+                              }}>{pos}</span>
+                              <div style={{
+                                flex: 1, height: 12,
+                                background: '#0e0e0e', borderRadius: 3, overflow: 'hidden',
+                              }}>
+                                <div style={{
+                                  height: '100%', width: `${barWidth}%`,
+                                  background: ev >= 0 ? '#2a6b4a' : '#6b2a2a',
+                                  borderRadius: 3,
+                                }} />
+                              </div>
+                              <span style={{
+                                fontSize: 10, fontWeight: 600, width: 40, textAlign: 'right',
+                                color: ev >= 0 ? '#7CFC7C' : '#E53935',
+                              }}>
+                                {ev >= 0 ? '+' : ''}{ev.toFixed(1)}
+                              </span>
+                            </div>
+                          )
+                        })}
+                        <div style={{ fontSize: 8, color: '#555', textAlign: 'center', marginTop: 4 }}>
+                          EV in bb — green = +EV, red = -EV
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
