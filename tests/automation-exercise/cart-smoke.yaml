@@ -1,0 +1,6 @@
+test-id: t_kend-lack-infect-nou-bah-kil-point-reak-ura-loo
+name: Automation Exercise cart smoke
+target: automation-exercise
+steps:
+  - Click on "Cart"
+  - Verify the page says "Shopping Cart"

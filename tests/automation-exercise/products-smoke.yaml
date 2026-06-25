@@ -1,0 +1,6 @@
+test-id: t_umble-ruby-direct-notify-rama-phony-dust-owl-lop-etch
+name: Automation Exercise products smoke
+target: automation-exercise
+steps:
+  - Click on "Products"
+  - Verify the page says "All Products"

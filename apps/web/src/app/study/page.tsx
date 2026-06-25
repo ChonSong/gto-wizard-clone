@@ -879,6 +879,17 @@ export default function StudyPage() {
           )}
         </div>
 
+      {/* Action Prompt Header Row — contextual prompt showing active position */}
+      <div className="study-action-prompt-bar" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 12px', background: '#111', borderBottom: '1px solid #1a1a1a', flexShrink: 0 }}>
+        <span style={{ color: GREEN, fontSize: 12, fontWeight: 700, letterSpacing: '0.03em' }}>{activePosition}</span>
+        <span style={{ color: '#666', fontSize: 11 }}>—</span>
+        <span style={{ color: '#aaa', fontSize: 11, fontWeight: 500 }}>Enter your action</span>
+        <div style={{ flex: 1 }} />
+        {mode === 'preflop' && selectedCell && (
+          <span style={{ color: '#888', fontSize: 10, fontFamily: 'monospace' }}>{selectedCell}</span>
+        )}
+      </div>
+
       {mode === 'preflop' ? (<div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       {/* Stack Depth Selector — compact */}
       <div className="study-stack-selector" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', background: '#0E0E0E', borderBottom: '1px solid #141414', flexShrink: 0 }}>

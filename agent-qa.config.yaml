@@ -1,0 +1,135 @@
+# agent-qa Configuration
+
+# File discovery and project settings
+workspace:
+  testMatch:
+    - tests/**/*.yaml
+  suiteMatch:
+    - suites/**/*.suite.yaml
+  hooksFile: hooks.yaml
+  agentRules: ./agent-rules.md
+  envFile: .env
+  secretsFile: .env.secrets.local
+# Optional: ignore archived or generated tests.
+  # testPathIgnore:
+  #   - tests/archive/**/*.yaml
+
+# Infrastructure services (dashboard, MCP, cache, auth state, logging)
+services:
+  dashboard:
+    port: 3100
+    artifactsDir: .agent-qa/artifacts
+    # Optional: persist dashboard state to a custom SQLite path.
+    # dbPath: .agent-qa/dashboard.sqlite
+  mcp:
+    enabled: true
+    transport: http
+    host: 127.0.0.1
+    port: 3471
+    path: /mcp
+  cache:
+    dir: .agent-qa/cache
+    ttl: 7d
+  # Accessibility checks power the W3C BAD demo test.
+  authState:
+    dir: .agent-qa/auth-states
+  accessibility:
+    enabled: true
+    standard: wcag2aa
+    runAfter: every-step
+    failOnViolation: false
+  recording:
+    enabled: true
+  memory:
+    enabled: true
+    provider: local
+    dir: agent-qa-memory
+  logging:
+    level: warn
+
+# Named resource definitions (LLM configs, app targets)
+registry:
+  # Optional: local and cloud device/provider profiles.
+  # devices:
+  #   android-emu:
+  #     platform: android
+  #     transport: local
+  # providers:
+  #   browserstack:
+  #     username: ${BROWSERSTACK_USERNAME}
+  #     accessKey: ${BROWSERSTACK_ACCESS_KEY}
+  llms:
+    - name: default
+      provider: anthropic-subscription
+      model: claude-sonnet-4-6
+      screenshotSize: 50kb
+      effectiveResolution: 500
+    - name: openrouter
+      provider: openai-compatible
+      model: openai/gpt-4o-mini
+      baseURL: https://openrouter.ai/api/v1
+      screenshotSize: 50kb
+      effectiveResolution: 500
+    - name: opencode-zen
+      provider: openai-compatible
+      model: big-pickle
+      baseURL: https://opencode.ai/zen/v1
+      screenshotSize: 50kb
+      effectiveResolution: 500
+  targets:
+    # Optional: add more web or mobile targets here.
+    # my-mobile:
+    #   platform: android
+    #   appPackage: com.example.app
+    #   appActivity: .MainActivity
+    #   app:
+    #     path: apps/example.apk
+    example-web:
+      platform: web
+      url: https://example.com
+    automation-exercise:
+      platform: web
+      url: https://automationexercise.com
+    wai-bad:
+      platform: web
+      url: https://www.w3.org/WAI/demos/bad/before/home.html
+    gto-wizard:
+      platform: web
+      url: https://wiz.codeovertcp.com
+    gto-wizard-reference:
+      platform: web
+      url: https://app.gtowizard.com
+
+# Optional subscription auth plugin declarations
+# Optional subscription auth plugin declarations
+#plugins:
+#  auth:
+#    - package: "@vostride/agent-qa-subscription-auth"
+
+# Execution settings (cascades: global -> suite -> test -> CLI flags)
+use:
+  browser:
+    name: chromium
+    headless: true
+    viewport:
+      width: 1280
+      height: 720
+  mobile:
+    appState: preserve
+  timeout:
+    step: 5m
+    test: 30m
+    navigation: 1m
+  healing:
+    maxAttempts: 3
+  planner:
+    maxSubActions: 10
+    previousStepCount: 5
+  logCapture:
+    console: true
+    network: true
+  parallel: false
+  llm: opencode-zen
+  # Optional: bind mobile runs to a configured device profile.
+  # device: android-emu
+

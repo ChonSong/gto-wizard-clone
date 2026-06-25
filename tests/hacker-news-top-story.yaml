@@ -1,0 +1,10 @@
+test-id: t_quad-adar-micro-magic-cross-cue-open-agog-rang-cours
+name: Hacker News top story hook demo
+target: example-web
+setup:
+  - h_aster-bloom-cloud-drift-ember-field-glade-hollow-ivory-jasper
+use:
+  cache: false
+steps:
+  - Navigate to "https://news.ycombinator.com/"
+  - Verify the page shows "{{env:HN_FIRST_STORY_TITLE}}"

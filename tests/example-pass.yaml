@@ -1,0 +1,7 @@
+test-id: t_amber-birch-coral-delta-ember-falcon-garden-harbor-island-jungle
+name: Example passing test
+target: example-web
+steps:
+  - Verify the page says "Example Domain"
+  - Click on "Learn More"
+  - Verify the page url is "https://www.iana.org/help/example-domains"

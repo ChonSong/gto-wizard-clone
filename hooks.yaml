@@ -1,0 +1,12 @@
+hooks:
+  - id: h_aster-bloom-cloud-drift-ember-field-glade-hollow-ivory-jasper
+    name: Fetch first Hacker News story
+    runtime: node
+    file: scripts/fetch-hn-top-story.mjs
+    timeout: 30s
+    network: true
+  - id: h_order-was-lan-card-oleg-eye-bito-cursor-garten-forme
+    name: Generate Timestamp
+    runtime: bash
+    file: hooks/generate-timestamp.sh
+    timeout: 10s

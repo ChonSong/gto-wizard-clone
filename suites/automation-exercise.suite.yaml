@@ -1,0 +1,10 @@
+suite-id: s_hill-gant-verb-nast-hunter-rita-home-store-amy-crest
+name: Automation Exercise demo suite
+target: automation-exercise
+tests:
+  - test: tests/automation-exercise/home-smoke.yaml
+    id: t_class-volume-nth-intent-break-gun-gone-ging-twig-vert
+  - test: tests/automation-exercise/products-smoke.yaml
+    id: t_umble-ruby-direct-notify-rama-phony-dust-owl-lop-etch
+  - test: tests/automation-exercise/cart-smoke.yaml
+    id: t_kend-lack-infect-nou-bah-kil-point-reak-ura-loo

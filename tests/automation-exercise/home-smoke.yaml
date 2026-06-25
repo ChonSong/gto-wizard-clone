@@ -1,0 +1,6 @@
+test-id: t_class-volume-nth-intent-break-gun-gone-ging-twig-vert
+name: Automation Exercise home smoke
+target: automation-exercise
+steps:
+  - Verify the page says "Automation Exercise"
+  - Verify the page has "Signup / Login"

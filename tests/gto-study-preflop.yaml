@@ -1,0 +1,39 @@
+test-id: t_eagle-river-stone-cloud-ember-gold-hill-iris-jade-keel
+name: GTO Wizard — Study Preflop Workflow
+target: gto-wizard
+setup:
+  - h_order-was-lan-card-oleg-eye-bito-cursor-garten-forme
+steps:
+  # ── Step 1: Page loads with hand matrix ──
+  - Navigate to "https://wiz.codeovertcp.com/study"
+  - Wait for the hand position cards to load
+  - Verify the page shows "UTG" position card
+  - Verify the page shows "BTN" position card
+  - Verify there are 6 position cards visible
+
+  # ── Step 2: Preflop mode is active by default ──
+  - Verify a button labeled "Preflop ranges mode" has aria-pressed="true"
+  - Verify a button labeled "Postflop training mode" has aria-pressed="false"
+
+  # ── Step 3: Hand matrix has data ──
+  - Click on "UTG" position card
+  - Wait for the hand matrix to load
+  - Verify the hand matrix grid has 169 cells
+  - Verify the hand matrix shows action data for cell "AA"
+
+  # ── Step 4: AA = raise 100% in UTG ──
+  - Verify cell "AA" in the matrix shows "raise" action with 100% frequency
+
+  # ── Step 5: BTN range differs from UTG ──
+  - Click on "BTN" position card
+  - Wait for the hand matrix to update
+  - Verify cell "A5s" shows a different action in BTN than it did in UTG
+
+  # ── Step 6: Stack depth change updates matrix ──
+  - Click on the "50bb stack depth" option
+  - Wait for the matrix to reload
+  - Verify the hand matrix still has data for cell "AA"
+  - Click back on "100bb stack depth"
+
+  # ── Step 7: All positions show different ranges ──
+  - Verify each of the 6 positions (UTG, MP, CO, BTN, SB, BB) loads a unique range matrix

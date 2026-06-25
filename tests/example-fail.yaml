@@ -1,0 +1,10 @@
+test-id: t_bronze-cedar-dune-ember-fjord-glade-harbor-ivory-jade-kelp
+name: Example failing test
+target: example-web
+use:
+  browser:
+    headless: false
+steps:
+  - Verify the page says "Example Domain"
+  - Click on "Learn More"
+  - Verify the page url is "https://www.iana.org/example-domains"

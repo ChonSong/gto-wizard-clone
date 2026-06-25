@@ -1,0 +1,30 @@
+test-id: t_fjord-amber-sky-dawn-ember-creek-bay-hill-oak-pine
+name: GTO Wizard — Study Postflop Workflow
+target: gto-wizard
+steps:
+  # ── Step 1: Switch to Postflop mode ──
+  - Navigate to "https://wiz.codeovertcp.com/study"
+  - Click on the "Postflop training mode" button
+  - Verify the "Configure Spot" panel opens
+
+  # ── Step 2: Default spot loads ──
+  - Verify the default spot shows board "KsKc3s"
+  - Verify the pot displays "POT 5.5"
+  - Verify the street shows "FLOP"
+
+  # ── Step 3: Get GTO Strategy ──
+  - Click on "Get GTO strategy" button
+  - Wait for the GTO strategy breakdown to appear
+  - Verify the page shows "GTO STRATEGY BREAKDOWN"
+
+  # ── Step 4: GTO frequencies are available ──
+  # The LLM will parse the frequency numbers and validate correctness
+  - Verify the GTO action frequencies (CALL, FOLD, CHECK, BET, RAISE) are visible
+  - Verify the action frequencies do not exceed 150% total
+
+  # ── Step 5: GTO badge on recommended action ──
+  - Verify one action button has the "GTO recommended" badge or label
+
+  # ── Step 6: Street navigation ──
+  - Verify the street progression shows "FLOP" as current
+  - Verify "TURN" and "RIVER" indicators are present but locked
