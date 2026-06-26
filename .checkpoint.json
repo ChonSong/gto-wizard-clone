@@ -309,7 +309,7 @@
       "type": "infra_gap",
       "priority": 1,
       "evidence": "docker compose ps shows only postgres and redis. No solver container. Build and start needed.",
-      "cycles_stagnant": 4,
+      "cycles_stagnant": 5,
       "status": "escalated"
     },
     {
@@ -317,23 +317,23 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 4,
+      "cycles_stagnant": 5,
       "status": "escalated"
     },
     {
-      "item": "No periodic health check cron job",
+      "item": "Health check cron job fails with 401 billing error",
       "type": "infra_gap",
       "priority": 2,
-      "evidence": "No gto-wizard-health-check cron job found. Health check script exists but runs only manually.",
-      "cycles_stagnant": 4,
+      "evidence": "gto-wizard-health-check cron exists at 0 */6 * * * but fails with HTTP 401 (Insufficient balance). Check billing at opencode.ai.",
+      "cycles_stagnant": 5,
       "status": "escalated"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "8893efd",
-    "last_reviewed_at": "2026-06-26T10:05:00Z",
+    "last_reviewed_at": "2026-06-26T10:35:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 20:05 AEST. Reviewed Player commit 8893efd (fix SB aggregate stackDepth). Fix is correct: Math.round() applied to stackDepth - 0.5 on fetchAllPositions line 238, matching the pattern on line 160. Verified live: SB summary strip shows F:7% C:0% R:6% — 169 combos. Console shows 0 preflop-range 422 errors. All 7 aggregate API calls return 200. 368 Python tests pass, 53 frontend tests pass, 11/11 health check passes. Polytopia: 0 new Player commits since last review. Site 200, 0 JS errors, tribe selection screen renders. Remaining spec_gaps: solver container (4 cycles), clean-build script (4), health check cron (4) — all escalated. Current_task unchanged: start-solver-docker-service."
+    "notes": "Coach cycle 2026-06-26 10:35 AEST. No new Player commits since last review. All 11 health checks pass. Site returns 200 with 0 JS errors. SB summary strip verified: F:7% C:0% R:6%. Polytopia tribe selection renders correctly. Updated spec_gaps: solver container (5 cycles stagnant), clean-build script (5 cycles), health check cron corrected from 'no cron' to 'cron exists but 401 billing error' (5 cycles). All escalated by auto-escalation cron."
   },
-  "note": "Tick 2026-06-26 20:05 AEST. Reviewed fix-sb-aggregate-stack-depth (8893efd) — approved and verified live. SB summary strip now shows real data. All tests pass. 3 infra spec_gaps stagnant for 4 cycles each (escalated). Next: start-solver-docker-service."
+  "note": "Tick 2026-06-26 10:35 AEST. No new Player commits. Both sites healthy. 3 infra spec_gaps stagnant (5 cycles each, escalated). Corrected health check cron evidence — cron exists but fails with 401 billing error."
 }
