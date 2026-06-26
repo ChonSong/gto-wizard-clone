@@ -314,6 +314,14 @@
       "coach_verified_at": "2026-06-26T14:06:00Z"
     },
     {
+      "task": "fix-study-matrix-readability",
+      "sha": "503b7fa",
+      "date": "2026-06-26",
+      "summary": "Increased cell font 10px→12px, freq chips 8px→11px with bg pill, padding 0→4px 2px. Flow layout for freq chip.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-26T19:35:00Z"
+    },
+    {
       "task": "visual-polish-reference-comparison",
       "sha": "136f19f",
       "date": "2026-06-26",
@@ -322,9 +330,9 @@
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "136f19f",
+  "last_sha": "503b7fa",
   "blocker": null,
-  "current_task": "visual-polish-reference-comparison",
+  "current_task": "fix-dashboard-hero-polish",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -353,10 +361,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "d85a95b",
-    "last_reviewed_at": "2026-06-26T05:12:00Z",
+    "last_reviewed_sha": "503b7fa",
+    "last_reviewed_at": "2026-06-26T19:35:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 05:12 UTC. No new Player commits. All 11 health checks pass. RefQA passes (4/4). Study page loads with GTO data, position switching works, 0 JS errors. Stale spec_gaps: health check cron 401 billing at 4 cycles stagnant (escalated). Polytopia: page loads, canvas renders, 0 console errors, RefQA passes."
+    "notes": "Coach cycle 2026-06-26 19:35 UTC. fix-study-matrix-readability (503b7fa): verified live — cell font 12px, freq chips 11px with bg pill, padding 4px 2px. Position switching works. Postflop mode loads with GTO data. 0 JS errors. 11/11 health checks pass. RefQA passes. Next: fix-dashboard-hero-polish."
   },
-  "note": "Tick 2026-06-26 ~16:00 UTC. Visual polish comparison complete. 12 reference screenshots vs 8 live pages analyzed. 6 gaps identified, 3 fix tasks generated in AGENTS.md (fix-study-matrix-readability, fix-dashboard-hero-polish, fix-practice-page-placeholder). Report saved to docs/visual-polish-comparison-report.md. Next: fix-study-matrix-readability."
+  "note": "Tick 2026-06-26T19:35 UTC. fix-study-matrix-readability (503b7fa) approved by Coach. Cell readability confirmed live. 0 JS errors, 11/11 health checks. Next: fix-dashboard-hero-polish."
 }

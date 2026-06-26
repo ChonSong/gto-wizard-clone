@@ -106,14 +106,10 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Status:** Comparison complete. See `docs/visual-polish-comparison-report.md` for full analysis. 6 gaps identified, 4 actionable fix tasks generated below (2 deferred as architectural).
 **Evidence:** Subagent analysis of 12 reference screenshots + 8 live page captures. All 11 health checks pass.
 
-### Task: fix-study-matrix-readability
-**Priority:** P2
-**Description:** Increase study matrix cell font size from ~10px to 12px. Show frequency chips (e.g. "42%") on ALL non-fold cells, not only on hover/selected. Increase cell padding from 2px to 4px for better touch targets. Reference screenshot shows large, readable cells with clear frequency values.
-**Success criteria:**
-- Matrix cell font size ≥ 12px
-- Frequency % visible on non-fold cells without selection
-- Cell padding ≥ 4px
-**Coach checks:** Browser screenshot of study preflop matrix — verify readability
+### Task: fix-study-matrix-readability ✅
+**Priority:** P2 — **Coach verified 2026-06-26T19:35:00Z**
+**Status:** Fixed by Player commit `503b7fa`. Cell font 10px→12px, freq chips 8px→11px with `rgba(0,0,0,0.45)` bg pill, padding `0`→`4px 2px`, flow layout for freq chip (was absolute). Verified live: matrix cells are readable, frequencies visible on non-fold cells without selection. 0 JS console errors, 11/11 health checks pass.
+**Evidence:** Browser screenshot confirms font size, pill backgrounds, cell padding, and frequency visibility.
 
 ### Task: fix-dashboard-hero-polish
 **Priority:** P2
