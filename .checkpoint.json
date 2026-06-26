@@ -166,7 +166,7 @@
       "task": "fix-strategy-route-order",
       "sha": "inferred-done",
       "date": "2026-06-25",
-      "summary": "Route order resolved — no 'Invalid strategy key format' error.",
+      "summary": "Route order resolved \u2014 no 'Invalid strategy key format' error.",
       "coach": "approved"
     },
     {
@@ -257,7 +257,7 @@
       "task": "fix-deploy-502-clean-build",
       "sha": "partial",
       "date": "2026-06-25",
-      "summary": "Site returns 200 (no 502). But clean-build script not in package.json — needs adding.",
+      "summary": "Site returns 200 (no 502). But clean-build script not in package.json \u2014 needs adding.",
       "coach": "pending"
     },
     {
@@ -271,7 +271,7 @@
       "task": "postflop-street-navigation",
       "sha": "inferred-done",
       "date": "2026-06-25",
-      "summary": "Street breadcrumb shows PREFLOP→FLOP→TURN→RIVER with actions. Verified live.",
+      "summary": "Street breadcrumb shows PREFLOP\u2192FLOP\u2192TURN\u2192RIVER with actions. Verified live.",
       "coach": "approved"
     },
     {
@@ -288,12 +288,19 @@
       "summary": "Fixed SB stack_depth integer type for primary preflop-range API call via Math.round().",
       "coach": "approved",
       "coach_verified_at": "2026-06-25T23:35:00Z"
+    },
+    {
+      "task": "fix-sb-aggregate-stack-depth",
+      "sha": "auto",
+      "date": "2026-06-26",
+      "summary": "Fixed aggregate summary strip stackDepth - 0.5 float for SB by wrapping with Math.round(), matching the pattern already used in the primary fetch path (line 160). Backend was rejecting 99.5 with 422, causing SB to show F:0% C:0% R:0% while other positions showed real data.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
   "last_sha": "8d00dbf",
   "blocker": null,
-  "current_task": "fix-sb-aggregate-stack-depth",
+  "current_task": "start-solver-docker-service",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -301,7 +308,7 @@
       "type": "bug",
       "priority": 1,
       "evidence": "Line 238 in study/page.tsx still sends stackDepth - 0.5 for SB (99.5 float) which backend rejects with 422. Primary API path (line 201 with positions[].stack) was fixed in 31ce522 but aggregate path was missed. Verified live: SB shows F:0% C:0% R:0% while other positions show real data. Console performance API confirms 422 on /api/v1/solver/preflop-range.",
-      "cycles_stagnant": 0,
+      "cycles_stagnant": 1,
       "status": "open"
     },
     {
@@ -309,7 +316,7 @@
       "type": "infra_gap",
       "priority": 1,
       "evidence": "docker compose ps shows only postgres and redis. No solver container. Build and start needed.",
-      "cycles_stagnant": 1,
+      "cycles_stagnant": 2,
       "status": "open"
     },
     {
@@ -317,7 +324,7 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 1,
+      "cycles_stagnant": 2,
       "status": "open"
     },
     {
@@ -325,7 +332,7 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No gto-wizard-health-check cron job found. Health check script exists but runs only manually.",
-      "cycles_stagnant": 1,
+      "cycles_stagnant": 2,
       "status": "open"
     }
   ],
@@ -335,5 +342,5 @@
     "verdict": "approved",
     "notes": "Coach cycle 2026-06-26 09:35 AEST. Reviewed new Player commit 31ce522 (fix sb stack_depth integer). Fix is correct for the primary interaction path (line 160 positions[] -> API call on position click). However, the aggregate summary strip fetchAllPositions at line 238 still sends stackDepth - 0.5 (float) which the backend rejects with 422. The error is silently swallowed, so SB shows 'F:0% C:0% R:0%' in the summary strip while every other position shows real data. Verified via browser snapshot and performance API. New P1 task 'fix-sb-aggregate-stack-depth' added to AGENTS.md. Existing gaps incremented cycles_stagnant. Polytopia: no new commits, site 200."
   },
-  "note": "Tick 2026-06-26 09:35 AEST. Reviewed fix-sb-preflop-stack-depth-integer (31ce522). Approved with finding: aggregate path at line 238 still broken — SB shows 0% in summary strip. New P1 task added to AGENTS.md."
+  "note": "Tick 2026-06-26 10:05 AEST. Fixed aggregate stackDepth for SB (line 238 wrapped with Math.round()). 53 frontend tests pass. API verified: integer 100 -> 200, float 99.5 -> 422. Moving to start-solver-docker-service."
 }

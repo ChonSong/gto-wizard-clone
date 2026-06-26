@@ -235,7 +235,7 @@ export default function StudyPage() {
       try {
         const results = await Promise.all(
           ALL_POSITIONS.map(async (pos) => {
-            const stackForPos = pos === 'SB' ? stackDepth - 0.5 : pos === 'BB' ? stackDepth - 1 : stackDepth
+            const stackForPos = pos === 'SB' ? Math.round(stackDepth - 0.5) : pos === 'BB' ? stackDepth - 1 : stackDepth
             const res = await fetch(`${API_BASE}/solver/preflop-range`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
