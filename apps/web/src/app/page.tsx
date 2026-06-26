@@ -100,7 +100,15 @@ export default function HomePage() {
           Master optimal poker strategy with cutting-edge GTO analysis tools.
           Train smarter, analyze deeper, and play better.
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 relative">
+          {/* Radial gradient glow behind CTA buttons */}
+          <div className="absolute inset-0 -z-10 opacity-60 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(0,200,83,0.25) 0%, transparent 70%)',
+              filter: 'blur(20px)',
+              transform: 'translateY(10px)',
+            }}
+          />
           <Link
             href="/study"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:brightness-110"
@@ -128,7 +136,7 @@ export default function HomePage() {
           <Link
             key={feature.title}
             href={feature.href}
-            className="group block rounded-xl transition-all duration-200 hover:-translate-y-0.5"
+            className="feature-card group block rounded-xl"
             style={{
               backgroundColor: 'var(--panel)',
               border: '1px solid var(--border)',

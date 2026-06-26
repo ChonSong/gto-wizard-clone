@@ -69,6 +69,7 @@ export default function Header() {
                   whiteSpace: 'nowrap', transition: '.15s', textDecoration: 'none',
                   background: tab.highlight && active ? '#00C853'
                     : active ? '#222' : 'transparent',
+                  borderLeft: active ? '2px solid var(--green-lime)' : '2px solid transparent',
                 }}
               >
                 {tab.highlight && (active ? '🎓 ' : '🎓 ')}{tab.label}
@@ -137,6 +138,7 @@ export default function Header() {
                   background: active ? '#1a3a2a' : 'transparent',
                   display: 'flex', alignItems: 'center', gap: 8,
                   transition: '.1s',
+                  borderLeft: active ? '2px solid var(--green-lime)' : '2px solid transparent',
                 }}
                 onClick={() => setMenuOpen(false)}
               >
