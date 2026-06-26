@@ -604,7 +604,7 @@ export default function StudyPage() {
             border-radius: 2px !important;
           }
           .study-matrix-cell {
-            font-size: 10px !important;
+            font-size: 12px !important;
             letter-spacing: 0 !important;
           }
           .study-spot-card-bar {
@@ -669,12 +669,12 @@ export default function StudyPage() {
         }
         @media (max-width: 480px) {
           .study-matrix-cell {
-            font-size: 9px !important;
+            font-size: 11px !important;
             letter-spacing: 0 !important;
           }
           .study-matrix-cell-freq {
             display: block !important;
-            font-size: 8px !important;
+            font-size: 10px !important;
           }
           .study-spot-card-bar {
             min-height: 38px !important;
@@ -1071,19 +1071,20 @@ export default function StudyPage() {
                         style={{
                           aspectRatio: isSelected ? 'auto' : '1/1',
                           minHeight: isSelected ? 84 : undefined,
-                          display: 'flex', flexDirection: isSelected ? 'column' : undefined,
+                          display: 'flex', flexDirection: 'column',
                           alignItems: isSelected ? 'stretch' : 'center',
-                          justifyContent: isSelected ? 'flex-start' : 'center',
+                          justifyContent: 'center',
                           fontWeight: 700, color: '#fff', letterSpacing: -0.3,
+                          fontSize: 12,
                           textShadow: '0 1px 2px rgba(0,0,0,.8)', cursor: 'pointer', userSelect: 'none',
                           background: color, opacity,
                           border: isSelected ? '2px solid #fff' : '1px solid rgba(255,255,255,0.06)',
                           borderRadius: 3,
                           transition: 'opacity .15s, border .15s',
-                          position: 'relative',
                           outline: 'none',
-                          padding: isSelected ? '3px' : undefined,
+                          padding: isSelected ? '3px' : '4px 2px',
                           zIndex: isSelected ? 10 : undefined,
+                          gap: 2,
                         }}>
                         <span style={{ textAlign: 'center', width: '100%', lineHeight: 1.1 }}>{hand}</span>
                         {/* Inline action buttons — shown only when cell is selected */}
@@ -1127,9 +1128,12 @@ export default function StudyPage() {
                         )}
                         {data && data.action !== 'fold' && !isSelected && (
                           <span className="study-matrix-cell-freq" style={{
-                            position: 'absolute', bottom: 1, right: 2,
-                            fontSize: 8, fontWeight: 600, opacity: 0.7,
+                            fontSize: 11, fontWeight: 700, opacity: 1,
                             color: '#fff',
+                            background: 'rgba(0,0,0,0.45)',
+                            padding: '1px 4px',
+                            borderRadius: 2,
+                            lineHeight: 1.2,
                           }}>
                             {(data.frequency * 100).toFixed(0)}%
                           </span>
