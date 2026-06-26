@@ -81,29 +81,20 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 ## Phase 3 — Infrastructure & Visual Polish
 
-### Task: start-solver-docker-service
-**Priority:** P1
-**Description:** Build and start the solver Docker container. Currently only PostgreSQL and Redis are up (`docker compose ps` shows no solver). The solver Docker image had build/runtime issues (numpy version conflict, protobuf version mismatch). These need to be resolved then the container started.
-**Success criteria:**
-- `docker compose build solver` exits 0
-- `docker compose up -d solver` starts container
-- `docker compose ps` shows solver as "Up"
-- `curl http://localhost:8001/api/v1/solver/health` returns 200
-- Solver gRPC port 50051 is listening
-**Coach checks:** Verify solver container is running, health endpoint responds, no protobuf/gencode errors in container logs.
+### Task: start-solver-docker-service ✅
+**Priority:** P1 — **Coach verified 2026-06-26T13:21:00Z**
+**Status:** Fixed by Player commit `67b5214`. Solver container built and started via docker-compose. gRPC server on port 50051, health endpoint returns 200 with MCCFR engine available. All 11 health checks pass. Container logs show no protobuf/gencode errors.
+**Evidence:** `docker compose ps` shows solver as "Up", `curl http://localhost:8001/api/v1/solver/health` returns 200.
 
 ### Task: fix-sb-aggregate-stack-depth ✅
 **Priority:** P1 — **Coach verified 2026-06-26T10:05:00Z**
 **Status:** Fixed by Player commit `8893efd`. `Math.round()` wrapped around `stackDepth - 0.5` on line 238, matching the primary path pattern. Verified live: SB summary strip shows **F:7% C:0% R:6%** with 169 combos on fresh load. Console shows 0 preflop-range 422 errors. All 7 aggregate API calls return 200.
 **Evidence:** https://wiz.codeovertcp.com/study — SB position, 100bb, Preflop Ranges mode.
 
-### Task: add-clean-build-npm-script
-**Priority:** P2
-**Description:** Add a `clean-build` npm script to `apps/web/package.json`: `"clean-build": "rm -rf .next && next build"`. Prevents stale `.next` cache issues on deploy. Currently 502 errors can occur when `.next` cache has stale manifest files.
-**Success criteria:**
-- `cd apps/web && npm run clean-build` exits 0
-- Script exists in package.json
-**Coach checks:** Verify script exists and runs successfully.
+### Task: add-clean-build-npm-script ✅
+**Priority:** P2 — **Coach verified 2026-06-26T14:06:00Z**
+**Status:** Fixed by Player commit `d85a95b`. `"clean-build": "rm -rf .next && next build"` added to `apps/web/package.json`. Build runs successfully — all pages compile without errors.
+**Evidence:** `cd apps/web && npm run clean-build` exits 0. All 11 health checks pass. Study page loads with 0 JS errors.
 
 ### Task: add-periodic-health-check-cron
 **Priority:** P2

@@ -302,13 +302,22 @@
       "sha": "67b5214",
       "date": "2026-06-26",
       "summary": "Added solver service to docker-compose.yml, built Docker image, started container. gRPC server on port 50051, health endpoint returns 200 with MCCFR engine available. Container healthy.",
-      "coach": "pending"
+      "coach": "approved",
+      "coach_verified_at": "2026-06-26T13:21:00Z"
+    },
+    {
+      "task": "add-clean-build-npm-script",
+      "sha": "d85a95b",
+      "date": "2026-06-26",
+      "summary": "Added clean-build npm script to apps/web/package.json: rm -rf .next && next build. Prevents stale .next cache issues on deploy.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-26T14:06:00Z"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "67b5214",
+  "last_sha": "d85a95b",
   "blocker": null,
-  "current_task": "add-clean-build-npm-script",
+  "current_task": "add-periodic-health-check-cron",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -316,31 +325,31 @@
       "type": "infra_gap",
       "priority": 1,
       "evidence": "RESOLVED \u2014 solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
-      "cycles_stagnant": 8,
-      "status": "escalated"
+      "cycles_stagnant": 1,
+      "status": "resolved"
     },
     {
       "item": "clean-build npm script not in package.json",
       "type": "infra_gap",
       "priority": 2,
-      "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 7,
-      "status": "escalated"
+      "evidence": "RESOLVED \u2014 clean-build script added to apps/web/package.json by Player commit d85a95b. Script runs successfully.",
+      "cycles_stagnant": 1,
+      "status": "resolved"
     },
     {
       "item": "Health check cron job fails with 401 billing error",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "gto-wizard-health-check cron exists at 0 */6 * * * but fails with HTTP 401 (Insufficient balance). Check billing at opencode.ai.",
-      "cycles_stagnant": 7,
-      "status": "escalated"
+      "cycles_stagnant": 2,
+      "status": "active"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "67b5214",
-    "last_reviewed_at": "2026-06-26T12:35:00Z",
+    "last_reviewed_sha": "d85a95b",
+    "last_reviewed_at": "2026-06-26T14:06:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 12:35 AEST. Solver Docker service: container running, health endpoint 200, MCCFR engine available. No methodology concerns (infrastructure task)."
+    "notes": "Coach cycle 2026-06-26 14:06 AEST. Player commit d85a95b: add clean-build npm script. Script exists and runs successfully (build compiles all pages). Solver container still running, health 200. Study page loads with 0 JS errors. 11/11 health checks pass. No methodology concerns (chore commit, no E2E tests involved). Spec_gaps: solver + clean-build resolved. Next task: add-periodic-health-check-cron."
   },
-  "note": "Tick 2026-06-26 12:35 AEST. Coach approved solver Docker commit 67b5214. Study page verified: hand matrix populated, position switching works, SB fix confirmed (F:7% C:0% R:6%). Next task: add-clean-build-npm-script."
+  "note": "Tick 2026-06-26 14:06 AEST. Coach approved Player commit d85a95b (clean-build script). Spec_gaps resolved: solver container, clean-build script. Open: health check cron 401 billing. Next: add-periodic-health-check-cron."
 }
