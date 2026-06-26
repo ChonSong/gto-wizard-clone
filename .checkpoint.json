@@ -315,14 +315,14 @@
     },
     {
       "task": "visual-polish-reference-comparison",
-      "sha": "pending",
+      "sha": "136f19f",
       "date": "2026-06-26",
       "summary": "Compared 12 reference screenshots against 8 live pages. Identified 6 visual gaps. Generated 3 actionable fix tasks (fix-study-matrix-readability, fix-dashboard-hero-polish, fix-practice-page-placeholder). 2 deferred as architectural (sidebar nav, game tree). Report: docs/visual-polish-comparison-report.md",
       "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "d85a95b",
+  "last_sha": "136f19f",
   "blocker": null,
   "current_task": "visual-polish-reference-comparison",
   "all_coach_tasks_done": false,
