@@ -309,7 +309,7 @@
       "type": "infra_gap",
       "priority": 1,
       "evidence": "docker compose ps shows only postgres and redis. No solver container. Build and start needed.",
-      "cycles_stagnant": 5,
+      "cycles_stagnant": 6,
       "status": "escalated"
     },
     {
@@ -317,7 +317,7 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 5,
+      "cycles_stagnant": 6,
       "status": "escalated"
     },
     {
@@ -325,15 +325,15 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "gto-wizard-health-check cron exists at 0 */6 * * * but fails with HTTP 401 (Insufficient balance). Check billing at opencode.ai.",
-      "cycles_stagnant": 5,
+      "cycles_stagnant": 6,
       "status": "escalated"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "8893efd",
-    "last_reviewed_at": "2026-06-26T10:35:00Z",
+    "last_reviewed_at": "2026-06-26T11:36:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 10:35 AEST. No new Player commits since last review. All 11 health checks pass. Site returns 200 with 0 JS errors. SB summary strip verified: F:7% C:0% R:6%. Polytopia tribe selection renders correctly. Updated spec_gaps: solver container (5 cycles stagnant), clean-build script (5 cycles), health check cron corrected from 'no cron' to 'cron exists but 401 billing error' (5 cycles). All escalated by auto-escalation cron."
+    "notes": "Coach cycle 2026-06-26 11:36 AEST. No new Player commits since 8893efd. Stability check: 11/11 health checks pass, site 200, 0 JS errors. SB summary strip verified still working (F:7% C:0% R:6%). Hand matrix full with strategy data. All position tiles render. 3 infra spec_gaps stagnant at 6 cycles each (solver container, clean-build script, health check cron billing error — all escalated)."
   },
-  "note": "Tick 2026-06-26 10:35 AEST. No new Player commits. Both sites healthy. 3 infra spec_gaps stagnant (5 cycles each, escalated). Corrected health check cron evidence — cron exists but fails with 401 billing error."
+  "note": "Tick 2026-06-26 11:36 AEST. No new Player commits. 11/11 health checks pass. 3 infra spec_gaps stagnant at 6 cycles (escalated)."
 }
