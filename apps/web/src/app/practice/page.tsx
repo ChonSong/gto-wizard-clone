@@ -1105,21 +1105,64 @@ export default function PracticePage() {
               )}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="text-3xl mb-3">⚠️</div>
-              <div className="text-sm font-semibold mb-1" style={{ color: 'var(--text)' }}>
-                Unable to load training spot
+            /* — Placeholder: no spot loaded — */
+            <div
+              className="relative flex flex-col items-center justify-center py-16 px-6 rounded-xl mx-auto max-w-md"
+              style={{
+                background: 'linear-gradient(135deg, #0f5132 0%, #0a3d24 50%, #06281a 100%)',
+                border: '1px solid #1a7a4a',
+                boxShadow: 'inset 0 0 60px rgba(0,0,0,0.5), 0 0 30px rgba(170,250,178,0.08)',
+              }}
+            >
+              {/* Felt texture */}
+              <div
+                className="absolute inset-0 rounded-xl opacity-10 pointer-events-none"
+                style={{
+                  backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(170,250,178,0.1) 0%, transparent 40%)',
+                }}
+              />
+              <div className="relative text-5xl mb-4">🃏</div>
+              <h3 className="relative text-lg font-bold mb-2" style={{ color: '#AAFBB2' }}>
+                Select a Training Mode
+              </h3>
+              <p className="relative text-xs text-center mb-6 leading-relaxed" style={{ color: '#7fbb9a' }}>
+                Choose from three training modes below to begin practicing GTO poker strategy
+              </p>
+              <div className="relative grid gap-3 w-full">
+                <div
+                  className="flex items-start gap-3 p-3 rounded-lg"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(170,250,178,0.15)' }}
+                >
+                  <span className="text-xl shrink-0">🎯</span>
+                  <div>
+                    <div className="text-xs font-semibold mb-0.5" style={{ color: '#e8eef7' }}>Preflop Ranges</div>
+                    <div className="text-[10px] leading-snug" style={{ color: '#7fbb9a' }}>Master opening ranges from every position</div>
+                  </div>
+                </div>
+                <div
+                  className="flex items-start gap-3 p-3 rounded-lg"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(170,250,178,0.15)' }}
+                >
+                  <span className="text-xl shrink-0">⚔️</span>
+                  <div>
+                    <div className="text-xs font-semibold mb-0.5" style={{ color: '#e8eef7' }}>Postflop Scenarios</div>
+                    <div className="text-[10px] leading-snug" style={{ color: '#7fbb9a' }}>Navigate turns, rivers, and complex spots</div>
+                  </div>
+                </div>
+                <div
+                  className="flex items-start gap-3 p-3 rounded-lg"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(170,250,178,0.15)' }}
+                >
+                  <span className="text-xl shrink-0">🧠</span>
+                  <div>
+                    <div className="text-xs font-semibold mb-0.5" style={{ color: '#e8eef7' }}>Spaced Repetition</div>
+                    <div className="text-[10px] leading-snug" style={{ color: '#7fbb9a' }}>SM-2 algorithm for long-term retention</div>
+                  </div>
+                </div>
               </div>
-              <div className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
-                The quiz API is not responding. Please ensure the backend is running.
-              </div>
-              <button
-                onClick={fetchSpot}
-                className="font-semibold cursor-pointer border-none rounded-lg px-6 py-2.5 text-sm"
-                style={{ background: 'var(--green)', color: '#000' }}
-              >
-                Retry
-              </button>
+              <p className="relative text-[10px] mt-5 text-center" style={{ color: '#4a7a5a' }}>
+                Use the exercise type selector above to get started
+              </p>
             </div>
           )}
         </div>
