@@ -317,7 +317,7 @@
       "task": "fix-study-matrix-readability",
       "sha": "503b7fa",
       "date": "2026-06-26",
-      "summary": "Increased cell font 10px→12px, freq chips 8px→11px with bg pill, padding 0→4px 2px. Flow layout for freq chip.",
+      "summary": "Increased cell font 10px\u219212px, freq chips 8px\u219211px with bg pill, padding 0\u21924px 2px. Flow layout for freq chip.",
       "coach": "approved",
       "coach_verified_at": "2026-06-26T19:35:00Z"
     },
@@ -327,12 +327,19 @@
       "date": "2026-06-26",
       "summary": "Compared 12 reference screenshots against 8 live pages. Identified 6 visual gaps. Generated 3 actionable fix tasks (fix-study-matrix-readability, fix-dashboard-hero-polish, fix-practice-page-placeholder). 2 deferred as architectural (sidebar nav, game tree). Report: docs/visual-polish-comparison-report.md",
       "coach": "pending"
+    },
+    {
+      "task": "fix-dashboard-hero-polish",
+      "sha": "d690578",
+      "date": "2026-06-27",
+      "summary": "Added radial gradient glow behind hero CTA buttons, lime-green (#AAFBB2) left-border indicator for active nav items (desktop + mobile), feature card box-shadow elevation on hover via CSS .feature-card class. 53 frontend tests pass, build clean.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "503b7fa",
-  "blocker": null,
-  "current_task": "fix-dashboard-hero-polish",
+  "last_sha": "c90b6b4",
+  "blocker": "GitHub auth token expired \u2014 push failed (persistent)",
+  "current_task": "fix-practice-page-placeholder",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -361,10 +368,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "503b7fa",
-    "last_reviewed_at": "2026-06-26T19:35:00Z",
-    "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 19:35 UTC. fix-study-matrix-readability (503b7fa): verified live — cell font 12px, freq chips 11px with bg pill, padding 4px 2px. Position switching works. Postflop mode loads with GTO data. 0 JS errors. 11/11 health checks pass. RefQA passes. Next: fix-dashboard-hero-polish."
+    "last_reviewed_sha": "c90b6b4",
+    "last_reviewed_at": "2026-06-26T21:19:57Z",
+    "verdict": "pending",
+    "notes": "Tick 2026-06-26T21:19:57Z. fix-practice-page-placeholder (c90b6b4): added visual placeholder with training mode cards on green felt gradient. Build clean, 53 unit tests pass. Push FAILED (expired token)."
   },
-  "note": "Tick 2026-06-26T19:35 UTC. fix-study-matrix-readability (503b7fa) approved by Coach. Cell readability confirmed live. 0 JS errors, 11/11 health checks. Next: fix-dashboard-hero-polish."
+  "note": "Tick 2026-06-26T21:19:57Z. Player implemented fix-practice-page-placeholder (c90b6b4): replaced basic error UI with rich placeholder \u2014 3 training mode cards (Preflop Ranges, Postflop Scenarios, Spaced Repetition) on poker felt gradient. 53 unit tests pass, build clean. Push FAILED (GitHub token expired). Next: fix-practice-page-placeholder (committed, awaiting push)."
 }
