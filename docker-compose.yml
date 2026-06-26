@@ -66,6 +66,26 @@ services:
       CELERY_RESULT_BACKEND: redis://redis:6379/2
     command: celery -A apps.worker.celery_app worker --loglevel=info --concurrency=4
 
+  solver:
+    build:
+      context: .
+      dockerfile: apps/solver/Dockerfile
+    ports:
+      - "50051:50051"
+    networks:
+      - gto-network
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gto_wizard
+      GRPC_PORT: "50051"
+      GRPC_MAX_WORKERS: "10"
+    restart: unless-stopped
+
   web:
     build:
       context: .
@@ -84,20 +104,6 @@ services:
       - ./apps/web:/app
       - /app/node_modules
     command: npm run dev
-
-  solver:
-    build:
-      context: .
-      dockerfile: apps/solver/Dockerfile
-    ports:
-      - "50051:50051"
-    networks:
-      - gto-network
-    depends_on:
-      redis:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
 
   seed:
     build:
