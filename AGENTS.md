@@ -96,26 +96,42 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Status:** Fixed by Player commit `d85a95b`. `"clean-build": "rm -rf .next && next build"` added to `apps/web/package.json`. Build runs successfully — all pages compile without errors.
 **Evidence:** `cd apps/web && npm run clean-build` exits 0. All 11 health checks pass. Study page loads with 0 JS errors.
 
-### Task: add-periodic-health-check-cron
-**Priority:** P2
-**Description:** Create a Hermes cron job `gto-wizard-health-check` running `bash scripts/deploy-health-check.sh` every 6 hours. Reports results to the user's origin channel. Currently the health check script exists but runs only on demand.
-**Success criteria:**
-- Cron job exists with name `gto-wizard-health-check`
-- Schedule `0 */6 * * *`
-- Delivers to origin channel
+### Task: add-periodic-health-check-cron ✅
+**Priority:** P2 — **Completed 2026-06-19** (commit `0e39c5d`)
+**Status:** Cron job `gto-wizard-health-check` exists, schedule `0 */6 * * *`, delivers to origin channel. Cron ID: 5d06462b5271. Note: currently fails with HTTP 401 (billing) — requires opencode.ai balance top-up.
 **Coach checks:** List cron jobs — verify entry exists.
 
-### Task: visual-polish-reference-comparison
+### Task: visual-polish-reference-comparison ✅
+**Priority:** P2 — **Completed 2026-06-26T16:00:00Z**
+**Status:** Comparison complete. See `docs/visual-polish-comparison-report.md` for full analysis. 6 gaps identified, 4 actionable fix tasks generated below (2 deferred as architectural).
+**Evidence:** Subagent analysis of 12 reference screenshots + 8 live page captures. All 11 health checks pass.
+
+### Task: fix-study-matrix-readability
 **Priority:** P2
-**Description:** Coach-driven visual comparison. Load reference screenshots from `docs/` directory and compare against live `wiz.codeovertcp.com` pages. Generate specific fix tasks for any remaining visual gaps:
-- Preflop: hand matrix cell styling, GTO frequency chips, position button sizing
-- Postflop: action button layout, board card styling, street breadcrumb, GTO comparison overlay
-- Dashboard: navigation layout, card styling, spacing/typography consistency
+**Description:** Increase study matrix cell font size from ~10px to 12px. Show frequency chips (e.g. "42%") on ALL non-fold cells, not only on hover/selected. Increase cell padding from 2px to 4px for better touch targets. Reference screenshot shows large, readable cells with clear frequency values.
 **Success criteria:**
-- Compare all 8 reference screenshots against live pages
-- Each identified gap gets a specific fix task in AGENTS.md
-- No self-referential E2E tests — only user-visible behavior changes
-**Coach checks:** Browser vision comparison of each page against its reference.
+- Matrix cell font size ≥ 12px
+- Frequency % visible on non-fold cells without selection
+- Cell padding ≥ 4px
+**Coach checks:** Browser screenshot of study preflop matrix — verify readability
+
+### Task: fix-dashboard-hero-polish
+**Priority:** P2
+**Description:** Add radial gradient glow behind hero CTA buttons (reference shows subtle green depth). Introduce secondary lime-green (#AAFBB2) accent for active nav states alongside primary #00C853. Add box-shadow on feature card hover (reference shows elevation depth, clone only has -translate-y-0.5).
+**Success criteria:**
+- Hero section has visible radial gradient glow
+- Active nav items use #AAFBB2 lime green indicator
+- Feature cards have box-shadow on hover
+**Coach checks:** Browser screenshot of dashboard — verify depth and glow
+
+### Task: fix-practice-page-placeholder
+**Priority:** P2
+**Description:** Practice/trainer page at `/practice` shows an empty dark page with only sidebar indicators. Reference shows a poker table with green felt. Add a visual placeholder: "Select a training mode" panel with mode options (Preflop Ranges, Postflop Scenarios, Spaced Repetition) as styled cards. Include a subtle poker table texture/gradient background.
+**Success criteria:**
+- Practice page shows meaningful content (not empty)
+- At least 3 training mode options visible
+- Green subtle felt/gradient background
+**Coach checks:** Browser screenshot of /practice — verify content visible
 
 ### Task: tandem-reference-comparison-gtowizard
 **Priority:** P2

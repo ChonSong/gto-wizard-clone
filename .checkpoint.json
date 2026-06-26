@@ -312,12 +312,19 @@
       "summary": "Added clean-build npm script to apps/web/package.json: rm -rf .next && next build. Prevents stale .next cache issues on deploy.",
       "coach": "approved",
       "coach_verified_at": "2026-06-26T14:06:00Z"
+    },
+    {
+      "task": "visual-polish-reference-comparison",
+      "sha": "pending",
+      "date": "2026-06-26",
+      "summary": "Compared 12 reference screenshots against 8 live pages. Identified 6 visual gaps. Generated 3 actionable fix tasks (fix-study-matrix-readability, fix-dashboard-hero-polish, fix-practice-page-placeholder). 2 deferred as architectural (sidebar nav, game tree). Report: docs/visual-polish-comparison-report.md",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
   "last_sha": "d85a95b",
   "blocker": null,
-  "current_task": "add-periodic-health-check-cron",
+  "current_task": "visual-polish-reference-comparison",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -325,31 +332,31 @@
       "type": "infra_gap",
       "priority": 1,
       "evidence": "RESOLVED \u2014 solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
-      "cycles_stagnant": 1,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
       "item": "clean-build npm script not in package.json",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "RESOLVED \u2014 clean-build script added to apps/web/package.json by Player commit d85a95b. Script runs successfully.",
-      "cycles_stagnant": 1,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
       "item": "Health check cron job fails with 401 billing error",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "gto-wizard-health-check cron exists at 0 */6 * * * but fails with HTTP 401 (Insufficient balance). Check billing at opencode.ai.",
-      "cycles_stagnant": 2,
-      "status": "active"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "d85a95b",
-    "last_reviewed_at": "2026-06-26T14:06:00Z",
+    "last_reviewed_at": "2026-06-26T05:12:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 14:06 AEST. Player commit d85a95b: add clean-build npm script. Script exists and runs successfully (build compiles all pages). Solver container still running, health 200. Study page loads with 0 JS errors. 11/11 health checks pass. No methodology concerns (chore commit, no E2E tests involved). Spec_gaps: solver + clean-build resolved. Next task: add-periodic-health-check-cron."
+    "notes": "Coach cycle 2026-06-26 05:12 UTC. No new Player commits. All 11 health checks pass. RefQA passes (4/4). Study page loads with GTO data, position switching works, 0 JS errors. Stale spec_gaps: health check cron 401 billing at 4 cycles stagnant (escalated). Polytopia: page loads, canvas renders, 0 console errors, RefQA passes."
   },
-  "note": "Tick 2026-06-26 14:06 AEST. Coach approved Player commit d85a95b (clean-build script). Spec_gaps resolved: solver container, clean-build script. Open: health check cron 401 billing. Next: add-periodic-health-check-cron."
+  "note": "Tick 2026-06-26 ~16:00 UTC. Visual polish comparison complete. 12 reference screenshots vs 8 live pages analyzed. 6 gaps identified, 3 fix tasks generated in AGENTS.md (fix-study-matrix-readability, fix-dashboard-hero-polish, fix-practice-page-placeholder). Report saved to docs/visual-polish-comparison-report.md. Next: fix-study-matrix-readability."
 }
