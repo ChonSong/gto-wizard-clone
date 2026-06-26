@@ -296,20 +296,27 @@
       "summary": "Fixed aggregate summary strip stackDepth - 0.5 float for SB by wrapping with Math.round(), matching the pattern already used in the primary fetch path (line 160). Backend was rejecting 99.5 with 422, causing SB to show F:0% C:0% R:0% while other positions showed real data.",
       "coach": "approved",
       "coach_verified_at": "2026-06-26T10:05:00Z"
+    },
+    {
+      "task": "start-solver-docker-service",
+      "sha": "67b5214",
+      "date": "2026-06-26",
+      "summary": "Added solver service to docker-compose.yml, built Docker image, started container. gRPC server on port 50051, health endpoint returns 200 with MCCFR engine available. Container healthy.",
+      "coach": "pending"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "8893efd",
+  "last_sha": "67b5214",
   "blocker": null,
-  "current_task": "start-solver-docker-service",
+  "current_task": "add-clean-build-npm-script",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
       "item": "Solver Docker container not running",
       "type": "infra_gap",
       "priority": 1,
-      "evidence": "docker compose ps shows only postgres and redis. No solver container. Build and start needed.",
-      "cycles_stagnant": 6,
+      "evidence": "RESOLVED \u2014 solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
+      "cycles_stagnant": 8,
       "status": "escalated"
     },
     {
@@ -317,7 +324,7 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 6,
+      "cycles_stagnant": 7,
       "status": "escalated"
     },
     {
@@ -325,15 +332,15 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "gto-wizard-health-check cron exists at 0 */6 * * * but fails with HTTP 401 (Insufficient balance). Check billing at opencode.ai.",
-      "cycles_stagnant": 6,
+      "cycles_stagnant": 7,
       "status": "escalated"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "8893efd",
-    "last_reviewed_at": "2026-06-26T11:36:00Z",
+    "last_reviewed_sha": "67b5214",
+    "last_reviewed_at": "2026-06-26T12:35:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 11:36 AEST. No new Player commits since 8893efd. Stability check: 11/11 health checks pass, site 200, 0 JS errors. SB summary strip verified still working (F:7% C:0% R:6%). Hand matrix full with strategy data. All position tiles render. 3 infra spec_gaps stagnant at 6 cycles each (solver container, clean-build script, health check cron billing error — all escalated)."
+    "notes": "Coach cycle 2026-06-26 12:35 AEST. Solver Docker service: container running, health endpoint 200, MCCFR engine available. No methodology concerns (infrastructure task)."
   },
-  "note": "Tick 2026-06-26 11:36 AEST. No new Player commits. 11/11 health checks pass. 3 infra spec_gaps stagnant at 6 cycles (escalated)."
+  "note": "Tick 2026-06-26 12:35 AEST. Coach approved solver Docker commit 67b5214. Study page verified: hand matrix populated, position switching works, SB fix confirmed (F:7% C:0% R:6%). Next task: add-clean-build-npm-script."
 }
