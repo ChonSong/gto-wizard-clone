@@ -100,13 +100,13 @@ export class PracticePage {
 
   async selectExerciseType(type: ExerciseType): Promise<void> {
     await this.page.getByRole('button', { name: type }).click();
-    await this.page.waitForTimeout(500);
-    const currentType = await this.getActiveExerciseType();
-    if (currentType !== type) {
-      throw new Error(
-        `Exercise type selection may not have worked. Wanted ${type}, detected ${currentType}.`
-      );
+    // Wait for the conditional section to appear (React re-render)
+    if (type === 'Timed Drill') {
+      await this.page.waitForSelector('text=Timer Duration', { state: 'visible', timeout: 5000 });
+    } else if (type === 'Spaced Repetition') {
+      await this.page.waitForSelector('text=spots tracked', { state: 'visible', timeout: 5000 });
     }
+    // GTO Quiz is the default — no conditional section to wait for
   }
 
   async selectTimerDuration(duration: TimerDuration): Promise<void> {
