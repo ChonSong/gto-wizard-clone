@@ -92,15 +92,10 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Solver gRPC port 50051 is listening
 **Coach checks:** Verify solver container is running, health endpoint responds, no protobuf/gencode errors in container logs.
 
-### Task: fix-sb-aggregate-stack-depth
-**Priority:** P1
-**Description:** The `fix(study): ensure SB stack_depth is integer` commit (31ce522) fixed the primary preflop-range API call for SB position (line 160), but the aggregate summary strip fetch (line 238) still sends `stackDepth - 0.5` (99.5 for 100bb) which the backend rejects with 422. The error is silently swallowed, causing SB to show "F: 0% C: 0% R: 0%" in the summary strip while every other position shows real data. Verified live at wiz.codeovertcp.com — SB shows zeros, UTG/HJ/CO/BTN/BB all show real data. Console shows a 422 on `/api/v1/solver/preflop-range`.
-**Success criteria:**
-- SB summary strip shows real F/C/R percentages matching the hand matrix
-- Console shows no 422 errors for SB preflop-range API calls
-- Line 238 `stackForPos` wraps SB's `stackDepth - 0.5` with `Math.round()` matching the pattern on line 160
-- Deploy and verify the summary strip
-**Coach checks:** Load wiz.codeovertcp.com/study, click SB, verify summary strip shows non-zero F/C/R. Open console — no 422 errors.
+### Task: fix-sb-aggregate-stack-depth ✅
+**Priority:** P1 — **Coach verified 2026-06-26T10:05:00Z**
+**Status:** Fixed by Player commit `8893efd`. `Math.round()` wrapped around `stackDepth - 0.5` on line 238, matching the primary path pattern. Verified live: SB summary strip shows **F:7% C:0% R:6%** with 169 combos on fresh load. Console shows 0 preflop-range 422 errors. All 7 aggregate API calls return 200.
+**Evidence:** https://wiz.codeovertcp.com/study — SB position, 100bb, Preflop Ranges mode.
 
 ### Task: add-clean-build-npm-script
 **Priority:** P2

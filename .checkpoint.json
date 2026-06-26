@@ -291,56 +291,49 @@
     },
     {
       "task": "fix-sb-aggregate-stack-depth",
-      "sha": "auto",
+      "sha": "8893efd",
       "date": "2026-06-26",
       "summary": "Fixed aggregate summary strip stackDepth - 0.5 float for SB by wrapping with Math.round(), matching the pattern already used in the primary fetch path (line 160). Backend was rejecting 99.5 with 422, causing SB to show F:0% C:0% R:0% while other positions showed real data.",
-      "coach": "pending"
+      "coach": "approved",
+      "coach_verified_at": "2026-06-26T10:05:00Z"
     }
   ],
   "health": "build_passes_368_py_tests_53_frontend_tests_live_200_0_js_errors_health_check_11_of_11_pass",
-  "last_sha": "8d00dbf",
+  "last_sha": "8893efd",
   "blocker": null,
   "current_task": "start-solver-docker-service",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
-      "item": "SB aggregate summary strip shows 0% instead of real data",
-      "type": "bug",
-      "priority": 1,
-      "evidence": "Line 238 in study/page.tsx still sends stackDepth - 0.5 for SB (99.5 float) which backend rejects with 422. Primary API path (line 201 with positions[].stack) was fixed in 31ce522 but aggregate path was missed. Verified live: SB shows F:0% C:0% R:0% while other positions show real data. Console performance API confirms 422 on /api/v1/solver/preflop-range.",
-      "cycles_stagnant": 1,
-      "status": "open"
-    },
-    {
       "item": "Solver Docker container not running",
       "type": "infra_gap",
       "priority": 1,
       "evidence": "docker compose ps shows only postgres and redis. No solver container. Build and start needed.",
-      "cycles_stagnant": 2,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     },
     {
       "item": "clean-build npm script not in package.json",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No 'clean-build' script in apps/web/package.json. Prevents clean deploy if .next cache goes stale.",
-      "cycles_stagnant": 2,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     },
     {
       "item": "No periodic health check cron job",
       "type": "infra_gap",
       "priority": 2,
       "evidence": "No gto-wizard-health-check cron job found. Health check script exists but runs only manually.",
-      "cycles_stagnant": 2,
-      "status": "open"
+      "cycles_stagnant": 4,
+      "status": "escalated"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "8d00dbf",
-    "last_reviewed_at": "2026-06-25T23:35:00Z",
+    "last_reviewed_sha": "8893efd",
+    "last_reviewed_at": "2026-06-26T10:05:00Z",
     "verdict": "approved",
-    "notes": "Coach cycle 2026-06-26 09:35 AEST. Reviewed new Player commit 31ce522 (fix sb stack_depth integer). Fix is correct for the primary interaction path (line 160 positions[] -> API call on position click). However, the aggregate summary strip fetchAllPositions at line 238 still sends stackDepth - 0.5 (float) which the backend rejects with 422. The error is silently swallowed, so SB shows 'F:0% C:0% R:0%' in the summary strip while every other position shows real data. Verified via browser snapshot and performance API. New P1 task 'fix-sb-aggregate-stack-depth' added to AGENTS.md. Existing gaps incremented cycles_stagnant. Polytopia: no new commits, site 200."
+    "notes": "Coach cycle 2026-06-26 20:05 AEST. Reviewed Player commit 8893efd (fix SB aggregate stackDepth). Fix is correct: Math.round() applied to stackDepth - 0.5 on fetchAllPositions line 238, matching the pattern on line 160. Verified live: SB summary strip shows F:7% C:0% R:6% — 169 combos. Console shows 0 preflop-range 422 errors. All 7 aggregate API calls return 200. 368 Python tests pass, 53 frontend tests pass, 11/11 health check passes. Polytopia: 0 new Player commits since last review. Site 200, 0 JS errors, tribe selection screen renders. Remaining spec_gaps: solver container (4 cycles), clean-build script (4), health check cron (4) — all escalated. Current_task unchanged: start-solver-docker-service."
   },
-  "note": "Tick 2026-06-26 10:05 AEST. Fixed aggregate stackDepth for SB (line 238 wrapped with Math.round()). 53 frontend tests pass. API verified: integer 100 -> 200, float 99.5 -> 422. Moving to start-solver-docker-service."
+  "note": "Tick 2026-06-26 20:05 AEST. Reviewed fix-sb-aggregate-stack-depth (8893efd) — approved and verified live. SB summary strip now shows real data. All tests pass. 3 infra spec_gaps stagnant for 4 cycles each (escalated). Next: start-solver-docker-service."
 }
