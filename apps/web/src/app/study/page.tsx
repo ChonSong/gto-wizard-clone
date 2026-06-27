@@ -1087,45 +1087,7 @@ export default function StudyPage() {
                           gap: 2,
                         }}>
                         <span style={{ textAlign: 'center', width: '100%', lineHeight: 1.1 }}>{hand}</span>
-                        {/* Inline action buttons — shown only when cell is selected */}
-                        {isSelected && (
-                          <div className="hspotcrd_actions" style={{
-                            display: 'flex', flexDirection: 'column', gap: 1.5, marginTop: 2,
-                          }}>
-                            {POSITION_ACTIONS[activePosition]?.map(action => {
-                              const gtoActionBase = getGtoActionBase(data)
-                              const isGtoRecommended = data && gtoActionBase === action.actionBase
-                              let bg = 'rgba(0,0,0,0.35)'
-                              let borderColor = 'rgba(255,255,255,0.15)'
-                              if (action.actionBase === 'fold') { bg = 'rgba(50,50,50,0.6)'; borderColor = '#444' }
-                              if (action.actionBase === 'call') { bg = 'rgba(58,110,165,0.4)'; borderColor = '#3A6EA5' }
-                              if (action.actionBase === 'raise') { bg = 'rgba(229,57,53,0.35)'; borderColor = '#E53935' }
-                              if (action.actionBase === 'all_in') { bg = 'rgba(123,30,30,0.5)'; borderColor = '#7B1E1E' }
-                              if (isGtoRecommended) { bg = 'rgba(255,255,255,0.22)'; borderColor = '#fff' }
-                              return (
-                                <div key={action.id}
-                                  className={`hspotcrd_action${isGtoRecommended ? ' hspotcrd_action_active' : ''}`}
-                                  style={{
-                                    fontSize: 8, lineHeight: 1.3,
-                                    padding: '1.5px 3px', borderRadius: 2,
-                                    background: bg,
-                                    border: `1px solid ${borderColor}`,
-                                    color: isGtoRecommended ? '#fff' : '#ccc',
-                                    fontWeight: isGtoRecommended ? 700 : 500,
-                                    cursor: 'pointer', textAlign: 'center',
-                                    whiteSpace: 'nowrap', overflow: 'hidden',
-                                    textShadow: '0 0 2px rgba(0,0,0,0.8)',
-                                    transition: 'all 0.1s',
-                                  }}
-                                  role="button"
-                                  aria-label={`${action.label}${isGtoRecommended ? ', GTO recommendation' : ''}`}
-                                >
-                                  {action.label}
-                                </div>
-                              )
-                            })}
-                          </div>
-                        )}
+
                         {data && data.action !== 'fold' && !isSelected && (
                           <span className="study-matrix-cell-freq" style={{
                             fontSize: 11, fontWeight: 700, opacity: 1,
