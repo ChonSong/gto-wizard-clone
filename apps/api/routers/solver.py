@@ -390,20 +390,15 @@ def _get_position_index(pos: str) -> int:
         return -1
 
 
-def _get_next_position(current: str, folded_positions: set[str]) -> str | None:
-    """Get the next position that hasn't folded."""
+def _get_next_position(current: str, excluded_positions: set[str]) -> str | None:
+    """Get the next position that hasn't folded or already acted."""
     idx = _get_position_index(current)
     for i in range(1, len(_POSITION_ORDER) + 1):
         next_idx = (idx + i) % len(_POSITION_ORDER)
         pos = _POSITION_ORDER[next_idx]
-        if pos not in folded_positions:
+        if pos not in excluded_positions:
             return pos
     return None
-
-
-def _get_next_position_after_action(position: str, folded_positions: set[str]) -> str | None:
-    """Get the next position to act after `position` folds/acts."""
-    return _get_next_position(position, folded_positions)
 
 
 # ── Tree context computation ──
@@ -464,6 +459,12 @@ def _compute_tree_context(
             last_raise_action = act
             callers_after_raise = []  # reset — will need to re-call
 
+    # Build set of positions already excluded (folded OR already acted)
+    acted_or_folded = set(folded)
+    if last_raiser:
+        acted_or_folded.add(last_raiser)
+    acted_or_folded.update(callers_after_raise)
+
     # Determine who acts next and the context
     if raise_count == 0:
         # Nobody has raised yet — this is the initial position acting
@@ -492,7 +493,7 @@ def _compute_tree_context(
 
         # Find next position after the raiser (defensive fallback if last_raiser is somehow None)
         if last_raiser:
-            acting_position = _get_next_position_after_action(last_raiser, folded)
+            acting_position = _get_next_position(last_raiser, acted_or_folded)
         else:
             acting_position = _POSITION_ORDER[0]
 
@@ -527,9 +528,9 @@ def _compute_tree_context(
             acting_position = orig_raiser
         else:
             # Fallback: next position after 3-bettor
-            acting_position = _get_next_position_after_action(
+            acting_position = _get_next_position(
                 last_raiser if last_raiser else _POSITION_ORDER[0],
-                folded,
+                acted_or_folded,
             )
 
         context = "vs_3bet"
@@ -541,8 +542,8 @@ def _compute_tree_context(
 
     elif raise_count >= 3:
         # 4-bet, 5-bet, etc. The 3-bettor needs to decide.
-        acting_position = last_action_position if last_action_position else _get_next_position_after_action(
-            last_raiser if last_raiser else _POSITION_ORDER[0], folded,
+        acting_position = last_action_position if last_action_position else _get_next_position(
+            last_raiser if last_raiser else _POSITION_ORDER[0], acted_or_folded,
         )
         context = "vs_4bet"
         pot = _SB_AMOUNT + _BB_AMOUNT + _ANTE + last_raise_size * 2
