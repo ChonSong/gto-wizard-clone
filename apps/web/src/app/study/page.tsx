@@ -3,6 +3,26 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PostflopTraining from '@/components/study/PostflopTraining'
 
+// ── Independent solver health polling ──
+function useSolverHealth(pollMs = 10000): 'online' | 'offline' {
+  const [status, setStatus] = useState<'online' | 'offline'>('online')
+  useEffect(() => {
+    let cancelled = false
+    async function check() {
+      try {
+        const res = await fetch(`${API_BASE}/solver/health`, { cache: 'no-store' })
+        if (!cancelled) setStatus(res.ok ? 'online' : 'offline')
+      } catch {
+        if (!cancelled) setStatus('offline')
+      }
+    }
+    check()
+    const id = setInterval(check, pollMs)
+    return () => { cancelled = true; clearInterval(id) }
+  }, [pollMs])
+  return status
+}
+
 import {
   RED, RED_BRIGHT, RED_DARK, BLUE, GREEN, GRAY,
   MATRIX_HANDS, ACTION_COLORS, ACTION_LABELS,
@@ -53,6 +73,7 @@ export default function StudyPage() {
   const [allPositionLoading, setAllPositionLoading] = useState(false)
   const [treePath, setTreePath] = useState<TreeAction[]>([])
   const [treeNode, setTreeNode] = useState<TreeNode>(null)
+  const solverStatus = useSolverHealth()
 
   // ── Derived data ──
   const positions = useMemo(() => [
@@ -545,8 +566,7 @@ export default function StudyPage() {
             activePosition={activePosition}
             treePath={treePath}
             treeNode={treeNode}
-            loading={loading}
-            error={error}
+            solverStatus={solverStatus}
             actionFilter={actionFilter}
             onSelectPosition={handleSelectPosition}
             onActionClick={handleActionClick}

@@ -10,8 +10,7 @@ export function StudyPlayerTiles({
   activePosition,
   treePath,
   treeNode,
-  loading,
-  error,
+  solverStatus,
   actionFilter,
   onSelectPosition,
   onActionClick,
@@ -21,8 +20,7 @@ export function StudyPlayerTiles({
   activePosition: string
   treePath: Array<{ position: string }>
   treeNode: TreeNode
-  loading: boolean
-  error: string | null
+  solverStatus: 'online' | 'offline'
   actionFilter: string | null
   onSelectPosition: (pos: string) => void
   onActionClick: (actionBase: string) => void
@@ -46,10 +44,8 @@ export function StudyPlayerTiles({
           fontSize: 10, display: 'flex', alignItems: 'center',
           gap: 3, whiteSpace: 'nowrap',
         }}>
-          {loading
-            ? <span style={{ color: GREEN }}>●</span>
-            : <span style={{ color: GREEN }}>●</span>}
-          {loading ? 'Solving...' : error ? 'Offline' : 'GTO'}
+          <span style={{ color: solverStatus === 'online' ? GREEN : '#ff4444' }}>●</span>
+          {solverStatus === 'online' ? 'GTO' : 'Offline'}
         </div>
       </div>
 
