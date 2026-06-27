@@ -121,16 +121,29 @@ test.describe("Study Page Console Error Audit", () => {
 
     // Switch to Postflop Training
     await page.locator("button:has-text('Postflop Training')").click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(2000);
 
-    // Click "Get GTO Strategy" and wait for solver response (may timeout if solver offline)
+    // The PostflopTraining component auto-fetches strategy on mount (useEffect).
+    // The button text changes from "Get GTO Strategy" → "⟳ Refresh" once a strategy loads.
+    // If solver is offline, it stays as "Get GTO Strategy" (no strategy set).
+    // Handle both cases.
     const apiResponsePromise = page.waitForResponse(
       (resp) =>
         resp.url().includes("/api/v1/solver/postflop-strategy") &&
         resp.status() === 200,
       { timeout: 15000 }
     ).catch(() => null);
-    await page.locator("button:has-text('Get GTO Strategy')").click();
+
+    // Button text: "Get GTO Strategy" when no strategy loaded, "⟳ Refresh" when strategy exists.
+    // The aria-label is "Get GTO strategy" / "Refresh GTO strategy" respectively.
+    // Use aria-label for stable matching since visible text contains unicode glyphs.
+    const gtoBtn = page.locator("button[aria-label='Get GTO strategy']");
+    const refreshBtn = page.locator("button[aria-label='Refresh GTO strategy']");
+
+    // Wait for either button to appear (auto-fetch may complete instantly if strategy cached)
+    const strategyBtn = (await gtoBtn.count()) > 0 ? gtoBtn : refreshBtn;
+    // Click whichever button is present (force: true to handle scroll-container clipping)
+    await strategyBtn.click({ timeout: 10000, force: true });
     const response = await apiResponsePromise;
 
     if (response) {
