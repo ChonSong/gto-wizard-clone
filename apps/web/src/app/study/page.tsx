@@ -31,7 +31,10 @@ const SUIT_COLOR: Record<string, string> = { s: '#fff', h: '#E53935', d: '#E5393
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api/v1'
 
 type HandData = { hand: string; action: string; frequency: number; equity: number }
+type TreeAction = { position: string; action: string; label: string; size?: number }
 type BoardCard = { rank: string; suit: string }
+
+const ACTION_TYPES = ['raise', 'call', 'fold', 'all_in'] as const
 
 const RANKS = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
 const SUITS = ['s','h','d','c']
@@ -151,6 +154,15 @@ export default function StudyPage() {
   const [blockerRanks, setBlockerRanks] = useState<string[]>([])
   const [allPositionData, setAllPositionData] = useState<Map<string, Map<string, HandData>>>(new Map())
   const [allPositionLoading, setAllPositionLoading] = useState(false)
+  const [treePath, setTreePath] = useState<TreeAction[]>([])
+  const [treeNode, setTreeNode] = useState<{
+    acting_position: string
+    available_actions: Array<{ id: string; label: string; actionBase: string; size?: number }>
+    pot_size: number
+    stack_remaining?: number
+    context: string
+    description: string
+  } | null>(null)
 
   const ALL_POSITIONS = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const
 
@@ -189,19 +201,24 @@ export default function StudyPage() {
     fetchDepths()
   }, [])
 
-  // Fetch solver data when position or stack depth changes
+  // Fetch solver data when position, stack depth, or tree path changes
   useEffect(() => {
     async function fetchRange() {
       setLoading(true)
       setError(null)
       try {
+        const body: any = {
+          position: activePosition,
+          stack_depth: positions.find(p => p.id === activePosition)?.stack || stackDepth,
+          game_type: 'nlh',
+        }
+        if (treePath.length > 0) {
+          body.tree_path = treePath.map(t => ({ position: t.position, action: t.action, size: t.size || null }))
+        }
         const res = await fetch(`${API_BASE}/solver/preflop-range`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            position: activePosition,
-            stack_depth: positions.find(p => p.id === activePosition)?.stack || stackDepth,
-          }),
+          body: JSON.stringify(body),
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
@@ -210,6 +227,13 @@ export default function StudyPage() {
           map.set(h.hand, h)
         }
         setRangeData(map)
+        // Update tree node from API response
+        if (data.tree_node) {
+          setTreeNode(data.tree_node)
+          if (data.tree_node.acting_position && data.tree_node.acting_position !== activePosition) {
+            setActivePosition(data.tree_node.acting_position)
+          }
+        }
         setIsSolverMode(true)
         // Auto-select strongest non-fold hand so the range display is immediately usable
         const firstActionable = data.hands?.find((h: any) => h.action !== 'fold')
@@ -226,7 +250,13 @@ export default function StudyPage() {
       }
     }
     fetchRange()
-  }, [activePosition, stackDepth])
+  }, [activePosition, stackDepth, treePath])
+
+  // Reset tree path when stack depth changes
+  useEffect(() => {
+    setTreePath([])
+    setTreeNode(null)
+  }, [stackDepth])
 
   // Fetch all 6 positions' data in parallel for the aggregate summary strip
   useEffect(() => {
@@ -264,14 +294,33 @@ export default function StudyPage() {
     return () => { cancelled = true }
   }, [stackDepth, mode])
 
-  // Advance to next position when an action is clicked
+  // ── Action click: adds to tree path, triggering a re-fetch with the new node ──
   function handleActionClick(actionBase: string) {
-    const order = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
-    const idx = order.indexOf(activePosition)
-    if (idx >= 0 && idx < order.length - 1) {
-      setActivePosition(order[idx + 1])
+    // Find the button label & full action id from available actions
+    const actions = treeNode?.available_actions || POSITION_ACTIONS[activePosition] || []
+    // Handle both action formats: POSITION_ACTIONS format has {id, label, actionBase}
+    // treeNode.available_actions also has {id, label, actionBase, size}
+    const matchingAct = actions.find(a => a.actionBase === actionBase)
+    if (!matchingAct) {
+      // Fallback: advance to next position linearly (legacy behavior)
+      const order = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
+      const idx = order.indexOf(activePosition)
+      if (idx >= 0 && idx < order.length - 1) {
+        setActivePosition(order[idx + 1])
+      }
       setActionFilter(null)
+      return
     }
+
+    // Append the action to the tree path
+    const newEntry: TreeAction = {
+      position: activePosition,
+      action: matchingAct.id,
+      label: matchingAct.label,
+      size: (matchingAct as any).size,
+    }
+    setTreePath(prev => [...prev, newEntry])
+    setActionFilter(null)
   }
 
   // Compute per-position aggregate stats for the summary strip
@@ -838,11 +887,40 @@ export default function StudyPage() {
           )}
         </div>
 
-      {/* Action Prompt Header Row — contextual prompt showing active position */}
-      <div className="study-action-prompt-bar" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 12px', background: '#111', borderBottom: '1px solid #1a1a1a', flexShrink: 0 }}>
+      {/* Action Prompt Header Row — contextual prompt showing active position + tree path */}
+      <div className="study-action-prompt-bar" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', background: '#111', borderBottom: '1px solid #1a1a1a', flexShrink: 0 }}>
+        {/* Tree breadcrumb */}
+        {treePath.length > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#666', flexWrap: 'nowrap', overflow: 'hidden', maxWidth: '40%' }}>
+            {treePath.map((entry, i) => (
+              <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                {i > 0 && <span style={{ color: '#444' }}>›</span>}
+                <span style={{ color: i === treePath.length - 1 ? GREEN : '#888', fontWeight: i === treePath.length - 1 ? 700 : 500 }}>{entry.position}</span>
+                <span style={{ color: '#999', fontWeight: 500 }}>{entry.label.replace(/\s*\d+bb?$/, '')}</span>
+              </span>
+            ))}
+            <span style={{ color: '#444', marginLeft: 2 }}>|</span>
+          </div>
+        )}
         <span style={{ color: GREEN, fontSize: 12, fontWeight: 700, letterSpacing: '0.03em' }}>{activePosition}</span>
         <span style={{ color: '#666', fontSize: 11 }}>—</span>
-        <span style={{ color: '#aaa', fontSize: 11, fontWeight: 500 }}>Enter your action</span>
+        <span style={{ color: '#aaa', fontSize: 11, fontWeight: 500 }}>
+          {treeNode?.context === 'vs_raise' ? 'Facing a raise' :
+           treeNode?.context === 'vs_3bet' ? 'Facing a 3-bet' :
+           treeNode?.context === 'vs_4bet' ? 'Facing a 4-bet' :
+           treeNode?.context === 'rfi' ? 'Raise first in' :
+           'Enter your action'}
+        </span>
+        {treeNode && treeNode.pot_size > 0 && (
+          <span style={{ color: '#666', fontSize: 10, fontFamily: 'monospace', marginLeft: 4 }}>
+            Pot: {treeNode.pot_size}bb
+          </span>
+        )}
+        {treeNode && treeNode.stack_remaining != null && treeNode.stack_remaining > 0 && (
+          <span style={{ color: '#666', fontSize: 10, fontFamily: 'monospace' }}>
+            Eff: {treeNode.stack_remaining}bb
+          </span>
+        )}
         <div style={{ flex: 1 }} />
         {mode === 'preflop' && selectedCell && (
           <span style={{ color: '#888', fontSize: 10, fontFamily: 'monospace' }}>{selectedCell}</span>
@@ -878,9 +956,12 @@ export default function StudyPage() {
         </div>
         {positions.map((pos) => {
           const isActive = activePosition === pos.id
-          const posActions = POSITION_ACTIONS[pos.id] || []
+          // Use treeNode available_actions if active + we have tree context, else fall back to static config
+          const isTreeMode = treePath.length > 0 && treeNode != null
+          const posActions = (isActive && isTreeMode && treeNode?.available_actions)
+            || POSITION_ACTIONS[pos.id] || []
           return (
-            <div key={pos.id} onClick={() => { setActivePosition(pos.id); setActionFilter(null) }}
+            <div key={pos.id} onClick={() => { setActivePosition(pos.id); setActionFilter(null); setTreePath([]); setTreeNode(null) }}
               className={`hspot-card ${isActive ? 'hspotcrd_active' : 'hspotcrd_minimized'}`}
               role="button" tabIndex={0}
               aria-label={`${pos.label} position, ${pos.stack != null && pos.stack > 0 ? `${pos.stack}bb stack` : 'no stack data'}${isActive ? ', active' : ''}`}
