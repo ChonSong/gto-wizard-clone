@@ -111,8 +111,8 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Status:** Fixed by Player commit `503b7fa`. Cell font 10px→12px, freq chips 8px→11px with `rgba(0,0,0,0.45)` bg pill, padding `0`→`4px 2px`, flow layout for freq chip (was absolute). Verified live: matrix cells are readable, frequencies visible on non-fold cells without selection. 0 JS console errors, 11/11 health checks pass.
 **Evidence:** Browser screenshot confirms font size, pill backgrounds, cell padding, and frequency visibility.
 
-### Task: fix-dashboard-hero-polish
-**Priority:** P2
+### Task: fix-dashboard-hero-polish ✅
+**Priority:** P2 — **Coach verified 2026-06-27T00:41:17Z**
 **Description:** Add radial gradient glow behind hero CTA buttons (reference shows subtle green depth). Introduce secondary lime-green (#AAFBB2) accent for active nav states alongside primary #00C853. Add box-shadow on feature card hover (reference shows elevation depth, clone only has -translate-y-0.5).
 **Success criteria:**
 - Hero section has visible radial gradient glow
@@ -120,8 +120,8 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Feature cards have box-shadow on hover
 **Coach checks:** Browser screenshot of dashboard — verify depth and glow
 
-### Task: fix-practice-page-placeholder
-**Priority:** P2
+### Task: fix-practice-page-placeholder ✅
+**Priority:** P2 — **Coach verified 2026-06-27T00:41:17Z**
 **Description:** Practice/trainer page at `/practice` shows an empty dark page with only sidebar indicators. Reference shows a poker table with green felt. Add a visual placeholder: "Select a training mode" panel with mode options (Preflop Ranges, Postflop Scenarios, Spaced Repetition) as styled cards. Include a subtle poker table texture/gradient background.
 **Success criteria:**
 - Practice page shows meaningful content (not empty)
@@ -146,6 +146,33 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Stable specs (study.spec.ts, practice.spec.ts, smoke.spec.ts, study-console-audit.spec.ts) pass
 - Brittle specs (workflows.spec.ts, study-preflop-flow.spec.ts) either fixed or replaced
 **Coach checks:** Run playwright test, report pass/fail counts.
+
+### Task: fix-gitignore-agent-qa-artifacts
+**Priority:** P3 — **Coach generated 2026-06-27T01:35:54Z**
+**Description:** Commit 1579cb4 added 39 .webm test recording files (33MB) from `.agent-qa/artifacts/videos/` to the repo. This directory is not gitignored, causing repository bloat. Add `.agent-qa/` to `.gitignore`, then `git rm --cached` to remove the tracked artifacts without deleting local copies.
+**Success criteria:**
+- `.agent-qa/` is in `.gitignore`
+- `git status` shows no untracked `.agent-qa/` files
+- Repo `.git` size decreases
+**Coach checks:** Check `.gitignore`, run `git ls-files .agent-qa/` to confirm no files tracked.
+
+### Task: fix-utg-range-low-pairs-frequency
+**Priority:** P3 — **Coach generated 2026-06-27T01:35:54Z**
+**Description:** UTG range at `apps/api/routers/solver.py` opens all pocket pairs (22-AA) at 100% frequency in the `_UTG_RANGE` definition. Real solver output opens low pairs (22-55) at mixed frequencies (15-40%). Move low pairs (22-55) from `always_raise` to `mixed` with appropriate frequencies (e.g., `"22": 0.15, "33": 0.25, "44": 0.35, "55": 0.45`). Extend to HJ/CO/BTN/SB if the same issue exists there.
+**Success criteria:**
+- API response for UTG@100bb shows low pairs (22-55) with 0.15-0.45 frequency, not 1.0
+- All 169 hands still have a valid action and frequency
+- Aggregate numbers still make sense (~15-17% RFI for UTG)
+**Coach checks:** Hit the API for UTG@100bb, verify low pairs have mixed frequencies.
+
+### Task: fix-action-filter-hover-accessibility
+**Priority:** P3 — **Coach generated 2026-06-27T01:35:54Z**
+**Description:** The hover-to-filter feature on action buttons (added in commit dcd713d) uses `onMouseEnter`/`onMouseLeave` which is mouse-only and not accessible to keyboard or screen reader users. Make the action filter toggleable via keyboard (e.g., press Enter on an action button to toggle filter mode, press again to clear). Ensure screen readers announce filter state.
+**Success criteria:**
+- Keyboard users can activate the action filter on matrix cells without a mouse
+- Screen reader announces when filter is active and what action it's filtering by
+- Existing click-to-advance behavior is preserved
+**Coach checks:** Tab to action button, press Enter — verify filter activates. Tab away — verify it clears.
 
 ### Task: remove-stale-agents-md-tasks (Coaching Meta)
 **Priority:** Done

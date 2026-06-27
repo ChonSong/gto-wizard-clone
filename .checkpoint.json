@@ -343,10 +343,34 @@
       "summary": "Added BACKEND_API_PATTERN filter to study-console-audit tests to handle offline solver/backend gracefully. Fixed button locator when aria-label not present before re-render. 3 console-audit tests pass.",
       "coach": "approved",
       "coach_verified_at": "2026-06-27T00:41:17Z"
+    },
+    {
+      "task": "fix-study-action-buttons-advance-position",
+      "sha": "e432960",
+      "date": "2026-06-27",
+      "summary": "Added position-card action buttons that filter matrix grid and advance position on click. Verified live: clicking Raise 2.5 on UTG advances to HJ, HJ advances to CO. 0 console errors.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-27T01:35:54Z"
+    },
+    {
+      "task": "fix-study-hover-filter-commit-action",
+      "sha": "dcd713d",
+      "date": "2026-06-27",
+      "summary": "Added hover-to-filter grid interaction and click-commits action + position advance. Keyboard accessibility gap (mouse-only) documented as follow-up task fix-action-filter-hover-accessibility.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-27T01:35:54Z"
+    },
+    {
+      "task": "feat-solver-hand-crafted-ranges",
+      "sha": "1579cb4",
+      "date": "2026-06-27",
+      "summary": "Replaced equity-based GTO range model with hand-crafted range definitions per position (UTG/BTN/SB+BB). Includes mixed-frequency cell rendering. 39 .webm test artifacts (33MB) committed — gitignore fix queued. UTG opens 22-77 at 100% (should be mixed) — queued as fix-utg-range-low-pairs-frequency.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-27T01:35:54Z"
     }
   ],
   "health": "build_passes_3_console_audit_pass_33_core_e2e_pass_11_stale_failing_solver_offline",
-  "last_sha": "5145bb4",
+  "last_sha": "1579cb4",
   "blocker": "GitHub auth token expired \u2014 push failed (persistent)",
   "current_task": "fix-ai-territory-expansion",
   "all_coach_tasks_done": false,
@@ -377,10 +401,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "5145bb4",
-    "last_reviewed_at": "2026-06-27T00:41:17Z",
-    "verdict": "approved",
-    "notes": "Coach cycle 2026-06-27T00:41:17Z. Reviewed commits d690578 (dashboard hero polish), c90b6b4 (practice placeholder), 22a6a86 (e2e resilience), 30f5976 (console-audit fix). All criteria met after applying backend-api-400 filter to study-console-audit.spec.ts (coach fix 5145bb4). 3 console-audit tests pass. 33 core e2e tests pass. 11 stale test failures remain (pre-existing infrastructure \u2014 solver/backend offline). Push blocked (expired GitHub token). Next task: fix-ai-territory-expansion (polytopia)."
+    "last_reviewed_sha": "1579cb4",
+    "last_reviewed_at": "2026-06-27T01:35:54Z",
+    "verdict": "APPROVE",
+    "notes": "Coach cycle 2026-06-27T01:35:54Z. Reviewed 3 new player commits: e432960 (action button advance position — working), dcd713d (hover filter + commit action — functional), 1579cb4 (hand-crafted GTO ranges — reasonable first pass). 0 console errors. API health OK. 3 P3 findings: gitignore bloat from .webm files (33MB), UTG low pairs at 100% (should be mixed), hover filter keyboard accessibility gap. Generated 3 backlog tasks. Active project remains polytopia-clone for fix-ai-territory-expansion."
   },
-  "note": "Tick 2026-06-27T00:41:17Z. Coach APPROVED all pending gto-wizard-clone work. Tasks: fix-dashboard-hero-polish (d690578), fix-practice-page-placeholder (c90b6b4), e2e-test-suite-validation (22a6a86+30f5976+5145bb4). 3 console-audit tests pass. Smoker/study tests have pre-existing Playwright module resolution issue. Next: fix-ai-territory-expansion (polytopia)."
+  "note": "Tick 2026-06-27T01:35:54Z. Coach APPROVED gto-wizard-clone work. 3 new commits verified live: action-button advance position (e432960), hover-filter commit action (dcd713d), hand-crafted GTO ranges (1579cb4). 0 console errors. 3 P3 findings — gitignore .agent-qa/ artifacts, UTG range low-pair frequencies, hover-filter accessibility. Generated 3 P3 backlog tasks. Next: fix-ai-territory-expansion (polytopia, escalated 12 cycles)."
 }
