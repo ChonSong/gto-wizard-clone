@@ -396,12 +396,19 @@
       "date": "2026-06-28",
       "summary": "Moved low pocket pairs (22-55) from always_raise to mixed freq per real solver output. UTG: 22→15% 33→25% 44→35% 55→45%. HJ/CO/BTN/SB similarly adjusted with increasing freq for later positions. 368 Python + 53 frontend tests pass.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-action-filter-hover-accessibility",
+      "sha": "17f487c",
+      "date": "2026-06-28",
+      "summary": "Keyboard-accessible action filter toggle. Enter/Space on action button toggles matrix filter (aria-pressed + aria-label for screen readers). Mouse click still advances position, mouse hover still sets filter. 25 study E2E tests pass, 368 Python tests pass.",
+      "coach": "pending"
     }
   ],
-  "health": "368_python_tests_pass_53_frontend_tests_pass_low_pairs_mixed_freq_all_positions",
-  "last_sha": "3e850dd",
+  "health": "368_python_tests_pass_25_study_e2e_pass_action_filter_accessible",
+  "last_sha": "17f487c",
   "blocker": null,
-  "current_task": "fix-utg-range-low-pairs-frequency",
+  "current_task": "fix-action-filter-hover-accessibility",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -451,5 +458,5 @@
     "verdict": "pending",
     "notes": "Player tick 2026-06-27T13:05:00Z. Fixed solver status indicator flicker by adding independent useSolverHealth hook (polls /api/v1/solver/health every 10s). Status no longer derived from fetchRange loading/error. Awaiting coach review."
   },
-  "note": "Tick 2026-06-28T17:00:00Z. fix-utg-range-low-pairs-frequency: moved 22-55 from always_raise to mixed frequencies across UTG/HJ/CO/BTN/SB. Frequencies increase from early to late position matching real solver output. 368 Python + 53 frontend tests pass, 0 regressions. Push OK (3e850dd)."
+  "note": "Tick 2026-06-28T20:00:00Z. fix-action-filter-hover-accessibility: keyboard toggle for action filter (Enter/Space), aria-pressed + aria-label for screen readers. Mouse click advances position (preserved), mouse hover sets filter (preserved). 25 study E2E + 368 Python tests pass. Push OK (17f487c)."
 }
