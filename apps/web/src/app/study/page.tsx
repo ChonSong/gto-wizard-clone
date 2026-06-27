@@ -263,13 +263,13 @@ export default function StudyPage() {
     return () => { cancelled = true }
   }, [stackDepth, mode])
 
-  // Advance to next position when an action is selected
+  // Advance to next position when an action is clicked
   function handleActionClick(actionBase: string) {
-    setActionFilter(actionBase)
     const order = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
     const idx = order.indexOf(activePosition)
     if (idx >= 0 && idx < order.length - 1) {
       setActivePosition(order[idx + 1])
+      setActionFilter(null)
     }
   }
 
@@ -974,6 +974,8 @@ export default function StudyPage() {
                       return (
                         <div key={act.id} className={`hspotcrd_action${isActiveFilter ? ' hspotcrd_action_active' : ''}`}
                           onClick={(e) => { e.stopPropagation(); handleActionClick(act.actionBase) }}
+                          onMouseEnter={() => setActionFilter(act.actionBase)}
+                          onMouseLeave={() => setActionFilter(null)}
                           role="button" tabIndex={0}
                           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleActionClick(act.actionBase) } }}
                           style={{
