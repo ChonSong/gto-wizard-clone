@@ -105,8 +105,17 @@ export function StudyPlayerTiles({
                         onClick={(e) => { e.stopPropagation(); onActionClick(act.actionBase) }}
                         onMouseEnter={() => onActionFilter(act.actionBase)}
                         onMouseLeave={() => onActionFilter(null)}
-                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onActionClick(act.actionBase) } }}
-                        role="button" tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            // Keyboard: toggle filter instead of advancing position
+                            onActionFilter(isActiveFilter ? null : act.actionBase)
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={isActiveFilter}
+                        aria-label={`${act.label} action — ${isActiveFilter ? 'filter active' : 'press Enter to filter matrix'}`}
                         style={{
                           fontSize: 8, padding: '1px 4px', lineHeight: '14px',
                           background: isActiveFilter ? actionColor : 'rgba(255,255,255,0.04)',
@@ -114,6 +123,8 @@ export function StudyPlayerTiles({
                           borderRadius: 3, color: isActiveFilter ? '#000' : '#999',
                           fontWeight: isActiveFilter ? 700 : 500, whiteSpace: 'nowrap',
                           cursor: 'pointer',
+                          outline: isActiveFilter ? `2px solid ${actionColor}` : 'none',
+                          outlineOffset: 1,
                         }}
                         className={`hspotcrd_action${isActiveFilter ? ' hspotcrd_action_active' : ''}`}
                       >
