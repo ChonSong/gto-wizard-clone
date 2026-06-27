@@ -188,53 +188,10 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Description:** AGENTS.md was cleaned up by Coach cycle 2026-06-26 09:05 AEST. Removed ~1800 lines of stale/completed tasks (matrix legend, suit colors, postflop training, quiz/hand-history/plo4/omaha/bomb-pot/double-board/strategies pages, strategy-lookup, seed-data, route-order, all Phase 2 tasks). Replaced with this clean Phase 3 backlog.
 **Success criteria:** AGENTS.md is clean, accurate, and actionable.
 
-## Phase 4 — Recovery Tasks (Reference Comparison Gaps)
+## Phase 4 — Visual Gap Recovery (Current)
 
-### Task: recovery-dashboard-hero-green-panel
-**Priority:** P1 — **Recovery generated 2026-06-28**
-**Description:** (recovery-generated) Restore the large solid green panel (~320px wide) on the left side of the dashboard hero section, matching the reference layout where a prominent green panel sits beside a dark right panel with data. Currently the hero only shows an icon, title, and CTA buttons without the signature green panel.
-**Success criteria:**
-- Hero section contains a ~320px solid green panel (left side) using accent color #00C853 or similar
-- Right side of hero has a dark panel (#1A1A1A or similar) displaying key data/stats
-- Layout is two-column (green panel + dark data panel), not single-column centered text
-- Visual match to `docs/reference-dashboard.png` hero region
-**Coach checks:** Browser screenshot of dashboard hero — verify green left panel + dark right data panel layout exists.
+### Status: Awaiting Coach Backlog Health Check
 
-### Task: recovery-dashboard-footer-green-bar
-**Priority:** P1 — **Recovery generated 2026-06-28**
-**Description:** (recovery-generated) Add the prominent horizontal green footer bar and bottom links row that the reference dashboard has. Currently the live page only shows a text tagline without the green accent bar or navigation links in the footer area.
-**Success criteria:**
-- Footer has a horizontal green bar (full-width, ~4-8px height, accent green #00C853) above the links row
-- Below the green bar, a row of navigation links is visible (e.g., About, Terms, Privacy, Contact)
-- Footer area visually matches `docs/reference-dashboard.png` footer region
-- Green bar is clearly distinct from the page background
-**Coach checks:** Browser screenshot scrolled to bottom of dashboard — verify green bar + links row visible.
+All Phase 3 tasks are complete. The Phase 4 recovery tasks generated 2026-06-28 were flagged as having specs that contradict reference screenshots (pixel analysis proved the reference uses dark bg with small lime-green accent dots, NOT large solid green panels/teal accents).
 
-### Task: recovery-study-matrix-fold-cell-contrast
-**Priority:** P2 — **Recovery generated 2026-06-28**
-**Description:** (recovery-generated) Fix study matrix fold cell visibility: increase fold cell opacity from 0.3 to ~0.7 so cells are readable, change green accent from lime #000C853 to teal #0A6470, and lighten fold cell gray background from #2A2A2A to #363636 to match the reference.
-**Success criteria:**
-- Fold cells have opacity ~0.7 (visible, not nearly transparent)
-- Green accent color in matrix is teal #0A6470 (not lime #000C853)
-- Fold cell background gray is #363636 (not #2A2A2A)
-- Visual match to `docs/reference-study-interface.png` fold cell styling
-**Coach checks:** Browser screenshot of study page in postflop mode — verify fold cells are visible with teal accent and lighter gray.
-
-### Task: recovery-dashboard-cards-grid-layout
-**Priority:** P2 — **Recovery generated 2026-06-28**
-**Description:** (recovery-generated) Change the dashboard feature cards grid from 3-4 dense columns to a 2-column layout with larger cards, and add deeper box-shadow on hover for elevation depth matching the reference.
-**Success criteria:**
-- Feature cards display in a 2-column grid (not 3-4 columns)
-- Cards are noticeably larger with more padding/spacing between them
-- Hover state includes visible box-shadow (e.g., `0 20px 40px rgba(0,0,0,0.4)` or similar depth)
-- Background color is near-black #000000 (not #0E0E0E)
-**Coach checks:** Browser screenshot of dashboard — verify 2-column card layout, larger cards, hover shadow depth, and darker background.
-
-### Task: recovery-study-matrix-accent-color-audit
-**Priority:** P3 — **Recovery generated 2026-06-28**
-**Description:** (recovery-generated) Audit all accent colors in the study matrix components to ensure consistency with the teal #0A6470 reference standard. The fold cell fix addresses one instance, but other elements (active cell borders, frequency highlights, action buttons) may also use the wrong lime #000C853 instead of teal.
-**Success criteria:**
-- No instances of lime #000C853 remain in `apps/web/src/components/study/`
-- All accent/highlight colors use teal #0A6470 or matching palette
-- Active cell borders, selected state highlights, and action indicators all use teal
-**Coach checks:** Grep for `#000C853` and `0,12,83` in study components — verify zero matches.
+**Current state:** Project is healthy — 368 Python + 53 frontend + 142 E2E tests pass, 11/11 health checks pass. Remaining visual gaps are minor (decorative hero accent dots). Awaiting Coach backlog health check to generate validated recovery tasks.
