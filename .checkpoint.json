@@ -375,21 +375,28 @@
       "summary": "Game tree navigation: tree_path API with RFI/vs_raise/vs_3bet/vs_4bet, frontend breadcrumb, context-aware action buttons, Cash/MTT selector, removed dead UI (Random Spot, Upgrade, Postflop Toggle). 0 JS errors. Minor P2 bug: solver status flickers to 'Offline' after tree nav.",
       "coach": "approved",
       "coach_verified_at": "2026-06-27T12:45:00Z"
+    },
+    {
+      "task": "fix-solver-status-indicator-flicker",
+      "sha": "4371b5e",
+      "date": "2026-06-27",
+      "summary": "Replaced fetchRange-derived loading/error status with independent useSolverHealth hook polling /api/v1/solver/health every 10s. Status indicator no longer flickers to Offline during tree navigation.",
+      "coach": "pending"
     }
   ],
-  "health": "build_passes_3_console_audit_pass_33_core_e2e_pass_11_stale_failing_solver_offline",
-  "last_sha": "687a3f6",
+  "health": "build_passes_53_frontend_tests_pass_status_indicator_decoupled_from_fetch",
+  "last_sha": "4371b5e",
   "blocker": null,
-    "current_task": "fix-solver-status-indicator-flicker",
+  "current_task": "fix-gitignore-agent-qa-artifacts",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
       "item": "Solver status indicator flickers to 'Offline' after tree navigation despite healthy backend",
       "type": "bug",
       "priority": 2,
-      "evidence": "P2 — observed live at wiz.codeovertcp.com/study. After tree navigation (UTG Raise 2.5 → HJ → position card click), status shows 'Offline'. /api/v1/solver/health returns 200. Frontend-only polling issue.",
+      "evidence": "RESOLVED — replaced with independent useSolverHealth hook polling /api/v1/solver/health. Status no longer derived from fetchRange loading/error state. Fixed by Player commit 4371b5e.",
       "cycles_stagnant": 0,
-      "status": "new"
+      "status": "resolved"
     },
     {
       "item": "Solver Docker container not running",
@@ -425,10 +432,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "687a3f6",
-    "last_reviewed_at": "2026-06-27T12:45:00Z",
-    "verdict": "APPROVE",
-    "notes": "Coach cycle 2026-06-27T12:45:00Z. Reviewed 8 new player commits since 1579cb4. Major feature: game tree navigation (e99c0a1) with tree_path API supporting 4 depths (RFI→vs_raise→vs_3bet→vs_4bet), frontend breadcrumb, context-aware action buttons. Fix commits 5be20d2, 687a3f6 for null size handling and position lookup. Cleanup: removed Random Spot, Upgrade button, Postflop Training toggle, added Cash/MTT selector. 0 JS console errors in all tests. Practice page now shows content (not empty). RefQA passes. New P2 finding: solver status indicator flickers to 'Offline' after tree navigation (health endpoint 200). Pre-existing P3 tasks unchanged."
+    "last_reviewed_sha": "4371b5e",
+    "last_reviewed_at": "2026-06-27T13:05:00Z",
+    "verdict": "pending",
+    "notes": "Player tick 2026-06-27T13:05:00Z. Fixed solver status indicator flicker by adding independent useSolverHealth hook (polls /api/v1/solver/health every 10s). Status no longer derived from fetchRange loading/error. Awaiting coach review."
   },
-  "note": "Tick 2026-06-27T12:45:00Z. Coach APPROVED gto-wizard-clone work (8 new commits). Game tree navigation verified live: 4 depths work with correct pot/stack/action context. 0 JS errors. P2: solver status indicator flickers to Offline after tree navigation. P3: UTG low pair freqs, gitignore bloat, hover accessibility (all pre-existing). AGENTS.md updated with fix-solver-status-indicator-flicker. Next current_task: fix-solver-status-indicator-flicker."
+  "note": "Tick 2026-06-27T13:05:00Z. Fixed: solver status indicator now uses independent health polling instead of fetchRange loading/error state. Eliminates false 'Offline' flickers during tree navigation. 53 frontend tests pass, build clean. Next: fix-gitignore-agent-qa-artifacts."
 }
