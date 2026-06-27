@@ -379,8 +379,8 @@
   ],
   "health": "build_passes_3_console_audit_pass_33_core_e2e_pass_11_stale_failing_solver_offline",
   "last_sha": "687a3f6",
-  "blocker": "GitHub auth token expired \u2014 push failed (persistent)",
-  "current_task": "fix-solver-status-indicator-flicker",
+  "blocker": null,
+    "current_task": "fix-solver-status-indicator-flicker",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
