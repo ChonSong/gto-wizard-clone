@@ -143,6 +143,7 @@ export default function StudyPage() {
   const [activeTab, setActiveTab] = useState<'strategy' | 'ranges' | 'breakdown'>('strategy')
   const [hotkeyToast, setHotkeyToast] = useState<string | null>(null)
   const [showHotkeys, setShowHotkeys] = useState(false)
+  const [actionFilter, setActionFilter] = useState<string | null>(null)
   const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
   const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'actions_chart' | 'range_compare' | 'blockers' | 'equity_chart' | 'compare_ev'>('actions')
   const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
@@ -262,6 +263,16 @@ export default function StudyPage() {
     return () => { cancelled = true }
   }, [stackDepth, mode])
 
+  // Advance to next position when an action is selected
+  function handleActionClick(actionBase: string) {
+    setActionFilter(actionBase)
+    const order = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
+    const idx = order.indexOf(activePosition)
+    if (idx >= 0 && idx < order.length - 1) {
+      setActivePosition(order[idx + 1])
+    }
+  }
+
   // Compute per-position aggregate stats for the summary strip
   const positionAggregates = useMemo(() => {
     const agg: Record<string, { fold: number; call: number; raise: number; total: number }> = {}
@@ -303,6 +314,12 @@ export default function StudyPage() {
     // Apply hand filters and blocker ranks first
     if (isHandFiltered(hand)) return 0.08
     if (isHandBlocked(hand)) return 0.15
+    // Action filter: dim cells whose GTO action doesn't match
+    if (actionFilter) {
+      const data = rangeData.get(hand)
+      const handAction = data ? (data.action.startsWith('raise') ? 'raise' : data.action) : null
+      if (handAction !== actionFilter) return 0.08
+    }
     if (!isSolverMode) return 1.0
     const data = rangeData.get(hand)
     if (!data) return 0.3
@@ -920,12 +937,8 @@ export default function StudyPage() {
         {positions.map((pos) => {
           const isActive = activePosition === pos.id
           const posActions = POSITION_ACTIONS[pos.id] || []
-          // Determine the most frequent GTO action base for highlighting
-          const gtoActionBase = Object.entries(actionSummary)
-            .sort(([,a],[,b]) => b.totalFreq - a.totalFreq)
-            .map(([action]) => action)[0] || null
           return (
-            <div key={pos.id} onClick={() => setActivePosition(pos.id)}
+            <div key={pos.id} onClick={() => { setActivePosition(pos.id); setActionFilter(null) }}
               className={`hspot-card ${isActive ? 'hspotcrd_active' : 'hspotcrd_minimized'}`}
               role="button" tabIndex={0}
               aria-label={`${pos.label} position, ${pos.stack != null && pos.stack > 0 ? `${pos.stack}bb stack` : 'no stack data'}${isActive ? ', active' : ''}`}
@@ -957,17 +970,21 @@ export default function StudyPage() {
                   <div className="hspotcrd_actions" style={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                     {posActions.map(act => {
                       const actionColor = ACTION_COLORS[act.actionBase] || GRAY
-                      const isGto = gtoActionBase && act.actionBase === gtoActionBase
+                      const isActiveFilter = actionFilter === act.actionBase
                       return (
-                        <div key={act.id} className={`hspotcrd_action${isGto ? ' hspotcrd_action_active' : ''}`}
+                        <div key={act.id} className={`hspotcrd_action${isActiveFilter ? ' hspotcrd_action_active' : ''}`}
+                          onClick={(e) => { e.stopPropagation(); handleActionClick(act.actionBase) }}
+                          role="button" tabIndex={0}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleActionClick(act.actionBase) } }}
                           style={{
                             fontSize: 8, padding: '1px 4px', lineHeight: '14px',
-                            background: isGto ? `${actionColor}33` : 'rgba(255,255,255,0.04)',
-                            border: isGto ? `1px solid ${actionColor}` : '1px solid rgba(255,255,255,0.08)',
-                            borderRadius: 3, color: isGto ? actionColor : '#999',
-                            fontWeight: isGto ? 700 : 500, whiteSpace: 'nowrap',
+                            background: isActiveFilter ? `${actionColor}` : 'rgba(255,255,255,0.04)',
+                            border: isActiveFilter ? `1px solid ${actionColor}` : '1px solid rgba(255,255,255,0.08)',
+                            borderRadius: 3, color: isActiveFilter ? '#000' : '#999',
+                            fontWeight: isActiveFilter ? 700 : 500, whiteSpace: 'nowrap',
+                            cursor: 'pointer',
                           }}>
-                          {isGto && '✓ '}{act.label}
+                          {act.label}
                         </div>
                       )
                     })}
