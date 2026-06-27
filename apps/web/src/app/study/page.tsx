@@ -144,6 +144,7 @@ export default function StudyPage() {
   const [hotkeyToast, setHotkeyToast] = useState<string | null>(null)
   const [showHotkeys, setShowHotkeys] = useState(false)
   const [actionFilter, setActionFilter] = useState<string | null>(null)
+  const [gameType, setGameType] = useState('Cash')
   const [rightTopTab, setRightTopTab] = useState<'overview' | 'table' | 'equity_chart'>('overview')
   const [rightSubTab, setRightSubTab] = useState<'hand' | 'summary' | 'filters' | 'actions' | 'actions_chart' | 'range_compare' | 'blockers' | 'equity_chart' | 'compare_ev'>('actions')
   const [handFilters, setHandFilters] = useState<Record<string, boolean>>({ pairs: true, suited: true, offsuit: true, broadway: true, aceHigh: true })
@@ -659,9 +660,6 @@ export default function StudyPage() {
             gap: 6px !important;
             padding: 6px 8px !important;
           }
-          .study-top-bar-upgrade {
-            margin-left: auto !important;
-          }
           .study-mode-toggle {
             flex-wrap: wrap !important;
             gap: 4px !important;
@@ -753,14 +751,27 @@ export default function StudyPage() {
         padding: '6px 12px', background: '#1A1A1A',
         borderBottom: '1px solid #333', flexShrink: 0,
       }}>
-        {/* Game type label */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 4,
-          color: '#e0e0e0', fontSize: 12, fontWeight: 600,
-          whiteSpace: 'nowrap',
-        }}>
-          <span>Cash</span>
-          <span style={{ color: '#666', fontSize: 8, marginTop: 1 }}>▾</span>
+        {/* Game type selector */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <select
+            value={gameType}
+            onChange={(e) => setGameType(e.target.value)}
+            aria-label="Select game type"
+            style={{
+              background: '#0E0E0E', color: '#e0e0e0',
+              border: '1px solid #333', borderRadius: 4,
+              padding: '2px 20px 2px 8px', fontSize: 12, fontWeight: 600,
+              cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none',
+              lineHeight: 1.6, minWidth: 66,
+            }}
+          >
+            <option value="Cash">Cash</option>
+            <option value="MTT">MTT</option>
+          </select>
+          <span style={{
+            position: 'absolute', right: 6, top: '50%', marginTop: -5,
+            color: '#666', fontSize: 8, pointerEvents: 'none',
+          }}>▾</span>
         </div>
         <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
         {/* Stack depth selector */}
@@ -810,23 +821,6 @@ export default function StudyPage() {
         </button>
         <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
         <div style={{ flex: 1 }} />
-        {/* Upgrade CTA button */}
-        <a
-          href="#"
-          className="study-top-bar-upgrade"
-          onClick={(e) => { e.preventDefault() }}
-          style={{
-            color: '#00C853', fontSize: 11, fontWeight: 700,
-            padding: '3px 12px', borderRadius: 4,
-            border: '1px solid #00C853',
-            background: 'transparent',
-            textDecoration: 'none', cursor: 'pointer',
-            whiteSpace: 'nowrap', letterSpacing: '0.03em',
-            lineHeight: 1.5,
-          }}
-        >
-          Upgrade
-        </a>
       </div>
       {/* Mode Toggle — fixed height */}
       <div className="study-mode-toggle" style={{ display: 'flex', gap: 8, padding: '6px 12px', borderBottom: '1px solid #141414', background: '#0E0E0E', flexShrink: 0 }}>
