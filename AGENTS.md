@@ -129,6 +129,15 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Green subtle felt/gradient background
 **Coach checks:** Browser screenshot of /practice — verify content visible
 
+### Task: fix-solver-status-indicator-flicker
+**Priority:** P2 — **Coach generated 2026-06-27T12:45:00Z**
+**Description:** The solver status indicator in the study page shows "Offline" after game tree navigation, despite the solver health endpoint returning 200 OK. On initial page load the indicator correctly shows "GTO". After navigating through the tree (UTG→Raise 2.5→HJ→Raise 7.5→position card click), the indicator can change to "Offline". The status component does not properly re-poll or re-sync after state transitions (tree_path changes, position changes). Verified: `curl http://localhost:8001/api/v1/solver/health` always returns 200, so the issue is frontend-only.
+**Success criteria:**
+- Solver status indicator shows "GTO" (green) after tree navigation, always matching actual health endpoint state
+- No "Offline" false positives after any sequence of tree navigations and position switches
+- No regression to existing study page functionality
+**Coach checks:** Navigate UTG→Raise 2.5→HJ→Raise 7.5→click CO position card. Verify status shows "GTO", not "Offline". Refresh and repeat 3x.
+
 ### Task: tandem-reference-comparison-gtowizard
 **Priority:** P2
 **Description:** Load the original GTO Wizard (app.gtowizard.com/study) via Tandem browser at localhost:3099 alongside wiz.codeovertcp.com. Compare real behavior — range data, street transitions, GTO frequencies, quiz API responses. This is Tier 1 reference verification that catches semantic bugs no test spec can encode.

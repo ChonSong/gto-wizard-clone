@@ -367,28 +367,44 @@
       "summary": "Replaced equity-based GTO range model with hand-crafted range definitions per position (UTG/BTN/SB+BB). Includes mixed-frequency cell rendering. 39 .webm test artifacts (33MB) committed — gitignore fix queued. UTG opens 22-77 at 100% (should be mixed) — queued as fix-utg-range-low-pairs-frequency.",
       "coach": "approved",
       "coach_verified_at": "2026-06-27T01:35:54Z"
+    },
+    {
+      "task": "feat-game-tree-navigation",
+      "sha": "687a3f6",
+      "date": "2026-06-27",
+      "summary": "Game tree navigation: tree_path API with RFI/vs_raise/vs_3bet/vs_4bet, frontend breadcrumb, context-aware action buttons, Cash/MTT selector, removed dead UI (Random Spot, Upgrade, Postflop Toggle). 0 JS errors. Minor P2 bug: solver status flickers to 'Offline' after tree nav.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-27T12:45:00Z"
     }
   ],
   "health": "build_passes_3_console_audit_pass_33_core_e2e_pass_11_stale_failing_solver_offline",
-  "last_sha": "1579cb4",
+  "last_sha": "687a3f6",
   "blocker": "GitHub auth token expired \u2014 push failed (persistent)",
-  "current_task": "fix-ai-territory-expansion",
+  "current_task": "fix-solver-status-indicator-flicker",
   "all_coach_tasks_done": false,
   "spec_gaps": [
+    {
+      "item": "Solver status indicator flickers to 'Offline' after tree navigation despite healthy backend",
+      "type": "bug",
+      "priority": 2,
+      "evidence": "P2 — observed live at wiz.codeovertcp.com/study. After tree navigation (UTG Raise 2.5 → HJ → position card click), status shows 'Offline'. /api/v1/solver/health returns 200. Frontend-only polling issue.",
+      "cycles_stagnant": 0,
+      "status": "new"
+    },
     {
       "item": "Solver Docker container not running",
       "type": "infra_gap",
       "priority": 1,
-      "evidence": "RESOLVED \u2014 solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
-      "cycles_stagnant": 3,
+      "evidence": "RESOLVED — solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
+      "cycles_stagnant": 4,
       "status": "escalated"
     },
     {
       "item": "clean-build npm script not in package.json",
       "type": "infra_gap",
       "priority": 2,
-      "evidence": "RESOLVED \u2014 clean-build script added to apps/web/package.json by Player commit d85a95b. Script runs successfully.",
-      "cycles_stagnant": 3,
+      "evidence": "RESOLVED — clean-build script added to apps/web/package.json by Player commit d85a95b. Script runs successfully.",
+      "cycles_stagnant": 4,
       "status": "escalated"
     },
     {
@@ -396,15 +412,23 @@
       "type": "infra_gap",
       "priority": 2,
       "evidence": "gto-wizard-health-check cron exists at 0 */6 * * * but fails with HTTP 401 (Insufficient balance). Check billing at opencode.ai.",
-      "cycles_stagnant": 4,
+      "cycles_stagnant": 5,
       "status": "escalated"
+    },
+    {
+      "item": "GitHub auth token expired — persistent push failures",
+      "type": "infra_gap",
+      "priority": 1,
+      "evidence": "Push fails with authentication error. Player cannot push commits. Multiple cycles. Needs token rotation.",
+      "cycles_stagnant": 1,
+      "status": "new"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "1579cb4",
-    "last_reviewed_at": "2026-06-27T01:35:54Z",
+    "last_reviewed_sha": "687a3f6",
+    "last_reviewed_at": "2026-06-27T12:45:00Z",
     "verdict": "APPROVE",
-    "notes": "Coach cycle 2026-06-27T01:35:54Z. Reviewed 3 new player commits: e432960 (action button advance position — working), dcd713d (hover filter + commit action — functional), 1579cb4 (hand-crafted GTO ranges — reasonable first pass). 0 console errors. API health OK. 3 P3 findings: gitignore bloat from .webm files (33MB), UTG low pairs at 100% (should be mixed), hover filter keyboard accessibility gap. Generated 3 backlog tasks. Active project remains polytopia-clone for fix-ai-territory-expansion."
+    "notes": "Coach cycle 2026-06-27T12:45:00Z. Reviewed 8 new player commits since 1579cb4. Major feature: game tree navigation (e99c0a1) with tree_path API supporting 4 depths (RFI→vs_raise→vs_3bet→vs_4bet), frontend breadcrumb, context-aware action buttons. Fix commits 5be20d2, 687a3f6 for null size handling and position lookup. Cleanup: removed Random Spot, Upgrade button, Postflop Training toggle, added Cash/MTT selector. 0 JS console errors in all tests. Practice page now shows content (not empty). RefQA passes. New P2 finding: solver status indicator flickers to 'Offline' after tree navigation (health endpoint 200). Pre-existing P3 tasks unchanged."
   },
-  "note": "Tick 2026-06-27T01:35:54Z. Coach APPROVED gto-wizard-clone work. 3 new commits verified live: action-button advance position (e432960), hover-filter commit action (dcd713d), hand-crafted GTO ranges (1579cb4). 0 console errors. 3 P3 findings — gitignore .agent-qa/ artifacts, UTG range low-pair frequencies, hover-filter accessibility. Generated 3 P3 backlog tasks. Next: fix-ai-territory-expansion (polytopia, escalated 12 cycles)."
+  "note": "Tick 2026-06-27T12:45:00Z. Coach APPROVED gto-wizard-clone work (8 new commits). Game tree navigation verified live: 4 depths work with correct pot/stack/action context. 0 JS errors. P2: solver status indicator flickers to Offline after tree navigation. P3: UTG low pair freqs, gitignore bloat, hover accessibility (all pre-existing). AGENTS.md updated with fix-solver-status-indicator-flicker. Next current_task: fix-solver-status-indicator-flicker."
 }
