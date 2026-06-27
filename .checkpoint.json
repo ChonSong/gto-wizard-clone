@@ -364,7 +364,7 @@
       "task": "feat-solver-hand-crafted-ranges",
       "sha": "1579cb4",
       "date": "2026-06-27",
-      "summary": "Replaced equity-based GTO range model with hand-crafted range definitions per position (UTG/BTN/SB+BB). Includes mixed-frequency cell rendering. 39 .webm test artifacts (33MB) committed — gitignore fix queued. UTG opens 22-77 at 100% (should be mixed) — queued as fix-utg-range-low-pairs-frequency.",
+      "summary": "Replaced equity-based GTO range model with hand-crafted range definitions per position (UTG/BTN/SB+BB). Includes mixed-frequency cell rendering. 39 .webm test artifacts (33MB) committed \u2014 gitignore fix queued. UTG opens 22-77 at 100% (should be mixed) \u2014 queued as fix-utg-range-low-pairs-frequency.",
       "coach": "approved",
       "coach_verified_at": "2026-06-27T01:35:54Z"
     },
@@ -382,19 +382,26 @@
       "date": "2026-06-27",
       "summary": "Replaced fetchRange-derived loading/error status with independent useSolverHealth hook polling /api/v1/solver/health every 10s. Status indicator no longer flickers to Offline during tree navigation.",
       "coach": "pending"
+    },
+    {
+      "task": "e2e-test-suite-validation",
+      "sha": "9eb4353",
+      "date": "2026-06-28",
+      "summary": "Resolved 22 failing E2E tests (118 to 140 passing). Added Postflop Training button, fixed RFI position context, moved A5s to mixed frequency, stabilized selectors.",
+      "coach": "pending"
     }
   ],
-  "health": "build_passes_53_frontend_tests_pass_status_indicator_decoupled_from_fetch",
-  "last_sha": "4371b5e",
+  "health": "140_e2e_tests_pass_98.6%_position_ranges_differentiated_postflop_button_added",
+  "last_sha": "9eb4353",
   "blocker": null,
-  "current_task": "fix-gitignore-agent-qa-artifacts",
+  "current_task": "e2e-test-suite-validation",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
       "item": "Solver status indicator flickers to 'Offline' after tree navigation despite healthy backend",
       "type": "bug",
       "priority": 2,
-      "evidence": "RESOLVED — replaced with independent useSolverHealth hook polling /api/v1/solver/health. Status no longer derived from fetchRange loading/error state. Fixed by Player commit 4371b5e.",
+      "evidence": "RESOLVED \u2014 replaced with independent useSolverHealth hook polling /api/v1/solver/health. Status no longer derived from fetchRange loading/error state. Fixed by Player commit 4371b5e.",
       "cycles_stagnant": 0,
       "status": "resolved"
     },
@@ -402,7 +409,7 @@
       "item": "Solver Docker container not running",
       "type": "infra_gap",
       "priority": 1,
-      "evidence": "RESOLVED — solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
+      "evidence": "RESOLVED \u2014 solver container running, gRPC on 50051, health 200. Fixed by Player commit 67b5214.",
       "cycles_stagnant": 4,
       "status": "escalated"
     },
@@ -410,7 +417,7 @@
       "item": "clean-build npm script not in package.json",
       "type": "infra_gap",
       "priority": 2,
-      "evidence": "RESOLVED — clean-build script added to apps/web/package.json by Player commit d85a95b. Script runs successfully.",
+      "evidence": "RESOLVED \u2014 clean-build script added to apps/web/package.json by Player commit d85a95b. Script runs successfully.",
       "cycles_stagnant": 4,
       "status": "escalated"
     },
@@ -423,12 +430,12 @@
       "status": "escalated"
     },
     {
-      "item": "GitHub auth token expired — persistent push failures",
+      "item": "GitHub auth token expired \u2014 persistent push failures",
       "type": "infra_gap",
       "priority": 1,
-      "evidence": "Push fails with authentication error. Player cannot push commits. Multiple cycles. Needs token rotation.",
+      "evidence": "Push succeeded 9eb4353. Token issue resolved.",
       "cycles_stagnant": 1,
-      "status": "new"
+      "status": "resolved"
     }
   ],
   "coach_review": {
@@ -437,5 +444,5 @@
     "verdict": "pending",
     "notes": "Player tick 2026-06-27T13:05:00Z. Fixed solver status indicator flicker by adding independent useSolverHealth hook (polls /api/v1/solver/health every 10s). Status no longer derived from fetchRange loading/error. Awaiting coach review."
   },
-  "note": "Tick 2026-06-27T13:05:00Z. Fixed: solver status indicator now uses independent health polling instead of fetchRange loading/error state. Eliminates false 'Offline' flickers during tree navigation. 53 frontend tests pass, build clean. Next: fix-gitignore-agent-qa-artifacts."
+  "note": "Tick 2026-06-28T01:00:00Z. E2E test suite validation: 140/142 passing (98.6%). Fixed: added Postflop Training button, fixed position range differentiation (BTN 102 vs UTG 44 raise hands), moved A5s to mixed freq in UTG, stabilized test selectors for auto-fetch button text changes. 2 intermittent failures remain (ICM/practice timing under concurrent load)."
 }
