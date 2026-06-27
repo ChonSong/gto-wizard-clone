@@ -996,15 +996,6 @@ export default function StudyPage() {
             </div>
           )
         })}
-        <button onClick={handleRandomSpot} aria-label="Generate random spot"
-          style={{
-            background: '#1a1a2e', border: '1px solid #3a3a5e',
-            color: '#b0b0ff', padding: '3px 8px', borderRadius: 6,
-            fontSize: 10, fontWeight: 600, cursor: 'pointer',
-            whiteSpace: 'nowrap', flexShrink: 0, alignSelf: 'center',
-          }}>
-          🎲 Random
-        </button>
       </div>
 
       {/* Per-Position Aggregate Summary Strip */}

@@ -103,16 +103,6 @@ export default function Header() {
         </button>
       )}
 
-      {/* Desktop Upgrade button */}
-      {!isMobile && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button style={{
-            background: '#00C853', color: '#000', border: 'none', padding: '7px 13px',
-            borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: 'pointer',
-          }}>👑 Upgrade</button>
-        </div>
-      )}
-
       {/* Mobile dropdown menu */}
       {isMobile && menuOpen && (
         <div
