@@ -60,8 +60,13 @@ test.describe("Equity Calculator Page", () => {
     const boardInput = page.locator("input[placeholder*='Ah']").first();
     await expect(boardInput).toBeVisible();
 
+    // Wait for auto-calculation to finish (button shows "..." while loading)
+    await page.waitForFunction(() => {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      return buttons.some(b => b.textContent?.trim() === 'Calculate');
+    }, { timeout: 15000 });
     // Calculate button should be present
-    const calcButton = page.locator("button:has-text('Calculate')");
+    const calcButton = page.locator("button:has-text('Calculate')").first();
     await expect(calcButton).toBeVisible();
   });
 

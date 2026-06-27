@@ -525,6 +525,18 @@ export default function StudyPage() {
           }}>
           Preflop Ranges
         </button>
+        <button onClick={() => setMode('postflop')}
+          aria-pressed={mode === 'postflop'}
+          aria-label="Postflop training mode"
+          style={{
+            background: mode === 'postflop' ? '#16241a' : '#161616',
+            border: mode === 'postflop' ? `1px solid ${GREEN}` : '1px solid #262626',
+            color: mode === 'postflop' ? '#fff' : '#888',
+            padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+            cursor: 'pointer',
+          }}>
+          Postflop Training
+        </button>
         <StudyHotkeyHelp showHotkeys={showHotkeys} onToggle={() => setShowHotkeys(prev => !prev)} />
       </div>
 
@@ -548,6 +560,7 @@ export default function StudyPage() {
             {availableDepths.map(d => (
               <button key={d.value} onClick={() => setStackDepth(d.value)}
                 aria-pressed={stackDepth === d.value}
+                aria-label={`${d.value}bb stack depth`}
                 style={{
                   background: stackDepth === d.value ? '#16241a' : '#161616',
                   border: stackDepth === d.value ? `1px solid ${GREEN}` : '1px solid #262626',

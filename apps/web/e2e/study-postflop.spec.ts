@@ -34,7 +34,7 @@ test.describe("Postflop Training: Full Cycle Workflow", () => {
 
     // Verify postflop UI is visible
     await expect(page.locator("button:has-text('Configure Spot')")).toBeVisible();
-    await expect(page.locator("button:has-text('Get GTO Strategy')")).toBeVisible();
+    await expect(page.locator("button[aria-label*='GTO strategy']").first()).toBeVisible();
 
     // ── Step 3: Open Configure Spot and customise settings ──
     await page.locator("button:has-text('Configure Spot')").click();
@@ -69,7 +69,7 @@ test.describe("Postflop Training: Full Cycle Workflow", () => {
         resp.request().postDataJSON()?.street === "flop"
     );
 
-    await page.locator("button:has-text('Get GTO Strategy')").click();
+    await page.locator("button[aria-label*='GTO strategy']").first().click();
 
     const flopData = await (await flopResponse).json();
     expect(flopData.status).toBe("complete");
@@ -206,7 +206,7 @@ test.describe("Postflop Training: Full Cycle Workflow", () => {
         resp.url().includes("/api/v1/solver/postflop-strategy") &&
         resp.status() === 200
     );
-    await page.locator("button:has-text('Get GTO Strategy')").click();
+    await page.locator("button[aria-label*='GTO strategy']").first().click();
     await apiResponse;
 
     // Verify breakdown renders

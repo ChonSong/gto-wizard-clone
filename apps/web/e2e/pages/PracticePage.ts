@@ -130,7 +130,8 @@ export class PracticePage {
 
   async startSession(): Promise<PracticeSessionResult> {
     await this.page.getByRole('button', { name: 'Start Practice Session' }).click();
-    await this.page.waitForTimeout(2000);
+    // Wait for the quiz question to load (API call + render)
+    await this.page.waitForTimeout(5000);
 
     const url = this.page.url();
     const bodyText = await this.page.evaluate(() => document.body.innerText);

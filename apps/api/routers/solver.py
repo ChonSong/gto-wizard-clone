@@ -404,7 +404,7 @@ def _get_next_position(current: str, excluded_positions: set[str]) -> str | None
 # ── Tree context computation ──
 
 def _compute_tree_context(
-    tree_path: list[dict], stack_depth: int
+    tree_path: list[dict], stack_depth: int, requested_position: str | None = None
 ) -> dict:
     """
     Given the game tree path (sequence of actions taken), compute:
@@ -467,17 +467,17 @@ def _compute_tree_context(
 
     # Determine who acts next and the context
     if raise_count == 0:
-        # Nobody has raised yet — this is the initial position acting
-        # This shouldn't normally happen (we always start with a raise),
-        # but handle gracefully
+        # Nobody has raised yet — RFI (raise first in) scenario
         context = "rfi"
-        # Find first non-folded position
-        for pos in _POSITION_ORDER:
-            if pos not in folded and pos != (last_action_position if last_action_position else ""):
-                acting_position = pos
-                break
+        if requested_position:
+            acting_position = requested_position
         else:
-            acting_position = _POSITION_ORDER[0]
+            for pos in _POSITION_ORDER:
+                if pos not in folded and pos != (last_action_position if last_action_position else ""):
+                    acting_position = pos
+                    break
+            else:
+                acting_position = _POSITION_ORDER[0]
         pot = _SB_AMOUNT + _BB_AMOUNT + _ANTE
         stack_rem = stack_depth
         last_raiser = None
@@ -672,7 +672,7 @@ def _get_available_actions(
 _UTG_RANGE = {
     "always_raise": {
         "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
-        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s",
+        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A4s", "A3s",
         "KQs", "KJs", "KTs", "K9s", "K8s",
         "QJs", "QTs", "Q9s",
         "JTs", "J9s",
@@ -680,7 +680,7 @@ _UTG_RANGE = {
         "AKo", "AQo", "AJo", "ATo",
         "KQo",
     },
-    "mixed": {"A2s": 0.5, "K7s": 0.5, "KJo": 0.5, "QJo": 0.5},
+    "mixed": {"A2s": 0.5, "A5s": 0.4, "K7s": 0.5, "KJo": 0.5, "QJo": 0.5},
 }
 _HJ_RANGE = {
     "always_raise": {
@@ -1267,7 +1267,7 @@ async def preflop_range(req: PreflopRangeRequest):
                            for a in req.tree_path]
 
         # Compute the tree context
-        tree_context = _compute_tree_context(tree_path_dicts, req.stack_depth)
+        tree_context = _compute_tree_context(tree_path_dicts, req.stack_depth, req.position)
         acting_position = tree_context["acting_position"]
         context = tree_context["context"]
         pot_size = tree_context["pot_size"]
@@ -1333,7 +1333,7 @@ async def get_tree_node(req: PreflopRangeRequest):
     """
     tree_path_dicts = [{"position": a.position, "action": a.action, "size": a.size}
                        for a in req.tree_path]
-    tree_context = _compute_tree_context(tree_path_dicts, req.stack_depth)
+    tree_context = _compute_tree_context(tree_path_dicts, req.stack_depth, req.position)
     available_actions = _get_available_actions(
         tree_context["acting_position"], tree_context["context"],
         tree_context["stack_remaining"], tree_context.get("last_raise_size", 0),

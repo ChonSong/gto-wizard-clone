@@ -81,8 +81,8 @@ test.describe("Solver Integration: Postflop Training", () => {
     const callBtn = page.locator("button:has-text('CALL')");
     await expect(callBtn).toBeVisible();
 
-    // Get GTO Strategy button should exist
-    const solveBtn = page.locator("button:has-text('Get GTO Strategy')");
+    // GTO strategy button (text is "Get GTO Strategy" or "⟳ Refresh" after auto-fetch)
+    const solveBtn = page.locator("button[aria-label*='GTO strategy']").first();
     await expect(solveBtn).toBeVisible();
 
     // No critical console errors
@@ -112,8 +112,8 @@ test.describe("Solver Integration: Postflop Training", () => {
         resp.status() === 200
     );
 
-    // Click "Get GTO Strategy" button
-    await page.locator("button:has-text('Get GTO Strategy')").click();
+    // Click the GTO strategy button (text may be "Get GTO Strategy" or "⟳ Refresh")
+    await page.locator("button[aria-label*='GTO strategy']").first().click();
 
     // Wait for the API response
     const response = await apiResponse;
@@ -173,13 +173,13 @@ test.describe("Solver Integration: Postflop Training", () => {
     await page.locator("button:has-text('Postflop Training')").click();
     await page.waitForTimeout(300);
 
-    // Get strategy first
+    // Get strategy first (click by aria-label since auto-fetch may have changed button text)
     const apiResponse = page.waitForResponse(
       (resp) =>
         resp.url().includes("/api/v1/solver/postflop-strategy") &&
         resp.status() === 200
     );
-    await page.locator("button:has-text('Get GTO Strategy')").click();
+    await page.locator("button[aria-label*='GTO strategy']").first().click();
     await apiResponse;
     await page.waitForSelector("text=GTO Strategy Breakdown", { timeout: 15000 });
 
@@ -216,13 +216,13 @@ test.describe("Solver Integration: Postflop Training", () => {
     await page.locator("button:has-text('Postflop Training')").click();
     await page.waitForTimeout(300);
 
-    // Get strategy
+    // Get strategy (click by aria-label since auto-fetch may have changed button text)
     const apiResponse = page.waitForResponse(
       (resp) =>
         resp.url().includes("/api/v1/solver/postflop-strategy") &&
         resp.status() === 200
     );
-    await page.locator("button:has-text('Get GTO Strategy')").click();
+    await page.locator("button[aria-label*='GTO strategy']").first().click();
     await apiResponse;
     await page.waitForSelector("text=GTO Strategy Breakdown", { timeout: 15000 });
 

@@ -141,13 +141,13 @@ test.describe("ICM Calculator Page", () => {
   test("4. ICMResults section displays calculations", async ({ page }) => {
     await icmPage.goto();
 
-    // Wait for the page to fully load and API calls to settle
-    await page.waitForLoadState("networkidle", { timeout: 20000 });
+    // Wait for the page DOM to load (networkidle can time out with polling endpoints)
+    await page.waitForLoadState("domcontentloaded");
 
     const resultsSection = icmPage.getICMResultsSection();
 
     // Verify results section exists (use longer timeout for API-backed content)
-    await expect(resultsSection).toBeVisible({ timeout: 10000 });
+    await expect(resultsSection).toBeVisible({ timeout: 15000 });
 
     // Look for equity values (percentages or currency)
     const equityElements = resultsSection.locator("text=/\\d+\\.?\\d*%/");

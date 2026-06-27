@@ -80,10 +80,10 @@ test.describe("Study Page Console Error Audit", () => {
     await postflopBtn.click();
     await page.waitForTimeout(1000);
 
-    // Check postflop UI elements
+    // Check postflop UI elements (use aria-label since auto-fetch may change button text)
     const configBtn = page.locator("button:has-text('Configure Spot')");
     const hasConfigBtn = await configBtn.isVisible().catch(() => false);
-    const solveBtn = page.locator("button:has-text('Get GTO Strategy')");
+    const solveBtn = page.locator("button[aria-label*='GTO strategy']").first();
     const hasSolveBtn = await solveBtn.isVisible().catch(() => false);
 
     console.log(`=== Postflop Mode Audit ===`);
