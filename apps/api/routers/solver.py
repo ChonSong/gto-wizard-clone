@@ -437,7 +437,9 @@ def _compute_tree_context(
     for entry in tree_path:
         pos = entry["position"]
         act = entry["action"]
-        size = entry.get("size", _parse_action_size(act))
+        size = entry.get("size")
+        if size is None:
+            size = _parse_action_size(act)
 
         last_action = act
         last_action_position = pos
