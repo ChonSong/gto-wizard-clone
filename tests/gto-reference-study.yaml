@@ -1,0 +1,20 @@
+test-id: t_amber-river-stone-cloud-ember-gold-hill-iris-jade-keel
+name: GTO Wizard Reference — Study Page Ground Truth
+target: gto-wizard-reference
+use:
+  cache: false
+steps:
+  # ── Probe 1: Does the reference page load at all? ──
+  - Navigate to "https://app.gtowizard.com/study"
+  - Wait for 5 seconds
+  - Verify the page has visible text content
+
+  # ── Probe 2: What's on the page? ──
+  # These steps capture reference behavior as observations
+  - Find and record which position cards are shown
+  - Find and record which mode toggle buttons exist and their states
+  - Find and record which position is currently selected
+
+  # ── Probe 3: Hand matrix ──
+  - If a hand matrix grid is visible, count and record how many cells it has
+  - If cell AA is visible, record its action and frequency

@@ -1096,7 +1096,10 @@ export default function StudyPage() {
                           fontWeight: 700, color: '#fff', letterSpacing: -0.3,
                           fontSize: 12,
                           textShadow: '0 1px 2px rgba(0,0,0,.8)', cursor: 'pointer', userSelect: 'none',
-                          background: color, opacity,
+                          background: data && data.action !== 'fold' && data.frequency < 1
+                            ? `linear-gradient(to right, ${color} ${(data.frequency * 100).toFixed(0)}%, ${GRAY} ${(data.frequency * 100).toFixed(0)}%)`
+                            : color,
+                          opacity,
                           border: isSelected ? '2px solid #fff' : '1px solid rgba(255,255,255,0.06)',
                           borderRadius: 3,
                           transition: 'opacity .15s, border .15s',

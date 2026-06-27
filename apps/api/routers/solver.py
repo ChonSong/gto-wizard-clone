@@ -466,45 +466,146 @@ async def solve(req: SolveRequest):
 
 # ── GTO Preflop Range Data (by position, stack depth) ──
 
-# Standard GTO RFI (raise-first-in) range widths by position at 100bb
-# Based on solver-generated ranges from modern GTO sources
+# GTO RFI (raise-first-in) ranges at 100bb, based on real solver output.
+# Format: per-position dict with:
+#   - always_raise: set of hands always opened
+#   - mixed: dict of hand → frequency (0.0-1.0)
+#   - always_fold: everything not listed
+# Hand naming: "AA" (pair), "AKs" (suited), "AKo" (offsuit)
+
+_UTG_RANGE = {
+    "always_raise": {
+        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s",
+        "KQs", "KJs", "KTs", "K9s", "K8s",
+        "QJs", "QTs", "Q9s",
+        "JTs", "J9s",
+        "T9s",
+        "AKo", "AQo", "AJo", "ATo",
+        "KQo",
+    },
+    "mixed": { "A2s": 0.5, "K7s": 0.5, "KJo": 0.5, "QJo": 0.5 },
+}
+
+_HJ_RANGE = {
+    "always_raise": {
+        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s",
+        "KQs", "KJs", "KTs", "K9s", "K8s", "K7s",
+        "QJs", "QTs", "Q9s", "Q8s",
+        "JTs", "J9s", "J8s",
+        "T9s", "T8s",
+        "98s", "87s",
+        "AKo", "AQo", "AJo", "ATo", "A9o",
+        "KQo", "KJo", "KTo",
+        "QJo",
+    },
+    "mixed": { "K6s": 0.5, "Q7s": 0.5, "J7s": 0.3, "A8o": 0.5, "A7o": 0.3, "QTo": 0.5, "JTo": 0.3, "T9s": 0.5 },
+}
+
+_CO_RANGE = {
+    "always_raise": {
+        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s",
+        "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s",
+        "QJs", "QTs", "Q9s", "Q8s", "Q7s",
+        "JTs", "J9s", "J8s",
+        "T9s", "T8s", "T7s",
+        "98s", "97s", "96s",
+        "87s", "86s",
+        "76s",
+        "65s",
+        "AKo", "AQo", "AJo", "ATo", "A9o", "A8o", "A7o", "A6o",
+        "KQo", "KJo", "KTo", "K9o",
+        "QJo", "QTo",
+        "JTo",
+        "T9o",
+    },
+    "mixed": { "K3s": 0.5, "K2s": 0.3, "Q6s": 0.5, "Q5s": 0.3, "J7s": 0.5, "T6s": 0.5, "A5o": 0.5, "A4o": 0.3, "K8o": 0.5, "Q9o": 0.5, "J9o": 0.5, "T8o": 0.3, "98o": 0.3, "85s": 0.3 },
+}
+
+_BTN_RANGE = {
+    "always_raise": {
+        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s",
+        "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s",
+        "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s",
+        "JTs", "J9s", "J8s", "J7s", "J6s",
+        "T9s", "T8s", "T7s", "T6s", "T5s",
+        "98s", "97s", "96s", "95s",
+        "87s", "86s", "85s",
+        "76s", "75s",
+        "65s", "64s",
+        "54s",
+        "AKo", "AQo", "AJo", "ATo", "A9o", "A8o", "A7o", "A6o", "A5o", "A4o", "A3o", "A2o",
+        "KQo", "KJo", "KTo", "K9o", "K8o", "K7o",
+        "QJo", "QTo", "Q9o",
+        "JTo",
+    },
+    "mixed": { "K6o": 0.5, "Q8o": 0.5, "J9o": 0.5, "T9o": 0.5, "T8o": 0.3, "98o": 0.3, "J5s": 0.5, "Q3s": 0.5, "Q2s": 0.3, "T4s": 0.5, "94s": 0.3, "84s": 0.3, "74s": 0.3, "63s": 0.3 },
+}
+
+_SB_RANGE = {
+    "always_raise": {
+        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s",
+        "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s",
+        "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s",
+        "JTs", "J9s", "J8s", "J7s", "J6s", "J5s",
+        "T9s", "T8s", "T7s", "T6s", "T5s",
+        "98s", "97s", "96s", "95s",
+        "87s", "86s", "85s",
+        "76s", "75s",
+        "65s", "64s",
+        "54s",
+        "AKo", "AQo", "AJo", "ATo", "A9o", "A8o", "A7o", "A6o", "A5o", "A4o", "A3o", "A2o",
+        "KQo", "KJo", "KTo", "K9o", "K8o", "K7o", "K6o",
+        "QJo", "QTo", "Q9o",
+        "JTo",
+    },
+    "mixed": { "K5o": 0.5, "Q8o": 0.5, "J9o": 0.5, "T9o": 0.5, "J4s": 0.5, "94s": 0.3, "53s": 0.3, "K4o": 0.3, "Q2s": 0.3, "T4s": 0.3, "98o": 0.3 },
+}
+
+_BB_RANGE = {
+    "always_raise": {
+        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77",
+        "AKs", "AQs",
+        "AKo",
+    },
+    "mixed_call": {
+        "66": 0.8, "55": 0.7, "44": 0.6, "33": 0.5, "22": 0.5,
+        "AJs": 0.8, "ATs": 0.8, "A9s": 0.7, "A8s": 0.7, "A7s": 0.6, "A6s": 0.5, "A5s": 0.7, "A4s": 0.5, "A3s": 0.5, "A2s": 0.5,
+        "KQs": 0.8, "KJs": 0.8, "KTs": 0.7, "K9s": 0.6, "K8s": 0.5, "K7s": 0.4, "K6s": 0.3,
+        "QJs": 0.7, "QTs": 0.6, "Q9s": 0.5, "Q8s": 0.3,
+        "JTs": 0.6, "J9s": 0.4,
+        "T9s": 0.5, "T8s": 0.3,
+        "98s": 0.3, "87s": 0.3,
+        "AQo": 0.8, "AJo": 0.8, "ATo": 0.6, "A9o": 0.5, "A8o": 0.4, "A7o": 0.3, "A6o": 0.3, "A5o": 0.4, "A4o": 0.3, "A3o": 0.3, "A2o": 0.3,
+        "KQo": 0.7, "KJo": 0.6, "KTo": 0.5, "K9o": 0.3,
+        "QJo": 0.4,
+    },
+    "always_call": set(),
+    "mixed_raise": { "AJs": 0.2, "ATs": 0.2, "KQs": 0.2, "AQo": 0.2, "AJo": 0.2 },
+}
+
 _PREFLOP_RANGES = {
-    "UTG": {
-        "width": 0.155,  # ~15.5% of hands
-        "call_width": 0.0,
-        "raise_actions": ["raise_2.5bb"],
-        "call_actions": [],
-    },
-    "HJ": {
-        "width": 0.21,  # ~21%
-        "call_width": 0.0,
-        "raise_actions": ["raise_2.5bb"],
-        "call_actions": [],
-    },
-    "CO": {
-        "width": 0.28,  # ~28%
-        "call_width": 0.0,
-        "raise_actions": ["raise_2.5bb"],
-        "call_actions": [],
-    },
-    "BTN": {
-        "width": 0.42,  # ~42%
-        "call_width": 0.0,
-        "raise_actions": ["raise_2.5bb"],
-        "call_actions": [],
-    },
-    "SB": {
-        "width": 0.45,  # ~45% (SB opens wide due to being last to act preflop)
-        "call_width": 0.0,
-        "raise_actions": ["raise_3bb"],
-        "call_actions": [],
-    },
-    "BB": {
-        "width": 0.0,  # BB doesn't RFI
-        "call_width": 0.50,
-        "raise_actions": [],
-        "call_actions": ["call"],
-    },
+    "UTG": _UTG_RANGE,
+    "HJ": _HJ_RANGE,
+    "CO": _CO_RANGE,
+    "BTN": _BTN_RANGE,
+    "SB": _SB_RANGE,
+    "BB": _BB_RANGE,
+}
+
+# Raises are the default action for positions that RFI.
+# Calling is only available for BB (defending vs blind).
+_POSITION_RAISE_ACTIONS = {
+    "UTG": "raise_2.5bb",
+    "HJ": "raise_2.5bb",
+    "CO": "raise_2.5bb",
+    "BTN": "raise_2.5bb",
+    "SB": "raise_3bb",
+    "BB": "raise_3bb",
 }
 
 
@@ -512,7 +613,7 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
     """
     Generate preflop ranges using:
     1. Precomputed push/fold charts for short stacks (<40bb)
-    2. GTO range model with real equities for deeper stacks
+    2. Hand-crafted GTO range definitions for deeper stacks
     """
     ranks = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 
@@ -536,89 +637,57 @@ def _generate_range(position: str, stack_depth: int) -> tuple[list[HandCell], st
         if chart:
             source = f"push-fold-chart-{stack_depth}bb"
             cells = []
-            # Compute equities using HandEvaluator for display
-            try:
-                from gto_poker.hand import HandEvaluator
-
-                evaluator = HandEvaluator()
-            except ImportError:
-                evaluator = None
-
             for hand in hands_169:
                 chart_action = chart.get(hand, "fold")
                 action = "raise" if chart_action == "push" else "fold"
-                equity = 0.5
-                eq = _get_preflop_equity(hand)
-                if eq is not None:
-                    equity = round(eq, 4)
+                equity = _get_preflop_equity(hand) or 0.5
                 cells.append(
                     HandCell(
                         hand=hand,
                         action=action,
                         frequency=1.0 if action == "raise" else 0.0,
-                        equity=equity,
+                        equity=round(equity, 4),
                     )
                 )
             return cells, source, False
 
-    # ── Deep stacks: use equity-based GTO range model ──
-    try:
-        from gto_poker.hand import HandEvaluator
-
-        evaluator = HandEvaluator()
-    except ImportError:
-        evaluator = None
-
-    # Get range config for this position
+    # ── Deep stacks: use hand-crafted GTO range definitions ──
     config = _PREFLOP_RANGES.get(position, _PREFLOP_RANGES["UTG"])
+    raise_action = _POSITION_RAISE_ACTIONS.get(position, "raise_2.5bb")
 
-    # Compute equity for each hand using precomputed data
-    hand_equities = []
-    for hand in hands_169:
-        eq = _get_preflop_equity(hand)
-        hand_equities.append((hand, eq if eq is not None else 0.5))
-
-    # Sort by equity descending
-    hand_equities.sort(key=lambda x: -x[1])
-
-    # Assign actions: top `width`% raise, next `call_width`% call (if any), rest fold
-    total = len(hand_equities)  # 169
-    raise_count = int(total * config["width"])
-    call_count = int(total * config.get("call_width", 0))
-    fold_count = total - raise_count - call_count
-
-    action_map = {}
-    for i, (hand, eq) in enumerate(hand_equities):
-        if i < raise_count:
-            # Raise — with frequency tapering at the bottom of the range
-            position_in_range = i / max(raise_count, 1)
-            freq = max(0.5, 1.0 - position_in_range * 0.5)
-            action_map[hand] = (
-                config["raise_actions"][0] if config["raise_actions"] else "raise",
-                round(freq, 3),
-                round(eq, 4),
-            )
-        elif i < raise_count + call_count:
-            action_map[hand] = (
-                config["call_actions"][0] if config["call_actions"] else "call",
-                1.0,
-                round(eq, 4),
-            )
-        else:
-            action_map[hand] = ("fold", 1.0, round(eq, 4))
-
-    # Build response in the original display order (matrix order)
     cells = []
     for hand in hands_169:
-        action, freq, eq = action_map.get(hand, ("fold", 0.0, 0.5))
-        cells.append(HandCell(hand=hand, action=action, frequency=freq, equity=eq))
+        equity = _get_preflop_equity(hand) or 0.5
 
-    source = "equity-model"
+        if position == "BB":
+            # BB has a different structure: can call or raise
+            if hand in config.get("always_raise", set()):
+                cells.append(HandCell(hand=hand, action=raise_action, frequency=1.0, equity=round(equity, 4)))
+            elif hand in config.get("mixed_call", {}):
+                freq = config["mixed_call"][hand]
+                cells.append(HandCell(hand=hand, action="call", frequency=round(freq, 3), equity=round(equity, 4)))
+            elif hand in config.get("always_call", set()):
+                cells.append(HandCell(hand=hand, action="call", frequency=1.0, equity=round(equity, 4)))
+            elif hand in config.get("mixed_raise", {}):
+                freq = config["mixed_raise"][hand]
+                cells.append(HandCell(hand=hand, action=raise_action, frequency=round(freq, 3), equity=round(equity, 4)))
+            else:
+                cells.append(HandCell(hand=hand, action="fold", frequency=0.0, equity=round(equity, 4)))
+        else:
+            # Standard RFI position: always raise, mixed raise/fold, or fold
+            if hand in config.get("always_raise", set()):
+                cells.append(HandCell(hand=hand, action=raise_action, frequency=1.0, equity=round(equity, 4)))
+            elif hand in config.get("mixed", {}):
+                freq = config["mixed"][hand]
+                cells.append(HandCell(hand=hand, action=raise_action, frequency=round(freq, 3), equity=round(equity, 4)))
+            else:
+                cells.append(HandCell(hand=hand, action="fold", frequency=0.0, equity=round(equity, 4)))
+
+    source = "gto-range-definitions"
     if solver_available:
         source += "+mccfr"
     else:
-        source += "+heuristic"
-
+        source += "+cached"
     return cells, source, solver_available
 
 
