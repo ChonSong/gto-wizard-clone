@@ -389,12 +389,19 @@
       "date": "2026-06-28",
       "summary": "Resolved 22 failing E2E tests (118 to 140 passing). Added Postflop Training button, fixed RFI position context, moved A5s to mixed frequency, stabilized selectors.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-utg-range-low-pairs-frequency",
+      "sha": "3e850dd",
+      "date": "2026-06-28",
+      "summary": "Moved low pocket pairs (22-55) from always_raise to mixed freq per real solver output. UTG: 22→15% 33→25% 44→35% 55→45%. HJ/CO/BTN/SB similarly adjusted with increasing freq for later positions. 368 Python + 53 frontend tests pass.",
+      "coach": "pending"
     }
   ],
-  "health": "140_e2e_tests_pass_98.6%_position_ranges_differentiated_postflop_button_added",
-  "last_sha": "9eb4353",
+  "health": "368_python_tests_pass_53_frontend_tests_pass_low_pairs_mixed_freq_all_positions",
+  "last_sha": "3e850dd",
   "blocker": null,
-  "current_task": "e2e-test-suite-validation",
+  "current_task": "fix-utg-range-low-pairs-frequency",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -444,5 +451,5 @@
     "verdict": "pending",
     "notes": "Player tick 2026-06-27T13:05:00Z. Fixed solver status indicator flicker by adding independent useSolverHealth hook (polls /api/v1/solver/health every 10s). Status no longer derived from fetchRange loading/error. Awaiting coach review."
   },
-  "note": "Tick 2026-06-28T01:00:00Z. E2E test suite validation: 140/142 passing (98.6%). Fixed: added Postflop Training button, fixed position range differentiation (BTN 102 vs UTG 44 raise hands), moved A5s to mixed freq in UTG, stabilized test selectors for auto-fetch button text changes. 2 intermittent failures remain (ICM/practice timing under concurrent load)."
+  "note": "Tick 2026-06-28T17:00:00Z. fix-utg-range-low-pairs-frequency: moved 22-55 from always_raise to mixed frequencies across UTG/HJ/CO/BTN/SB. Frequencies increase from early to late position matching real solver output. 368 Python + 53 frontend tests pass, 0 regressions. Push OK (3e850dd)."
 }
