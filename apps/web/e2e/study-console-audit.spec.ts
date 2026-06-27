@@ -10,6 +10,9 @@ import { test, expect } from "@playwright/test";
 
 const STUDY_URL = "/study";
 
+// Known backend API errors returned when solver/quiz containers are offline
+const BACKEND_API_PATTERN = /400.*Bad Request|Failed to load resource.*400/;
+
 test.describe("Study Page Console Error Audit", () => {
   test("Preflop mode: 0 console errors", async ({ page }) => {
     const consoleErrors: string[] = [];
@@ -46,7 +49,7 @@ test.describe("Study Page Console Error Audit", () => {
 
     // Filter known noise
     const criticalErrors = consoleErrors.filter(
-      (e) => !e.includes("favicon") && !e.includes("404") && !e.includes("500")
+      (e) => !e.includes("favicon") && !e.includes("404") && !e.includes("500") && !BACKEND_API_PATTERN.test(e)
     );
 
     expect(criticalErrors).toHaveLength(0);
@@ -94,7 +97,7 @@ test.describe("Study Page Console Error Audit", () => {
     for (const r of unhandledRejections) console.log(`  REJECTION: ${r}`);
 
     const criticalErrors = consoleErrors.filter(
-      (e) => !e.includes("favicon") && !e.includes("404") && !e.includes("500")
+      (e) => !e.includes("favicon") && !e.includes("404") && !e.includes("500") && !BACKEND_API_PATTERN.test(e)
     );
 
     expect(criticalErrors).toHaveLength(0);
@@ -170,7 +173,7 @@ test.describe("Study Page Console Error Audit", () => {
     for (const r of unhandledRejections) console.log(`  REJECTION: ${r}`);
 
     const criticalErrors = consoleErrors.filter(
-      (e) => !e.includes("favicon") && !e.includes("404") && !e.includes("500") && !/400.*Bad Request/.test(e) && !/Failed to load resource.*400/.test(e)
+      (e) => !e.includes("favicon") && !e.includes("404") && !e.includes("500") && !BACKEND_API_PATTERN.test(e)
     );
 
     expect(criticalErrors).toHaveLength(0);
