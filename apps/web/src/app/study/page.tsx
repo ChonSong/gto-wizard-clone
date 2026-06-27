@@ -842,18 +842,6 @@ export default function StudyPage() {
           }}>
           Preflop Ranges
         </button>
-        <button onClick={() => setMode('postflop')}
-          aria-pressed={mode === 'postflop'}
-          aria-label="Postflop training mode"
-          style={{
-            background: mode === 'postflop' ? '#16241a' : '#161616',
-            border: mode === 'postflop' ? `1px solid ${GREEN}` : '1px solid #262626',
-            color: mode === 'postflop' ? '#fff' : '#888',
-            padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-            cursor: 'pointer',
-          }}>
-          Postflop Training
-        </button>
       </div>
         <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 4 }} data-hotkeys-popup>
           <button onClick={() => setShowHotkeys(!showHotkeys)}
