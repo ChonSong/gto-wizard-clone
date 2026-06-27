@@ -394,7 +394,7 @@
       "task": "fix-utg-range-low-pairs-frequency",
       "sha": "3e850dd",
       "date": "2026-06-28",
-      "summary": "Moved low pocket pairs (22-55) from always_raise to mixed freq per real solver output. UTG: 22→15% 33→25% 44→35% 55→45%. HJ/CO/BTN/SB similarly adjusted with increasing freq for later positions. 368 Python + 53 frontend tests pass.",
+      "summary": "Moved low pocket pairs (22-55) from always_raise to mixed freq per real solver output. UTG: 22\u219215% 33\u219225% 44\u219235% 55\u219245%. HJ/CO/BTN/SB similarly adjusted with increasing freq for later positions. 368 Python + 53 frontend tests pass.",
       "coach": "pending"
     },
     {
@@ -408,7 +408,7 @@
   "health": "368_python_tests_pass_25_study_e2e_pass_action_filter_accessible",
   "last_sha": "17f487c",
   "blocker": null,
-  "current_task": "fix-action-filter-hover-accessibility",
+  "current_task": "tbd",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -450,6 +450,14 @@
       "evidence": "Push succeeded 9eb4353. Token issue resolved.",
       "cycles_stagnant": 1,
       "status": "resolved"
+    },
+    {
+      "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
+      "type": "invalid_spec",
+      "priority": 1,
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots, NOT a 320px green panel. reference-study.png shows fold cells at #121212 (near-black), NOT #363636. reference accent is blue #3d7cb8, NOT teal #0A6470. All 5 recovery tasks invalid.",
+      "cycles_stagnant": 0,
+      "status": "escalated"
     }
   ],
   "coach_review": {
@@ -458,5 +466,5 @@
     "verdict": "pending",
     "notes": "Player tick 2026-06-27T13:05:00Z. Fixed solver status indicator flicker by adding independent useSolverHealth hook (polls /api/v1/solver/health every 10s). Status no longer derived from fetchRange loading/error. Awaiting coach review."
   },
-  "note": "Tick 2026-06-28T20:00:00Z. fix-action-filter-hover-accessibility: keyboard toggle for action filter (Enter/Space), aria-pressed + aria-label for screen readers. Mouse click advances position (preserved), mouse hover sets filter (preserved). 25 study E2E + 368 Python tests pass. Push OK (17f487c)."
+  "note": "Tick 2026-06-28T22:00:00Z. Player investigation: All 5 Phase 4 recovery tasks have incorrect specs \u2014 reference pixel analysis shows dark bg (#1d1d1d) with small lime-green accent dots (#aafbb2), NOT large green panels/bars/teal accents. Recovery tasks were generated from misread reference. Coach backlog health check needed. No code changes committed."
 }
