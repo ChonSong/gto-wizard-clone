@@ -422,10 +422,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "17f487c",
-    "last_reviewed_at": "2026-06-28T22:15:00Z",
+    "last_reviewed_sha": "a2b1d61",
+    "last_reviewed_at": "2026-06-29T10:38:00Z",
     "verdict": "pending",
-    "notes": "Player tick 2026-06-28T22:15:00Z. Task Exhaustion Recovery: removed 5 invalid Phase 4 recovery tasks from AGENTS.md (specs contradicted reference screenshots). Project is healthy — all tests pass. Awaiting Coach backlog health check."
+    "notes": "Player tick 2026-06-29T10:38:00Z. Discovered and fixed: RANGE CMP and CMP EV right sidebar tabs were rendering with undefined data (placeholders since dc78a8c). Wired allPositionData through OverviewSubTabs → RangeCompareTab/CompareEVTab. RangeCompareTab now shows stacked raise/call/fold frequency bars per position. CompareEVTab now shows EV divergence bars per position with zero-line. Also cleaned up dead state: removed write-only loading/error vars and unused selectedHandCombos useMemo."
   },
-  "note": "Tick 2026-06-28T22:15:00Z. Task Exhaustion Recovery: Phase 4 recovery tasks removed (invalid specs). Pixel analysis confirmed reference uses dark bg + lime-green accent dots, not solid green panels. Project healthy: 368 Python + 53 frontend + 142 E2E tests pass. Awaiting Coach backlog health check for validated recovery tasks."
+  "note": "Tick 2026-06-29T10:38:00Z. Found functional gap: RANGE CMP and CMP EV tabs were placeholders despite data being available. Implemented real visualizations: stacked frequency comparison bars (RangeCompareTab) and EV divergence bars (CompareEVTab). Threaded allPositionData + activePosition through OverviewSubTabs prop chain. Cleanup: removed 2 write-only state vars and 1 dead useMemo. All tests pass (368 Python + 53 frontend + build OK). Push OK (908c52e, a2b1d61)."
 }
