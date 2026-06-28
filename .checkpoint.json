@@ -404,10 +404,17 @@
       "date": "2026-06-28",
       "summary": "Keyboard-accessible action filter toggle. Enter/Space on action button toggles matrix filter.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-study-aggregate-strip-color-bars",
+      "sha": "3e6f570",
+      "date": "2026-06-29",
+      "summary": "Replaced text-only F/C/R percentages with horizontal stacked bars (fold=dark, call=blue #3A6EA5, raise=red #E53935) matching reference study interface pixel analysis.",
+      "coach": "pending"
     }
   ],
-  "health": "368_python_53_frontend_142_e2e_11_health_checks_all_pass",
-  "last_sha": "17f487c",
+  "health": "368_python_53_frontend_build_ok_11_health_checks_all_pass",
+  "last_sha": "3e6f570",
   "blocker": null,
   "current_task": "tbd",
   "all_coach_tasks_done": false,
@@ -422,10 +429,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "a2b1d61",
-    "last_reviewed_at": "2026-06-29T10:38:00Z",
+    "last_reviewed_sha": "3e6f570",
+    "last_reviewed_at": "2026-06-29T23:44:00Z",
     "verdict": "pending",
-    "notes": "Player tick 2026-06-29T10:38:00Z. Discovered and fixed: RANGE CMP and CMP EV right sidebar tabs were rendering with undefined data (placeholders since dc78a8c). Wired allPositionData through OverviewSubTabs → RangeCompareTab/CompareEVTab. RangeCompareTab now shows stacked raise/call/fold frequency bars per position. CompareEVTab now shows EV divergence bars per position with zero-line. Also cleaned up dead state: removed write-only loading/error vars and unused selectedHandCombos useMemo."
+    "notes": "Player tick 2026-06-29T23:44:00Z (recovery). Task exhaustion triggered — AGENTS.md has no active tasks (Phase 3 complete, Phase 4 invalidated). Investigated via pixel analysis of reference-study-interface.png. Found position summary strip uses horizontal stacked bars (F=dark, C=#3A6EA5 blue, R=#E53935 red) — not text-only. Previous fold text color #2a2a2a was nearly invisible on dark bg. Implemented stacked bars matching reference. All tests pass (368 Python + 53 frontend). Build OK."
   },
-  "note": "Tick 2026-06-29T10:38:00Z. Found functional gap: RANGE CMP and CMP EV tabs were placeholders despite data being available. Implemented real visualizations: stacked frequency comparison bars (RangeCompareTab) and EV divergence bars (CompareEVTab). Threaded allPositionData + activePosition through OverviewSubTabs prop chain. Cleanup: removed 2 write-only state vars and 1 dead useMemo. All tests pass (368 Python + 53 frontend + build OK). Push OK (908c52e, a2b1d61)."
+  "note": "Tick 2026-06-29T23:44:00Z (recovery). Task exhaustion recovery: master checkpoint stale (13h), project checkpoint current_task='tbd'. Investigated visual gaps from reference comparison report. P1 task: position summary strip color-coded bars (replaced invisible text with stacked horizontal bars). Pixel analysis confirmed reference uses stacked bars at y=65-168 per position card. Smaller next: Solutions game tree (large), dashboard card hover (3-line). Awaiting Coach backlog replenishment."
 }
