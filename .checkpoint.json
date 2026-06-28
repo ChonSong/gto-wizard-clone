@@ -416,21 +416,51 @@
       "summary": "Replaced text-only F/C/R percentages with horizontal stacked bars (fold=dark, call=blue #3A6EA5, raise=red #E53935) matching reference study interface pixel analysis. [Player note: implemented and deployed, was awaiting coach sync]",
       "coach": "approved",
       "coach_verified_at": "2026-06-28T15:10:00Z"
+    },
+    {
+      "task": "tandem-reference-comparison-gtowizard",
+      "sha": "pending",
+      "date": "2026-06-28",
+      "summary": "Comprehensive comparison of 4 reference screenshots against live clone pages. 14 gaps identified (3 P1, 5 P2, 6 P3), 9 already fixed. Generated 5 recovery tasks: fix-position-tile-range-percentage (P1), fix-study-combo-grid-suit-icons (P2), fix-practice-poker-table-visualization (P2), fix-study-gto-feedback-overlay (P2), fix-study-frequency-action-letter (P3). Report at docs/reference-comparison-gtowizard.md.",
+      "coach": "pending"
+    },
+    {
+      "task": "fix-gitignore-agent-qa-artifacts",
+      "sha": "already-resolved",
+      "date": "2026-06-28",
+      "summary": ".agent-qa/ already in .gitignore, 0 tracked webm files. Task was already completed before this tick.",
+      "coach": "pending"
     }
   ],
   "health": "53_frontend_tests_pass_142_e2e_pass_python_tests_need_gto_poker_dep",
   "last_sha": "3e6f570",
   "blocker": null,
-  "current_task": "tbd",
-  "all_coach_tasks_done": true,
+  "current_task": "fix-position-tile-range-percentage",
+  "all_coach_tasks_done": false,
   "spec_gaps": [
     {
       "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
       "type": "invalid_spec",
       "priority": 1,
-      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid — removed.",
       "cycles_stagnant": 1,
       "status": "resolved"
+    },
+    {
+      "item": "Left sidebar navigation vs top nav — architectural difference from reference",
+      "type": "architectural_gap",
+      "priority": 1,
+      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change — defer.",
+      "cycles_stagnant": 0,
+      "status": "deferred"
+    },
+    {
+      "item": "Missing game tree visualization for Solutions page",
+      "type": "missing_feature",
+      "priority": 1,
+      "evidence": "Reference shows interactive game tree. Large effort — defer.",
+      "cycles_stagnant": 0,
+      "status": "deferred"
     }
   ],
   "coach_review": {
@@ -439,5 +469,5 @@
     "verdict": "pending",
     "notes": "Tick 2026-06-28T15:10:00Z. Checkpoint synced: 4 implemented tasks (solver-status, e2e-suite, utg-low-pairs, action-filter-hover) now marked coach-approved. Strip-color-bars also synced. Awaiting Coach backlog generation."
   },
-  "note": "Tick 2026-06-28T15:10:00Z. Checkpoint sync + task exhaustion. All phases complete. No actionable tasks."
+  "note": "Tick 2026-06-28T07:10:00Z. Completed tandem-reference-comparison-gtowizard: 14 gaps identified (9 already fixed). Generated 5 recovery tasks in AGENTS.md Phase 4. Also synced 4 stale AGENTS.md tasks as completed (e2e-suite, gitignore, utg-low-pairs, action-filter). Current task: fix-position-tile-range-percentage (P1 recovery)."
 }
