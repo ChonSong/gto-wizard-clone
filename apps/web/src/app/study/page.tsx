@@ -571,6 +571,7 @@ export default function StudyPage() {
           treeNode={treeNode}
           solverStatus={solverStatus}
           actionFilter={actionFilter}
+          allPositionData={allPositionData}
           onSelectPosition={handleSelectPosition}
           onActionClick={handleActionClick}
           onActionFilter={setActionFilter}
@@ -583,6 +584,7 @@ export default function StudyPage() {
           treeNode={null}
           solverStatus={solverStatus}
           actionFilter={null}
+          allPositionData={allPositionData}
           onSelectPosition={handlePfSelectPosition}
           onActionClick={handlePfActionClick}
           onActionFilter={() => {}}

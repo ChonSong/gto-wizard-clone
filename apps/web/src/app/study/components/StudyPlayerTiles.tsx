@@ -1,9 +1,26 @@
 'use client'
 
-import { GREEN, GRAY, ACTION_COLORS, POSITION_ACTIONS, ALL_POSITIONS, type TreeNode, type ActionDef } from '../constants'
+import { GREEN, GRAY, ACTION_COLORS, POSITION_ACTIONS, ALL_POSITIONS, type TreeNode, type ActionDef, type HandData } from '../constants'
 import { useCallback } from 'react'
 
 interface PositionInfo { id: string; label: string; stack: number }
+
+function comboCount(hand: string): number {
+  if (hand.length === 2 && hand[0] === hand[1]) return 6
+  if (hand.endsWith('s')) return 4
+  return 12
+}
+
+function computeRangePct(data: Map<string, HandData> | undefined): number {
+  if (!data || data.size === 0) return 0
+  let totalCombos = 0
+  data.forEach((h) => {
+    if (h.action !== 'fold') {
+      totalCombos += comboCount(h.hand) * h.frequency
+    }
+  })
+  return (totalCombos / 1326) * 100
+}
 
 export function StudyPlayerTiles({
   positions,
@@ -12,6 +29,7 @@ export function StudyPlayerTiles({
   treeNode,
   solverStatus,
   actionFilter,
+  allPositionData,
   onSelectPosition,
   onActionClick,
   onActionFilter,
@@ -23,6 +41,7 @@ export function StudyPlayerTiles({
   treeNode: TreeNode
   solverStatus: 'online' | 'offline'
   actionFilter: string | null
+  allPositionData?: Map<string, Map<string, HandData>>
   onSelectPosition: (pos: string) => void
   onActionClick: (actionBase: string) => void
   onActionFilter: (filter: string | null) => void
@@ -57,13 +76,14 @@ export function StudyPlayerTiles({
         const posActions = (isActive && isTreeMode && treeNode?.available_actions)
           || (customActions?.[pos.id])
           || POSITION_ACTIONS[pos.id] || []
+        const rangePct = computeRangePct(allPositionData?.get(pos.id))
 
         return (
           <div key={pos.id}
             onClick={() => { onSelectPosition(pos.id) }}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectPosition(pos.id) } }}
             role="button" tabIndex={0}
-            aria-label={`${pos.label} position, ${pos.stack > 0 ? `${pos.stack}bb stack` : 'no stack data'}${isActive ? ', active' : ''}`}
+            aria-label={`${pos.label} position, ${rangePct > 0 ? `${rangePct.toFixed(1)}% range` : 'no range data'}, ${pos.stack > 0 ? `${pos.stack}bb stack` : 'no stack data'}${isActive ? ', active' : ''}`}
             style={{
               cursor: 'pointer', borderRadius: 8,
               background: isActive ? '#1A2A1A' : '#161616',
@@ -86,10 +106,21 @@ export function StudyPlayerTiles({
                 fontWeight: 700, fontSize: isActive ? 12 : 11,
                 color: isActive ? '#fff' : '#aaa', letterSpacing: '0.02em',
               }}>{pos.label}</span>
-              <span style={{ fontSize: 9, color: isActive ? '#ccc' : '#666', whiteSpace: 'nowrap' }}>
-                {pos.stack > 0 ? `${pos.stack}bb` : '\u2014'}
+              <span style={{
+                fontSize: isActive ? 11 : 10, fontWeight: 600,
+                color: isActive ? '#7CFC7C' : '#888', whiteSpace: 'nowrap',
+              }}>
+                {rangePct > 0 ? `${rangePct.toFixed(1)}%` : '\u2014'}
               </span>
             </div>
+            {isActive && (
+              <div style={{
+                fontSize: 9, color: '#aaa', marginBottom: 2,
+                display: 'flex', justifyContent: 'space-between', gap: 4,
+              }}>
+                <span>{pos.stack > 0 ? `${pos.stack}bb` : ''}</span>
+              </div>
+            )}
 
             {isActive && (
               <>
