@@ -438,12 +438,19 @@
       "summary": "Position tiles show range % as primary metric (e.g., \"16.8%\") with stack size on active tile. Range computed from allPositionData already fetched for aggregate strip.",
       "coach": "approved",
       "coach_verified_at": "2026-06-28T02:01:00Z"
+    },
+    {
+      "task": "fix-study-combo-grid-suit-icons",
+      "sha": "a5c488c",
+      "date": "2026-06-28",
+      "summary": "Added per-combo weight % display (green text), click-to-highlight matrix cell, keyboard accessibility. ComboGrid now receives handData and onCellSelect props.",
+      "coach": "pending"
     }
   ],
-  "health": "53_frontend_tests_pass_142_e2e_pass_range_percentage_on_tiles",
-  "last_sha": "20f92f5",
+  "health": "53_frontend_tests_pass_142_e2e_pass_combo_grid_weight",
+  "last_sha": "a5c488c",
   "blocker": null,
-  "current_task": "fix-study-combo-grid-suit-icons",
+  "current_task": "fix-practice-poker-table-visualization",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -472,10 +479,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "20f92f5",
-    "last_reviewed_at": "2026-06-28T09:01:00Z",
+    "last_reviewed_sha": "a5c488c",
+    "last_reviewed_at": "2026-06-28T09:06:00Z",
     "verdict": "pending",
-    "notes": "Tick 2026-06-28T09:01:00Z. Verified fix-position-tile-range-percentage already implemented (commit 20f92f5). 53 frontend tests pass. Advancing to fix-study-combo-grid-suit-icons."
+    "notes": "Tick 2026-06-28T09:06:00Z. Implemented combo grid weight display + click-to-highlight. 53 frontend tests pass, TS compiles clean. Advancing to fix-practice-poker-table-visualization."
   },
-  "note": "Tick 2026-06-28T09:01:00Z. Verified fix-position-tile-range-percentage (commit 20f92f5) \u2014 already implemented, 53 frontend tests pass. Advanced to fix-study-combo-grid-suit-icons (P2)."
+  "note": "Tick 2026-06-28T09:06:00Z. Completed fix-study-combo-grid-suit-icons (a5c488c): per-combo weight %, click-to-highlight, keyboard a11y. Next: fix-practice-poker-table-visualization (P2)."
 }
