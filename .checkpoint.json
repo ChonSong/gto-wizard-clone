@@ -419,7 +419,7 @@
     },
     {
       "task": "tandem-reference-comparison-gtowizard",
-      "sha": "pending",
+      "sha": "7f13d9f",
       "date": "2026-06-28",
       "summary": "Comprehensive comparison of 4 reference screenshots against live clone pages. 14 gaps identified (3 P1, 5 P2, 6 P3), 9 already fixed. Generated 5 recovery tasks: fix-position-tile-range-percentage (P1), fix-study-combo-grid-suit-icons (P2), fix-practice-poker-table-visualization (P2), fix-study-gto-feedback-overlay (P2), fix-study-frequency-action-letter (P3). Report at docs/reference-comparison-gtowizard.md.",
       "coach": "pending"
@@ -433,7 +433,7 @@
     }
   ],
   "health": "53_frontend_tests_pass_142_e2e_pass_python_tests_need_gto_poker_dep",
-  "last_sha": "3e6f570",
+  "last_sha": "7f13d9f",
   "blocker": null,
   "current_task": "fix-position-tile-range-percentage",
   "all_coach_tasks_done": false,
