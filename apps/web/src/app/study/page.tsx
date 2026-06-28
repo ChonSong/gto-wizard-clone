@@ -204,7 +204,7 @@ export default function StudyPage() {
     }
     setTreePath(prev => [...prev, {
       position: activePosition,
-      action: matchingAct.id,
+      action: matchingAct.actionBase,
       label: matchingAct.label,
       size: (matchingAct as any).size,
     }])
