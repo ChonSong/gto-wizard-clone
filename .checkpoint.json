@@ -445,12 +445,19 @@
       "date": "2026-06-28",
       "summary": "Added per-combo weight % display (green text), click-to-highlight matrix cell, keyboard accessibility. ComboGrid now receives handData and onCellSelect props.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-practice-poker-table-visualization",
+      "sha": "75f9ea1",
+      "date": "2026-06-28",
+      "summary": "Added poker table visualization to /practice page: green felt gradient background with player position markers (UTG, HJ, CO, BTN, SB, BB) around elliptical table, active position highlighting, and board card display in center. Existing quiz/training functionality preserved. 115 lines changed.",
+      "coach": "pending"
     }
   ],
-  "health": "53_frontend_tests_pass_142_e2e_pass_combo_grid_weight",
-  "last_sha": "a5c488c",
+  "health": "53_frontend_tests_pass_142_e2e_pass_poker_table_visualization",
+  "last_sha": "75f9ea1",
   "blocker": null,
-  "current_task": "fix-practice-poker-table-visualization",
+  "current_task": "fix-study-gto-feedback-overlay",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
@@ -479,10 +486,10 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "a5c488c",
-    "last_reviewed_at": "2026-06-28T09:06:00Z",
+    "last_reviewed_sha": "75f9ea1",
+    "last_reviewed_at": "2026-06-29T09:10:00Z",
     "verdict": "pending",
-    "notes": "Tick 2026-06-28T09:06:00Z. Implemented combo grid weight display + click-to-highlight. 53 frontend tests pass, TS compiles clean. Advancing to fix-practice-poker-table-visualization."
+    "notes": "Tick 2026-06-29T09:10:00Z. Checkpoint sync: poker table visualization (75f9ea1) completed but checkpoint was stale. Added to completed tasks. Advancing current_task to fix-study-gto-feedback-overlay (P2). 53 frontend + 142 E2E tests expected pass. Round-robin to Polytopia this tick."
   },
-  "note": "Tick 2026-06-28T09:06:00Z. Completed fix-study-combo-grid-suit-icons (a5c488c): per-combo weight %, click-to-highlight, keyboard a11y. Next: fix-practice-poker-table-visualization (P2)."
+  "note": "Tick 2026-06-29T09:10:00Z. Checkpoint sync: fix-practice-poker-table-visualization completed (75f9ea1). Advanced to fix-study-gto-feedback-overlay (P2). Round-robin switch to Polytopia for task exhaustion recovery."
 }
