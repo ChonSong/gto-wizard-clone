@@ -430,27 +430,35 @@
       "date": "2026-06-28",
       "summary": ".agent-qa/ already in .gitignore, 0 tracked webm files. Task was already completed before this tick.",
       "coach": "pending"
+    },
+    {
+      "task": "fix-position-tile-range-percentage",
+      "sha": "20f92f5",
+      "date": "2026-06-28",
+      "summary": "Position tiles show range % as primary metric (e.g., \"16.8%\") with stack size on active tile. Range computed from allPositionData already fetched for aggregate strip.",
+      "coach": "approved",
+      "coach_verified_at": "2026-06-28T02:01:00Z"
     }
   ],
-  "health": "53_frontend_tests_pass_142_e2e_pass_python_tests_need_gto_poker_dep",
-  "last_sha": "7f13d9f",
+  "health": "53_frontend_tests_pass_142_e2e_pass_range_percentage_on_tiles",
+  "last_sha": "20f92f5",
   "blocker": null,
-  "current_task": "fix-position-tile-range-percentage",
+  "current_task": "fix-study-combo-grid-suit-icons",
   "all_coach_tasks_done": false,
   "spec_gaps": [
     {
       "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
       "type": "invalid_spec",
       "priority": 1,
-      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid — removed.",
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
       "cycles_stagnant": 1,
       "status": "resolved"
     },
     {
-      "item": "Left sidebar navigation vs top nav — architectural difference from reference",
+      "item": "Left sidebar navigation vs top nav \u2014 architectural difference from reference",
       "type": "architectural_gap",
       "priority": 1,
-      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change — defer.",
+      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change \u2014 defer.",
       "cycles_stagnant": 0,
       "status": "deferred"
     },
@@ -458,16 +466,16 @@
       "item": "Missing game tree visualization for Solutions page",
       "type": "missing_feature",
       "priority": 1,
-      "evidence": "Reference shows interactive game tree. Large effort — defer.",
+      "evidence": "Reference shows interactive game tree. Large effort \u2014 defer.",
       "cycles_stagnant": 0,
       "status": "deferred"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "3e6f570",
-    "last_reviewed_at": "2026-06-28T02:01:00Z",
+    "last_reviewed_sha": "20f92f5",
+    "last_reviewed_at": "2026-06-28T09:01:00Z",
     "verdict": "pending",
-    "notes": "Tick 2026-06-28T15:10:00Z. Checkpoint synced: 4 implemented tasks (solver-status, e2e-suite, utg-low-pairs, action-filter-hover) now marked coach-approved. Strip-color-bars also synced. Awaiting Coach backlog generation."
+    "notes": "Tick 2026-06-28T09:01:00Z. Verified fix-position-tile-range-percentage already implemented (commit 20f92f5). 53 frontend tests pass. Advancing to fix-study-combo-grid-suit-icons."
   },
-  "note": "Tick 2026-06-28T07:10:00Z. Completed tandem-reference-comparison-gtowizard: 14 gaps identified (9 already fixed). Generated 5 recovery tasks in AGENTS.md Phase 4. Also synced 4 stale AGENTS.md tasks as completed (e2e-suite, gitignore, utg-low-pairs, action-filter). Current task: fix-position-tile-range-percentage (P1 recovery)."
+  "note": "Tick 2026-06-28T09:01:00Z. Verified fix-position-tile-range-percentage (commit 20f92f5) \u2014 already implemented, 53 frontend tests pass. Advanced to fix-study-combo-grid-suit-icons (P2)."
 }
