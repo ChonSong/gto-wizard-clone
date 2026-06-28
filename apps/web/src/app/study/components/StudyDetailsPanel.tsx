@@ -242,52 +242,83 @@ function HandDetailsTab({
         }}>
           Combos
         </div>
-        <ComboGrid hand={selectedCell} />
+        <ComboGrid hand={selectedCell} handData={selectedHandData} onCellSelect={onCellSelect} />
       </div>
     </div>
   )
 }
 
-function ComboGrid({ hand }: { hand: string }) {
+function ComboGrid({ hand, handData, onCellSelect }: { hand: string; handData: HandData | null; onCellSelect: (hand: string | null) => void }) {
   const suitSymbols: Record<string, string> = { s: '♠', h: '♥', d: '♦', c: '♣' }
   const suitColors: Record<string, string> = { s: '#fff', h: '#E53935', d: '#E53935', c: '#fff' }
   const suits = ['s', 'h', 'd', 'c']
   const r1 = hand[0], r2 = hand[1]
   const isPair = r1 === r2
   const isSuited = hand.length === 3 && hand[2] === 's'
-  const combos: { s1: string; s2: string }[] = []
+  const combos: { s1: string; s2: string; weight: number }[] = []
+
+  // Per-combo weight distribution (approximate based on action frequency)
+  // In a real solver each combo would have its own frequency; we approximate
+  // by splitting the hand's total frequency evenly across combos
+  const totalFreq = handData?.frequency ?? 0
+  const comboCount = isPair ? 6 : isSuited ? 4 : 12
+  const perComboFreq = comboCount > 0 ? totalFreq / comboCount : 0
 
   if (isPair) {
     for (let i = 0; i < suits.length; i++)
       for (let j = i + 1; j < suits.length; j++)
-        combos.push({ s1: suits[i], s2: suits[j] })
+        combos.push({ s1: suits[i], s2: suits[j], weight: perComboFreq })
   } else if (isSuited) {
-    for (const s of suits) combos.push({ s1: s, s2: s })
+    for (const s of suits) combos.push({ s1: s, s2: s, weight: perComboFreq })
   } else {
     for (const s1 of suits)
       for (const s2 of suits)
-        if (s1 !== s2) combos.push({ s1, s2 })
+        if (s1 !== s2) combos.push({ s1, s2, weight: perComboFreq })
   }
 
   return (
     <>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-        {combos.map((c, i) => (
-          <div key={i} style={{
-            display: 'flex', alignItems: 'center', gap: 2,
-            padding: '3px 5px', borderRadius: 4,
-            background: '#161616', border: '1px solid #262626',
-            fontSize: 9, fontWeight: 700,
-          }}>
-            <span style={{ color: '#fff' }}>{r1}</span>
-            <span style={{ color: suitColors[c.s1], fontSize: 8 }}>{suitSymbols[c.s1]}</span>
-            <span style={{ color: '#fff' }}>{r2}</span>
-            <span style={{ color: suitColors[c.s2], fontSize: 8 }}>{suitSymbols[c.s2]}</span>
-          </div>
-        ))}
+        {combos.map((c, i) => {
+          const comboLabel = isPair
+            ? `${r1}${r2}${c.s1}${c.s2}`
+            : isSuited
+              ? `${r1}${c.s1}${r2}${c.s2}`
+              : `${r1}${c.s1}${r2}${c.s2}`
+          const comboHand = isPair ? `${r1}${r2}` : isSuited ? `${r1}${r2}s` : `${r1}${r2}o`
+          return (
+            <div
+              key={i}
+              onClick={() => onCellSelect(comboHand)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onCellSelect(comboHand) } }}
+              role="button"
+              tabIndex={0}
+              title={`${comboLabel} — ${(c.weight * 100).toFixed(1)}%`}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 2,
+                padding: '3px 5px', borderRadius: 4,
+                background: '#161616', border: '1px solid #262626',
+                fontSize: 9, fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              <span style={{ color: '#fff' }}>{r1}</span>
+              <span style={{ color: suitColors[c.s1], fontSize: 8 }}>{suitSymbols[c.s1]}</span>
+              <span style={{ color: '#fff' }}>{r2}</span>
+              <span style={{ color: suitColors[c.s2], fontSize: 8 }}>{suitSymbols[c.s2]}</span>
+              <span style={{
+                fontSize: 7, marginLeft: 1,
+                color: c.weight > 0 ? '#7CFC7C' : '#555',
+                fontWeight: 500,
+              }}>
+                {c.weight > 0 ? `${(c.weight * 100).toFixed(0)}%` : '—'}
+              </span>
+            </div>
+          )
+        })}
       </div>
       <div style={{ fontSize: 8, color: '#555', marginTop: 3, textAlign: 'right' }}>
-        {isPair ? '6 combos' : isSuited ? '4 combos' : '12 combos'}
+        {isPair ? '6 combos' : isSuited ? '4 combos' : '12 combos'} · total {(totalFreq * 100).toFixed(1)}%
       </div>
     </>
   )
