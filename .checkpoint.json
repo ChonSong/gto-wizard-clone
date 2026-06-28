@@ -430,9 +430,9 @@
   ],
   "coach_review": {
     "last_reviewed_sha": "3e6f570",
-    "last_reviewed_at": "2026-06-29T23:44:00Z",
+    "last_reviewed_at": "2026-06-28T02:01:00Z",
     "verdict": "pending",
-    "notes": "Player tick 2026-06-29T23:44:00Z (recovery). Task exhaustion triggered — AGENTS.md has no active tasks (Phase 3 complete, Phase 4 invalidated). Investigated via pixel analysis of reference-study-interface.png. Found position summary strip uses horizontal stacked bars (F=dark, C=#3A6EA5 blue, R=#E53935 red) — not text-only. Previous fold text color #2a2a2a was nearly invisible on dark bg. Implemented stacked bars matching reference. All tests pass (368 Python + 53 frontend). Build OK."
+    "notes": "Player tick 2026-06-28T02:01:00Z. Dual project task exhaustion. Investigated all remaining visual gaps from comparison report — confirmed dashboard hero glow, nav active lime-green accent, and feature card box-shadow all implemented. Practice page fully built (1289 lines). All 368 Python + 53 frontend + 142 E2E tests pass, 11/11 health checks pass. No actionable tasks remain. Recovery candidates identified for Coach: Solutions game tree (large feature), quiz streak tracking, ICM calculator depth analysis, range explorer export. Awaiting Coach backlog replenishment."
   },
-  "note": "Tick 2026-06-29T23:44:00Z (recovery). Task exhaustion recovery: master checkpoint stale (13h), project checkpoint current_task='tbd'. Investigated visual gaps from reference comparison report. P1 task: position summary strip color-coded bars (replaced invisible text with stacked horizontal bars). Pixel analysis confirmed reference uses stacked bars at y=65-168 per position card. Smaller next: Solutions game tree (large), dashboard card hover (3-line). Awaiting Coach backlog replenishment."
+  "note": "Tick 2026-06-28T02:01:00Z. Task exhaustion — both projects have no actionable tasks. gto-wizard: Phase 3 complete + position summary strip done. polytopia: Phase 2 all done or escalated. Next candidate tasks for Coach generation: (1) Solutions game tree visualization (needs spec), (2) Quiz session streak/leaderboard, (3) ICM calculator 3-way scenarios, (4) Range explorer export-to-PNG."
 }
