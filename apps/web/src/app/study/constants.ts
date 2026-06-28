@@ -33,6 +33,8 @@ export const ACTION_COLORS: Record<string, string> = {
   call: BLUE,
   fold: GRAY,
   all_in: RED_DARK,
+  check: '#555',
+  bet: '#E65100',
 }
 
 // ── Hand Matrix (13×13) ──
@@ -75,6 +77,70 @@ export const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api/v1'
 
 // ── Per-Position Action Sets ──
 export type ActionDef = { id: string; label: string; actionBase: string; size?: number }
+// ── Postflop Per-Position Action Sets ──
+export const POSTFLOP_ACTIONS: Record<string, ActionDef[]> = {
+  UTG: [
+    { id: 'check', label: 'Check', actionBase: 'check' },
+    { id: 'bet_33', label: 'Bet 33%', actionBase: 'bet', size: 0.33 },
+    { id: 'bet_50', label: 'Bet 50%', actionBase: 'bet', size: 0.5 },
+    { id: 'bet_75', label: 'Bet 75%', actionBase: 'bet', size: 0.75 },
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_50', label: 'Raise 50%', actionBase: 'raise', size: 0.5 },
+    { id: 'all_in', label: 'Allin', actionBase: 'all_in' },
+  ],
+  HJ: [
+    { id: 'check', label: 'Check', actionBase: 'check' },
+    { id: 'bet_33', label: 'Bet 33%', actionBase: 'bet', size: 0.33 },
+    { id: 'bet_50', label: 'Bet 50%', actionBase: 'bet', size: 0.5 },
+    { id: 'bet_75', label: 'Bet 75%', actionBase: 'bet', size: 0.75 },
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_50', label: 'Raise 50%', actionBase: 'raise', size: 0.5 },
+    { id: 'all_in', label: 'Allin', actionBase: 'all_in' },
+  ],
+  CO: [
+    { id: 'check', label: 'Check', actionBase: 'check' },
+    { id: 'bet_33', label: 'Bet 33%', actionBase: 'bet', size: 0.33 },
+    { id: 'bet_50', label: 'Bet 50%', actionBase: 'bet', size: 0.5 },
+    { id: 'bet_75', label: 'Bet 75%', actionBase: 'bet', size: 0.75 },
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_50', label: 'Raise 50%', actionBase: 'raise', size: 0.5 },
+    { id: 'all_in', label: 'Allin', actionBase: 'all_in' },
+  ],
+  BTN: [
+    { id: 'check', label: 'Check', actionBase: 'check' },
+    { id: 'bet_33', label: 'Bet 33%', actionBase: 'bet', size: 0.33 },
+    { id: 'bet_50', label: 'Bet 50%', actionBase: 'bet', size: 0.5 },
+    { id: 'bet_75', label: 'Bet 75%', actionBase: 'bet', size: 0.75 },
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_50', label: 'Raise 50%', actionBase: 'raise', size: 0.5 },
+    { id: 'all_in', label: 'Allin', actionBase: 'all_in' },
+  ],
+  SB: [
+    { id: 'check', label: 'Check', actionBase: 'check' },
+    { id: 'bet_33', label: 'Bet 33%', actionBase: 'bet', size: 0.33 },
+    { id: 'bet_50', label: 'Bet 50%', actionBase: 'bet', size: 0.5 },
+    { id: 'bet_75', label: 'Bet 75%', actionBase: 'bet', size: 0.75 },
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_50', label: 'Raise 50%', actionBase: 'raise', size: 0.5 },
+    { id: 'all_in', label: 'Allin', actionBase: 'all_in' },
+  ],
+  BB: [
+    { id: 'check', label: 'Check', actionBase: 'check' },
+    { id: 'bet_33', label: 'Bet 33%', actionBase: 'bet', size: 0.33 },
+    { id: 'bet_50', label: 'Bet 50%', actionBase: 'bet', size: 0.5 },
+    { id: 'bet_75', label: 'Bet 75%', actionBase: 'bet', size: 0.75 },
+    { id: 'fold', label: 'Fold', actionBase: 'fold' },
+    { id: 'call', label: 'Call', actionBase: 'call' },
+    { id: 'raise_50', label: 'Raise 50%', actionBase: 'raise', size: 0.5 },
+    { id: 'all_in', label: 'Allin', actionBase: 'all_in' },
+  ],
+}
+
 export const POSITION_ACTIONS: Record<string, ActionDef[]> = {
   UTG: [
     { id: 'fold', label: 'Fold', actionBase: 'fold' },

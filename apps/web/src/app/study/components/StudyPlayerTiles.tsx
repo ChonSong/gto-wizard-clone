@@ -1,9 +1,9 @@
 'use client'
 
-import { GREEN, GRAY, ACTION_COLORS, POSITION_ACTIONS, ALL_POSITIONS, type TreeNode } from '../constants'
+import { GREEN, GRAY, ACTION_COLORS, POSITION_ACTIONS, ALL_POSITIONS, type TreeNode, type ActionDef } from '../constants'
 import { useCallback } from 'react'
 
-type PositionInfo = { id: string; label: string; stack: number }
+interface PositionInfo { id: string; label: string; stack: number }
 
 export function StudyPlayerTiles({
   positions,
@@ -15,6 +15,7 @@ export function StudyPlayerTiles({
   onSelectPosition,
   onActionClick,
   onActionFilter,
+  customActions,
 }: {
   positions: PositionInfo[]
   activePosition: string
@@ -25,6 +26,7 @@ export function StudyPlayerTiles({
   onSelectPosition: (pos: string) => void
   onActionClick: (actionBase: string) => void
   onActionFilter: (filter: string | null) => void
+  customActions?: Record<string, ActionDef[]>
 }) {
   return (
     <div style={{
@@ -53,6 +55,7 @@ export function StudyPlayerTiles({
         const isActive = activePosition === pos.id
         const isTreeMode = treePath.length > 0 && treeNode != null
         const posActions = (isActive && isTreeMode && treeNode?.available_actions)
+          || (customActions?.[pos.id])
           || POSITION_ACTIONS[pos.id] || []
 
         return (

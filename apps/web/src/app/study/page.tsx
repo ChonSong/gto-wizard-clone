@@ -26,7 +26,7 @@ function useSolverHealth(pollMs = 10000): 'online' | 'offline' {
 import {
   RED, RED_BRIGHT, RED_DARK, BLUE, GREEN, GRAY,
   MATRIX_HANDS, ACTION_COLORS, ACTION_LABELS,
-  API_BASE, ALL_POSITIONS, POSITION_ACTIONS,
+  API_BASE, ALL_POSITIONS, POSITION_ACTIONS, POSTFLOP_ACTIONS,
   TAB_ORDER, generateRandomCards, parseBoardString,
   isHandFiltered, isHandBlocked, getGtoActionBase,
   type HandData, type TreeAction, type BoardCard,
@@ -38,6 +38,7 @@ import { StudyAggregateStrip, StudyActionPrompt, StudyHotkeyHelp, StudyHotkeyToa
 import { StudyPlayerTiles } from './components/StudyPlayerTiles'
 import { StudyMatrixGrid } from './components/StudyMatrixGrid'
 import { StudyDetailsPanel } from './components/StudyDetailsPanel'
+import { BoardCardSelector } from './components/BoardCardSelector'
 
 const totalCombos = 1326
 
@@ -72,6 +73,14 @@ export default function StudyPage() {
   const [treePath, setTreePath] = useState<TreeAction[]>([])
   const [treeNode, setTreeNode] = useState<TreeNode>(null)
   const solverStatus = useSolverHealth()
+
+  // ── Postflop state ──
+  const [pfBoard, setPfBoard] = useState<BoardCard[]>([])
+  const [pfPot, setPfPot] = useState(5.5)
+  const [pfStreet, setPfStreet] = useState<'flop' | 'turn' | 'river'>('flop')
+  const [pfActivePosition, setPfActivePosition] = useState('CO')
+  const [pfBoardSelectorOpen, setPfBoardSelectorOpen] = useState(false)
+  const [pfAction, setPfAction] = useState<string | null>(null)
 
   // ── Derived data ──
   const positions = useMemo(() => [
@@ -209,6 +218,25 @@ export default function StudyPage() {
       size: (matchingAct as any).size,
     }])
     setActionFilter(null)
+  }
+
+  // ── Postflop action handler ──
+  function handlePfActionClick(actionBase: string) {
+    // For postflop, action clicks go to PostflopTraining via a callback
+    // We'll mount PostflopTraining with the action as its selected user choice
+    if (actionBase === 'fold' || actionBase === 'check' || actionBase === 'call') {
+      setPfAction(actionBase)
+    } else if (actionBase === 'bet') {
+      setPfAction('bet:0.5')
+    } else if (actionBase === 'raise') {
+      setPfAction('raise:0.5')
+    } else if (actionBase === 'all_in') {
+      setPfAction('all_in')
+    }
+  }
+
+  function handlePfSelectPosition(pos: string) {
+    setPfActivePosition(pos)
   }
 
   // ── Computed values ──
@@ -530,9 +558,37 @@ export default function StudyPage() {
       <StudyActionPrompt
         treePath={treePath}
         treeNode={treeNode}
-        activePosition={activePosition}
+        activePosition={mode === 'preflop' ? activePosition : pfActivePosition}
         selectedCell={selectedCell}
       />
+
+      {/* ── Player Tiles (shared between preflop and postflop) ── */}
+      {mode === 'preflop' ? (
+        <StudyPlayerTiles
+          positions={positions}
+          activePosition={activePosition}
+          treePath={treePath}
+          treeNode={treeNode}
+          solverStatus={solverStatus}
+          actionFilter={actionFilter}
+          onSelectPosition={handleSelectPosition}
+          onActionClick={handleActionClick}
+          onActionFilter={setActionFilter}
+        />
+      ) : (
+        <StudyPlayerTiles
+          positions={positions}
+          activePosition={pfActivePosition}
+          treePath={[]}
+          treeNode={null}
+          solverStatus={solverStatus}
+          actionFilter={null}
+          onSelectPosition={handlePfSelectPosition}
+          onActionClick={handlePfActionClick}
+          onActionFilter={() => {}}
+          customActions={POSTFLOP_ACTIONS}
+        />
+      )}
 
       {mode === 'preflop' ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
@@ -559,20 +615,7 @@ export default function StudyPage() {
             ))}
           </div>
 
-          {/* Player tiles */}
-          <StudyPlayerTiles
-            positions={positions}
-            activePosition={activePosition}
-            treePath={treePath}
-            treeNode={treeNode}
-            solverStatus={solverStatus}
-            actionFilter={actionFilter}
-            onSelectPosition={handleSelectPosition}
-            onActionClick={handleActionClick}
-            onActionFilter={setActionFilter}
-          />
-
-          {/* Aggregate summary strip */}
+          {/* Aggregate summary strip (preflop only) */}
           <StudyAggregateStrip
             positionAggregates={positionAggregates}
             activePosition={activePosition}
@@ -626,12 +669,71 @@ export default function StudyPage() {
           </div>
         </div>
       ) : (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
-          <div style={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
-            <PostflopTraining />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          {/* Board card area */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '4px 12px', borderBottom: '1px solid #141414',
+            background: '#0E0E0E', flexShrink: 0,
+          }}>
+            <span style={{ color: '#999', fontSize: 11, fontWeight: 500, whiteSpace: 'nowrap' }}>Board:</span>
+            <div style={{ display: 'flex', gap: 4 }}>
+              {pfBoard.length === 0 ? (
+                <span style={{ color: '#555', fontSize: 11, fontStyle: 'italic' }}>Select cards to begin</span>
+              ) : (
+                pfBoard.map((c, i) => (
+                  <div key={i} style={{
+                    width: 28, height: 36, borderRadius: 4,
+                    background: c.suit === 'h' || c.suit === 'd' ? '#c1272d'
+                      : c.suit === 's' ? '#3a3a3a'
+                      : c.suit === 'c' ? '#15803d' : '#1e40af',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#fff', fontWeight: 900, fontSize: 13,
+                    boxShadow: '0 1px 3px rgba(0,0,0,.5)',
+                  }}>
+                    {c.rank}
+                  </div>
+                ))
+              )}
+            </div>
+            <button onClick={() => setPfBoardSelectorOpen(true)}
+              aria-label="Select board cards"
+              style={{
+                background: '#16241a', border: `1px solid ${GREEN}44`,
+                color: GREEN, padding: '3px 10px', borderRadius: 6,
+                fontSize: 11, fontWeight: 600, cursor: 'pointer',
+              }}>
+              {pfBoard.length === 0 ? 'Select Cards' : 'Change'}
+            </button>
+          </div>
+
+          {/* Postflop strategy area */}
+          <div style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
+            <PostflopTraining
+              externalBoard={pfBoard}
+              externalPosition={pfActivePosition}
+              externalPot={pfPot}
+              externalAction={pfAction}
+              onActionConsumed={() => setPfAction(null)}
+            />
           </div>
         </div>
       )}
+
+      {/* ── Board Card Selector Popup ── */}
+      <BoardCardSelector
+        open={pfBoardSelectorOpen}
+        onClose={() => setPfBoardSelectorOpen(false)}
+        onConfirm={(cards) => {
+          setPfBoard(cards)
+          setPfBoard(cards.slice(0, 3))
+          setPfStreet('flop')
+          setPfPot(5.5)
+          setPfActivePosition('CO')
+          setPfAction(null)
+        }}
+        currentBoard={pfBoard}
+      />
     </div>
   )
 }

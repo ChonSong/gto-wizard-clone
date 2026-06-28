@@ -261,9 +261,21 @@ function StreetBreadcrumb({
 // ── Main Component ───────────────────────────────────────
 interface PostflopTrainingProps {
   onToggle?: () => void
+  externalBoard?: { rank: string; suit: string }[]
+  externalPosition?: string
+  externalPot?: number
+  externalAction?: string | null
+  onActionConsumed?: () => void
 }
 
-export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
+export default function PostflopTraining({
+  onToggle,
+  externalBoard,
+  externalPosition,
+  externalPot,
+  externalAction,
+  onActionConsumed,
+}: PostflopTrainingProps) {
   const [boardStr, setBoardStr] = useState('KsKc3s5h9d')
   const [potSize, setPotSize] = useState(5.5)
   const [stackDepth, setStackDepth] = useState(100)
@@ -277,6 +289,27 @@ export default function PostflopTraining({ onToggle }: PostflopTrainingProps) {
   const [loading, setLoading] = useState(false)
   const [userChoice, setUserChoice] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Sync external state into internal state when props change
+  useEffect(() => {
+    if (externalBoard && externalBoard.length > 0) {
+      setBoardStr(externalBoard.map(c => c.rank + c.suit).join(''))
+    }
+  }, [externalBoard])
+  useEffect(() => {
+    if (externalPosition) setActivePosition(externalPosition)
+  }, [externalPosition])
+  useEffect(() => {
+    if (externalPot !== undefined) setPotSize(externalPot)
+  }, [externalPot])
+
+  // Handle external action clicks from PlayerTiles
+  useEffect(() => {
+    if (externalAction && !userChoice && !loading) {
+      handleAction(externalAction)
+      onActionConsumed?.()
+    }
+  }, [externalAction])
   // Track actions taken per street (index 0=flop, 1=turn, 2=river)
   const [streetActions, setStreetActions] = useState<(string | null)[]>([null, null, null])
 
