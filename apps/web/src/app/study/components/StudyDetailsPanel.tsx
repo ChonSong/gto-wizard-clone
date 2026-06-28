@@ -637,6 +637,8 @@ function OverviewSubTabs({
   onBlockerRanksChange,
   boardCards,
   onCellSelect,
+  allPositionData,
+  activePosition,
 }: {
   rightSubTab: RightSubTab
   isSolverMode: boolean
@@ -651,6 +653,8 @@ function OverviewSubTabs({
   onBlockerRanksChange: (ranks: string[]) => void
   boardCards: BoardCard[]
   onCellSelect: (hand: string | null) => void
+  allPositionData?: Map<string, Map<string, HandData>>
+  activePosition: string
 }) {
   return (
     <div style={{ flex: 1, overflow: 'auto', padding: '4px 10px 10px' }}>
@@ -685,30 +689,94 @@ function OverviewSubTabs({
       )}
       {/* Range Compare tab */}
       {rightSubTab === 'range_compare' && (
-        <RangeCompareTab allPositionData={undefined} activePosition={undefined as any} />
+        <RangeCompareTab allPositionData={allPositionData} activePosition={activePosition} isSolverMode={isSolverMode} />
       )}
       {rightSubTab === 'equity_chart' && (
         <EquityChartTab rangeData={rangeData} isSolverMode={isSolverMode} />
       )}
       {rightSubTab === 'compare_ev' && (
-        <CompareEVTab allPositionData={undefined} activePosition={undefined as any} />
+        <CompareEVTab allPositionData={allPositionData} activePosition={activePosition} isSolverMode={isSolverMode} />
       )}
     </div>
   )
 }
 
-// ── Range Compare sub-tab (placeholder) ──
-function RangeCompareTab({ allPositionData, activePosition }: { allPositionData?: Map<string, Map<string, HandData>> | undefined; activePosition: string }) {
+// ── Range Compare sub-tab ──
+function RangeCompareTab({ allPositionData, activePosition, isSolverMode }: { allPositionData?: Map<string, Map<string, HandData>> | undefined; activePosition: string; isSolverMode: boolean }) {
+  if (!isSolverMode || !allPositionData || allPositionData.size === 0) {
+    return (
+      <div>
+        <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          Range Compare
+        </div>
+        <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+          Select a position to compare ranges
+        </div>
+      </div>
+    )
+  }
+
+  const positions = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const
+  const actionColors: Record<string, string> = { raise: '#E53935', call: '#3D7CB8', fold: '#555' }
+  const actionLabels: Record<string, string> = { raise: 'R', call: 'C', fold: 'F' }
+
+  // Compute action frequencies per position
+  const posStats = positions.map(pos => {
+    const data = allPositionData.get(pos)
+    if (!data || data.size === 0) return { pos, raise: 0, call: 0, fold: 0 }
+    let raise = 0, call = 0, fold = 0, total = 0
+    data.forEach(h => {
+      total += h.frequency
+      if (h.action === 'raise' || h.action === 'always_raise') raise += h.frequency
+      else if (h.action === 'call') call += h.frequency
+      else fold += h.frequency
+    })
+    return { pos, raise: total ? raise / total : 0, call: total ? call / total : 0, fold: total ? fold / total : 0 }
+  }).filter(s => allPositionData.has(s.pos))
+
   return (
     <div>
       <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
         Range Compare
       </div>
       <div style={{ fontSize: 9, color: '#777', marginBottom: 8 }}>
-        Compare raise frequency across positions
+        Action frequency by position
       </div>
-      <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
-        Select a position to compare ranges
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {posStats.map(s => {
+          const isActive = s.pos === activePosition
+          return (
+            <div key={s.pos} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 24, fontSize: 9, color: isActive ? '#AAFBB2' : '#888', fontWeight: isActive ? 700 : 400, flexShrink: 0 }}>
+                {s.pos}
+              </span>
+              <div style={{ flex: 1, display: 'flex', height: 10, borderRadius: 2, overflow: 'hidden' }}>
+                {(['raise', 'call', 'fold'] as const).map(action => {
+                  const freq = s[action]
+                  return (
+                    <div key={action} style={{
+                      width: `${freq * 100}%`,
+                      background: actionColors[action],
+                      minWidth: freq > 0 ? 1 : 0,
+                    }} />
+                  )
+                })}
+              </div>
+              <span style={{ width: 28, fontSize: 8, color: '#999', textAlign: 'right', flexShrink: 0 }}>
+                {Math.round(s.raise * 100)}%R
+              </span>
+            </div>
+          )
+        })}
+      </div>
+      {/* Legend */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 6, justifyContent: 'center' }}>
+        {(['raise', 'call', 'fold'] as const).map(action => (
+          <span key={action} style={{ fontSize: 8, color: '#777', display: 'flex', alignItems: 'center', gap: 2 }}>
+            <span style={{ width: 6, height: 6, borderRadius: 1, background: actionColors[action], display: 'inline-block' }} />
+            {actionLabels[action]}
+          </span>
+        ))}
       </div>
     </div>
   )
@@ -767,7 +835,35 @@ function EquityChartTab({ rangeData, isSolverMode }: { rangeData: Map<string, Ha
 }
 
 // ── Compare EV sub-tab ──
-function CompareEVTab({ allPositionData, activePosition, rangeData }: { allPositionData?: Map<string, Map<string, HandData>>; activePosition: string; rangeData?: Map<string, HandData> }) {
+function CompareEVTab({ allPositionData, activePosition, isSolverMode }: { allPositionData?: Map<string, Map<string, HandData>>; activePosition: string; isSolverMode: boolean }) {
+  if (!isSolverMode || !allPositionData || allPositionData.size === 0) {
+    return (
+      <div>
+        <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          Compare EV
+        </div>
+        <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+          Select a position to compare EV
+        </div>
+      </div>
+    )
+  }
+
+  const positions = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const
+
+  // Compute weighted EV per position (same formula as oopEV: avg equity → ((avgEq - 0.5) * 3))
+  const posEV = positions.map(pos => {
+    const data = allPositionData.get(pos)
+    if (!data || data.size === 0) return { pos, ev: 0 }
+    let weightedSum = 0, weightSum = 0
+    data.forEach(h => { weightedSum += h.equity * h.frequency; weightSum += h.frequency })
+    if (weightSum === 0) return { pos, ev: 0 }
+    const avgEq = weightedSum / weightSum
+    return { pos, ev: (avgEq - 0.5) * 3 }
+  }).filter(s => allPositionData.has(s.pos))
+
+  const maxAbsEV = Math.max(1, ...posEV.map(s => Math.abs(s.ev)))
+
   return (
     <div>
       <div style={{ fontSize: 10, color: '#999', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
@@ -776,8 +872,40 @@ function CompareEVTab({ allPositionData, activePosition, rangeData }: { allPosit
       <div style={{ fontSize: 9, color: '#777', marginBottom: 8 }}>
         Expected value by position (bb)
       </div>
-      <div style={{ color: '#888', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
-        Select a position to compare EV
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {posEV.map(s => {
+          const isActive = s.pos === activePosition
+          const barWidth = (Math.abs(s.ev) / maxAbsEV) * 50
+          const isPositive = s.ev >= 0
+          return (
+            <div key={s.pos} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 24, fontSize: 9, color: isActive ? '#AAFBB2' : '#888', fontWeight: isActive ? 700 : 400, flexShrink: 0 }}>
+                {s.pos}
+              </span>
+              <div style={{ flex: 1, display: 'flex', height: 8, alignItems: 'center', position: 'relative' }}>
+                {/* Zero line */}
+                <div style={{ position: 'absolute', left: '50%', width: 1, height: 8, background: '#444' }} />
+                {/* Bar */}
+                <div style={{
+                  position: 'absolute',
+                  left: isPositive ? '50%' : `${50 - barWidth}%`,
+                  width: `${barWidth}%`,
+                  height: 8,
+                  background: isPositive ? '#7CFC7C' : '#E53935',
+                  borderRadius: 1,
+                  opacity: 0.85,
+                }} />
+              </div>
+              <span style={{ width: 36, fontSize: 8, color: isPositive ? '#7CFC7C' : '#E53935', textAlign: 'right', flexShrink: 0 }}>
+                {s.ev >= 0 ? '+' : ''}{s.ev.toFixed(2)}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+      <div style={{ height: 1, background: '#262626', margin: '6px 0 2px' }} />
+      <div style={{ fontSize: 8, color: '#666', textAlign: 'center' }}>
+        Divergence from neutral equity
       </div>
     </div>
   )
@@ -937,6 +1065,8 @@ export function StudyDetailsPanel({
             onBlockerRanksChange={onBlockerRanksChange}
             boardCards={boardCards}
             onCellSelect={onCellSelect}
+            allPositionData={allPositionData}
+            activePosition={activePosition}
           />
         </div>
       )}
