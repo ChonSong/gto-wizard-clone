@@ -42,8 +42,33 @@ export function StudyAggregateStrip({
               fontSize: 10, fontWeight: 700,
               color: isActive ? GREEN : '#666', letterSpacing: 0.3,
             }}>{pos}</span>
-            <div style={{ display: 'flex', gap: 3, alignItems: 'center', fontSize: 9 }}>
-              <span style={{ color: '#2a2a2a' }}>F:{foldPct}%</span>
+            {/* Stacked horizontal bar (F/C/R) */}
+            <div style={{
+              width: '100%', height: 8, borderRadius: 2,
+              background: '#2a2a2a', overflow: 'hidden',
+              display: 'flex', marginTop: 1,
+            }}>
+              {foldPct > 0 && (
+                <div style={{
+                  width: `${foldPct}%`, height: '100%',
+                  background: '#2a2a2a',
+                }} />
+              )}
+              {callPct > 0 && (
+                <div style={{
+                  width: `${callPct}%`, height: '100%',
+                  background: '#3A6EA5',
+                }} />
+              )}
+              {raisePct > 0 && (
+                <div style={{
+                  width: `${raisePct}%`, height: '100%',
+                  background: '#E53935',
+                }} />
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: 3, alignItems: 'center', fontSize: 8, marginTop: 1 }}>
+              <span style={{ color: '#666' }}>F:{foldPct}%</span>
               <span style={{ color: '#3A6EA5' }}>C:{callPct}%</span>
               <span style={{ color: '#E53935' }}>R:{raisePct}%</span>
             </div>
