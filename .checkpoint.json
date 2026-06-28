@@ -458,24 +458,24 @@
       "type": "invalid_spec",
       "priority": 1,
       "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
-      "cycles_stagnant": 1,
-      "status": "resolved"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
       "item": "Left sidebar navigation vs top nav \u2014 architectural difference from reference",
       "type": "architectural_gap",
       "priority": 1,
       "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change \u2014 defer.",
-      "cycles_stagnant": 0,
-      "status": "deferred"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     },
     {
       "item": "Missing game tree visualization for Solutions page",
       "type": "missing_feature",
       "priority": 1,
       "evidence": "Reference shows interactive game tree. Large effort \u2014 defer.",
-      "cycles_stagnant": 0,
-      "status": "deferred"
+      "cycles_stagnant": 3,
+      "status": "escalated"
     }
   ],
   "coach_review": {

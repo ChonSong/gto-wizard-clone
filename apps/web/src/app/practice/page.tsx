@@ -228,6 +228,116 @@ function renderBoard(board: string | null) {
   )
 }
 
+function PokerTable({ activePosition }: { activePosition: string | null }) {
+  const positions = [
+    { id: 'UTG', angle: 270, label: 'UTG' },
+    { id: 'HJ', angle: 310, label: 'HJ' },
+    { id: 'CO', angle: 350, label: 'CO' },
+    { id: 'BTN', angle: 30, label: 'BTN' },
+    { id: 'SB', angle: 70, label: 'SB' },
+    { id: 'BB', angle: 110, label: 'BB' },
+  ]
+
+  const tableWidth = 320
+  const tableHeight = 200
+  const centerX = tableWidth / 2
+  const centerY = tableHeight / 2
+  const radiusX = tableWidth / 2 - 20
+  const radiusY = tableHeight / 2 - 10
+
+  return (
+    <div className="flex flex-col items-center my-4">
+      <svg
+        width={tableWidth}
+        height={tableHeight}
+        viewBox={`0 0 ${tableWidth} ${tableHeight}`}
+        className="drop-shadow-2xl"
+      >
+        {/* Table felt */}
+        <ellipse
+          cx={centerX}
+          cy={centerY}
+          rx={radiusX}
+          ry={radiusY}
+          fill="url(#feltGradient)"
+          stroke="#1a7a4a"
+          strokeWidth={3}
+        />
+        {/* Felt texture overlay */}
+        <ellipse
+          cx={centerX}
+          cy={centerY}
+          rx={radiusX - 8}
+          ry={radiusY - 8}
+          fill="none"
+          stroke="rgba(170,250,178,0.08)"
+          strokeWidth={40}
+          strokeDasharray="4 8"
+        />
+        {/* Center board area */}
+        <rect
+          x={centerX - 60}
+          y={centerY - 18}
+          width={120}
+          height={36}
+          rx={4}
+          fill="rgba(0,0,0,0.25)"
+          stroke="rgba(170,250,178,0.2)"
+          strokeWidth={1}
+        />
+        <text
+          x={centerX}
+          y={centerY + 5}
+          textAnchor="middle"
+          fill="rgba(170,250,178,0.5)"
+          fontSize={10}
+          fontFamily="monospace"
+        >
+          {'BOARD'}
+        </text>
+        {/* Player positions */}
+        {positions.map(pos => {
+          const rad = (pos.angle * Math.PI) / 180
+          const px = centerX + radiusX * Math.cos(rad)
+          const py = centerY + radiusY * Math.sin(rad)
+          const isActive = activePosition === pos.id
+          return (
+            <g key={pos.id}>
+              <circle
+                cx={px}
+                cy={py}
+                r={isActive ? 18 : 15}
+                fill={isActive ? 'rgba(170,250,178,0.25)' : 'rgba(0,0,0,0.4)'}
+                stroke={isActive ? '#AAFBB2' : 'rgba(255,255,255,0.2)'}
+                strokeWidth={isActive ? 2 : 1}
+              />
+              <text
+                x={px}
+                y={py + 4}
+                textAnchor="middle"
+                fill={isActive ? '#AAFBB2' : 'rgba(255,255,255,0.6)'}
+                fontSize={9}
+                fontWeight={isActive ? 700 : 500}
+                fontFamily="monospace"
+              >
+                {pos.label}
+              </text>
+            </g>
+          )
+        })}
+        {/* Gradient definition */}
+        <defs>
+          <radialGradient id="feltGradient" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#1a8a52" />
+            <stop offset="50%" stopColor="#0f6b3a" />
+            <stop offset="100%" stopColor="#06281a" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+  )
+}
+
 function ProgressRing({
   value,
   max,
@@ -771,7 +881,7 @@ export default function PracticePage() {
               style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
             >
               {/* Header */}
-              <div className="text-center mb-6">
+              <div className="text-center mb-4">
                 <div className="text-3xl mb-2">🎯</div>
                 <h2 className="text-lg font-bold mb-1" style={{ color: 'var(--text)' }}>
                   Practice
@@ -780,6 +890,9 @@ export default function PracticePage() {
                   Test your GTO knowledge with structured training exercises
                 </p>
               </div>
+
+              {/* Poker Table Visualization */}
+              <PokerTable activePosition={exerciseType === 'GTO Quiz' ? 'BTN' : exerciseType === 'Spaced Repetition' ? 'CO' : null} />
 
               {/* Exercise Type */}
               <div className="mb-3">

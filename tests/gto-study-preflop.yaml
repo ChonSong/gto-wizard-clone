@@ -1,6 +1,7 @@
 test-id: t_eagle-river-stone-cloud-ember-gold-hill-iris-jade-keel
 name: GTO Wizard — Study Preflop Workflow
-target: gto-wizard
+targets:
+  primary: gto-wizard
 setup:
   - h_order-was-lan-card-oleg-eye-bito-cursor-garten-forme
 steps:
