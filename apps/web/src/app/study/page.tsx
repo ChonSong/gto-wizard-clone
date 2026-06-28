@@ -46,8 +46,6 @@ export default function StudyPage() {
   const [activePosition, setActivePosition] = useState('UTG')
   const [selectedCell, setSelectedCell] = useState<string | null>(null)
   const [rangeData, setRangeData] = useState<Map<string, HandData>>(new Map())
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [isSolverMode, setIsSolverMode] = useState(false)
   const [stackDepth, setStackDepth] = useState(100)
   const [boardCards, setBoardCards] = useState<BoardCard[]>([])
@@ -120,8 +118,6 @@ export default function StudyPage() {
   // ── Fetch solver data on position/depth/treePath change ──
   useEffect(() => {
     async function fetchRange() {
-      setLoading(true)
-      setError(null)
       try {
         const body: any = {
           position: activePosition,
@@ -151,11 +147,8 @@ export default function StudyPage() {
         const firstActionable = data.hands?.find((h: any) => h.action !== 'fold')
         if (firstActionable) setSelectedCell(firstActionable.hand)
         else setSelectedCell(null)
-      } catch (err: any) {
-        setError(err.message)
+      } catch {
         setIsSolverMode(false)
-      } finally {
-        setLoading(false)
       }
     }
     fetchRange()
@@ -261,13 +254,6 @@ export default function StudyPage() {
     if (!selectedCell) return null
     return rangeData.get(selectedCell) || null
   }, [selectedCell, rangeData])
-
-  const selectedHandCombos = useMemo(() => {
-    if (!selectedCell) return []
-    const suits = ['s', 'h', 'd', 'c']; const combos: [string, string][] = []
-    for (const s1 of suits) for (const s2 of suits) if (s1 !== s2) combos.push([s1, s2])
-    return combos.slice(0, 12)
-  }, [selectedCell])
 
   // ── Cell visual helpers ──
   function getCellColor(hand: string): string {
