@@ -68,7 +68,7 @@
     },
     {
       "task": "visual-comparison-study-reference",
-      "sha": "pending-commit",
+      "sha": "101a186",
       "date": "2026-06-29",
       "summary": "Investigation complete. Compared reference screenshots vs live clone. Found 1 new P1 gap (matrix colors inverted), 2 P3 gaps (blinds display, bottom bar). Full report at docs/visual-comparison-study-report.md. Recommended fix tasks: fix-study-matrix-cell-colors (P1), fix-study-top-bar-blinds (P3), fix-study-bottom-bar (P3).",
       "coach": "pending",
