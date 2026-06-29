@@ -4,7 +4,10 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PostflopTraining from '@/components/study/PostflopTraining'
 
 // ── Independent solver health polling ──
-function useSolverHealth(pollMs = 10000): 'online' | 'offline' {
+// recheckDeps: when any value in this array changes (e.g. treePath, activePosition),
+// the hook immediately re-checks health and resets the polling interval.
+// This prevents false "Offline" flickers after state transitions.
+function useSolverHealth(pollMs = 10000, recheckDeps: any[] = []): 'online' | 'offline' {
   const [status, setStatus] = useState<'online' | 'offline'>('online')
   useEffect(() => {
     let cancelled = false
@@ -19,7 +22,8 @@ function useSolverHealth(pollMs = 10000): 'online' | 'offline' {
     check()
     const id = setInterval(check, pollMs)
     return () => { cancelled = true; clearInterval(id) }
-  }, [pollMs])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pollMs, ...recheckDeps])
   return status
 }
 
@@ -74,7 +78,7 @@ export default function StudyPage() {
   const [allPositionLoading, setAllPositionLoading] = useState(false)
   const [treePath, setTreePath] = useState<TreeAction[]>([])
   const [treeNode, setTreeNode] = useState<TreeNode>(null)
-  const solverStatus = useSolverHealth()
+  const solverStatus = useSolverHealth(10000, [treePath.length, activePosition])
 
   // ── Postflop state ──
   const [pfBoard, setPfBoard] = useState<BoardCard[]>([])
