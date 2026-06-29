@@ -239,3 +239,34 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Format: "75% R" not just "75%" ✅
 - Letter uses the same color as the cell background ✅
 **Coach checks:** Open /study preflop mode. Verify matrix cells show "R", "C", or "F" after percentage values.
+
+## Phase 5 — Recovery-Generated Tasks (Exhaustion Recovery)
+
+**Generated:** 2026-06-29 ~13:45 by Player exhaustion recovery. All Phase 3 & 4 recovery tasks already complete. Backlog drained.
+
+### Task: fix-solver-status-indicator-flicker (recovery-generated)
+**Priority:** P2
+**Description:** The solver status indicator in the study page shows "Offline" after game tree navigation, despite the solver health endpoint returning 200 OK. On initial page load the indicator correctly shows "GTO". After navigating through the tree (UTG→Raise 2.5→HJ→Raise 7.5→position card click), the indicator can change to "Offline". The status component does not properly re-poll or re-sync after state transitions (tree_path changes, position changes). Verified: `curl http://localhost:8001/api/v1/solver/health` always returns 200, so the issue is frontend-only.
+**Success criteria:**
+- Solver status indicator shows "GTO" (green) after tree navigation, always matching actual health endpoint state
+- No "Offline" false positives after any sequence of tree navigations and position switches
+- No regression to existing study page functionality
+**Coach checks:** Navigate UTG→Raise 2.5→HJ→Raise 7.5→click CO position card. Verify status shows "GTO", not "Offline". Refresh and repeat 3x.
+
+### Task: full-e2e-test-validation (recovery-generated)
+**Priority:** P3
+**Description:** Run the full Playwright E2E test suite (`npx playwright test`) and verify all specs pass. The test specs (study, practice, smoke, study-console-audit) may have brittle selectors or rely on features that have changed. Fix any failures. Target: all stable POM-based specs pass 100%.
+**Success criteria:**
+- `npx playwright test` returns 0 failures (flaky-allowed at ≤3)
+- No new regressions in study page, practice page, or core flows
+- Any fixed tests have stable selectors (aria-label, data-testid, role)
+**Coach checks:** Run `npx playwright test` and report pass/fail counts.
+
+### Task: visual-comparison-study-reference (recovery-generated)
+**Priority:** P2
+**Description:** Load the reference GTO Wizard study page (app.gtowizard.com/study) and the clone (wiz.codeovertcp.com/study) side-by-side. Compare visual layout, colors, spacing, and component positions. Identify any remaining visual gaps not covered by previous fix tasks. Focus on: position tiles, matrix grid cells, right sidebar tabs, action prompt bar, solver status indicator.
+**Success criteria:**
+- Comparison report identifies ≥0 new visual gaps with screenshots
+- Any P1 visual gaps (major layout/color mismatch) documented as new fix tasks
+- No changes to code — this is an investigation-only task
+**Coach checks:** Review comparison report and determine if new fix tasks are needed.
