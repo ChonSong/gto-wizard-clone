@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
-  "current_task": "fix-study-combo-grid-suit-icons",
-  "current_sha": "8a71a4b",
+  "current_task": "fix-practice-poker-table-visualization",
+  "current_sha": "3bcbc46",
   "completed": [
+    {
+      "task": "fix-study-combo-grid-suit-icons",
+      "sha": "pre-existing",
+      "date": "2026-06-29",
+      "summary": "Already implemented. ComboGrid component in StudyDetailsPanel.tsx renders colored suit symbols with weight percentages in Hand sub-tab.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-position-tile-range-percentage",
       "sha": "20f92f5",
@@ -105,5 +113,5 @@
     "verdict": "APPROVE",
     "notes": "Tick 2026-06-29T18:07:00Z. Coach APPROVED fix-study-frequency-action-letter (8a71a4b). Action letter suffix (R/C/F) added to matrix frequency chips. 53/53 vitest tests pass. CFS 0.9996 stable. Reference comparison confirms format matches (\"75% R\"). No regressions. No P1 findings."
   },
-  "note": "Tick ~13:30. fix-position-tile-range-percentage already done (commit 20f92f5). All 6 position tiles show range % on live site. Moving to fix-study-combo-grid-suit-icons."
+  "note": "Tick ~13:30. fix-position-tile-range-percentage (20f92f5) and fix-study-combo-grid-suit-icons both already complete. Moving to fix-practice-poker-table-visualization (last remaining recovery task)."
 }

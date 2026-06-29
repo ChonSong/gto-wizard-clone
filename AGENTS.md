@@ -201,8 +201,8 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Active position tile shows both range % and stack size
 **Coach checks:** Open /study in preflop mode. Check each position tile shows range %. Verify SB shows a meaningful range percentage, not just stack size.
 
-### Task: fix-study-combo-grid-suit-icons (recovery-generated)
-**Priority:** P2
+### Task: fix-study-combo-grid-suit-icons (recovery-generated) ✅
+**Priority:** P2 — **Already complete** (ComboGrid component in StudyDetailsPanel.tsx lines 251-325)
 **Description:** The Hand sub-tab in the right sidebar shows text-only hand stats. The reference shows a visual combo grid with colored suit icons (♠♥♦♣) showing individual combination weights. Add a visual combo grid to the Hand sub-tab that displays each suit combination as a mini-card with colored suit symbols and weight indicators.
 **Success criteria:**
 - Hand sub-tab shows a 4×4 or equivalent grid of suit combos (e.g., ♠♥, ♠♦, ♠♣, ♥♦, ♥♣, ♦♣ for offsuit; ♠♠, ♥♥, ♦♦, ♣♣ for pairs)
