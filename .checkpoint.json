@@ -5,11 +5,19 @@
   "repo": "/home/sc/repos/gto-wizard-clone",
   "web_dir": "apps/web",
   "api_dir": "apps/api",
-  "phase": 3,
-  "phase_name": "Infrastructure & Visual Polish",
-  "current_task": "full-e2e-test-validation",
-  "current_sha": "ccc1ca6",
+  "phase": 6,
+  "phase_name": "Visual Gap Fixes",
+  "current_task": "fix-study-top-bar-blinds",
+  "current_sha": "fb88a3d",
   "completed": [
+    {
+      "task": "fix-study-matrix-cell-colors",
+      "sha": "fb88a3d",
+      "date": "2026-06-30",
+      "summary": "Swapped matrix cell color scheme to match reference (app.gtowizard.com/study). raise/all_in/bet → BLUE (#3A6EA5), call/check → GREEN (#00C853), fold → GRAY/dark. Updated legend squares and GTO sizing text for consistency. 53/53 vitest pass. Live verified: AA/AKs cells rgb(58,110,165) blue, K6s fold cells rgb(42,42,42) dark.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-practice-poker-table-visualization",
       "sha": "pre-existing",
@@ -46,7 +54,7 @@
       "task": "fix-study-gto-feedback-overlay",
       "sha": "f44afb1",
       "date": "2026-06-29",
-      "summary": "Added GTO feedback overlay with \u2713/\u2717 + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
+      "summary": "Added GTO feedback overlay with ✓/✗ + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
       "coach": "fixed",
       "coach_verified_at": "2026-06-29T12:38:00Z"
     },
@@ -54,7 +62,7 @@
       "task": "fix-gto-feedback-allin-raise-family",
       "sha": "a6e85cf",
       "date": "2026-06-29",
-      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise \u2713. GTO=raise + click all_in \u2713.",
+      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise ✓. GTO=raise + click all_in ✓.",
       "coach": "approved",
       "coach_verified_at": "2026-06-29T14:30:00Z"
     },
@@ -62,7 +70,7 @@
       "task": "fix-study-frequency-action-letter",
       "sha": "8a71a4b",
       "date": "2026-06-29",
-      "summary": "Added action letter suffix (R/C/F) to matrix frequency chips. Format: '75% R'. Maps raise/all_in/bet\u2192R, call/check\u2192C, fold\u2192F.",
+      "summary": "Added action letter suffix (R/C/F) to matrix frequency chips. Format: '75% R'. Maps raise/all_in/bet→R, call/check→C, fold→F.",
       "coach": "approved",
       "coach_verified_at": "2026-06-29T18:07:00Z"
     },
@@ -80,15 +88,15 @@
       "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
       "type": "invalid_spec",
       "priority": 1,
-      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid — removed.",
       "cycles_stagnant": 6,
       "status": "escalated"
     },
     {
-      "item": "Left sidebar navigation vs top nav \u2014 architectural difference from reference",
+      "item": "Left sidebar navigation vs top nav — architectural difference from reference",
       "type": "architectural_gap",
       "priority": 1,
-      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change \u2014 defer.",
+      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change — defer.",
       "cycles_stagnant": 6,
       "status": "escalated"
     },
@@ -96,7 +104,7 @@
       "item": "Missing game tree visualization for Solutions page",
       "type": "missing_feature",
       "priority": 1,
-      "evidence": "Reference shows interactive game tree. Large effort \u2014 defer.",
+      "evidence": "Reference shows interactive game tree. Large effort — defer.",
       "cycles_stagnant": 6,
       "status": "escalated"
     }
@@ -134,11 +142,11 @@
     "verdict": "APPROVE",
     "findings_count": 0,
     "has_evidence": true,
-    "notes": "Tick 2026-06-30T01:18:00Z. Coach APPROVED fix-solver-status-indicator-flicker (a4a73aa). useSolverHealth now accepts recheckDeps parameter. Verified live: solver stays GTO through position switch (UTG\u2192HJ), tree navigation (HJ Raise\u2192CO 3-bet), and mode switch (Preflop\u2192Postflop). 0 JS console errors across all interactions. 53/53 vitest pass. CFS 0.9995 stable. RefQA runner had infrastructure instability (unrelated). No P1 findings.",
+    "notes": "Tick 2026-06-30T01:18:00Z. Coach APPROVED fix-solver-status-indicator-flicker (a4a73aa). useSolverHealth now accepts recheckDeps parameter. Verified live: solver stays GTO through position switch (UTG→HJ), tree navigation (HJ Raise→CO 3-bet), and mode switch (Preflop→Postflop). 0 JS console errors across all interactions. 53/53 vitest pass. CFS 0.9995 stable. RefQA runner had infrastructure instability (unrelated). No P1 findings.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-29T17:04:00Z. Completed visual-comparison-study-reference investigation. Compared reference screenshots (preflop + postflop) vs live clone at wiz.codeovertcp.com/study. Found 1 new P1 gap (matrix colors inverted: blue=raise in reference, red=raise in clone), 2 P3 gaps (blinds display, bottom bar duplicate nav). Full report at docs/visual-comparison-study-report.md. Verified fix-practice-poker-table-visualization is already implemented on /practice. 53/53 vitest pass. Next: full-e2e-test-validation or Coach review for new fix tasks.",
-  "last_sha": "ccc1ca6"
+  "note": "Tick 2026-06-30T04:10:00Z. Completed fix-study-matrix-cell-colors (fb88a3d). Swapped matrix cell colors: raise/all_in/bet→BLUE, call/check→GREEN, fold→GRAY/dark. Legend updated. GTO sizing text color updated. 53/53 vitest pass. Live verified: AA cells rgb(58,110,165) blue, K6s fold cells rgb(42,42,42) dark. Next: fix-study-top-bar-blinds (P3).",
+  "last_sha": "fb88a3d"
 }
