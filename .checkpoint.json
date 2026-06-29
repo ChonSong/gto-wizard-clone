@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
-  "current_task": "fix-study-frequency-action-letter",
-  "current_sha": "a6e85cf",
+  "current_task": "tbd",
+  "current_sha": "8a71a4b",
   "completed": [
     {
       "task": "fix-top-bar-action-prompts",
@@ -30,9 +30,17 @@
       "task": "fix-gto-feedback-allin-raise-family",
       "sha": "a6e85cf",
       "date": "2026-06-29",
-      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise \u2192 \u2713. GTO=raise + click all_in \u2192 \u2713.",
+      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise ✓. GTO=raise + click all_in ✓.",
       "coach": "approved",
       "coach_verified_at": "2026-06-29T14:30:00Z"
+    },
+    {
+      "task": "fix-study-frequency-action-letter",
+      "sha": "8a71a4b",
+      "date": "2026-06-29",
+      "summary": "Added action letter suffix (R/C/F) to matrix frequency chips. Format: '75% R'. Maps raise/all_in/bet→R, call/check→C, fold→F.",
+      "coach": "pending",
+      "coach_verified_at": null
     }
   ],
   "spec_gaps": [
@@ -79,9 +87,9 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "a6e85cf",
-    "last_reviewed_at": "2026-06-29T14:30:00Z",
+    "last_reviewed_sha": "8a71a4b",
+    "last_reviewed_at": null,
     "verdict": "APPROVE",
-    "notes": "Tick 2026-06-29T14:30:00Z. Coach APPROVED fix-gto-feedback-allin-raise-family (a6e85cf). 53/53 vitest tests pass. RefQA smoke test passes. All 5 structural gates pass. P2 visual gap: Allin 100 does not match reference All In 100. Pre-existing postflop strategy-display test failures unrelated to this commit (confirmed a6e85cf^). CFS 0.9997 improving. Next: fix-study-frequency-action-letter."
+    "notes": "Tick 2026-06-29T17:08:00Z. Player committed fix-study-frequency-action-letter (8a71a4b). 53/53 vitest tests pass. Action letter suffix (R/C/F) added to matrix frequency chips. Awaiting Coach review."
   }
 }
