@@ -31,8 +31,8 @@
       "sha": "a6e85cf",
       "date": "2026-06-29",
       "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise \u2192 \u2713. GTO=raise + click all_in \u2192 \u2713.",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "approved",
+      "coach_verified_at": "2026-06-29T14:30:00Z"
     }
   ],
   "spec_gaps": [
@@ -71,12 +71,17 @@
       "sha": "a6e85cf",
       "cfs": 0.9989,
       "timestamp": "2026-06-29T03:13:31Z"
+    },
+    {
+      "sha": "a6e85cf",
+      "cfs": 0.9997,
+      "timestamp": "2026-06-29T14:30:00Z"
     }
   ],
   "coach_review": {
     "last_reviewed_sha": "a6e85cf",
-    "last_reviewed_at": "2026-06-29T03:13:31Z",
-    "verdict": "pending",
-    "notes": "Tick 2026-06-29T03:13:31Z. Player fixed all_in/raise family bug in GTO feedback. Awaiting Coach review."
+    "last_reviewed_at": "2026-06-29T14:30:00Z",
+    "verdict": "APPROVE",
+    "notes": "Tick 2026-06-29T14:30:00Z. Coach APPROVED fix-gto-feedback-allin-raise-family (a6e85cf). 53/53 vitest tests pass. RefQA smoke test passes. All 5 structural gates pass. P2 visual gap: Allin 100 does not match reference All In 100. Pre-existing postflop strategy-display test failures unrelated to this commit (confirmed a6e85cf^). CFS 0.9997 improving. Next: fix-study-frequency-action-letter."
   }
 }
