@@ -230,11 +230,12 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 **Coach checks:** Open /study, find a hand where GTO says All-in, click Raise 2.5. Verify green ✓ appears. Then find a hand where GTO says Raise, click Allin 100. Verify green ✓ appears.
 
-### Task: fix-study-frequency-action-letter (recovery-generated)
-**Priority:** P3
+### Task: fix-study-frequency-action-letter ✅
+**Priority:** P3 — **Completed 2026-06-29** (commit 8a71a4b)
 **Description:** Matrix cells show frequency percentages (e.g., "87%") but the reference shows an action letter suffix (e.g., "75% R" for raise, "87% C" for call). Add action letter suffixes to frequency displays in the matrix grid.
+**Status:** Fixed. Added `getActionLetter()` helper mapping raise/all_in/bet→R, call/check→C, fold→F. Freq chips now render "75% R" format. 53/53 vitest tests pass.
 **Success criteria:**
-- Matrix cells show action letter suffix: "R" for raise, "C" for call, "F" for fold
-- Format: "75% R" not just "75%"
-- Letter uses the same color as the cell background
+- Matrix cells show action letter suffix: "R" for raise, "C" for call, "F" for fold ✅
+- Format: "75% R" not just "75%" ✅
+- Letter uses the same color as the cell background ✅
 **Coach checks:** Open /study preflop mode. Verify matrix cells show "R", "C", or "F" after percentage values.
