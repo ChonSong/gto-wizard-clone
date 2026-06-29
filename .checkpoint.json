@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
-  "current_task": "tbd",
+  "current_task": "fix-study-combo-grid-suit-icons",
   "current_sha": "8a71a4b",
   "completed": [
+    {
+      "task": "fix-position-tile-range-percentage",
+      "sha": "20f92f5",
+      "date": "2026-06-28",
+      "summary": "Already implemented before recovery task generated. All 6 position tiles show range % on live site.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-top-bar-action-prompts",
       "sha": "59124ac",
@@ -22,7 +30,7 @@
       "task": "fix-study-gto-feedback-overlay",
       "sha": "f44afb1",
       "date": "2026-06-29",
-      "summary": "Added GTO feedback overlay with \u2713/\u2717 + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
+      "summary": "Added GTO feedback overlay with ✓/✗ + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
       "coach": "fixed",
       "coach_verified_at": "2026-06-29T12:38:00Z"
     },
@@ -30,7 +38,7 @@
       "task": "fix-gto-feedback-allin-raise-family",
       "sha": "a6e85cf",
       "date": "2026-06-29",
-      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise \u2713. GTO=raise + click all_in \u2713.",
+      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise ✓. GTO=raise + click all_in ✓.",
       "coach": "approved",
       "coach_verified_at": "2026-06-29T14:30:00Z"
     },
@@ -38,7 +46,7 @@
       "task": "fix-study-frequency-action-letter",
       "sha": "8a71a4b",
       "date": "2026-06-29",
-      "summary": "Added action letter suffix (R/C/F) to matrix frequency chips. Format: '75% R'. Maps raise/all_in/bet\u2192R, call/check\u2192C, fold\u2192F.",
+      "summary": "Added action letter suffix (R/C/F) to matrix frequency chips. Format: '75% R'. Maps raise/all_in/bet→R, call/check→C, fold→F.",
       "coach": "approved",
       "coach_verified_at": "2026-06-29T18:07:00Z"
     }
@@ -48,15 +56,15 @@
       "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
       "type": "invalid_spec",
       "priority": 1,
-      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid — removed.",
       "cycles_stagnant": 5,
       "status": "escalated"
     },
     {
-      "item": "Left sidebar navigation vs top nav \u2014 architectural difference from reference",
+      "item": "Left sidebar navigation vs top nav — architectural difference from reference",
       "type": "architectural_gap",
       "priority": 1,
-      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change \u2014 defer.",
+      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change — defer.",
       "cycles_stagnant": 5,
       "status": "escalated"
     },
@@ -64,7 +72,7 @@
       "item": "Missing game tree visualization for Solutions page",
       "type": "missing_feature",
       "priority": 1,
-      "evidence": "Reference shows interactive game tree. Large effort \u2014 defer.",
+      "evidence": "Reference shows interactive game tree. Large effort — defer.",
       "cycles_stagnant": 5,
       "status": "escalated"
     }
@@ -97,5 +105,5 @@
     "verdict": "APPROVE",
     "notes": "Tick 2026-06-29T18:07:00Z. Coach APPROVED fix-study-frequency-action-letter (8a71a4b). Action letter suffix (R/C/F) added to matrix frequency chips. 53/53 vitest tests pass. CFS 0.9996 stable. Reference comparison confirms format matches (\"75% R\"). No regressions. No P1 findings."
   },
-  "note": "Tick 2026-06-29T18:07:00Z. Coach APPROVED fix-study-frequency-action-letter (8a71a4b). Action letter suffix complete. CFS 0.9996 stable."
+  "note": "Tick ~13:30. fix-position-tile-range-percentage already done (commit 20f92f5). All 6 position tiles show range % on live site. Moving to fix-study-combo-grid-suit-icons."
 }

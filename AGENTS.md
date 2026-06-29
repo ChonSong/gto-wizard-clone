@@ -191,8 +191,8 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 **Current state:** Project is healthy — 368 Python + 53 frontend + 142 E2E tests pass, 11/11 health checks pass.
 
-### Task: fix-position-tile-range-percentage (recovery-generated)
-**Priority:** P1
+### Task: fix-position-tile-range-percentage (recovery-generated) ✅
+**Priority:** P1 — **Already complete** (commit 20f92f5, 2026-06-28)
 **Description:** All position tiles in StudyPlayerTiles show stack size in bb (e.g., "99.5bb" for SB). The reference shows range percentage (e.g., "12.7%") on each position tile. Add range percentage data to position tiles and display it prominently alongside (or instead of) stack size. The position tiles should show range % as the primary metric (visible even when not active), with stack as secondary info.
 **Success criteria:**
 - Each position tile shows range percentage (e.g., "12.7%") in addition to or instead of just stack size
