@@ -123,9 +123,8 @@ test.describe("Courses Page", () => {
 
     const categoryFilter = coursesPage.getCategoryFilter();
     await expect(categoryFilter).toBeVisible();
-
-    // Select Preflop category (matches seeded course data)
-    await categoryFilter.selectOption("preflop");
+        // Select Preflop category (matches seeded course data)
+        await categoryFilter.selectOption("preflop");
     await page.waitForTimeout(300);
 
     // Verify courses are still displayed

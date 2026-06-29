@@ -129,14 +129,10 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Green subtle felt/gradient background
 **Coach checks:** Browser screenshot of /practice — verify content visible
 
-### Task: fix-solver-status-indicator-flicker
-**Priority:** P2 — **Coach generated 2026-06-27T12:45:00Z**
-**Description:** The solver status indicator in the study page shows "Offline" after game tree navigation, despite the solver health endpoint returning 200 OK. On initial page load the indicator correctly shows "GTO". After navigating through the tree (UTG→Raise 2.5→HJ→Raise 7.5→position card click), the indicator can change to "Offline". The status component does not properly re-poll or re-sync after state transitions (tree_path changes, position changes). Verified: `curl http://localhost:8001/api/v1/solver/health` always returns 200, so the issue is frontend-only.
-**Success criteria:**
-- Solver status indicator shows "GTO" (green) after tree navigation, always matching actual health endpoint state
-- No "Offline" false positives after any sequence of tree navigations and position switches
-- No regression to existing study page functionality
-**Coach checks:** Navigate UTG→Raise 2.5→HJ→Raise 7.5→click CO position card. Verify status shows "GTO", not "Offline". Refresh and repeat 3x.
+### Task: fix-solver-status-indicator-flicker ✅
+**Priority:** P2 — **Coach verified 2026-06-30T01:18:00Z**
+**Status:** Fixed by Player commit `a4a73aa`. `useSolverHealth` now accepts `recheckDeps` parameter — when `treePath.length` or `activePosition` changes, the hook immediately re-checks solver health. Verified live: solver stays "GTO" through UTG→HJ position switch, HJ Raise→CO 3-bet tree navigation, and Preflop→Postflop mode switch. 0 JS console errors across all interactions. 53/53 vitest pass.
+**Evidence:** Browser verification at https://wiz.codeovertcp.com/study. Screenshot: `/home/sc/.hermes/reviews/gto-wizard-2026-06-30-solver-health-postflop-verify.png`.
 
 ### Task: tandem-reference-comparison-gtowizard ✅
 **Priority:** P2 — **Completed 2026-06-28T04:00:00Z**
@@ -244,14 +240,7 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 **Generated:** 2026-06-29 ~13:45 by Player exhaustion recovery. All Phase 3 & 4 recovery tasks already complete. Backlog drained.
 
-### Task: fix-solver-status-indicator-flicker (recovery-generated)
-**Priority:** P2
-**Description:** The solver status indicator in the study page shows "Offline" after game tree navigation, despite the solver health endpoint returning 200 OK. On initial page load the indicator correctly shows "GTO". After navigating through the tree (UTG→Raise 2.5→HJ→Raise 7.5→position card click), the indicator can change to "Offline". The status component does not properly re-poll or re-sync after state transitions (tree_path changes, position changes). Verified: `curl http://localhost:8001/api/v1/solver/health` always returns 200, so the issue is frontend-only.
-**Success criteria:**
-- Solver status indicator shows "GTO" (green) after tree navigation, always matching actual health endpoint state
-- No "Offline" false positives after any sequence of tree navigations and position switches
-- No regression to existing study page functionality
-**Coach checks:** Navigate UTG→Raise 2.5→HJ→Raise 7.5→click CO position card. Verify status shows "GTO", not "Offline". Refresh and repeat 3x.
+### Task: fix-solver-status-indicator-flicker (recovery-generated) ✅ — **MERGED into primary task above. Fixed by commit `a4a73aa`.**
 
 ### Task: full-e2e-test-validation (recovery-generated)
 **Priority:** P3
