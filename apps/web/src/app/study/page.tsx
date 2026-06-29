@@ -537,6 +537,14 @@ export default function StudyPage() {
         <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
         <div style={{
           display: 'flex', alignItems: 'center', gap: 4,
+          color: '#aaa', fontSize: 11, fontWeight: 500, whiteSpace: 'nowrap',
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: GREEN }} />
+          <span>0.5/1</span>
+        </div>
+        <div style={{ width: 1, height: 16, background: '#333', flexShrink: 0 }} />
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 4,
           color: '#888', fontSize: 11, fontWeight: 500, whiteSpace: 'nowrap',
         }}>
           <span style={{ color: '#aaa', fontWeight: 600 }}>2,000+</span>
