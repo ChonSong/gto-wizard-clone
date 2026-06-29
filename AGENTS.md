@@ -258,19 +258,17 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 ## Phase 6 — Visual Gap Fixes (Current)
 
-### Task: fix-study-matrix-cell-colors
-**Priority:** P1
-**Description:** Matrix cell coloring is inverted vs reference (app.gtowizard.com/study). Reference uses blue for raise action cells; clone uses red for raise. Fix the matrix cell color scheme to match reference:
-1. Raise action cells should be blue (not red)
-2. Fold cells should be dark/black
-3. Verify that action button legend colors (red square near Fold button on position tiles) match the actual matrix colors
+### Task: fix-study-matrix-cell-colors ✅
+**Priority:** P1 — **Coach verified 2026-06-30T04:21:50Z**
+**Status:** Fixed by Player commit `fb88a3d`. `ACTION_COLORS` swapped: raise/all_in/bet→BLUE (#3A6EA5), call/check→GREEN (#00C853), fold→GRAY (#2a2a2a). Legend squares updated (Raise=blue, Call=green). GTO sizing text changed from RED_BRIGHT to BLUE. 53/53 vitest pass, 0 JS console errors, RefQA 4/4 pass. CFS 0.9994 stable. All 3 workflow interactions verified live (position switch, game tree navigation, solver stays GTO).
+**Evidence:** Code diff in `apps/web/src/app/study/constants.ts`, `StudyMatrixGrid.tsx`, `StudyDetailsPanel.tsx`. Live page at https://wiz.codeovertcp.com/study. Player RGB verification: AA rgb(58,110,165), K6s rgb(42,42,42).
 **Success criteria:**
-- Matrix raise cells are blue (matching reference app.gtowizard.com/study)
-- Fold cells are dark/black
-- Action legend colors are internally consistent with matrix colors
-- No change to data or functionality — visual color mapping only
-- 0 JS console errors on study page
-**Coach checks:** Open /study, verify raise cells are blue. Compare against reference screenshot.
+- Matrix raise cells are blue (matching reference app.gtowizard.com/study) ✅
+- Fold cells are dark/black ✅
+- Action legend colors are internally consistent with matrix colors ✅
+- No change to data or functionality — visual color mapping only ✅
+- 0 JS console errors on study page ✅
+**Coach checks:** Verified via code review, live page interactions, and console audit. Vision screenshots unavailable (tool limitation).
 
 ### Task: fix-study-top-bar-blinds
 **Priority:** P3
