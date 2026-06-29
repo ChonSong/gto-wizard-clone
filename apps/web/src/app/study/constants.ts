@@ -179,7 +179,8 @@ export const POSITION_ACTIONS: Record<string, ActionDef[]> = {
 // ── Hand utility helpers ──
 const broadwayRanks = new Set(['T','J','Q','K','A'])
 export function getGtoActionBase(action: string): string {
-  return action.startsWith('raise') ? 'raise' : action
+  if (action.startsWith('raise') || action === 'all_in') return 'raise'
+  return action
 }
 export function getHandCategories(hand: string): string[] {
   const cats: string[] = []

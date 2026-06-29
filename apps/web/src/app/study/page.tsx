@@ -228,7 +228,7 @@ export default function StudyPage() {
       const handData = rangeData.get(selectedCell)
       if (handData) {
         const gtoBase = getGtoActionBase(handData.action)
-        const clickedBase = actionBase.startsWith('raise') ? 'raise' : actionBase
+        const clickedBase = (actionBase.startsWith('raise') || actionBase === 'all_in') ? 'raise' : actionBase
         const isCorrect = clickedBase === gtoBase
         const evDiff = isCorrect ? 0 : -(handData.equity * 3)
         if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current)
