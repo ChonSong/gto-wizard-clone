@@ -245,28 +245,51 @@ export class StudyPage {
 
   async getGTOStrategy(): Promise<GTOAction[]> {
     await this.switchToPostflopMode();
-    const gtoBtn = this.page.getByRole('button', { name: /GTO strategy|Refresh/ });
-    await gtoBtn.click();
-    // Wait for strategy to load
-    await this.page.waitForTimeout(2000);
+    // Click Refresh to ensure strategy is loaded
+    const refreshBtn = this.page.getByRole('button', { name: 'Refresh GTO strategy' });
+    if (await refreshBtn.count() > 0) {
+      await refreshBtn.click();
+      // Wait for strategy to load
+      await this.page.waitForTimeout(2000);
+    }
 
     const actions: GTOAction[] = [];
-    const actionNames = ['CHECK', 'BET 33%', 'BET 50%', 'BET 75%', 'BET 125%', 'FOLD', 'CALL', 'RAISE 50%', 'RAISE 100%', 'ALL IN 100.0'];
+    // Find all buttons that match GTO strategy action patterns (e.g., "CHECK", "BET 33%", "FOLD")
+    // These buttons have concise accessible names like "CHECK", "BET 33%", "CALL, GTO recommended"
+    const allButtons = this.page.locator('button');
+    const btnCount = await allButtons.count();
 
-    for (const actionName of actionNames) {
+    const seenActions = new Set<string>();
+
+    for (let i = 0; i < btnCount; i++) {
+      const btn = allButtons.nth(i);
+      const textContent = (await btn.textContent()) || '';
+
+      let actionName = '';
+      // Check if this looks like a GTO strategy action button (has leading percentage)
+      const pctMatch = textContent.match(/^\s*(\d+)%/);
+      if (!pctMatch) continue; // Skip non-GTO buttons (filter buttons, nav, etc.)
+
+      // Extract action name from text after the percentage
+      // Formats: "42%CHECK", "93%✓ GTOCALL", "25%BET 33%2.0 (36%)"
+      const afterPct = textContent.substring(textContent.indexOf('%') + 1).replace('✓ GTO', '').trim();
+      const actionMatch = afterPct.match(/^([A-Z]+(?:\s+[\d.]+%)?)/i);
+      if (!actionMatch) continue;
+
+      actionName = actionMatch[1].trim().toUpperCase();
+      // Normalize ALLIN → ALL IN, ALL IN XX → ALL IN
+      if (actionName.startsWith('ALL IN') || actionName === 'ALLIN') {
+        actionName = 'ALL IN';
+      }
+
+      // Skip if we've already processed this action (debounce filter vs GTO buttons)
+      if (seenActions.has(actionName)) continue;
+      seenActions.add(actionName);
+
       try {
-        const btn = this.page.getByRole('button', { name: actionName });
-        const count = await btn.count();
-        if (count === 0) continue;
-
-        const text = await btn.textContent();
-        const isGTORecommended = text?.includes('✓ GTO') || false;
-
-        // Parse GTO frequency from leading text like "25%BET 33%2.0 (36%)" or "93%✓ GTOCALL3.0 (55%)"
-        const freqMatch = text?.match(/^(\d+)%/);
-        const frequency = freqMatch ? parseInt(freqMatch[1]) : 0;
-
-        const evMatch = text?.match(/EV:\s*([\d.]+)/);
+        const frequency = parseInt(pctMatch[1]);
+        const isGTORecommended = textContent.includes('✓ GTO');
+        const evMatch = textContent.match(/([\d.]+)\s*\(\d+%\)/);
         const ev = evMatch ? parseFloat(evMatch[1]) : null;
 
         actions.push({
@@ -276,7 +299,7 @@ export class StudyPage {
           isGTORecommended
         });
       } catch {
-        // Action not available for this spot
+        // Skip malformed entries
       }
     }
 

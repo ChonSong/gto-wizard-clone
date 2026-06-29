@@ -15,8 +15,8 @@
       "sha": "2e5fb03",
       "date": "2026-06-30",
       "summary": "Added blinds display ('0.5/1') with green circle icon to study page top bar, between stack depth selector and spot count. Matches reference GTO Wizard layout: Cash | 100bb | 0.5/1 | spots. +8 lines in page.tsx. 53/53 vitest pass. 0 JS console errors. Live verified.",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "approved",
+      "coach_verified_at": "2026-06-30T05:35:00Z"
     },
     {
       "task": "fix-study-matrix-cell-colors",
@@ -145,16 +145,16 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "a4a73aa",
-    "last_reviewed_at": "2026-06-30T01:18:00Z",
+    "last_reviewed_sha": "2e5fb03",
+    "last_reviewed_at": "2026-06-30T05:35:00Z",
     "verdict": "APPROVE",
-    "findings_count": 0,
+    "findings_count": 1,
     "has_evidence": true,
-    "notes": "Tick 2026-06-30T01:18:00Z. Coach APPROVED fix-solver-status-indicator-flicker (a4a73aa). useSolverHealth now accepts recheckDeps parameter. Verified live: solver stays GTO through position switch (UTG→HJ), tree navigation (HJ Raise→CO 3-bet), and mode switch (Preflop→Postflop). 0 JS console errors across all interactions. 53/53 vitest pass. CFS 0.9995 stable. RefQA runner had infrastructure instability (unrelated). No P1 findings.",
+    "notes": "Tick 2026-06-30T05:35:00Z. Coach APPROVED fix-study-top-bar-blinds (2e5fb03). Blinds display '0.5/1' with green circle verified live across position switch, hand selection, and mode switch. 53/53 vitest pass. 0 JS console errors. RefQA 4/4 pass. CFS 0.9981 stable. 1 P3 finding: editor backup file (sw.js~Stashed changes) accidentally committed. Generated cleanup task: remove-stashed-backup-file.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30T05:10:00Z. Completed fix-study-top-bar-blinds (2e5fb03). Added blinds display '0.5/1' with green circle icon to study page top bar between stack depth selector and spot count. 53/53 vitest pass. 0 JS console errors. Live verified. Next: full-e2e-test-validation (P3).",
+  "note": "Tick 2026-06-30T05:35:00Z. Coach APPROVED fix-study-top-bar-blinds (2e5fb03). Blinds display '0.5/1' verified live. 0 console errors. 1 P3 finding (stashed backup file). Next: full-e2e-test-validation (P3) or remove-stashed-backup-file (P3).",
   "last_sha": "2e5fb03"
 }

@@ -270,11 +270,16 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - 0 JS console errors on study page ✅
 **Coach checks:** Verified via code review, live page interactions, and console audit. Vision screenshots unavailable (tool limitation).
 
-### Task: fix-study-top-bar-blinds
+### Task: fix-study-top-bar-blinds ✅
+**Priority:** P3 — **Coach verified 2026-06-30T05:35:00Z**
+**Status:** Fixed by Player commit `2e5fb03`. Added blinds display ('0.5/1') with green circle icon to study page top bar, between stack depth selector and spot count. 53/53 vitest pass. 0 JS console errors. Verified live: blinds persist across position switch (UTG→HJ), hand selection (KK), and mode switch (Preflop→Postflop). RefQA 4/4 pass.
+**Evidence:** Browser screenshots at https://wiz.codeovertcp.com/study. CFS 0.9981 stable.
+
+### Task: remove-stashed-backup-file
 **Priority:** P3
-**Description:** Blinds display missing from top bar. The reference GTO Wizard shows blind amounts (e.g., '0.5/1') near the game type/stack depth selectors. Add blinds information display to the top bar.
+**Description:** Commit `2e5fb03` accidentally included `apps/web/public/sw.js~Stashed changes` — an editor backup file (10,848 bytes of auto-generated service worker code). Remove from git tracking and add `*~` pattern to `.gitignore` to prevent future backup file commits.
 **Success criteria:**
-- Top bar shows blinds information matching the selected game type (e.g., '0.5/1' for Cash)
-- Visible on page load
-- 0 JS console errors
-**Coach checks:** Open /study, verify blinds are displayed in top bar.
+- `git rm apps/web/public/sw.js~Stashed\ changes` succeeds
+- `*~` added to `.gitignore`
+- Stashed file no longer appears in `git ls-files`
+**Coach checks:** Run `git ls-files | grep '~'` — should return nothing.
