@@ -46,6 +46,8 @@ export default function StudyPage() {
   const [mode, setMode] = useState<'preflop' | 'postflop'>('preflop')
   const [activePosition, setActivePosition] = useState('UTG')
   const [selectedCell, setSelectedCell] = useState<string | null>(null)
+  const [feedbackState, setFeedbackState] = useState<{ isCorrect: boolean; selectedAction: string; gtoAction: string; evDiff: number } | null>(null)
+  const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [rangeData, setRangeData] = useState<Map<string, HandData>>(new Map())
   const [isSolverMode, setIsSolverMode] = useState(false)
   const [stackDepth, setStackDepth] = useState(100)
@@ -218,6 +220,23 @@ export default function StudyPage() {
       size: (matchingAct as any).size,
     }])
     setActionFilter(null)
+  }
+
+  // ── GTO feedback action handler ──
+  function handleActionWithFeedback(actionBase: string) {
+    if (selectedCell && rangeData.size > 0) {
+      const handData = rangeData.get(selectedCell)
+      if (handData) {
+        const gtoBase = getGtoActionBase(handData.action)
+        const clickedBase = actionBase.startsWith('raise') ? 'raise' : actionBase
+        const isCorrect = clickedBase === gtoBase
+        const evDiff = isCorrect ? 0 : -(handData.equity * 3)
+        if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current)
+        setFeedbackState({ isCorrect, selectedAction: actionBase, gtoAction: handData.action, evDiff })
+        feedbackTimerRef.current = setTimeout(() => setFeedbackState(null), 2000)
+      }
+    }
+    handleActionClick(actionBase)
   }
 
   // ── Postflop action handler ──
@@ -575,6 +594,7 @@ export default function StudyPage() {
           onSelectPosition={handleSelectPosition}
           onActionClick={handleActionClick}
           onActionFilter={setActionFilter}
+          onActionFeedback={handleActionWithFeedback}
         />
       ) : (
         <StudyPlayerTiles
@@ -736,6 +756,29 @@ export default function StudyPage() {
         }}
         currentBoard={pfBoard}
       />
+
+      {/* ── GTO Feedback Overlay ── */}
+      {feedbackState && (
+        <div role="status" aria-live="polite" style={{
+          position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          zIndex: 1000, background: 'rgba(0,0,0,0.9)', borderRadius: 16,
+          padding: '20px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+          border: `2px solid ${feedbackState.isCorrect ? '#00C853' : '#E53935'}`,
+          boxShadow: `0 0 24px ${feedbackState.isCorrect ? '#00C85344' : '#E5393544'}`,
+        }}>
+          <span style={{ fontSize: 48, lineHeight: 1, color: feedbackState.isCorrect ? '#00C853' : '#E53935' }}>
+            {feedbackState.isCorrect ? '✓' : '✗'}
+          </span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>
+            {feedbackState.isCorrect ? 'GTO Correct' : 'Not optimal'}
+          </span>
+          <span style={{ fontSize: 12, color: '#aaa' }}>
+            {feedbackState.isCorrect
+              ? `EV: +${(feedbackState.evDiff).toFixed(1)}bb`
+              : `EV cost: ${Math.abs(feedbackState.evDiff).toFixed(1)}bb`}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

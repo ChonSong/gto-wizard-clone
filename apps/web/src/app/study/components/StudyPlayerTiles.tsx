@@ -33,6 +33,7 @@ export function StudyPlayerTiles({
   onSelectPosition,
   onActionClick,
   onActionFilter,
+  onActionFeedback,
   customActions,
 }: {
   positions: PositionInfo[]
@@ -45,6 +46,7 @@ export function StudyPlayerTiles({
   onSelectPosition: (pos: string) => void
   onActionClick: (actionBase: string) => void
   onActionFilter: (filter: string | null) => void
+  onActionFeedback?: (actionBase: string) => void
   customActions?: Record<string, ActionDef[]>
 }) {
   return (
@@ -136,7 +138,7 @@ export function StudyPlayerTiles({
                     const isActiveFilter = actionFilter === act.actionBase
                     return (
                       <div key={act.id}
-                        onClick={(e) => { e.stopPropagation(); onActionClick(act.actionBase) }}
+                        onClick={(e) => { e.stopPropagation(); onActionClick(act.actionBase); onActionFeedback?.(act.actionBase) }}
                         onMouseEnter={() => onActionFilter(act.actionBase)}
                         onMouseLeave={() => onActionFilter(null)}
                         onKeyDown={(e) => {
