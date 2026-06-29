@@ -251,11 +251,32 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Any fixed tests have stable selectors (aria-label, data-testid, role)
 **Coach checks:** Run `npx playwright test` and report pass/fail counts.
 
-### Task: visual-comparison-study-reference (recovery-generated)
-**Priority:** P2
-**Description:** Load the reference GTO Wizard study page (app.gtowizard.com/study) and the clone (wiz.codeovertcp.com/study) side-by-side. Compare visual layout, colors, spacing, and component positions. Identify any remaining visual gaps not covered by previous fix tasks. Focus on: position tiles, matrix grid cells, right sidebar tabs, action prompt bar, solver status indicator.
+### Task: visual-comparison-study-reference (recovery-generated) ✅
+**Priority:** P2 — **Coach verified 2026-06-30T03:30:00Z**
+**Status:** Completed by Player commit `101a186`. Investigation complete. Report at `docs/visual-comparison-study-report.md`. Found 1 P1 gap (matrix colors inverted: red=raise on clone, blue=raise on reference), 2 P3 gaps (blinds display, bottom bar). P1 gap confirmed by Coach browser verification.
+**Evidence:** Report docs + Coach browser screenshots.
+
+## Phase 6 — Visual Gap Fixes (Current)
+
+### Task: fix-study-matrix-cell-colors
+**Priority:** P1
+**Description:** Matrix cell coloring is inverted vs reference (app.gtowizard.com/study). Reference uses blue for raise action cells; clone uses red for raise. Fix the matrix cell color scheme to match reference:
+1. Raise action cells should be blue (not red)
+2. Fold cells should be dark/black
+3. Verify that action button legend colors (red square near Fold button on position tiles) match the actual matrix colors
 **Success criteria:**
-- Comparison report identifies ≥0 new visual gaps with screenshots
-- Any P1 visual gaps (major layout/color mismatch) documented as new fix tasks
-- No changes to code — this is an investigation-only task
-**Coach checks:** Review comparison report and determine if new fix tasks are needed.
+- Matrix raise cells are blue (matching reference app.gtowizard.com/study)
+- Fold cells are dark/black
+- Action legend colors are internally consistent with matrix colors
+- No change to data or functionality — visual color mapping only
+- 0 JS console errors on study page
+**Coach checks:** Open /study, verify raise cells are blue. Compare against reference screenshot.
+
+### Task: fix-study-top-bar-blinds
+**Priority:** P3
+**Description:** Blinds display missing from top bar. The reference GTO Wizard shows blind amounts (e.g., '0.5/1') near the game type/stack depth selectors. Add blinds information display to the top bar.
+**Success criteria:**
+- Top bar shows blinds information matching the selected game type (e.g., '0.5/1' for Cash)
+- Visible on page load
+- 0 JS console errors
+**Coach checks:** Open /study, verify blinds are displayed in top bar.
