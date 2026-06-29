@@ -8,7 +8,7 @@
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
   "current_task": "fix-solver-status-indicator-flicker",
-  "current_sha": "1e1ba65",
+  "current_sha": "a4a73aa",
   "completed": [
     {
       "task": "fix-practice-poker-table-visualization",
@@ -126,5 +126,5 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick ~13:50. Exhaustion recovery: all Phase 4 tasks already complete. Generated 3 Phase 5 tasks: fix-solver-status-indicator-flicker (P2), full-e2e-test-validation (P3), visual-comparison-study-reference (P2). Next: fix-solver-status-indicator-flicker."
+  "note": "Tick 2026-06-30T01:10:00Z. Fixed solver status indicator flicker (a4a73aa). Root cause: useSolverHealth effect dep was only [pollMs], never re-ran on tree nav. Fix: added recheckDeps param with [treePath.length, activePosition] — re-checks immediately on state transitions. 53/53 vitest pass, build clean. Next: await Coach review."
 }
