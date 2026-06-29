@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
-  "current_task": "fix-gto-feedback-allin-raise-family",
-  "current_sha": "f44afb1",
+  "current_task": "fix-study-frequency-action-letter",
+  "current_sha": "a6e85cf",
   "completed": [
     {
       "task": "fix-top-bar-action-prompts",
@@ -22,9 +22,17 @@
       "task": "fix-study-gto-feedback-overlay",
       "sha": "f44afb1",
       "date": "2026-06-29",
-      "summary": "Added GTO feedback overlay with ✓/✗ + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
+      "summary": "Added GTO feedback overlay with \u2713/\u2717 + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
       "coach": "fixed",
       "coach_verified_at": "2026-06-29T12:38:00Z"
+    },
+    {
+      "task": "fix-gto-feedback-allin-raise-family",
+      "sha": "a6e85cf",
+      "date": "2026-06-29",
+      "summary": "Collapsed all_in to raise family in both getGtoActionBase() and handleActionWithFeedback(). GTO=all_in + click raise \u2192 \u2713. GTO=raise + click all_in \u2192 \u2713.",
+      "coach": "pending",
+      "coach_verified_at": null
     }
   ],
   "spec_gaps": [
@@ -32,15 +40,15 @@
       "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
       "type": "invalid_spec",
       "priority": 1,
-      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid — removed.",
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
       "cycles_stagnant": 5,
       "status": "escalated"
     },
     {
-      "item": "Left sidebar navigation vs top nav — architectural difference from reference",
+      "item": "Left sidebar navigation vs top nav \u2014 architectural difference from reference",
       "type": "architectural_gap",
       "priority": 1,
-      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change — defer.",
+      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change \u2014 defer.",
       "cycles_stagnant": 5,
       "status": "escalated"
     },
@@ -48,18 +56,27 @@
       "item": "Missing game tree visualization for Solutions page",
       "type": "missing_feature",
       "priority": 1,
-      "evidence": "Reference shows interactive game tree. Large effort — defer.",
+      "evidence": "Reference shows interactive game tree. Large effort \u2014 defer.",
       "cycles_stagnant": 5,
       "status": "escalated"
     }
   ],
   "fidelity_history": [
-    {"sha": "f44afb1", "cfs": 0.9989, "timestamp": "2026-06-29T12:38:00Z"}
+    {
+      "sha": "f44afb1",
+      "cfs": 0.9989,
+      "timestamp": "2026-06-29T12:38:00Z"
+    },
+    {
+      "sha": "a6e85cf",
+      "cfs": 0.9989,
+      "timestamp": "2026-06-29T03:13:31Z"
+    }
   ],
   "coach_review": {
-    "last_reviewed_sha": "f44afb1",
-    "last_reviewed_at": "2026-06-29T12:38:00Z",
-    "verdict": "FIX",
-    "notes": "Tick 2026-06-29T12:38:00Z. Coach FIXED f44afb1 (GTO feedback overlay). P2 bug: all_in not grouped with raise family in feedback comparison. P3: EV display shows +0.0bb on correct. CFS 0.9989 stable. All structural gates pass (53/53 tests, build OK, deploy 200). RefQA runner timed out (infra debt). Next: fix-gto-feedback-allin-raise-family."
+    "last_reviewed_sha": "a6e85cf",
+    "last_reviewed_at": "2026-06-29T03:13:31Z",
+    "verdict": "pending",
+    "notes": "Tick 2026-06-29T03:13:31Z. Player fixed all_in/raise family bug in GTO feedback. Awaiting Coach review."
   }
 }
