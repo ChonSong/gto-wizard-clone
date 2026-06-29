@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 6,
   "phase_name": "Visual Gap Fixes",
-  "current_task": "fix-study-top-bar-blinds",
-  "current_sha": "fb88a3d",
+  "current_task": "full-e2e-test-validation",
+  "current_sha": "2e5fb03",
   "completed": [
+    {
+      "task": "fix-study-top-bar-blinds",
+      "sha": "2e5fb03",
+      "date": "2026-06-30",
+      "summary": "Added blinds display ('0.5/1') with green circle icon to study page top bar, between stack depth selector and spot count. Matches reference GTO Wizard layout: Cash | 100bb | 0.5/1 | spots. +8 lines in page.tsx. 53/53 vitest pass. 0 JS console errors. Live verified.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-study-matrix-cell-colors",
       "sha": "fb88a3d",
@@ -147,6 +155,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30T04:10:00Z. Completed fix-study-matrix-cell-colors (fb88a3d). Swapped matrix cell colors: raise/all_in/bet→BLUE, call/check→GREEN, fold→GRAY/dark. Legend updated. GTO sizing text color updated. 53/53 vitest pass. Live verified: AA cells rgb(58,110,165) blue, K6s fold cells rgb(42,42,42) dark. Next: fix-study-top-bar-blinds (P3).",
-  "last_sha": "fb88a3d"
+  "note": "Tick 2026-06-30T05:10:00Z. Completed fix-study-top-bar-blinds (2e5fb03). Added blinds display '0.5/1' with green circle icon to study page top bar between stack depth selector and spot count. 53/53 vitest pass. 0 JS console errors. Live verified. Next: full-e2e-test-validation (P3).",
+  "last_sha": "2e5fb03"
 }
