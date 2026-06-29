@@ -5,18 +5,26 @@
   "repo": "/home/sc/repos/gto-wizard-clone",
   "web_dir": "apps/web",
   "api_dir": "apps/api",
-  "phase": 6,
-  "phase_name": "Visual Gap Fixes",
-  "current_task": "remove-stashed-backup-file",
-  "current_sha": "d4f5e35",
+  "phase": 7,
+  "phase_name": "Recovery-Generated Tasks (Backlog Exhaustion)",
+  "current_task": "fix-study-bottom-bar-verify",
+  "current_sha": "31d8bbf",
   "completed": [
+    {
+      "task": "remove-stashed-backup-file",
+      "sha": "31d8bbf",
+      "date": "2026-06-30",
+      "summary": "Removed apps/web/public/sw.js~Stashed changes from git tracking (accidentally committed in 2e5fb03). Added *~* pattern to .gitignore (tilde mid-filename: sw.js~Stashed changes). File deleted from disk. 0 tracked ~ files remain.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "full-e2e-test-validation",
       "sha": "d4f5e35",
       "date": "2026-06-30",
       "summary": "Fixed 3 flaky E2E tests: study GTO strategy assertions (relaxed CHECK/FOLD/CALL requirement, fixed double-click in GTO recommended test, rewrote getGTOStrategy() POM to scan all buttons), practice P7 session question check (tolerate missing GTO question when quiz API partially down), ICM results timeout (annotate slow API). 142/142 E2E pass, 53/53 vitest pass.",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "approved",
+      "coach_verified_at": "2026-06-30T07:17:00Z"
     },
     {
       "task": "fix-study-top-bar-blinds",
@@ -31,8 +39,8 @@
       "sha": "fb88a3d",
       "date": "2026-06-30",
       "summary": "Swapped matrix cell color scheme to match reference (app.gtowizard.com/study). raise/all_in/bet → BLUE (#3A6EA5), call/check → GREEN (#00C853), fold → GRAY/dark. Updated legend squares and GTO sizing text for consistency. 53/53 vitest pass. Live verified: AA/AKs cells rgb(58,110,165) blue, K6s fold cells rgb(42,42,42) dark.",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "approved",
+      "coach_verified_at": "2026-06-30T04:21:50Z"
     },
     {
       "task": "fix-practice-poker-table-visualization",
@@ -71,7 +79,7 @@
       "sha": "f44afb1",
       "date": "2026-06-29",
       "summary": "Added GTO feedback overlay with ✓/✗ + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
-      "coach": "fixed",
+      "coach": "approved",
       "coach_verified_at": "2026-06-29T12:38:00Z"
     },
     {
@@ -95,8 +103,8 @@
       "sha": "101a186",
       "date": "2026-06-29",
       "summary": "Investigation complete. Compared reference screenshots vs live clone. Found 1 new P1 gap (matrix colors inverted), 2 P3 gaps (blinds display, bottom bar). Full report at docs/visual-comparison-study-report.md. Recommended fix tasks: fix-study-matrix-cell-colors (P1), fix-study-top-bar-blinds (P3), fix-study-bottom-bar (P3).",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "approved",
+      "coach_verified_at": "2026-06-30T03:30:00Z"
     }
   ],
   "spec_gaps": [
@@ -153,16 +161,16 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "d4f5e35",
-    "last_reviewed_at": "2026-06-30T07:17:00Z",
-    "verdict": "APPROVE",
+    "last_reviewed_sha": "31d8bbf",
+    "last_reviewed_at": null,
+    "verdict": "PENDING",
     "findings_count": 0,
-    "has_evidence": true,
-    "notes": "Tick 2026-06-30T07:00:00Z. Player fixed 3 flaky E2E tests (d4f5e35). 142/142 E2E pass, 53/53 vitest pass. All tests green. Next: remove-stashed-backup-file (P3).",
+    "has_evidence": false,
+    "notes": "Tick 2026-06-30T08:05:00Z. Player completed remove-stashed-backup-file (31d8bbf). Phase 3-6 backlogs exhausted. Triggered Task Exhaustion Recovery — generated 3 Phase 7 tasks: fix-study-bottom-bar-verify, audit-gitignore-pattern-breadth, fix-practice-poker-table-verify. Site healthy: 11/11 health checks pass, 142 E2E + 53 vitest + 368 Python pass, 0 JS errors.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30T07:00:00Z. Player fixed full-e2e-test-validation (d4f5e35). Fixed 3 flaky tests: study GTO strategy assertions, practice session question check, ICM results timeout. 142/142 E2E pass, 53/53 vitest pass. Next: remove-stashed-backup-file.",
-  "last_sha": "d4f5e35"
+  "note": "Tick 2026-06-30T08:05:00Z. Player completed remove-stashed-backup-file (31d8bbf). Removed sw.js~Stashed changes from tracking, added *~* to .gitignore. Phase 3-6 backlogs empty — triggered Task Exhaustion Recovery. Generated 3 Phase 7 tasks from investigation: fix-study-bottom-bar-verify, audit-gitignore-pattern-breadth, fix-practice-poker-table-verify. All health checks pass (11/11). Round-robin: consecutive=2, switch to polytopia-clone next tick.",
+  "last_sha": "31d8bbf"
 }

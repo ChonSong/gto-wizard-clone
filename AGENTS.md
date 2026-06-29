@@ -275,11 +275,40 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Status:** Fixed by Player commit `2e5fb03`. Added blinds display ('0.5/1') with green circle icon to study page top bar, between stack depth selector and spot count. 53/53 vitest pass. 0 JS console errors. Verified live: blinds persist across position switch (UTG→HJ), hand selection (KK), and mode switch (Preflop→Postflop). RefQA 4/4 pass.
 **Evidence:** Browser screenshots at https://wiz.codeovertcp.com/study. CFS 0.9981 stable.
 
-### Task: remove-stashed-backup-file
+### Task: remove-stashed-backup-file ✅
+**Priority:** P3 — **Completed 2026-06-30** (commit `31d8bbf`)
+**Status:** Fixed by Player commit `31d8bbf`. Removed `apps/web/public/sw.js~Stashed changes` from git tracking (was accidentally committed in 2e5fb03). Added `*~*` pattern to `.gitignore` to prevent future editor backup file commits. Note: `*~` didn't match because the tilde is mid-filename (sw.js~Stashed changes), so `*~*` was used instead. File deleted from disk, 0 tracked `~` files remain.
+**Evidence:** `git ls-files | grep '~'` returns nothing. `.gitignore` includes `*~*`.
+
+## Phase 7 — Recovery-Generated Tasks (Backlog Exhaustion)
+
+**Generated:** 2026-06-30 by Player exhaustion recovery. Phase 3-6 backlogs exhausted. Site healthy: 11/11 health checks pass, 142 E2E + 53 vitest + 368 Python tests pass, 0 JS console errors. Two architectural P1 gaps (left sidebar nav, game tree visualization) remain deferred. Generated tasks target remaining P3 gaps and hygiene improvements.
+
+### Task: fix-study-bottom-bar-verify (recovery-generated)
 **Priority:** P3
-**Description:** Commit `2e5fb03` accidentally included `apps/web/public/sw.js~Stashed changes` — an editor backup file (10,848 bytes of auto-generated service worker code). Remove from git tracking and add `*~` pattern to `.gitignore` to prevent future backup file commits.
+**Description:** The visual comparison report at `docs/visual-comparison-study-report.md` claims a P3 gap: "Bottom Bar — Replace duplicate nav with slim footer bar." However, investigation of `apps/web/src/app/layout.tsx` shows only a `<Header />` at top and `<main>` — there is no bottom bar or duplicate nav. Load the reference screenshot (`docs/reference-study.png`) via vision_analyze and verify whether the reference actually shows a dedicated footer bar. If yes, implement a slim footer component matching the reference. If the report is inaccurate, update the visual comparison report to correct the claim.
 **Success criteria:**
-- `git rm apps/web/public/sw.js~Stashed\ changes` succeeds
-- `*~` added to `.gitignore`
-- Stashed file no longer appears in `git ls-files`
+- Reference screenshot analyzed for bottom bar presence
+- If reference has footer: implement slim footer bar with session controls
+- If reference has no footer: update `docs/visual-comparison-study-report.md` to correct the P3 gap claim
+- 0 JS console errors
+**Coach checks:** Compare reference screenshot vs live site bottom area.
+
+### Task: audit-gitignore-pattern-breadth (recovery-generated)
+**Priority:** P3
+**Description:** Commit `31d8bbf` added `*~*` to `.gitignore` to catch editor backup files with tildes mid-filename (e.g., `sw.js~Stashed changes`). This pattern is broader than necessary — it matches any file with a tilde anywhere in the name, which could potentially mask legitimate files in edge cases. Review whether `*~Stashed*` or a path-specific entry (e.g., `apps/web/public/*~*`) would be more targeted while still preventing backup file commits.
+**Success criteria:**
+- Review all files in the repo with tildes in their names (if any exist)
+- Either justify `*~*` as safe (no legitimate tilde files exist) or narrow to a more targeted pattern
+- No tracked backup files remain
 **Coach checks:** Run `git ls-files | grep '~'` — should return nothing.
+
+### Task: fix-practice-poker-table-verify (recovery-generated)
+**Priority:** P3
+**Description:** The practice page at `/practice` has a PokerTable SVG component (line 231 of `apps/web/src/app/practice/page.tsx`) showing green felt gradient and player positions. This task was marked completed but Coach hasn't verified it. Load the live page at `https://wiz.codeovertcp.com/practice` and the reference at `docs/reference-trainer.png`. Verify the poker table visualization matches the reference in: green felt gradient, player position markers (UTG, HJ, CO, BTN, SB, BB), active position highlight, and board card display. Fix any discrepancies.
+**Success criteria:**
+- Live practice page shows poker table with green felt
+- Player positions visible around the table
+- Board cards displayed when applicable
+- Visual comparison against reference-trainer.png shows acceptable match
+**Coach checks:** Load `/practice` and verify poker table visualization.
