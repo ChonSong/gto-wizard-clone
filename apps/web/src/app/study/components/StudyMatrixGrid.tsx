@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  RED_BRIGHT, GRAY,
+  BLUE, GREEN, GRAY,
   MATRIX_HANDS, ACTION_COLORS, ACTION_LABELS,
   type HandData, type ActiveTab,
 } from '../constants'
@@ -318,11 +318,11 @@ export function StudyMatrixGrid({
       {/* Legend */}
       <div style={{ display: 'flex', gap: 12, padding: '0 12px 8px', fontSize: 10, color: '#999' }}>
         <span>
-          <span style={{ display: 'inline-block', width: 10, height: 10, background: RED_BRIGHT, borderRadius: 2, marginRight: 3, verticalAlign: 'middle' }} />
+          <span style={{ display: 'inline-block', width: 10, height: 10, background: BLUE, borderRadius: 2, marginRight: 3, verticalAlign: 'middle' }} />
           Raise
         </span>
         <span>
-          <span style={{ display: 'inline-block', width: 10, height: 10, background: '#3A6EA5', borderRadius: 2, marginRight: 3, verticalAlign: 'middle' }} />
+          <span style={{ display: 'inline-block', width: 10, height: 10, background: GREEN, borderRadius: 2, marginRight: 3, verticalAlign: 'middle' }} />
           Call
         </span>
         <span>

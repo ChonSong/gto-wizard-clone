@@ -28,13 +28,17 @@ export const GREEN = '#00C853'
 export const GRAY = '#2a2a2a'
 
 // ── Action Colors ──
+// Color convention matching reference (app.gtowizard.com/study):
+//   BLUE = raise/play (aggressive actions: raise, all_in, bet)
+//   GREEN = call/check (passive actions)
+//   GRAY/dark = fold
 export const ACTION_COLORS: Record<string, string> = {
-  raise: RED_BRIGHT,
-  call: BLUE,
+  raise: BLUE,
+  call: GREEN,
   fold: GRAY,
-  all_in: RED_DARK,
-  check: '#555',
-  bet: '#E65100',
+  all_in: BLUE,
+  check: GREEN,
+  bet: BLUE,
 }
 
 // ── Hand Matrix (13×13) ──

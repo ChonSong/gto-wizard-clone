@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  GREEN, RED, RED_DARK, GRAY, RED_BRIGHT, BLUE,
+  GREEN, RED, RED_DARK, GRAY, BLUE,
   SUIT_SYM, ALL_POSITIONS, ACTION_COLORS, ACTION_LABELS, MATRIX_HANDS,
   type HandData, type BoardCard, type RightTopTab, type RightSubTab,
   type BoardStreet, type PositionId,
@@ -220,7 +220,7 @@ function HandDetailsTab({
 
       {selectedHandData.action.startsWith('raise') && (
         <div style={{ marginTop: 8, fontSize: 11, color: '#aaa', textAlign: 'center', padding: '4px 8px', background: '#151515', borderRadius: 6 }}>
-          GTO sizing: <strong style={{ color: RED_BRIGHT }}>{selectedHandData.action.replace('raise_', '').replace('bb', '')}bb</strong>
+          GTO sizing: <strong style={{ color: BLUE }}>{selectedHandData.action.replace('raise_', '').replace('bb', '')}bb</strong>
           {' · '}{(selectedHandData.frequency * 100).toFixed(0)}% frequency
         </div>
       )}
