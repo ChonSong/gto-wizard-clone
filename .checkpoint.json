@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
-  "current_task": "fix-practice-poker-table-visualization",
-  "current_sha": "3bcbc46",
+  "current_task": "tbd",
+  "current_sha": "1e1ba65",
   "completed": [
+    {
+      "task": "fix-practice-poker-table-visualization",
+      "sha": "pre-existing",
+      "date": "2026-06-29",
+      "summary": "Already implemented. PokerTable SVG with green felt gradient, player positions, board area on /practice page.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-study-combo-grid-suit-icons",
       "sha": "pre-existing",
@@ -113,5 +121,5 @@
     "verdict": "APPROVE",
     "notes": "Tick 2026-06-29T18:07:00Z. Coach APPROVED fix-study-frequency-action-letter (8a71a4b). Action letter suffix (R/C/F) added to matrix frequency chips. 53/53 vitest tests pass. CFS 0.9996 stable. Reference comparison confirms format matches (\"75% R\"). No regressions. No P1 findings."
   },
-  "note": "Tick ~13:30. fix-position-tile-range-percentage (20f92f5) and fix-study-combo-grid-suit-icons both already complete. Moving to fix-practice-poker-table-visualization (last remaining recovery task)."
+  "note": "Tick ~13:45. All Phase 4 recovery tasks already complete. Backlog drained — triggering Task Exhaustion Recovery."
 }
