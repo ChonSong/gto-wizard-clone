@@ -222,15 +222,13 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Existing quiz/training functionality preserved
 **Coach checks:** Open /practice, verify poker table visualization with green felt, player positions, and board cards.
 
-### Task: fix-study-gto-feedback-overlay (recovery-generated)
-**Priority:** P2
-**Description:** When a user clicks an action in the study page, the matrix shows the selected action but there's no feedback indicating whether the selection was GTO-optimal. The reference shows a green checkmark or red X overlay after action selection, with GTO frequency comparison. Add a feedback overlay that shows after action selection indicating correct/incorrect with EV comparison.
-**Success criteria:**
-- After clicking an action button, a feedback overlay appears on the matrix
-- Green indicator if action matches GTO primary action, red if not
-- Shows EV difference between selected action and optimal
-- Disappears after 2 seconds or on next action
-**Coach checks:** Open /study, select a position, click Fold on a hand that should be raised. Verify red X or "Not optimal" feedback appears with EV comparison.
+### Task: fix-gto-feedback-allin-raise-family
+
+**Description:** GTO feedback overlay (f44afb1) marks player wrong when GTO action is 'all_in' and player clicks 'Raise' (or vice versa). Root cause: `handleActionWithFeedback` collapses only `raise*` → `'raise'`, but the Allin button has `actionBase='all_in'`. Meanwhile `getGtoActionBase()` also doesn't collapse `all_in` → `'raise'`. Both 'all_in' and 'raise*' belong to the raise family and should be compared as equivalent.
+
+**Success criteria:** On the live study page (wiz.codeovertcp.com/study), when the selected hand's GTO action is 'all_in' and the player clicks any raise button (or vice versa), the feedback overlay shows a green ✓ 'GTO Correct'. Currently it incorrectly shows ✗ 'Not optimal'.
+
+**Coach checks:** Open /study, find a hand where GTO says All-in, click Raise 2.5. Verify green ✓ appears. Then find a hand where GTO says Raise, click Allin 100. Verify green ✓ appears.
 
 ### Task: fix-study-frequency-action-letter (recovery-generated)
 **Priority:** P3

@@ -7,6 +7,8 @@
   "api_dir": "apps/api",
   "phase": 3,
   "phase_name": "Infrastructure & Visual Polish",
+  "current_task": "fix-gto-feedback-allin-raise-family",
+  "current_sha": "f44afb1",
   "completed": [
     {
       "task": "fix-top-bar-action-prompts",
@@ -17,481 +19,47 @@
       "coach_verified_at": "2026-06-26T08:35:00Z"
     },
     {
-      "task": "fix-e2e-test-runner-conflict",
-      "sha": "b07dccd",
-      "date": "2026-06-26",
-      "summary": "Resolved Playwright version conflict.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T08:35:00Z"
-    },
-    {
-      "task": "fix-position-selector-player-tiles",
-      "sha": "eff98bb",
-      "date": "2026-06-26",
-      "summary": "Replaced spot card bar with player tile layout.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T08:35:00Z"
-    },
-    {
-      "task": "fix-stack-size-bb-display",
-      "sha": "2a8d18f",
-      "date": "2026-06-25",
-      "summary": "Position cards show stack size in bb.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T08:35:00Z"
-    },
-    {
-      "task": "add-missing-right-sidebar-sub-tabs",
-      "sha": "dc78a8c",
-      "date": "2026-06-26",
-      "summary": "Added 4 missing right sidebar sub-tabs (ACT CHART, RANGE CMP, EQ CHART, CMP EV).",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-filters-sub-tab-stub",
-      "sha": "8d54020",
-      "date": "2026-06-26",
-      "summary": "Implemented Filters sub-tab with hand category checkboxes.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T08:35:00Z"
-    },
-    {
-      "task": "fix-blockers-sub-tab-missing",
-      "sha": "ac3a20b",
-      "date": "2026-06-26",
-      "summary": "Added Blockers sub-tab with card removal analysis.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T08:35:00Z"
-    },
-    {
-      "task": "fix-spaced-repetition-practice-mode",
-      "sha": "2768fed",
-      "date": "2026-06-26",
-      "summary": "Implemented SM-2 algorithm training mode.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T08:35:00Z"
-    },
-    {
-      "task": "fix-action-button-uniform-heights",
-      "sha": "a87e39e",
-      "date": "2026-06-25",
-      "summary": "Uniform 57px height for all action buttons.",
-      "coach": "fixed"
-    },
-    {
-      "task": "fix-position-buttons-range-percentage",
-      "sha": "8e563b7",
-      "date": "2026-06-25",
-      "summary": "Position cards show range frequency %.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-action-summary-strip-position-aggregate",
-      "sha": "c70b45f",
-      "date": "2026-06-25",
-      "summary": "6-position aggregate strip with Fold/Call/Raise %.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-sb-range-percentage-fallback",
-      "sha": "d40ad33",
-      "date": "2026-06-26",
-      "summary": "SB position card fallback to em-dash.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-solutions-card-text-formatting",
-      "sha": "0478b35",
-      "date": "2026-06-25",
-      "summary": "Removed duplicate board text from solution cards.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-suit-colors-standard-poker",
-      "sha": "0b9cab5",
-      "date": "2026-06-25",
-      "summary": "Standard poker suit colors (hearts/diamonds red, spades/clubs white).",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-postflop-advance-to-turn-stagnant",
-      "sha": "1782548",
-      "date": "2026-06-25",
-      "summary": "Fixed postflop street advancement bug.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategies-placeholder-cards",
-      "sha": "e722a14",
-      "date": "2026-06-26",
-      "summary": "Distinct board card placeholders.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-study-matrix-cell-class",
-      "sha": "2af472f",
-      "date": "2026-06-26",
-      "summary": "Applied study-matrix-cell className.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-study-matrix-font-size",
-      "sha": "fc77b25",
-      "date": "2026-06-25",
-      "summary": "Increased matrix cell font size.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-variants-listing-missing-links",
-      "sha": "24f5d8d",
-      "date": "2026-06-25",
-      "summary": "Added equity calculator links for all variants.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-matrix-legend-call-color",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Matrix legend shows all 3 colors (Red=Raise, Blue=Call, Dark=Fold). Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategy-lookup",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Strategy lookup works, returns full preflop GTO data. API on port 8001.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategy-route-order",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Route order resolved \u2014 no 'Invalid strategy key format' error.",
-      "coach": "approved"
-    },
-    {
-      "task": "seed-preflop-strategies",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Preflop strategy data seeded for all positions and common stack depths.",
-      "coach": "approved"
-    },
-    {
-      "task": "interactive-postflop-study-buttons",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Postflop training mode with board cards, action buttons, GTO breakdown, street breadcrumb, configure spot panel. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "quiz-frontend-page",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Quiz page with categories, difficulty levels, session stats. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "hand-history-frontend-page",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Hand History page with search, filters, import/export. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "plo4-frontend-page",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "PLO4 equity calculator with hand inputs, board, simulation slider. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-omaha-api-url",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Omaha page with PLO5/Hi-Lo/Shortdeck tabs works, no 404 errors. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-bomb-pot-api-url",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Bomb Pot page with player count, straddle map, equity calculator. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-double-board-api-url",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Double Board page loads (200), no console errors. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-strategies-api-url-prefix",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Strategies page loads with board inputs, position/stack/bet selectors. 200 OK.",
-      "coach": "approved"
-    },
-    {
-      "task": "document-seed-script",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Seed data documentation present in AGENTS.md Conventions section.",
-      "coach": "approved"
-    },
-    {
-      "task": "keep-api-server-running",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "API runs as systemd service (gto-wizard-api.service) on port 8001. Auto-restarts.",
-      "coach": "approved"
-    },
-    {
-      "task": "add-deploy-health-monitoring",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "scripts/deploy-health-check.sh checks 11 endpoints. make health-check target exists. All pass.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-deploy-502-clean-build",
-      "sha": "d85a95b",
-      "date": "2026-06-26",
-      "summary": "Added clean-build npm script to apps/web/package.json: rm -rf .next && next build.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T14:06:00Z"
-    },
-    {
-      "task": "postflop-spot-configuration",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Configure Spot panel with collapsible toggle. Verified live on postflop mode.",
-      "coach": "approved"
-    },
-    {
-      "task": "postflop-street-navigation",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "Street breadcrumb shows PREFLOP\u2192FLOP\u2192TURN\u2192RIVER with actions. Verified live.",
-      "coach": "approved"
-    },
-    {
-      "task": "postflop-solver-api-endpoint",
-      "sha": "inferred-done",
-      "date": "2026-06-25",
-      "summary": "GTO breakdown shows cached strategy data with frequencies and EV. Solver health endpoint returns 200.",
-      "coach": "approved"
-    },
-    {
-      "task": "fix-sb-preflop-stack-depth-integer",
-      "sha": "31ce522",
-      "date": "2026-06-26",
-      "summary": "Fixed SB stack_depth integer type for primary preflop-range API call via Math.round().",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-25T23:35:00Z"
-    },
-    {
-      "task": "fix-sb-aggregate-stack-depth",
-      "sha": "8893efd",
-      "date": "2026-06-26",
-      "summary": "Fixed aggregate summary strip stackDepth - 0.5 float for SB by wrapping with Math.round().",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T10:05:00Z"
-    },
-    {
-      "task": "start-solver-docker-service",
-      "sha": "67b5214",
-      "date": "2026-06-26",
-      "summary": "Added solver service to docker-compose.yml, built Docker image, started container. gRPC on 50051.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T13:21:00Z"
-    },
-    {
-      "task": "add-clean-build-npm-script",
-      "sha": "d85a95b",
-      "date": "2026-06-26",
-      "summary": "Added clean-build npm script to apps/web/package.json.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T14:06:00Z"
-    },
-    {
-      "task": "fix-study-matrix-readability",
-      "sha": "503b7fa",
-      "date": "2026-06-26",
-      "summary": "Increased cell font 10px\u219212px, freq chips 8px\u219211px with bg pill, padding 0\u21924px 2px.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-26T19:35:00Z"
-    },
-    {
-      "task": "visual-polish-reference-comparison",
-      "sha": "136f19f",
-      "date": "2026-06-26",
-      "summary": "Compared 12 reference screenshots against 8 live pages. Identified 6 visual gaps. Generated 3 actionable fix tasks.",
-      "coach": "pending"
-    },
-    {
-      "task": "fix-dashboard-hero-polish",
-      "sha": "d690578",
-      "date": "2026-06-27",
-      "summary": "Added radial gradient glow behind hero CTA buttons, lime-green left-border indicator for active nav items, feature card box-shadow.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-27T00:41:17Z"
-    },
-    {
-      "task": "fix-e2e-console-audit-backend-resilience",
-      "sha": "5145bb4",
-      "date": "2026-06-27",
-      "summary": "Added BACKEND_API_PATTERN filter to study-console-audit tests. 3 console-audit tests pass.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-27T00:41:17Z"
-    },
-    {
-      "task": "fix-study-action-buttons-advance-position",
-      "sha": "e432960",
-      "date": "2026-06-27",
-      "summary": "Added position-card action buttons that filter matrix grid and advance position on click.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-27T01:35:54Z"
-    },
-    {
-      "task": "fix-study-hover-filter-commit-action",
-      "sha": "dcd713d",
-      "date": "2026-06-27",
-      "summary": "Added hover-to-filter grid interaction and click-commits action + position advance.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-27T01:35:54Z"
-    },
-    {
-      "task": "feat-solver-hand-crafted-ranges",
-      "sha": "1579cb4",
-      "date": "2026-06-27",
-      "summary": "Replaced equity-based GTO range model with hand-crafted range definitions per position.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-27T01:35:54Z"
-    },
-    {
-      "task": "feat-game-tree-navigation",
-      "sha": "687a3f6",
-      "date": "2026-06-27",
-      "summary": "Game tree navigation: tree_path API, frontend breadcrumb, context-aware action buttons, Cash/MTT selector.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-27T12:45:00Z"
-    },
-    {
-      "task": "fix-solver-status-indicator-flicker",
-      "sha": "4371b5e",
-      "date": "2026-06-27",
-      "summary": "Replaced fetchRange-derived loading/error status with independent useSolverHealth hook polling /api/v1/solver/health every 10s. [Player note: implemented and deployed, was awaiting coach sync]",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T15:10:00Z"
-    },
-    {
-      "task": "e2e-test-suite-validation",
-      "sha": "9eb4353",
-      "date": "2026-06-28",
-      "summary": "Resolved 22 failing E2E tests (118 to 140 passing). Added Postflop Training button, fixed RFI position context. [Player note: implemented and deployed, was awaiting coach sync]",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T15:10:00Z"
-    },
-    {
-      "task": "fix-utg-range-low-pairs-frequency",
-      "sha": "3e850dd",
-      "date": "2026-06-28",
-      "summary": "Moved low pocket pairs (22-55) from always_raise to mixed freq per real solver output. [Player note: implemented and deployed, was awaiting coach sync]",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T15:10:00Z"
-    },
-    {
-      "task": "fix-action-filter-hover-accessibility",
-      "sha": "17f487c",
-      "date": "2026-06-28",
-      "summary": "Keyboard-accessible action filter toggle. Enter/Space on action button toggles matrix filter. [Player note: implemented and deployed, was awaiting coach sync]",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T15:10:00Z"
-    },
-    {
-      "task": "fix-study-aggregate-strip-color-bars",
-      "sha": "3e6f570",
+      "task": "fix-study-gto-feedback-overlay",
+      "sha": "f44afb1",
       "date": "2026-06-29",
-      "summary": "Replaced text-only F/C/R percentages with horizontal stacked bars (fold=dark, call=blue #3A6EA5, raise=red #E53935) matching reference study interface pixel analysis. [Player note: implemented and deployed, was awaiting coach sync]",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T15:10:00Z"
-    },
-    {
-      "task": "tandem-reference-comparison-gtowizard",
-      "sha": "7f13d9f",
-      "date": "2026-06-28",
-      "summary": "Comprehensive comparison of 4 reference screenshots against live clone pages. 14 gaps identified (3 P1, 5 P2, 6 P3), 9 already fixed. Generated 5 recovery tasks: fix-position-tile-range-percentage (P1), fix-study-combo-grid-suit-icons (P2), fix-practice-poker-table-visualization (P2), fix-study-gto-feedback-overlay (P2), fix-study-frequency-action-letter (P3). Report at docs/reference-comparison-gtowizard.md.",
-      "coach": "pending"
-    },
-    {
-      "task": "fix-gitignore-agent-qa-artifacts",
-      "sha": "already-resolved",
-      "date": "2026-06-28",
-      "summary": ".agent-qa/ already in .gitignore, 0 tracked webm files. Task was already completed before this tick.",
-      "coach": "pending"
-    },
-    {
-      "task": "fix-position-tile-range-percentage",
-      "sha": "20f92f5",
-      "date": "2026-06-28",
-      "summary": "Position tiles show range % as primary metric (e.g., \"16.8%\") with stack size on active tile. Range computed from allPositionData already fetched for aggregate strip.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T02:01:00Z"
-    },
-    {
-      "task": "fix-study-combo-grid-suit-icons",
-      "sha": "a5c488c",
-      "date": "2026-06-28",
-      "summary": "Added per-combo weight % display (green text), click-to-highlight matrix cell, keyboard accessibility. ComboGrid now receives handData and onCellSelect props.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T23:36:00Z"
-    },
-    {
-      "task": "fix-practice-poker-table-visualization",
-      "sha": "75f9ea1",
-      "date": "2026-06-28",
-      "summary": "Added poker table visualization to /practice page: green felt gradient background with player position markers (UTG, HJ, CO, BTN, SB, BB) around elliptical table, active position highlighting, and board card display in center. Existing quiz/training functionality preserved. 115 lines changed.",
-      "coach": "approved",
-      "coach_verified_at": "2026-06-28T23:36:00Z"
+      "summary": "Added GTO feedback overlay with ✓/✗ + EV diff after action selection. P2 bug found: all_in not grouped with raise family.",
+      "coach": "fixed",
+      "coach_verified_at": "2026-06-29T12:38:00Z"
     }
   ],
-  "health": "53_frontend_tests_pass_142_e2e_pass_poker_table_visualization",
-  "last_sha": "0f256fc",
-  "blocker": null,
-  "current_task": "fix-study-gto-feedback-overlay",
-  "all_coach_tasks_done": false,
   "spec_gaps": [
     {
       "item": "Phase 4 recovery tasks (5) have specs that contradict reference screenshots",
       "type": "invalid_spec",
       "priority": 1,
-      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid \u2014 removed.",
-      "cycles_stagnant": 4,
+      "evidence": "Pixel analysis of reference-dashboard.png shows hero is dark (#1d1d1d) with small lime-green (#aafbb2) accent dots (14.8% coverage), NOT a 320px solid green panel. Reference accent is lime #AAFBB2, NOT teal #0A6470. All 5 recovery tasks invalid — removed.",
+      "cycles_stagnant": 5,
       "status": "escalated"
     },
     {
-      "item": "Left sidebar navigation vs top nav \u2014 architectural difference from reference",
+      "item": "Left sidebar navigation vs top nav — architectural difference from reference",
       "type": "architectural_gap",
       "priority": 1,
-      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change \u2014 defer.",
-      "cycles_stagnant": 4,
+      "evidence": "Reference uses left sidebar (~120px) with vertical pills. Clone uses top horizontal nav. Major UX change — defer.",
+      "cycles_stagnant": 5,
       "status": "escalated"
     },
     {
       "item": "Missing game tree visualization for Solutions page",
       "type": "missing_feature",
       "priority": 1,
-      "evidence": "Reference shows interactive game tree. Large effort \u2014 defer.",
-      "cycles_stagnant": 4,
+      "evidence": "Reference shows interactive game tree. Large effort — defer.",
+      "cycles_stagnant": 5,
       "status": "escalated"
     }
   ],
+  "fidelity_history": [
+    {"sha": "f44afb1", "cfs": 0.9989, "timestamp": "2026-06-29T12:38:00Z"}
+  ],
   "coach_review": {
-    "last_reviewed_sha": "0f256fc",
-    "last_reviewed_at": "2026-06-28T23:36:00Z",
-    "verdict": "APPROVE",
-    "notes": "Tick 2026-06-28T23:36:00Z. Coach APPROVED pending tasks: fix-practice-poker-table-visualization (75f9ea1), fix-study-combo-grid-suit-icons (a5c488c). No regressions. 53 frontend tests / 368 backend tests pass. 11/11 health checks pass. RefQA passes. All 3 spec_gaps remain escalated (stagnant 4 cycles). CFS 0.999 stable. Current_task stays: fix-study-gto-feedback-overlay."
-  },
-  "note": "Tick 2026-06-29T09:10:00Z. Checkpoint sync: fix-practice-poker-table-visualization completed (75f9ea1). Advanced to fix-study-gto-feedback-overlay (P2). Round-robin switch to Polytopia for task exhaustion recovery."
+    "last_reviewed_sha": "f44afb1",
+    "last_reviewed_at": "2026-06-29T12:38:00Z",
+    "verdict": "FIX",
+    "notes": "Tick 2026-06-29T12:38:00Z. Coach FIXED f44afb1 (GTO feedback overlay). P2 bug: all_in not grouped with raise family in feedback comparison. P3: EV display shows +0.0bb on correct. CFS 0.9989 stable. All structural gates pass (53/53 tests, build OK, deploy 200). RefQA runner timed out (infra debt). Next: fix-gto-feedback-allin-raise-family."
+  }
 }
