@@ -6,6 +6,13 @@ import {
   type HandData, type ActiveTab,
 } from '../constants'
 
+/** Map a raw GTO action to its single-letter suffix for matrix display. */
+function getActionLetter(action: string): string {
+  if (action.startsWith('raise') || action === 'all_in' || action === 'bet') return 'R'
+  if (action === 'call' || action === 'check') return 'C'
+  return 'F'
+}
+
 // ── Matrix Grid ──
 export function StudyMatrixGrid({
   activeTab,
@@ -85,9 +92,11 @@ export function StudyMatrixGrid({
                   const opacity = getCellOpacity(hand)
                   const isSelected = selectedCell === hand
                   const color = getCellColor(hand)
-                  const raisePct = data && data.action !== 'fold' && data.frequency < 1
+                  const showFreqChip = data && data.action !== 'fold' && data.frequency < 1
+                  const raisePct = showFreqChip
                     ? `${(data.frequency * 100).toFixed(0)}%`
                     : null
+                  const actionLetter = data ? getActionLetter(data.action) : ''
 
                   return (
                     <div key={hand} role="gridcell"
@@ -111,7 +120,7 @@ export function StudyMatrixGrid({
                         fontSize: 12,
                         textShadow: '0 1px 2px rgba(0,0,0,.8)',
                         cursor: 'pointer', userSelect: 'none',
-                        background: data && data.action !== 'fold' && data.frequency < 1
+                        background: showFreqChip
                           ? `linear-gradient(to right, ${color} ${raisePct}, ${GRAY} ${raisePct})`
                           : color,
                         opacity,
@@ -125,7 +134,7 @@ export function StudyMatrixGrid({
                       }}>
                       <span style={{ textAlign: 'center', width: '100%', lineHeight: 1.1 }}>{hand}</span>
 
-                      {data && data.action !== 'fold' && !isSelected && (
+                      {showFreqChip && !isSelected && (
                         <span style={{
                           fontSize: 11, fontWeight: 700, opacity: 1,
                           color: '#fff',
@@ -133,7 +142,7 @@ export function StudyMatrixGrid({
                           padding: '1px 4px', borderRadius: 2,
                           lineHeight: 1.2,
                         }}>
-                          {(data.frequency * 100).toFixed(0)}%
+                          {(data.frequency * 100).toFixed(0)}% {actionLetter}
                         </span>
                       )}
                     </div>
