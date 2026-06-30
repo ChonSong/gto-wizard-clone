@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 7,
   "phase_name": "Core Gameplay Fixes",
-  "current_task": "audit-gitignore-pattern-breadth",
-  "current_sha": "542589e",
+  "current_task": "fix-game-tree-equal-action-rule-preflop-allin",
+  "current_sha": "5069922",
   "completed": [
     {
       "task": "fix-game-tree-equal-action-rule-phase3",
@@ -183,6 +183,14 @@
       "summary": "Extended GATE 7 regex from 3 to 9 coach_review fields + top-level note protection. All 10 protected fields now caught. Player-only fields pass through. Direct hook test verified. 53/53 vitest pass.",
       "coach": "pending",
       "coach_verified_at": null
+    },
+    {
+      "task": "audit-gitignore-pattern-breadth",
+      "sha": "5069922",
+      "date": "2026-07-01",
+      "summary": "Audit confirmed *~* pattern correctly scoped: catches editor backup files (sw.js~Stashed changes), 0 legitimate files or directories match. Comment in .gitignore documents breadth. Stale backup file deleted from disk (checkpoint previously claimed deletion but file still existed). 53/53 vitest pass. 0 source changes.",
+      "coach": "pending",
+      "coach_verified_at": null
     }
   ],
   "spec_gaps": [
@@ -290,6 +298,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "2411ef5",
-  "player_note": "Tick 2026-07-01 ~00:10: fix-gate7-protect-all-coach-fields complete. Commit 2411ef5 extends GATE 7 to all 9 coach_review fields + top-level note. 53/53 vitest pass, build clean, push verified. Advanced to audit-gitignore-pattern-breadth."
+  "last_sha": "5069922",
+  "player_note": "Tick 2026-07-01 ~01:05: audit-gitignore-pattern-breadth complete. *~* pattern verified correctly scoped — 0 legitimate files masked. Stale sw.js~Stashed changes deleted from disk (was gitignored but checkpoint claimed deleted). 53/53 vitest pass. Advanced to fix-game-tree-equal-action-rule-preflop-allin — remaining all-in short-circuit gap for preflop (deal 5 cards on round-complete). ⚠️ AGENTS.md stale — fix-destructive-hook-overwrite, fix-makefile-phony-install, fix-precommit-gate6-meaningful-changes already completed but still listed as 'New'."
 }
