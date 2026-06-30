@@ -423,6 +423,43 @@ export default function PostflopTraining({
       fetchStrategy()
     }
 
+    // All-in short-circuit: deal all remaining community cards straight to showdown
+    if (action.startsWith('all_in') && !isLastStreet) {
+      const currentParsed = parseBoardCards(boardStr)
+      const existing = currentParsed.map(c => c.rank + c.suit)
+      const hero = heroCards.trim()
+      const heroParsed = hero ? parseBoardCards(hero) : []
+      const used = [...existing, ...heroParsed.map(c => c.rank + c.suit)]
+
+      // Deal cards for ALL remaining streets up to 5 total
+      let dealtBoard = boardStr
+      for (let i = currentParsed.length; i < 5; i++) {
+        const card = generateRandomCard(used)
+        dealtBoard += card
+        used.push(card)
+      }
+
+      // Mark intermediate street actions as auto-dealt (null = automatic)
+      const finalActions = [...updated]
+      for (let i = streetIndex + 1; i <= 2; i++) {
+        if (finalActions[i] == null) finalActions[i] = null
+      }
+
+      const allInPot = computeNextPot(action, potSize, stackDepth)
+
+      // After feedback delay, jump directly to river (showdown)
+      autoAdvanceRef.current = setTimeout(() => {
+        setPotSize(allInPot)
+        setBoardStr(dealtBoard)
+        setStreetIndex(2) // river
+        setStreetActions(finalActions)
+        setUserChoice(null)
+        setStrategy(null)
+        setError(null)
+      }, 1500)
+      return
+    }
+
     // Auto-advance to next street after feedback delay (1.5s)
     if (!isLastStreet) {
       autoAdvanceRef.current = setTimeout(() => {
