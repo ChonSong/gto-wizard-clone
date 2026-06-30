@@ -1,0 +1,122 @@
+#!/bin/bash
+# === Structural Enforcement Pre-Commit Hook ===
+# Installed by dev-loop structural enforcement system.
+# These gates run BEFORE every commit — no LLM involved.
+# TRAIL (Patronus 2025): LLM trace review has 11% accuracy ceiling.
+# These deterministic checks catch what LLMs cannot see.
+
+set -euo pipefail
+
+PASS=0
+FAIL=0
+STAGED_FILES=$(git diff --cached --name-only)
+STAGED_DIFF=$(git diff --cached)
+
+# ── GATE 1: Must-Change Gate (DELEGATE-52) ─────────────────────
+# Reject commits with zero actual changes.
+CHANGED_LINES=$(echo "$STAGED_DIFF" | grep -c '^[+-]' || true)
+if [ "$CHANGED_LINES" -eq 0 ]; then
+    echo "⛔ GATE 1 FAILED: Must-change gate — zero lines changed."
+    echo "   This would produce an empty commit."
+    echo "   Abort and investigate: did the Player actually produce work?"
+    FAIL=$((FAIL + 1))
+else
+    echo "✅ GATE 1 PASSED: $CHANGED_LINES lines changed."
+    PASS=$((PASS + 1))
+fi
+
+# ── GATE 2: Security Scan ─────────────────────────────────────
+SECRET_PATTERNS='(api_key|API_KEY|secret_key|SECRET_KEY|token|TOKEN|sk-[a-zA-Z0-9]{20,})'
+if echo "$STAGED_DIFF" | grep -qiE "$SECRET_PATTERNS" 2>/dev/null; then
+    echo "⛔ GATE 2 FAILED: Security scan — possible secret detected in diff."
+    echo "   Check: git diff --cached | grep -iE '$SECRET_PATTERNS'"
+    FAIL=$((FAIL + 1))
+else
+    echo "✅ GATE 2 PASSED: No secrets detected."
+    PASS=$((PASS + 1))
+fi
+
+# ── GATE 3: No Self-Referential Test Tasks in AGENTS.md ───────
+# Reject tasks that say "Add E2E test for X" where X is built this commit.
+if echo "$STAGED_FILES" | grep -q "AGENTS.md"; then
+    if echo "$STAGED_DIFF" | grep -qP 'Add E2E test for'; then
+        echo "⛔ GATE 3 FAILED: Self-referential test task detected in AGENTS.md."
+        echo "   Pattern: 'Add E2E test for X' where X is being built in same commit."
+        echo "   This creates tests that validate implementation, not requirements."
+        echo "   Fix: define expected behavior from reference FIRST, then implement."
+        FAIL=$((FAIL + 1))
+    else
+        echo "✅ GATE 3 PASSED: No self-referential test tasks."
+        PASS=$((PASS + 1))
+    fi
+else
+    echo "⏭️  GATE 3 SKIPPED: AGENTS.md not in this commit."
+fi
+
+# ── GATE 4: File Provenance (DELEGATE-52 distractor pattern) ──
+# Warns (but doesn't block) when files_read >> files_changed.
+# This is a signal of agent confusion.
+FILES_ADDED=$(echo "$STAGED_DIFF" | grep -c '^+++' || true)
+FILES_REMOVED=$(echo "$STAGED_DIFF" | grep -c '^---' || true)
+FILES_CHANGED=$((FILES_ADDED + FILES_REMOVED))
+if [ "$FILES_CHANGED" -eq 0 ]; then
+    echo "⚠️  GATE 4 WARNING: Zero files changed — verify this isn't a no-op commit."
+elif [ "$FILES_CHANGED" -gt 10 ]; then
+    echo "⚠️  GATE 4 WARNING: $FILES_CHANGED files changed — verify scope isn't creeping."
+    echo "   If this is intentional, proceed. Otherwise consider splitting into multiple commits."
+else
+    echo "✅ GATE 4 PASSED: $FILES_CHANGED files changed."
+    PASS=$((PASS + 1))
+fi
+
+# ── GATE 5: Diff Size ──────────────────────────────────────────
+DIFF_LINES=$(echo "$STAGED_DIFF" | wc -l)
+if [ "$DIFF_LINES" -gt 500 ]; then
+    echo "⚠️  GATE 5 WARNING: $DIFF_LINES lines in diff — verify scope. Consider splitting."
+else
+    echo "✅ GATE 5 PASSED: $DIFF_LINES lines in diff."
+    PASS=$((PASS + 1))
+fi
+
+# ── GATE 6: Deployed-Hash-Only Commit (7ad9ad9 pattern) ──────
+# Block commits where .deployed-hash is the ONLY staged file.
+# Commit 7ad9ad9 claimed to fix PostflopTraining but only changed
+# .deployed-hash — 0 source changes. This gate prevents that pattern.
+DEPLOYED_HASH_STAGED=0
+OTHER_FILES_STAGED=0
+for f in $STAGED_FILES; do
+    if [ "$f" = ".deployed-hash" ]; then
+        DEPLOYED_HASH_STAGED=1
+    else
+        OTHER_FILES_STAGED=1
+    fi
+done
+if [ "$DEPLOYED_HASH_STAGED" -eq 1 ] && [ "$OTHER_FILES_STAGED" -eq 0 ]; then
+    echo "⛔ GATE 6 FAILED: .deployed-hash is the ONLY staged file."
+    echo "   Commit 7ad9ad9 exhibited this pattern — claimed code fix but"
+    echo "   only changed the deployment marker with 0 source changes."
+    echo "   Either: add source changes alongside .deployed-hash, or"
+    echo "   unstage .deployed-hash and commit the source changes separately."
+    FAIL=$((FAIL + 1))
+else
+    echo "✅ GATE 6 PASSED: .deployed-hash not solo-committed."
+    PASS=$((PASS + 1))
+fi
+
+# ── Summary ────────────────────────────────────────────────────
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Structural Gates: $PASS passed, $FAIL failed"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [ "$FAIL" -gt 0 ]; then
+    echo ""
+    echo "Commit blocked by structural enforcement gates."
+    echo "These gates exist because TRAIL (Patronus 2025) proved LLM review"
+    echo "has only 11% accuracy at detecting errors in agent traces."
+    echo "Fix the failures above and try again."
+    exit 1
+fi
+
+echo "All structural gates passed. Proceeding with commit."
+exit 0
