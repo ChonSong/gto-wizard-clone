@@ -11,6 +11,14 @@
   "current_sha": "542589e",
   "completed": [
     {
+      "task": "fix-game-tree-equal-action-rule-phase3",
+      "sha": "2023b6b",
+      "date": "2026-06-30",
+      "summary": "Phase 3 all-in short-circuit: PostflopTraining handleAction now detects all_in + !isLastStreet → generates all remaining community cards (up to 5 total) → jumps directly to river (showdown). 1.5s feedback delay preserved. Preflop all-in short-circuit (generate 5 cards on round-complete) noted as future gap. 53/53 vitest pass, build clean.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
+    {
       "task": "fix-checkpoint-band-gate-respect",
       "sha": "542589e",
       "date": "2026-06-30",
@@ -273,6 +281,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30 ~22:09: fix-checkpoint-band-gate-respect complete. Commit 542589e adds GATE 7 checkpoint band gate. 53/53 vitest pass. Advanced to fix-game-tree-equal-action-rule (all-in short-circuit remaining).",
-  "last_sha": "542589e"
+  "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
+  "last_sha": "2023b6b"
 }
