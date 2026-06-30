@@ -78,28 +78,56 @@ else
     PASS=$((PASS + 1))
 fi
 
-# ── GATE 6: Deployed-Hash-Only Commit (7ad9ad9 pattern) ──────
-# Block commits where .deployed-hash is the ONLY staged file.
+# ── GATE 6: Deployed-Hash Meaningful Changes (7ad9ad9 pattern) ─
+# Block commits where .deployed-hash is the ONLY staged file OR
+# where co-staged files have no meaningful changes (empty, whitespace-only).
 # Commit 7ad9ad9 claimed to fix PostflopTraining but only changed
-# .deployed-hash — 0 source changes. This gate prevents that pattern.
+# .deployed-hash — 0 source changes. This gate prevents that pattern
+# and its trivial bypass (staging an empty companion file).
 DEPLOYED_HASH_STAGED=0
 OTHER_FILES_STAGED=0
+MEANINGFUL_CHANGE=0
+
 for f in $STAGED_FILES; do
     if [ "$f" = ".deployed-hash" ]; then
         DEPLOYED_HASH_STAGED=1
-    else
-        OTHER_FILES_STAGED=1
+        continue
+    fi
+    OTHER_FILES_STAGED=1
+
+    # Check whether this file has substantive (non-trivial) changes.
+    # Get the cached diff for just this file.
+    FILE_DIFF=$(git diff --cached -- "$f" 2>/dev/null || true)
+    # Count lines that are real additions/removals:
+    #   - Start with + or -
+    #   - Are NOT diff headers (+++ or ---)
+    #   - Are NOT whitespace-only (at least one non-space char after +/-)
+    REAL_CHANGES=$(echo "$FILE_DIFF" | grep -E '^[+-]' | grep -vE '^[+-]{3}' | grep -vE '^[+-][[:space:]]*$' | wc -l || true)
+    # Binary files: git diff shows "Binary files ... differ" — count as meaningful.
+    if echo "$FILE_DIFF" | grep -q '^Binary files '; then
+        MEANINGFUL_CHANGE=1
+    elif [ "$REAL_CHANGES" -gt 0 ]; then
+        MEANINGFUL_CHANGE=1
     fi
 done
-if [ "$DEPLOYED_HASH_STAGED" -eq 1 ] && [ "$OTHER_FILES_STAGED" -eq 0 ]; then
+
+if [ "$DEPLOYED_HASH_STAGED" -eq 0 ]; then
+    echo "⏭️  GATE 6 SKIPPED: .deployed-hash not staged."
+elif [ "$OTHER_FILES_STAGED" -eq 0 ]; then
     echo "⛔ GATE 6 FAILED: .deployed-hash is the ONLY staged file."
     echo "   Commit 7ad9ad9 exhibited this pattern — claimed code fix but"
     echo "   only changed the deployment marker with 0 source changes."
     echo "   Either: add source changes alongside .deployed-hash, or"
     echo "   unstage .deployed-hash and commit the source changes separately."
     FAIL=$((FAIL + 1))
+elif [ "$MEANINGFUL_CHANGE" -eq 0 ]; then
+    echo "⛔ GATE 6 FAILED: .deployed-hash staged with no meaningful changes."
+    echo "   Co-staged files have only trivial content (empty, whitespace-only)."
+    echo "   This bypasses the solo-commit check without real source changes."
+    echo "   Verify that staged source files contain actual code modifications."
+    FAIL=$((FAIL + 1))
 else
-    echo "✅ GATE 6 PASSED: .deployed-hash not solo-committed."
+    echo "✅ GATE 6 PASSED: .deployed-hash accompanied by meaningful changes."
     PASS=$((PASS + 1))
 fi
 
@@ -120,3 +148,4 @@ fi
 
 echo "All structural gates passed. Proceeding with commit."
 exit 0
+   
