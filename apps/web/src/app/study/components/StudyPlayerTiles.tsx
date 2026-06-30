@@ -138,7 +138,7 @@ export function StudyPlayerTiles({
                     const isActiveFilter = actionFilter === act.actionBase
                     return (
                       <div key={act.id}
-                        onClick={(e) => { e.stopPropagation(); onActionClick(act.actionBase); onActionFeedback?.(act.actionBase) }}
+                        onClick={(e) => { e.stopPropagation(); if (onActionFeedback) { onActionFeedback(act.actionBase) } else { onActionClick(act.actionBase) } }}
                         onMouseEnter={() => onActionFilter(act.actionBase)}
                         onMouseLeave={() => onActionFilter(null)}
                         onKeyDown={(e) => {
