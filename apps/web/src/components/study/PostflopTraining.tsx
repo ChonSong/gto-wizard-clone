@@ -451,9 +451,6 @@ export default function PostflopTraining({
 
       // Mark intermediate street actions as auto-dealt (null = automatic)
       const finalActions = [...updated]
-      for (let i = streetIndex + 1; i <= 2; i++) {
-        if (finalActions[i] == null) finalActions[i] = null
-      }
 
       const allInPot = computeNextPot(action, potSize, stackDepth)
 
