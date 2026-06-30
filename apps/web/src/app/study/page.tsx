@@ -173,15 +173,31 @@ export default function StudyPage() {
           }
           // Check for equal-action round complete
           if (isPreflopRoundComplete(treePath)) {
-            const flopCards = generateRandomCards(3, [])
-            setBoardCards(flopCards)
-            setBoardStreet('flop')
-            setPfBoard(flopCards)
-            setPfStreet('flop')
-            setPfPot(treeNode?.pot_size || 5.5)
-            setPfActivePosition('CO')
-            setPfAction(null)
-            setMode('postflop')
+            // Detect preflop all-in: if any position went all-in, all 5 cards → showdown
+            const hasAllIn = treePath.some(entry => entry.action === 'all_in')
+            if (hasAllIn) {
+              // All-in short-circuit: deal all 5 community cards, jump to river
+              const allCards = generateRandomCards(5, [])
+              setBoardCards(allCards)
+              setBoardStreet('river')
+              setPfBoard(allCards)
+              setPfStreet('river')
+              setPfPot(treeNode?.pot_size || 5.5)
+              setPfActivePosition('CO')
+              setPfAction(null)
+              setMode('postflop')
+            } else {
+              // Normal preflop completion: deal 3 flop cards
+              const flopCards = generateRandomCards(3, [])
+              setBoardCards(flopCards)
+              setBoardStreet('flop')
+              setPfBoard(flopCards)
+              setPfStreet('flop')
+              setPfPot(treeNode?.pot_size || 5.5)
+              setPfActivePosition('CO')
+              setPfAction(null)
+              setMode('postflop')
+            }
           }
         }
       } catch {
@@ -822,6 +838,7 @@ export default function StudyPage() {
               externalPosition={pfActivePosition}
               externalPot={pfPot}
               externalAction={pfAction}
+              externalStreet={pfStreet}
               onActionConsumed={() => setPfAction(null)}
             />
           </div>

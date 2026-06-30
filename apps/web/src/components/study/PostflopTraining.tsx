@@ -265,6 +265,7 @@ interface PostflopTrainingProps {
   externalPosition?: string
   externalPot?: number
   externalAction?: string | null
+  externalStreet?: 'flop' | 'turn' | 'river'
   onActionConsumed?: () => void
 }
 
@@ -274,6 +275,7 @@ export default function PostflopTraining({
   externalPosition,
   externalPot,
   externalAction,
+  externalStreet,
   onActionConsumed,
 }: PostflopTrainingProps) {
   const [boardStr, setBoardStr] = useState('KsKc3s5h9d')
@@ -302,6 +304,14 @@ export default function PostflopTraining({
   useEffect(() => {
     if (externalPot !== undefined) setPotSize(externalPot)
   }, [externalPot])
+
+  // Sync external street into initial streetIndex (preflop all-in short-circuit starts at river)
+  useEffect(() => {
+    if (externalStreet) {
+      const mapping: Record<string, number> = { flop: 0, turn: 1, river: 2 }
+      setStreetIndex(mapping[externalStreet] ?? 0)
+    }
+  }, [externalStreet])
 
   // Handle external action clicks from PlayerTiles
   useEffect(() => {
