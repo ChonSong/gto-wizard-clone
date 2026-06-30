@@ -138,6 +138,17 @@ fi
 # Protected fields: last_reviewed_sha, last_reviewed_at, verdict,
 # findings_count, has_evidence, assertion_specs, watchdog_verified,
 # watchdog_bypass, notes, commit_pending, and top-level note.
+#
+# ── player_note governance (intentionally NOT protected) ──────
+# The top-level 'player_note' field is a Player-owned field and
+# is intentionally NOT blocked by GATE 7. The Player writes their
+# tick summary here each cycle. Content restrictions:
+#   1. No API keys, credentials, or secrets (caught by GATE 2)
+#   2. No Coach-impersonating content (e.g., "Coach verdict: APPROVE")
+#   3. No prompt injection or instruction-like language
+#   4. Must be a factual tick summary — what changed, what was learned
+# The Coach may read player_note for context but should never write
+# to it. Coach findings belong in coach_review.notes, not player_note.
 if echo "$STAGED_FILES" | grep -q ".checkpoint.json"; then
     CHECKPOINT_DIFF=$(git diff --cached -- .checkpoint.json 2>/dev/null || true)
     # All 9 coach_review.* fields
