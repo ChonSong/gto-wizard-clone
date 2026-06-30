@@ -131,6 +131,34 @@ else
     PASS=$((PASS + 1))
 fi
 
+# ── GATE 7: Checkpoint Band Gate ──────────────────────────────
+# Block Player from modifying Coach-owned checkpoint fields.
+# The Coach writes verdict independently; Player must not alter
+# coach_review.commit_pending, coach_review.findings_count, or
+# coach_review.notes. These fields are the Coach's exclusive domain.
+if echo "$STAGED_FILES" | grep -q ".checkpoint.json"; then
+    CHECKPOINT_DIFF=$(git diff --cached -- .checkpoint.json 2>/dev/null || true)
+    PROTECTED_CHANGES=$(echo "$CHECKPOINT_DIFF" | grep -E '^[+-].*"(commit_pending|findings_count|notes)":' || true)
+    if [ -n "$PROTECTED_CHANGES" ]; then
+        echo "⛔ GATE 7 FAILED: Checkpoint band gate — Coach-owned fields modified."
+        echo "   The following coach_review fields are protected and must not"
+        echo "   be modified by the Player:"
+        echo "     - coach_review.commit_pending"
+        echo "     - coach_review.findings_count"
+        echo "     - coach_review.notes"
+        echo "   Detected changes:"
+        echo "$PROTECTED_CHANGES" | sed 's/^/   /'
+        echo "   The Coach writes verdict independently — remove these changes"
+        echo "   from your commit or unstage .checkpoint.json."
+        FAIL=$((FAIL + 1))
+    else
+        echo "✅ GATE 7 PASSED: No protected checkpoint fields modified."
+        PASS=$((PASS + 1))
+    fi
+else
+    echo "⏭️  GATE 7 SKIPPED: .checkpoint.json not staged."
+fi
+
 # ── Summary ────────────────────────────────────────────────────
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
