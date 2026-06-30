@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 7,
   "phase_name": "Core Gameplay Fixes",
-  "current_task": "fix-precommit-gate6-meaningful-changes",
-  "current_sha": "3439c95",
+  "current_task": "fix-destructive-hook-overwrite",
+  "current_sha": "d01a59c",
   "completed": [
+    {
+      "task": "fix-precommit-gate6-meaningful-changes",
+      "sha": "d01a59c",
+      "date": "2026-06-30",
+      "summary": "Enhanced GATE 6 in scripts/pre-commit to detect trivial companion file bypass. Previously blocked only when .deployed-hash was the SOLE staged file — could be bypassed by staging any trivial file (empty, .gitkeep, whitespace-only). Now verifies co-staged files contain meaningful changes by counting non-whitespace diff lines per file. Binary file diffs count as meaningful. Empty new files and whitespace-only additions are blocked. .deployed-hash not staged → GATE 6 SKIP. Tested 5 scenarios. 53/53 vitest pass.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-precommit-hook-auto-install",
       "sha": "3439c95",
@@ -259,6 +267,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30 ~18:10: fix-precommit-hook-auto-install complete. Commit 3439c95 adds Makefile install target + npm prepare script for auto-installing pre-commit hook on fresh clones. Verified: make install → symlink created, git commit blocked by GATE 1. 53/53 vitest pass. Advanced to fix-precommit-gate6-meaningful-changes (P2).",
-  "last_sha": "3439c95"
+  "note": "Tick 2026-06-30 ~20:10: fix-precommit-gate6-meaningful-changes complete. Commit d01a59c enhances GATE 6 to detect trivial companion file bypass. Empty files, .gitkeep, whitespace-only changes co-staged with .deployed-hash now blocked. 53/53 vitest pass. Advanced to fix-destructive-hook-overwrite (P2).",
+  "last_sha": "d01a59c"
 }
