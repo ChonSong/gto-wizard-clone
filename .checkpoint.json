@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
-  "current_task": "fix-checkpoint-current-sha-staleness",
-  "current_sha": "ae77c93",
+  "current_task": "fix-preflop-round-complete-pot-size",
+  "current_sha": "c3a0604",
   "completed": [
     {
       "task": "fix-preflop-allin-round-detection",
