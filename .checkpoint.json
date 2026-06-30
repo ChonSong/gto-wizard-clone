@@ -7,16 +7,24 @@
   "api_dir": "apps/api",
   "phase": 7,
   "phase_name": "Core Gameplay Fixes",
-  "current_task": "fix-game-tree-equal-action-rule",
-  "current_sha": "49f17dd",
+  "current_task": "fix-postflop-training-timer-cleanup-systematic",
+  "current_sha": "7ad9ad9",
   "completed": [
+    {
+      "task": "fix-postflop-action-button-registration",
+      "sha": "7ad9ad9",
+      "date": "2026-06-30",
+      "summary": "Investigated and fixed layout issue causing postflop action buttons to be unreachable. Root cause: PostflopTraining container had no overflow handling; on viewports < 630px, action buttons rendered below the fold. Added overflow-y:auto to root div so content scrolls internally. Verified: both small (position tile) and large (below board) action buttons work correctly — clicking advances street, shows GTO feedback, auto-advances after 1.5s. 53/53 vitest pass. 0 JS console errors. The original bug report ('clicking does not advance') was a viewport/layout issue, not a missing handler — all onClick handlers were properly registered and functional.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-game-tree-equal-action-rule-phase2",
       "sha": "49f17dd",
       "date": "2026-06-30",
       "summary": "Phase 2 bugfixes (Coach-reported HIGH bugs): (1) isPreflopRoundComplete() fold-before-raise fix — added foldedPositions tracking, skipped folded positions in round-completion check. UTG fold → HJ raise → all call now correctly returns true. (2) advanceToNextStreet() timer cleanup — clears autoAdvanceRef at function start to prevent double-advance on manual button click + auto-advance timer race. 53/53 vitest pass, build clean.",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "approved",
+      "coach_verified_at": "2026-06-30T05:10:00Z"
     },
     {
       "task": "fix-game-tree-equal-action-rule-phase1",
@@ -151,6 +159,12 @@
   ],
   "fidelity_history": [
     {
+      "sha": "49f17dd",
+      "cfs": 0.999992,
+      "trend": "improving",
+      "timestamp": "2026-06-30T05:10:00Z"
+    },
+    {
       "sha": "f44afb1",
       "cfs": 0.9989,
       "timestamp": "2026-06-29T12:38:00Z"
@@ -178,17 +192,17 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "6e67d20",
-    "last_reviewed_at": "2026-06-30T04:12:00Z",
-    "verdict": "FIX",
-    "findings_count": 4,
+    "last_reviewed_sha": "49f17dd",
+    "last_reviewed_at": "2026-06-30T05:10:00Z",
+    "verdict": "APPROVE",
+    "findings_count": 2,
     "has_evidence": true,
     "assertion_specs": [],
-    "notes": "Coach review 2026-06-30T04:12:00Z. Verdict FIX. Reviewed Phase 1 of fix-game-tree-equal-action-rule (6e67d20). Found 2 HIGH bugs: fold-before-raise in isPreflopRoundComplete(), missing timer cleanup in advanceToNextStreet(). 3 AGENTS.md tasks generated. CFS 0.9982 stable.",
+    "notes": "Coach review 2026-06-30T05:10:00Z. Verdict APPROVE. Reviewed Phase 2 bugfixes (49f17dd): both Coach-reported HIGH bugs correctly fixed. Structural gates: 53/53 vitest pass, build clean, HTTP 200, no secrets/injection. Browser QA: position switch UTG→HJ works, Postflop Training loads with street progression (BTN raise 2.5, BB call → FLOP), CALL action registers GTO feedback, 0 JS console errors. RefQA 4/4 pass. CFS 0.999992 improving. Adversarial review found systematic timer cleanup gap (handleRandomSpot + 4 config panel handlers) — task generated. Next: all-in short-circuit, fix-postflop-action-button-registration, fix-postflop-training-timer-cleanup-systematic.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Player tick 2026-06-30T05:00Z. Phase 2 bugfixes (49f17dd): Fixed both Coach-reported HIGH bugs. (1) isPreflopRoundComplete(): added foldedPositions tracking — positions that folded before last raise are now skipped in round-completion check. UTG fold → HJ raise → everyone calls now correctly returns true. (2) advanceToNextStreet(): clears autoAdvanceRef timer on entry to prevent double-advance on manual click + auto-timer race. 53/53 vitest pass, build clean. Commit pushed. Next: Coach should review, then move to remaining tasks (all-in short-circuit, fix-postflop-action-button-registration).",
-  "last_sha": "49f17dd"
+  "note": "Player tick 2026-06-30 ~06:20Z. Completed fix-postflop-action-button-registration (7ad9ad9). Investigation revealed the bug was NOT a missing handler — all onClick handlers were properly registered and functional. Root cause: layout/viewport issue — PostflopTraining container had no overflow handling, pushing large action buttons below the fold on viewports < 630px. Fix: added overflow-y:auto to root div. Verified: both small (position tile) and large action buttons work correctly via browser_click after scrolling into view. 53/53 vitest pass. Next: fix-postflop-training-timer-cleanup-systematic (P2, 5 handler locations need timer cleanup).",
+  "last_sha": "7ad9ad9"
 }
