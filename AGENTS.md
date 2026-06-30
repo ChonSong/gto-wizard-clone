@@ -409,6 +409,26 @@ See coach review tasks below for follow-ups.
 **Description:** `current_sha` field in .checkpoint.json was stale at '542589e' through 5+ commits (8e8e690, 2023b6b, 48afb58, 2411ef5, 5069922). Checkpoint update commits must always update current_sha to match actual HEAD. Fix the Player's checkpoint update workflow.
 **Success criteria:** current_sha always matches HEAD commit produced by the same tick. No multi-commit staleness.
 
+### Task: fix-preflop-round-complete-pot-size
+**Priority:** P2
+**Status:** New — Coach generated 2026-07-01T04:42
+**Description:** The pre-flight round-complete transition (added in 56223e1) uses stale `treeNode?.pot_size` with fallback 5.5 when computing pot after auto-transition. Since the API is skipped for complete rounds, treeNode holds data from the previous (incomplete) API response. The displayed pot after 6-player all-in was 100.5bb — incorrect. Fix: recompute pot_size from treePath entries (sum of call/raise amounts + blinds) instead of relying on stale API data.
+**Success criteria:**
+- After all-in short-circuit transition, pot_size reflects actual pot from treePath entries
+- 6-player all-in at 100bb displays pot ≈ 599bb (not 100.5bb)
+- No regression in existing 53 vitest + 368 Python tests
+**Coach checks:** Browser test: UTG Allin 100 → all call → verify pot_size is correct. Check for pot_size accuracy with raise/all-in scenarios.
+
+### Task: add-unit-tests-for-preflop-round-complete
+**Priority:** P2
+**Status:** New — Coach generated 2026-07-01T04:42
+**Description:** Zero unit test coverage for `isPreflopRoundComplete()` and `isAllFold()` — the core round-completion logic this fix repositions. Both functions live inline in `apps/web/src/app/study/page.tsx` (lines 249-296) and have no dedicated vitest tests. Extract both functions to a shared module (`packages/poker-core/src/preflop-round-detection.ts`) and add comprehensive tests.
+**Success criteria:**
+- isPreflopRoundComplete() and isAllFold() extracted to a testable module
+- At least 10 unit tests covering: all-fold, all-call after raise, all-in short-circuit, fold-before-raise, single-caller, multi-way all-in
+- 0 regression on existing 53 vitest + 368 Python tests
+**Coach checks:** Verify test file exists at packages/poker-core/src/__tests__/preflop-round-detection.test.ts. Run vitest — all pass.
+
 ### Task: create-preflop-allin-shortcircuit
 **Priority:** P1
 **Status:** ✅ Completed (commit 4293d33)
