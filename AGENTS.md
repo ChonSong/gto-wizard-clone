@@ -284,15 +284,11 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 **Generated:** 2026-06-30 by Player exhaustion recovery. Phase 3-6 backlogs exhausted. Site healthy: 11/11 health checks pass, 142 E2E + 53 vitest + 368 Python tests pass, 0 JS console errors. Two architectural P1 gaps (left sidebar nav, game tree visualization) remain deferred. Generated tasks target remaining P3 gaps and hygiene improvements.
 
-### Task: fix-study-bottom-bar-verify (recovery-generated)
-**Priority:** P3
-**Description:** The visual comparison report at `docs/visual-comparison-study-report.md` claims a P3 gap: "Bottom Bar — Replace duplicate nav with slim footer bar." However, investigation of `apps/web/src/app/layout.tsx` shows only a `<Header />` at top and `<main>` — there is no bottom bar or duplicate nav. Load the reference screenshot (`docs/reference-study.png`) via vision_analyze and verify whether the reference actually shows a dedicated footer bar. If yes, implement a slim footer component matching the reference. If the report is inaccurate, update the visual comparison report to correct the claim.
-**Success criteria:**
-- Reference screenshot analyzed for bottom bar presence
-- If reference has footer: implement slim footer bar with session controls
-- If reference has no footer: update `docs/visual-comparison-study-report.md` to correct the P3 gap claim
-- 0 JS console errors
-**Coach checks:** Compare reference screenshot vs live site bottom area.
+### Task: fix-study-bottom-bar-verify (recovery-generated) ✅
+**Priority:** P3 — **Coach APPROVED 2026-06-30**
+**Status:** Fixed by Player commit `069fd97`. Footer.tsx component added with 6 icon controls (☰ Main menu, 🪙 Session, 🔊 Audio, 👤 Profile, ⚙ Settings, 👁 Visibility). Footer wired into RootLayout. 44px dark theme (#0d0d0d), print-hidden, keyboard accessible. Verified on all 3 pages (dashboard, study, practice). 0 JS console errors. Footer represents ~3% of total page height (44/673px).
+**Evidence:** Browser QA across https://wiz.codeovertcp.com (dashboard), /study, /practice. Footer DOM confirmed at 44px height, visible, with 6 accessible icon links. 11/11 health checks pass.
+**Success criteria:** ✅ All met. Reference matched, footer implemented, 0 JS errors.
 
 ### Task: audit-gitignore-pattern-breadth (recovery-generated)
 **Priority:** P3
@@ -312,3 +308,15 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 - Board cards displayed when applicable
 - Visual comparison against reference-trainer.png shows acceptable match
 **Coach checks:** Load `/practice` and verify poker table visualization.
+
+## Phase 8 — Coach-Generated Tasks (2026-06-30)
+
+### Task: fix-postflop-action-button-registration
+**Priority:** P3
+**Status:** Not started
+**Description:** In postflop training mode, clicking action buttons (BET 33%, CALL, etc.) does not advance the interaction — the 'Take action ▶' prompt persists and the page state doesn't change. 0 JS console errors — no exceptions thrown, just no handler registered. Investigate event handler registration in the postflop action panel. May be a z-index or overlay interception issue (the postflop action row might be behind the position tile overlay).
+**Success criteria:**
+- Clicking any action button in postflop training mode advances the state (shows GTO feedback overlay, advances street, or shows error)
+- 'Take action ▶' prompt disappears after successful action
+- 0 JS console errors
+**Coach checks:** Open /study, switch to Postflop mode, click an action button. Verify GTO feedback appears and state advances.
