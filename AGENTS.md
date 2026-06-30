@@ -286,23 +286,29 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 ### Task: fix-game-tree-equal-action-rule
 **Priority:** P1
-**Status:** Not started
+**Status:** In progress
 **Description:** The game tree does not correctly implement poker betting round rules. Three rules must be verified and fixed:
 
 1. **Equal Action Rule:** A betting round only ends when all players have had a chance to act AND all active players have contributed the exact same amount to the pot (or folded).
 2. **Street Progression:** Once the equal action rule is met, traverse Pre-Flop → Flop → Turn → River → Showdown in order. Postflop should transition automatically after preflop actions complete — NOT require a separate menu selection.
 3. **Short-Circuit Rule:** Skip all remaining streets if (a) all players fold except one — remaining player wins instantly, no more cards dealt, OR (b) players go all-in with no decisions remaining — deal remaining community cards straight to showdown.
 
-**Success criteria:**
-- Preflop: all players act, betting round concludes when equal action met, then auto-transition to Flop
-- Postflop mode activates automatically — not via separate menu toggle
-- All-in short-circuits: remaining streets dealt automatically, no orphaned "Take action" prompts
-- All-fold short-circuits: winner declared immediately, pot awarded, no cards dealt
-- No broken buttons at bottom of page
-- 0 JS console errors
-- Existing test suite still passes (regression check)
+**Phase 1 Status (Coach reviewed 2026-06-30T04:12:00Z):** ✅ Preflop round-complete detection (`isPreflopRoundComplete`) added. ⚠️ Auto-transition preflop→postflop works (verified live: street breadcrumb shows "BTN raise 2.5, BB call" → FLOP). ⚠️ PostflopTraining auto-advance timer added but street advancement not confirmed on live page. ⚠️ CI workflow at `.github/workflows/e2e-game-tree.yml` references non-existent spec file.
 
-**Coach checks:** Open /study. Play through a full hand UTG vs BTN: preflop → flop → turn → river → showdown. Verify auto-transitions. Test all-in during preflop: verify remaining streets auto-dealt. Test fold-to-steal: verify instant win and no broken UI state.
+**Known bugs in Phase 1 (Coach-reported, must fix before Phase 2):**
+1. **Fold-before-raise bug** (`isPreflopRoundComplete`): Positions that folded before the last raise are still checked as "must have acted after the raise". If UTG folds and HJ raises, the function incorrectly requires UTG to be in `actedAfter` set, returning `false` for genuinely complete rounds. Fix: skip positions that folded before the last raise.
+2. **Auto-advance timer cleanup** (`PostflopTraining.tsx`): `advanceToNextStreet()` doesn't clear `autoAdvanceRef.current`. If the timer fires concurrently with another advance trigger, it can cause a double-advance. Fix: clear timer at start of `advanceToNextStreet()`.
+
+**Success criteria:**
+- Preflop: all players act, betting round concludes when equal action met, then auto-transition to Flop ✅ (Partially — fold-before-raise edge case still broken)
+- Postflop mode activates automatically ✅
+- All-in short-circuits: remaining streets dealt automatically ❌ (Not implemented yet)
+- All-fold short-circuits: winner declared immediately ✅ (isAllFold implemented)
+- No broken buttons at bottom of page ✅
+- 0 JS console errors ✅
+- Existing test suite still passes ✅ (53/53 vitest)
+
+**Coach checks:** Open /study. Test scenario: select HJ position, simulate UTG fold → HJ raise → CO call → BTN call → SB call → BB call. Verify auto-transition to postflop. Currently fails due to fold-before-raise bug.
 
 ### Task: fix-postflop-action-button-registration
 **Priority:** P1

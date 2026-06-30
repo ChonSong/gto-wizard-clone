@@ -170,16 +170,17 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "e27f506",
-    "last_reviewed_at": "2026-06-30T02:35:00Z",
-    "verdict": "APPROVE",
-    "findings_count": 0,
+    "last_reviewed_sha": "6e67d20",
+    "last_reviewed_at": "2026-06-30T04:12:00Z",
+    "verdict": "FIX",
+    "findings_count": 4,
     "has_evidence": true,
-    "notes": "Coach review 2026-06-30T02:35:00Z. Verdict APPROVE. Reviewed revert commit e27f506: removed footer bar (recovery-generated from Phase 7, didn't match reference), promoted game tree tasks to P1, disabled exhaustion recovery. AGENTS.md rewritten with proper gameplay tasks. 53/53 vitest pass, HTTP 200, 0 JS console errors. Study page: all positions (UTG/HJ/CO/BTN/SB/BB) with ranges, hand matrix with strategy data, mode toggle. RefQA: 3/4 pass (step 2 LLM flake — known ~30-40% rate). CFS 0.942 (inflated by tsconfig.tsbuildinfo). No regressions. Next: fix-game-tree-equal-action-rule.",
+    "assertion_specs": [],
+    "notes": "Coach review 2026-06-30T04:12:00Z. Verdict FIX. Reviewed Phase 1 of fix-game-tree-equal-action-rule (6e67d20+440e05d). Structural gates: 53/53 vitest pass, build clean, HTTP 200, no secrets/injection. Postflop Training loads correctly with auto-transition preflop→flop (verified live). All-fold detection works. Adversarial review found 2 HIGH-severity bugs: (1) isPreflopRoundComplete() fold-before-raise bug — positions that folded before the last raise are still required in actedAfter check, causing false negatives for complete rounds; (2) auto-advance timer cleanup missing in advanceToNextStreet(). Also found P3: dangling CI workflow ref to non-existent study-game-tree.spec.ts, || vs ?? for pot_size fallback. CFS 0.9982 stable. 3 fix tasks generated in AGENTS.md.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Player tick 2026-06-30. Implemented Phase 1 of fix-game-tree-equal-action-rule (6e67d20): preflop round-complete detection with equal-action rule, auto-transition from preflop to postflop, auto-advance streets in PostflopTraining, all-fold detection. 53/53 vitest pass, build clean. Remaining: all-in short-circuit, backend-driven round-complete detection. Coach review pending.",
+  "note": "Coach review 2026-06-30T04:12:00Z. Verdict FIX. Reviewed Phase 1 of fix-game-tree-equal-action-rule (6e67d20). Found 2 HIGH bugs: fold-before-raise in isPreflopRoundComplete(), missing timer cleanup in advanceToNextStreet(). 3 AGENTS.md tasks generated. CFS 0.9982 stable.",
   "last_sha": "6e67d20"
 }

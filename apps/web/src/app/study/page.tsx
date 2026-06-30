@@ -237,8 +237,10 @@ export default function StudyPage() {
     // Find the last raise (or all_in) in the path, and track who acted after it
     let lastRaiserIdx = -1
     const actedAfter = new Set<string>()
+    const foldedPositions = new Set<string>()  // folds at any time (fix: fold-before-raise bug)
 
     for (const entry of path) {
+      if (entry.action === 'fold') foldedPositions.add(entry.position)
       if (entry.action === 'raise' || entry.action === 'all_in') {
         // New raise — reset the "acted after" set
         lastRaiserIdx = POSITION_ORDER.indexOf(entry.position as any)
@@ -251,10 +253,12 @@ export default function StudyPage() {
 
     if (lastRaiserIdx === -1) return false  // No raise yet
 
-    // Check all positions after the raiser (wrapping) have acted
+    // Check all positions after the raiser (wrapping) have acted.
+    // Skip folded positions — they can't act again (fix: fold-before-raise bug #1).
     for (let i = 1; i <= 5; i++) {
       const idx = (lastRaiserIdx + i) % 6
       const pos = POSITION_ORDER[idx]
+      if (foldedPositions.has(pos)) continue  // folded before raise, can't act
       if (!actedAfter.has(pos)) return false
     }
 

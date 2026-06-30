@@ -542,6 +542,12 @@ export default function PostflopTraining({
   }, [streetIndex, boardStr, activePosition, currentStreet, potSize, stackDepth])
 
   const advanceToNextStreet = () => {
+    // Clear any pending auto-advance timer to prevent double-advance (fix: bug #2)
+    if (autoAdvanceRef.current) {
+      clearTimeout(autoAdvanceRef.current)
+      autoAdvanceRef.current = null
+    }
+
     if (!nextStreetInfo) return
 
     setPotSize(nextStreetInfo.nextPot)
