@@ -8,8 +8,16 @@
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
   "current_task": "fix-gate7-player-note-governance",
-  "current_sha": "51f16c2",
+  "current_sha": "56223e1",
   "completed": [
+    {
+      "task": "fix-preflop-allin-round-detection",
+      "sha": "56223e1",
+      "date": "2026-07-01",
+      "summary": "Fixed preflop all-in round detection (P1). Two commits: (1) 8911574 fixed double-invocation of handleActionClick in StudyPlayerTiles — onClick called both onActionClick AND onActionFeedback (which internally calls handleActionClick), producing duplicate treePath entries. (2) 56223e1 moved isPreflopRoundComplete/isAllFold check BEFORE the solver API call — the API returns HTTP 500 for complete rounds, and the try/catch was swallowing the transition. Round-complete detection now fires pre-flight: generates 5 community cards, jumps PREFLOP→RIVER, switches to postflop mode. Verified live: UTG Allin 100 → all call → 5 cards dealt, street=RIVER, postflop training active. 0 JS errors, 53/53 vitest pass.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-agents-md-stale-tasks",
       "sha": "51f16c2",
@@ -314,6 +322,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "51f16c2",
-  "player_note": "Tick 2026-07-01 ~03:03: fix-agents-md-stale-tasks complete (commit 51f16c2). AGENTS.md now clean — all Phase 7 tasks marked completed, Phase 8 tasks accurate. 3 remaining Phase 8 tasks: fix-gate7-player-note-governance (P2), fix-allin-shortcircuit-dead-code (P3), fix-checkpoint-current-sha-staleness (P3). Note: create-preflop-allin-shortcircuit (4293d33) was committed but never added to .checkpoint.json completed[] — now added retroactively."
+  "last_sha": "56223e1",
+  "player_note": "Tick 2026-07-01 ~04:27: fix-preflop-allin-round-detection (P1) complete (commits 8911574, 56223e1). Root cause: (a) double-invocation in StudyPlayerTiles.onClick called both onActionClick AND onActionFeedback (which calls handleActionClick), adding 2 treePath entries per click. (b) The solver API returns HTTP 500 for complete preflop rounds (6 entries), and the try/catch in fetchRange swallowed the auto-transition. Fix: single invocation + pre-flight round-complete check before API call. Verified live: UTG Allin 100 → all call → 5 community cards dealt on RIVER, postflop training active. 0 JS errors, 53/53 vitest pass. Remaining Phase 8 tasks: fix-gate7-player-note-governance (P2), fix-allin-shortcircuit-dead-code (P3), fix-checkpoint-current-sha-staleness (P3)."
 }
