@@ -8,8 +8,16 @@
   "phase": 7,
   "phase_name": "Core Gameplay Fixes",
   "current_task": "fix-game-tree-equal-action-rule",
-  "current_sha": "c7e30ae",
+  "current_sha": "6e67d20",
   "completed": [
+    {
+      "task": "fix-game-tree-equal-action-rule-phase1",
+      "sha": "6e67d20",
+      "date": "2026-06-30",
+      "summary": "Phase 1 of game tree fix: (1) Added isPreflopRoundComplete() detection — round ends when all positions after last raiser have called/folded (equal-action rule). (2) Auto-transition from preflop to postflop mode: generates flop cards, sets up postflop state without requiring manual mode toggle. (3) Added auto-advance timer in PostflopTraining: after user takes action and sees GTO feedback, auto-advances to next street after 1.5s. (4) Added isAllFold() detection (hand-over on all-fold). Remaining: all-in short-circuit to deal remaining streets automatically, and backend-driven round-complete detection.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "remove-stashed-backup-file",
       "sha": "31d8bbf",
@@ -172,6 +180,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Coach tick 2026-06-30T02:35:00Z. Reviewed revert e27f506: footer removed, game tree P1, exhaustion recovery disabled. AGENTS.md rewritten. 53/53 vitest pass. Study page healthy. Next: fix-game-tree-equal-action-rule.",
-  "last_sha": "e27f506"
+  "note": "Player tick 2026-06-30. Implemented Phase 1 of fix-game-tree-equal-action-rule (6e67d20): preflop round-complete detection with equal-action rule, auto-transition from preflop to postflop, auto-advance streets in PostflopTraining, all-fold detection. 53/53 vitest pass, build clean. Remaining: all-in short-circuit, backend-driven round-complete detection. Coach review pending.",
+  "last_sha": "6e67d20"
 }
