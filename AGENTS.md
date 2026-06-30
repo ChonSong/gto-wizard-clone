@@ -280,43 +280,56 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Status:** Fixed by Player commit `31d8bbf`. Removed `apps/web/public/sw.js~Stashed changes` from git tracking (was accidentally committed in 2e5fb03). Added `*~*` pattern to `.gitignore` to prevent future editor backup file commits. Note: `*~` didn't match because the tilde is mid-filename (sw.js~Stashed changes), so `*~*` was used instead. File deleted from disk, 0 tracked `~` files remain.
 **Evidence:** `git ls-files | grep '~'` returns nothing. `.gitignore` includes `*~*`.
 
-## Phase 7 — Recovery-Generated Tasks (Backlog Exhaustion)
+## Phase 7 — Core Gameplay Fixes (Current)
 
-**Generated:** 2026-06-30 by Player exhaustion recovery. Phase 3-6 backlogs exhausted. Site healthy: 11/11 health checks pass, 142 E2E + 53 vitest + 368 Python tests pass, 0 JS console errors. Two architectural P1 gaps (left sidebar nav, game tree visualization) remain deferred. Generated tasks target remaining P3 gaps and hygiene improvements.
+**Note:** Exhaustion recovery (auto-generating cosmetic tasks when backlog drains) has been disabled. When the backlog is empty, the system goes silent — it does not invent work. Tasks below are explicitly authored for core gameplay correctness.
 
-### Task: fix-study-bottom-bar-verify (recovery-generated) ✅
-**Priority:** P3 — **Coach APPROVED 2026-06-30**
-**Status:** Fixed by Player commit `069fd97`. Footer.tsx component added with 6 icon controls (☰ Main menu, 🪙 Session, 🔊 Audio, 👤 Profile, ⚙ Settings, 👁 Visibility). Footer wired into RootLayout. 44px dark theme (#0d0d0d), print-hidden, keyboard accessible. Verified on all 3 pages (dashboard, study, practice). 0 JS console errors. Footer represents ~3% of total page height (44/673px).
-**Evidence:** Browser QA across https://wiz.codeovertcp.com (dashboard), /study, /practice. Footer DOM confirmed at 44px height, visible, with 6 accessible icon links. 11/11 health checks pass.
-**Success criteria:** ✅ All met. Reference matched, footer implemented, 0 JS errors.
+### Task: fix-game-tree-equal-action-rule
+**Priority:** P1
+**Status:** Not started
+**Description:** The game tree does not correctly implement poker betting round rules. Three rules must be verified and fixed:
 
-### Task: audit-gitignore-pattern-breadth (recovery-generated)
-**Priority:** P3
-**Description:** Commit `31d8bbf` added `*~*` to `.gitignore` to catch editor backup files with tildes mid-filename (e.g., `sw.js~Stashed changes`). This pattern is broader than necessary — it matches any file with a tilde anywhere in the name, which could potentially mask legitimate files in edge cases. Review whether `*~Stashed*` or a path-specific entry (e.g., `apps/web/public/*~*`) would be more targeted while still preventing backup file commits.
+1. **Equal Action Rule:** A betting round only ends when all players have had a chance to act AND all active players have contributed the exact same amount to the pot (or folded).
+2. **Street Progression:** Once the equal action rule is met, traverse Pre-Flop → Flop → Turn → River → Showdown in order. Postflop should transition automatically after preflop actions complete — NOT require a separate menu selection.
+3. **Short-Circuit Rule:** Skip all remaining streets if (a) all players fold except one — remaining player wins instantly, no more cards dealt, OR (b) players go all-in with no decisions remaining — deal remaining community cards straight to showdown.
+
 **Success criteria:**
-- Review all files in the repo with tildes in their names (if any exist)
-- Either justify `*~*` as safe (no legitimate tilde files exist) or narrow to a more targeted pattern
-- No tracked backup files remain
-**Coach checks:** Run `git ls-files | grep '~'` — should return nothing.
+- Preflop: all players act, betting round concludes when equal action met, then auto-transition to Flop
+- Postflop mode activates automatically — not via separate menu toggle
+- All-in short-circuits: remaining streets dealt automatically, no orphaned "Take action" prompts
+- All-fold short-circuits: winner declared immediately, pot awarded, no cards dealt
+- No broken buttons at bottom of page
+- 0 JS console errors
+- Existing test suite still passes (regression check)
 
-### Task: fix-practice-poker-table-verify (recovery-generated)
-**Priority:** P3
-**Description:** The practice page at `/practice` has a PokerTable SVG component (line 231 of `apps/web/src/app/practice/page.tsx`) showing green felt gradient and player positions. This task was marked completed but Coach hasn't verified it. Load the live page at `https://wiz.codeovertcp.com/practice` and the reference at `docs/reference-trainer.png`. Verify the poker table visualization matches the reference in: green felt gradient, player position markers (UTG, HJ, CO, BTN, SB, BB), active position highlight, and board card display. Fix any discrepancies.
-**Success criteria:**
-- Live practice page shows poker table with green felt
-- Player positions visible around the table
-- Board cards displayed when applicable
-- Visual comparison against reference-trainer.png shows acceptable match
-**Coach checks:** Load `/practice` and verify poker table visualization.
-
-## Phase 8 — Coach-Generated Tasks (2026-06-30)
+**Coach checks:** Open /study. Play through a full hand UTG vs BTN: preflop → flop → turn → river → showdown. Verify auto-transitions. Test all-in during preflop: verify remaining streets auto-dealt. Test fold-to-steal: verify instant win and no broken UI state.
 
 ### Task: fix-postflop-action-button-registration
-**Priority:** P3
+**Priority:** P1
 **Status:** Not started
 **Description:** In postflop training mode, clicking action buttons (BET 33%, CALL, etc.) does not advance the interaction — the 'Take action ▶' prompt persists and the page state doesn't change. 0 JS console errors — no exceptions thrown, just no handler registered. Investigate event handler registration in the postflop action panel. May be a z-index or overlay interception issue (the postflop action row might be behind the position tile overlay).
+
 **Success criteria:**
 - Clicking any action button in postflop training mode advances the state (shows GTO feedback overlay, advances street, or shows error)
 - 'Take action ▶' prompt disappears after successful action
 - 0 JS console errors
+
 **Coach checks:** Open /study, switch to Postflop mode, click an action button. Verify GTO feedback appears and state advances.
+
+### Task: fix-gto-feedback-allin-raise-family
+**Priority:** P2
+**Status:** Not started
+**Description:** GTO feedback overlay marks player wrong when GTO action is 'all_in' and player clicks 'Raise' (or vice versa). Root cause: `handleActionWithFeedback` collapses only `raise*` → `'raise'`, but the Allin button has `actionBase='all_in'`. Meanwhile `getGtoActionBase()` also doesn't collapse `all_in` → `'raise'`. Both 'all_in' and 'raise*' belong to the raise family and should be compared as equivalent.
+
+**Success criteria:** On the live study page, when the selected hand's GTO action is 'all_in' and the player clicks any raise button (or vice versa), the feedback overlay shows a green ✓ 'GTO Correct'.
+
+**Coach checks:** Open /study, find a hand where GTO says All-in, click Raise. Verify green ✓ appears.
+
+### Task: audit-gitignore-pattern-breadth
+**Priority:** P3
+**Description:** Commit `31d8bbf` added `*~*` to `.gitignore`. Verify the pattern is not masking legitimate files. Narrow if needed.
+
+## Deferred (will not be autonomously worked — requires manual architectural decision)
+
+- **Left sidebar navigation vs top nav** — architectural UX decision
+- **Solutions page game tree visualization** — large feature, requires game tree rules fixed first (see Phase 7 Task 1)

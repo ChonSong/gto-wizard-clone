@@ -6,26 +6,10 @@
   "web_dir": "apps/web",
   "api_dir": "apps/api",
   "phase": 7,
-  "phase_name": "Recovery-Generated Tasks (Backlog Exhaustion)",
-  "current_task": "fix-practice-poker-table-verify",
-  "current_sha": "980bfeb",
+  "phase_name": "Core Gameplay Fixes",
+  "current_task": "fix-game-tree-equal-action-rule",
+  "current_sha": "c7e30ae",
   "completed": [
-    {
-      "task": "audit-gitignore-pattern-breadth",
-      "sha": "980bfeb",
-      "date": "2026-06-30",
-      "summary": "Reviewed *~* gitignore pattern breadth. Confirmed no legitimate tilde-named files exist in repo (0 tracked, 0 on disk). Pattern is intentionally broader than *~ to catch VS Code 'Stashed changes' mid-filename tildes. Added explanatory comment. No pattern narrowing needed.",
-      "coach": "pending",
-      "coach_verified_at": null
-    },
-    {
-      "task": "fix-study-bottom-bar-verify",
-      "sha": "069fd97",
-      "date": "2026-06-30",
-      "summary": "Implemented slim footer bar with 6 icon controls (menu \u2630, session \ud83e\ude99, audio \ud83d\udd0a, profile \ud83d\udc64, settings \u2699, visibility \ud83d\udc41). Vision analysis confirmed reference shows bottom bar. Footer added to RootLayout via new Footer.tsx component. Dark theme (#0d0d0d, 44px), print-hidden, keyboard accessible. 53/53 vitest pass, 0 JS console errors, build clean. Live verified on dashboard and study pages.",
-      "coach": "pending",
-      "coach_verified_at": null
-    },
     {
       "task": "remove-stashed-backup-file",
       "sha": "31d8bbf",
@@ -171,22 +155,23 @@
       "timestamp": "2026-06-29T18:07:00Z"
     },
     {
-      "cfs": 0.9995,
+      "sha": "c7e30ae",
+      "cfs": 0.997,
       "trend": "stable",
-      "timestamp": "2026-06-30T01:18:00Z"
+      "timestamp": "2026-06-30T01:36:35Z"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "31d8bbf",
-    "last_reviewed_at": "2026-06-30T22:11:19Z",
+    "last_reviewed_sha": "c7e30ae",
+    "last_reviewed_at": "2026-06-30T01:36:35Z",
     "verdict": "APPROVE",
     "findings_count": 0,
     "has_evidence": true,
-    "notes": "Coach reviewed remove-stashed-backup-file (31d8bbf). Trivial chore commit: removed sw.js~Stashed changes from tracking, added *~* to .gitignore. All structural gates pass: 368 Python + 53 vitest pass, build clean, HTTP 200, 0 JS errors, RefQA 4/4 pass. CFS 0.9999 stable. No findings. Next: fix-study-bottom-bar-verify (Phase 7 recovery task).",
+    "notes": "Exhaustion recovery disabled. Backlog now only contains explicitly authored tasks. Game tree P1 rules promoted. Bottom bar reverted.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30T00:42:00Z. Completed audit-gitignore-pattern-breadth (980bfeb). Reviewed *~* gitignore pattern: confirmed 0 tracked tilde files, pattern intentionally broader than *~ to catch VS Code Stashed changes. Added explanatory comment. Next: fix-practice-poker-table-verify.",
-  "last_sha": "980bfeb"
+  "last_sha": "c7e30ae"
 }
