@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 7,
   "phase_name": "Core Gameplay Fixes",
-  "current_task": "fix-deployment-hash-tracking",
-  "current_sha": "c827783",
+  "current_task": "audit-gitignore-pattern-breadth",
+  "current_sha": "8d404b4",
   "completed": [
+    {
+      "task": "fix-deployment-hash-tracking",
+      "sha": "8d404b4",
+      "date": "2026-06-30",
+      "summary": "Added GATE 6 to pre-commit hook: blocks commits where .deployed-hash is the ONLY staged file. Prevents the 7ad9ad9 pattern (claimed code fix but 0 source changes). Tracked at scripts/pre-commit, symlinked into .git/hooks/pre-commit. 53/53 vitest pass. GATE 6 verified: blocks .deployed-hash-only, allows .deployed-hash + .checkpoint.json, allows .deployed-hash + source files.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-git-governance-postflop-training",
       "sha": "c827783",
@@ -231,6 +239,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30 ~16:50: fix-git-governance-postflop-training complete. Commit c827783 adds clarifying comment to PostflopTraining.tsx — parent page.tsx already provides overflow:auto. Coach pending changes committed. 53/53 vitest. Advanced to fix-deployment-hash-tracking (P1).",
-  "last_sha": "c827783"
+  "note": "Tick 2026-06-30 ~17:10: fix-deployment-hash-tracking complete. Commit 8d404b4 adds GATE 6 to pre-commit hook — blocks .deployed-hash-only commits. Tracked at scripts/pre-commit. Verified: blocks solo .deployed-hash, allows .deployed-hash + .checkpoint.json, allows .deployed-hash + source files. 53/53 vitest pass. Advanced to audit-gitignore-pattern-breadth (P3).",
+  "last_sha": "8d404b4"
 }
