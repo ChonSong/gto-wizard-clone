@@ -162,16 +162,16 @@
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "c7e30ae",
-    "last_reviewed_at": "2026-06-30T01:36:35Z",
+    "last_reviewed_sha": "e27f506",
+    "last_reviewed_at": "2026-06-30T02:35:00Z",
     "verdict": "APPROVE",
     "findings_count": 0,
     "has_evidence": true,
-    "notes": "Exhaustion recovery disabled. Backlog now only contains explicitly authored tasks. Game tree P1 rules promoted. Bottom bar reverted.",
+    "notes": "Coach review 2026-06-30T02:35:00Z. Verdict APPROVE. Reviewed revert commit e27f506: removed footer bar (recovery-generated from Phase 7, didn't match reference), promoted game tree tasks to P1, disabled exhaustion recovery. AGENTS.md rewritten with proper gameplay tasks. 53/53 vitest pass, HTTP 200, 0 JS console errors. Study page: all positions (UTG/HJ/CO/BTN/SB/BB) with ranges, hand matrix with strategy data, mode toggle. RefQA: 3/4 pass (step 2 LLM flake — known ~30-40% rate). CFS 0.942 (inflated by tsconfig.tsbuildinfo). No regressions. Next: fix-game-tree-equal-action-rule.",
     "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30T00:42:00Z. Completed audit-gitignore-pattern-breadth (980bfeb). Reviewed *~* gitignore pattern: confirmed 0 tracked tilde files, pattern intentionally broader than *~ to catch VS Code Stashed changes. Added explanatory comment. Next: fix-practice-poker-table-verify.",
-  "last_sha": "c7e30ae"
+  "note": "Coach tick 2026-06-30T02:35:00Z. Reviewed revert e27f506: footer removed, game tree P1, exhaustion recovery disabled. AGENTS.md rewritten. 53/53 vitest pass. Study page healthy. Next: fix-game-tree-equal-action-rule.",
+  "last_sha": "e27f506"
 }

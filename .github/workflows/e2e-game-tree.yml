@@ -1,0 +1,70 @@
+# E2E Tests — Game Tree Rules
+# Auto-generated 2026-06-30 from reference-to-assertion pipeline.
+# Tests encoded from Coach assertion_specs (Coach Step 2.6.5).
+# Run: npx playwright test --grep "game-tree" --project=chromium
+
+name: E2E — Game Tree Rules
+
+on:
+  push:
+    paths:
+      - 'apps/web/src/app/study/**'
+      - 'apps/web/src/lib/game-tree/**'
+      - 'e2e/study-game-tree.spec.ts'
+  pull_request:
+    paths:
+      - 'apps/web/src/app/study/**'
+      - 'apps/web/src/lib/game-tree/**'
+      - 'e2e/study-game-tree.spec.ts'
+
+jobs:
+  game-tree:
+    name: Game Tree Rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: cd apps/web && npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('apps/web/package-lock.json') }}
+          restore-keys: |
+            playwright-browsers-${{ runner.os }}-
+
+      - name: Install Playwright browsers
+        run: cd apps/web && npx playwright install --with-deps chromium
+
+      - name: Run game tree tests
+        run: cd apps/web && npx playwright test --grep "game-tree" --project=chromium
+        env:
+          CI: 'true'
+          BASE_URL: 'https://wiz.codeovertcp.com'
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-tree-report
+          path: apps/web/playwright-report/
+          retention-days: 30
+
+      - name: Upload test traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-tree-traces
+          path: apps/web/test-results/
+          retention-days: 7

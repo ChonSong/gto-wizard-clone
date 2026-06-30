@@ -162,6 +162,28 @@ export default function StudyPage() {
         const firstActionable = data.hands?.find((h: any) => h.action !== 'fold')
         if (firstActionable) setSelectedCell(firstActionable.hand)
         else setSelectedCell(null)
+
+        // ── Auto-transition: check if preflop round is complete ──
+        if (mode === 'preflop' && treePath.length > 0) {
+          // Check for all-fold scenario
+          const foldResult = isAllFold(treePath)
+          if (foldResult.complete) {
+            // Hand over — all folded except winner — stay in preflop
+            return
+          }
+          // Check for equal-action round complete
+          if (isPreflopRoundComplete(treePath)) {
+            const flopCards = generateRandomCards(3, [])
+            setBoardCards(flopCards)
+            setBoardStreet('flop')
+            setPfBoard(flopCards)
+            setPfStreet('flop')
+            setPfPot(treeNode?.pot_size || 5.5)
+            setPfActivePosition('CO')
+            setPfAction(null)
+            setMode('postflop')
+          }
+        }
       } catch {
         setIsSolverMode(false)
       }
@@ -205,6 +227,54 @@ export default function StudyPage() {
     fetchAll()
     return () => { cancelled = true }
   }, [stackDepth, mode])
+
+  // ── Preflop round complete detection ──
+  const POSITION_ORDER = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const
+
+  function isPreflopRoundComplete(path: TreeAction[]): boolean {
+    if (path.length === 0) return false
+
+    // Find the last raise (or all_in) in the path, and track who acted after it
+    let lastRaiserIdx = -1
+    const actedAfter = new Set<string>()
+
+    for (const entry of path) {
+      if (entry.action === 'raise' || entry.action === 'all_in') {
+        // New raise — reset the "acted after" set
+        lastRaiserIdx = POSITION_ORDER.indexOf(entry.position as any)
+        actedAfter.clear()
+      } else if (lastRaiserIdx !== -1) {
+        // Call or fold after the current raiser
+        actedAfter.add(entry.position)
+      }
+    }
+
+    if (lastRaiserIdx === -1) return false  // No raise yet
+
+    // Check all positions after the raiser (wrapping) have acted
+    for (let i = 1; i <= 5; i++) {
+      const idx = (lastRaiserIdx + i) % 6
+      const pos = POSITION_ORDER[idx]
+      if (!actedAfter.has(pos)) return false
+    }
+
+    // Verify last action wasn't a raise (would mean someone can still re-raise)
+    const lastAction = path[path.length - 1]
+    if (lastAction.action === 'raise' || lastAction.action === 'all_in') return false
+
+    return true
+  }
+
+  // ── Detect all-fold (only one non-folded position remains) ──
+  function isAllFold(path: TreeAction[]): { complete: boolean; winner: string | null } {
+    const folded = new Set<string>()
+    for (const entry of path) {
+      if (entry.action === 'fold') folded.add(entry.position)
+    }
+    const active = POSITION_ORDER.filter(p => !folded.has(p))
+    if (active.length === 1) return { complete: true, winner: active[0] }
+    return { complete: false, winner: null }
+  }
 
   // ── Action click ──
   function handleActionClick(actionBase: string) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 // ── Colours ──────────────────────────────────────────────
 const RED = '#D32F2F'
@@ -403,8 +403,17 @@ export default function PostflopTraining({
 
   const actionTaken = streetActions[streetIndex] != null
   const isLastStreet = streetIndex >= 2
+  const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Clean up auto-advance timer on unmount
+  useEffect(() => {
+    return () => { if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current) }
+  }, [])
 
   const handleAction = (action: string) => {
+    // Clear any pending auto-advance
+    if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current)
+
     setUserChoice(action)
     // Record the action for this street
     const updated = [...streetActions]
@@ -412,6 +421,13 @@ export default function PostflopTraining({
     setStreetActions(updated)
     if (!strategy) {
       fetchStrategy()
+    }
+
+    // Auto-advance to next street after feedback delay (1.5s)
+    if (!isLastStreet) {
+      autoAdvanceRef.current = setTimeout(() => {
+        advanceToNextStreetRef.current()
+      }, 1500)
     }
   }
 
@@ -535,6 +551,10 @@ export default function PostflopTraining({
     setStrategy(null)
     setError(null)
   }
+
+  // Ref for stable access to advanceToNextStreet (avoids stale closure in timers)
+  const advanceToNextStreetRef = useRef(advanceToNextStreet)
+  useEffect(() => { advanceToNextStreetRef.current = advanceToNextStreet })
 
   return (
     <div style={{ padding: 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
@@ -968,6 +988,7 @@ export default function PostflopTraining({
               <div style={{ display: 'flex', gap: 8 }}>
                 {/* Try Again button */}
                 <button onClick={() => {
+                  if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current)
                   setUserChoice(null)
                   const updated = [...streetActions]
                   updated[streetIndex] = null
