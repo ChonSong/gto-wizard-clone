@@ -267,6 +267,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30 ~20:10: fix-precommit-gate6-meaningful-changes complete. Commit d01a59c enhances GATE 6 to detect trivial companion file bypass. Empty files, .gitkeep, whitespace-only changes co-staged with .deployed-hash now blocked. 53/53 vitest pass. Advanced to fix-destructive-hook-overwrite (P2).",
-  "last_sha": "d01a59c"
+  "note": "Tick 2026-06-30 ~21:06: fix-destructive-hook-overwrite complete. Commit f704ee9 adds safety check to Makefile install + npm prepare — detects non-symlink custom hooks, backs up before ln -sf. Also added 'install' to .PHONY (incidental fix-makefile-phony-install). 53/53 vitest pass, all 6 gates pass. Advanced to fix-checkpoint-band-gate-respect (P3).",
+  "last_sha": "f704ee9"
 }
