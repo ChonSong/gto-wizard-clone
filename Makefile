@@ -1,7 +1,7 @@
 # GTO Wizard Clone — Developer Makefile
 # Targets for common development and ops tasks.
 
-.PHONY: help seed-preflop seed-all health-check
+.PHONY: help seed-preflop seed-all health-check install
 
 help:           ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -16,8 +16,14 @@ seed-all:       ## Seed all strategies (preflop + flop, all depths) into Postgre
 health-check:   ## Run deploy health check against API and frontend endpoints
 	bash scripts/deploy-health-check.sh
 
-install:        ## Install pre-commit hook (idempotent — safe to run repeatedly)
+install:        ## Install pre-commit hook (idempotent, preserves custom hooks)
 	@if [ -d .git ]; then \
+		if [ -f .git/hooks/pre-commit ] && [ ! -L .git/hooks/pre-commit ]; then \
+			BACKUP=".git/hooks/pre-commit.backup-$$(date +%Y%m%d%H%M%S)"; \
+			cp .git/hooks/pre-commit "$$BACKUP"; \
+			echo "⚠️  Existing custom pre-commit hook backed up to $$BACKUP"; \
+			echo "   To restore: mv $$BACKUP .git/hooks/pre-commit"; \
+		fi; \
 		ln -sf ../../scripts/pre-commit .git/hooks/pre-commit && \
 		echo "✅ Pre-commit hook installed (6 structural gates active)"; \
 	else \
