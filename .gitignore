@@ -17,4 +17,7 @@ apps/web/e2e/node_modules.bak2/
 .next_old/
 apps/web/.next.bak/
 .agent-qa/
+# Editor backup files: *~* catches trailing tildes (Vim/Emacs: file~) AND
+# mid-filename tildes (VS Code: file~Stashed changes, gedit: file~).
+# Intentionally broader than *~ — verified 0 legitimate tilde-named files in repo.
 *~*
