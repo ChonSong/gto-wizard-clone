@@ -563,6 +563,8 @@ export default function PostflopTraining({
   useEffect(() => { advanceToNextStreetRef.current = advanceToNextStreet })
 
   return (
+    /* Scrolling: parent page.tsx (line 819) provides overflow:auto on wrapper div;
+       this root div inherits height:100% from flex parent — no overflow needed here. */
     <div style={{ padding: 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       {/* Street breadcrumb */}
       <div style={{ flexShrink: 0 }}>

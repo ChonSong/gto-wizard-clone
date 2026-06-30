@@ -310,17 +310,17 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 **Coach checks:** Open /study. Test scenario: select HJ position, simulate UTG fold → HJ raise → CO call → BTN call → SB call → BB call. Verify auto-transition to postflop. Currently fails due to fold-before-raise bug.
 
-### Task: fix-postflop-action-button-registration
+|### Task: fix-git-governance-postflop-training
 **Priority:** P1
-**Status:** Not started
-**Description:** In postflop training mode, clicking action buttons (BET 33%, CALL, etc.) does not advance the interaction — the 'Take action ▶' prompt persists and the page state doesn't change. 0 JS console errors — no exceptions thrown, just no handler registered. Investigate event handler registration in the postflop action panel. May be a z-index or overlay interception issue (the postflop action row might be behind the position tile overlay).
+**Status:** New
+**Description:** Git governance integrity issue. Commit `7ad9ad9` claims to fix PostflopTraining.tsx (add overflow-y:auto to root div) but the code change is NOT in git history — the commit only modified .deployed-hash. The root div at line 566 has no overflow property. Either: (a) commit the actual overflow-y:auto change if one was applied server-side (check deployed `/study` Postflop Training action buttons), or (b) if the fix was unnecessary (parent already scrolls via page.tsx line 819 overflow:auto), revert the .deployed-hash and checkpoint metadata to match reality. Investigate why the commit claimed a fix that wasn't tracked — ensure future code changes appear in git diffs.
 
 **Success criteria:**
-- Clicking any action button in postflop training mode advances the state (shows GTO feedback overlay, advances street, or shows error)
-- 'Take action ▶' prompt disappears after successful action
-- 0 JS console errors
+- `git diff HEAD~1` shows actual PostflopTraining.tsx changes OR comment clarifying the fix was unnecessary
+- .checkpoint.json `fix-postflop-action-button-registration` summary matches what's actually in git
+- `git status` shows clean working tree (no uncommitted .deployed-hash changes)
 
-**Coach checks:** Open /study, switch to Postflop mode, click an action button. Verify GTO feedback appears and state advances.
+**Coach checks:** Run `git diff HEAD~1 -- apps/web/src/components/study/PostflopTraining.tsx` — verify actual code change exists. Verify `.deployed-hash` is committed and matches deployed state. Verify `grep -c 'overflow.*auto' apps/web/src/components/study/PostflopTraining.tsx` shows overflow on root div or documented as unnecessary.
 
 ### Task: fix-gto-feedback-allin-raise-family
 **Priority:** P2
@@ -330,6 +330,17 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 **Success criteria:** On the live study page, when the selected hand's GTO action is 'all_in' and the player clicks any raise button (or vice versa), the feedback overlay shows a green ✓ 'GTO Correct'.
 
 **Coach checks:** Open /study, find a hand where GTO says All-in, click Raise. Verify green ✓ appears.
+
+### Task: fix-deployment-hash-tracking
+**Priority:** P1
+**Status:** New
+**Description:** Add pre-commit or CI validation that `.deployed-hash` updates only accompany actual code changes. The current pattern (updating `.deployed-hash` without corresponding source changes in commit `7ad9ad9`) creates audit trail gaps where deployed code doesn't match git history. Implement a check that either: (a) prevents committing `.deployed-hash` changes without source tree modifications, or (b) validates deployed hash points to the actual committed code.
+
+**Success criteria:**
+- A check exists (pre-commit hook or CI step) that validates `.deployed-hash` changes are accompanied by non-metadata code changes
+- No future commits should modify `.deployed-hash` without corresponding source changes
+
+**Coach checks:** Attempt a `.deployed-hash`-only commit; verify the validation blocks it.
 
 ### Task: audit-gitignore-pattern-breadth
 **Priority:** P3
