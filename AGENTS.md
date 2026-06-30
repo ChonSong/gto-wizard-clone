@@ -342,12 +342,35 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 4. Root cause (deploy.sh writes .deployed-hash outside git) not addressed
 See coach review tasks below for follow-ups.
 
-### Task: fix-precommit-hook-auto-install
+### Task: fix-precommit-hook-auto-install ✅
+**Priority:** P2
+**Status:** ✅ Coach VERIFIED — fix-destructive-hook-overwrite needed before APPROVE
+**Description:** Implemented in commit 3439c95. Makefile install target + npm prepare script that symlinks `scripts/pre-commit` → `.git/hooks/pre-commit`. Verified working: `make install` creates symlink, `git commit --allow-empty` blocked by GATE 1, `npm run prepare` succeeds.
+**Coach findings:**
+1. ⛔ **P2 — Destructive hook overwrite**: `ln -sf` silently overwrites existing custom hooks without warning/backup. Confirmed live.
+2. ⛔ **P3 — Task/implementation merged in single commit** — prevented spec review.
+3. ⛔ **P3 — Makefile `install` target missing from `.PHONY`**.
+
+### Task: fix-destructive-hook-overwrite
 **Priority:** P2
 **Status:** New
-**Description:** Add auto-installation mechanism for the pre-commit hook so fresh clones and CI environments also get structural enforcement. Options: npm prepare script (setting core.hooksPath), Makefile install target, or shell script.
-**Success criteria:** Fresh clone (git clone) automatically gets pre-commit hook installed. `git commit` on fresh clone invokes all 6 gates.
-**Coach checks:** Clone repo fresh, verify hook is active on first commit attempt.
+**Description:** Add safety check before `ln -sf` in both Makefile install and npm prepare. Detect existing non-symlink hooks (`test -f .git/hooks/pre-commit && ! test -L .git/hooks/pre-commit`) and warn before overwriting. Offer to backup the original. Never destroy user content silently.
+**Success criteria:** Running `make install` with a custom `.git/hooks/pre-commit` warns and preserves original. User must explicitly confirm overwrite. `2>/dev/null` dropped or only suppresses expected errors.
+**Coach checks:** Install a dummy custom hook, run `make install` → verify warning shown, original hook preserved.
+
+### Task: fix-checkpoint-band-gate-respect
+**Priority:** P3
+**Status:** New
+**Description:** Player must not modify coach-only checkpoint fields (`coach_review.*`, high-level `note`). Add pre-commit GATE that blocks checkpoint.json changes that alter `coach_review.commit_pending`, `coach_review.findings_count`, or `coach_review.notes`. The Coach writes verdict independently.
+**Success criteria:** Player commits that modify coach_review fields in .checkpoint.json are blocked. The Player can append to `completed` array and update `current_task`/`last_sha` but cannot touch `coach_review.*`.
+**Coach checks:** Attempt commit that changes coach_review fields → verify blocked.
+
+### Task: fix-makefile-phony-install
+**Priority:** P3
+**Status:** New
+**Description:** Add `install` to the `.PHONY` declaration in the root Makefile. Currently lists `help seed-preflop seed-all health-check` but omits `install`.
+**Success criteria:** `.PHONY: help seed-preflop seed-all health-check install`
+**Coach checks:** Verify Makefile PHONY line includes `install`.
 
 ### Task: fix-precommit-gate6-meaningful-changes
 **Priority:** P2
