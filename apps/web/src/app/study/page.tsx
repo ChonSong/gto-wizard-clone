@@ -134,6 +134,43 @@ export default function StudyPage() {
   useEffect(() => {
     async function fetchRange() {
       try {
+        // ── Pre-flight: if preflop round is already complete, transition now ──
+        // The solver API returns 500 for complete rounds (no next position to compute).
+        // Transition BEFORE calling the API to avoid the error.
+        if (mode === 'preflop' && treePath.length > 0) {
+          const foldResult = isAllFold(treePath)
+          if (foldResult.complete) {
+            return  // Hand over — all folded except winner
+          }
+          if (isPreflopRoundComplete(treePath)) {
+            const hasAllIn = treePath.some(entry => entry.action === 'all_in')
+            if (hasAllIn) {
+              // All-in short-circuit: deal all 5 community cards, jump to river
+              const allCards = generateRandomCards(5, [])
+              setBoardCards(allCards)
+              setBoardStreet('river')
+              setPfBoard(allCards)
+              setPfStreet('river')
+              setPfPot(treeNode?.pot_size || 5.5)
+              setPfActivePosition('CO')
+              setPfAction(null)
+              setMode('postflop')
+            } else {
+              // Normal preflop completion: deal 3 flop cards
+              const flopCards = generateRandomCards(3, [])
+              setBoardCards(flopCards)
+              setBoardStreet('flop')
+              setPfBoard(flopCards)
+              setPfStreet('flop')
+              setPfPot(treeNode?.pot_size || 5.5)
+              setPfActivePosition('CO')
+              setPfAction(null)
+              setMode('postflop')
+            }
+            return
+          }
+        }
+
         const body: any = {
           position: activePosition,
           stack_depth: positions.find(p => p.id === activePosition)?.stack || stackDepth,
@@ -162,44 +199,6 @@ export default function StudyPage() {
         const firstActionable = data.hands?.find((h: any) => h.action !== 'fold')
         if (firstActionable) setSelectedCell(firstActionable.hand)
         else setSelectedCell(null)
-
-        // ── Auto-transition: check if preflop round is complete ──
-        if (mode === 'preflop' && treePath.length > 0) {
-          // Check for all-fold scenario
-          const foldResult = isAllFold(treePath)
-          if (foldResult.complete) {
-            // Hand over — all folded except winner — stay in preflop
-            return
-          }
-          // Check for equal-action round complete
-          if (isPreflopRoundComplete(treePath)) {
-            // Detect preflop all-in: if any position went all-in, all 5 cards → showdown
-            const hasAllIn = treePath.some(entry => entry.action === 'all_in')
-            if (hasAllIn) {
-              // All-in short-circuit: deal all 5 community cards, jump to river
-              const allCards = generateRandomCards(5, [])
-              setBoardCards(allCards)
-              setBoardStreet('river')
-              setPfBoard(allCards)
-              setPfStreet('river')
-              setPfPot(treeNode?.pot_size || 5.5)
-              setPfActivePosition('CO')
-              setPfAction(null)
-              setMode('postflop')
-            } else {
-              // Normal preflop completion: deal 3 flop cards
-              const flopCards = generateRandomCards(3, [])
-              setBoardCards(flopCards)
-              setBoardStreet('flop')
-              setPfBoard(flopCards)
-              setPfStreet('flop')
-              setPfPot(treeNode?.pot_size || 5.5)
-              setPfActivePosition('CO')
-              setPfAction(null)
-              setMode('postflop')
-            }
-          }
-        }
       } catch {
         setIsSolverMode(false)
       }
