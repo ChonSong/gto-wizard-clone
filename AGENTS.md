@@ -331,16 +331,30 @@ The `docs/` directory contains screenshots of the real GTO Wizard that serve as 
 
 **Coach checks:** Open /study, find a hand where GTO says All-in, click Raise. Verify green ✓ appears.
 
-### Task: fix-deployment-hash-tracking
+### Task: fix-deployment-hash-tracking ✅
 **Priority:** P1
+**Status:** Coach: FIX (2026-06-30T17:38:00+10:00)
+**Description:** Completed by commit 8d404b4 — GATE 6 pre-commit hook blocks .deployed-hash-only commits. Symlinked to .git/hooks/pre-commit.
+**Coach findings:** Implementation caught during structural/adversarial review:
+1. GATE 6 can be trivially bypassed by staging any second file (empty, .gitkeep) alongside .deployed-hash — gate checks exclusivity, not meaningful change
+2. No auto-installation mechanism — fresh clones get zero enforcement
+3. GATE 2's own SECRET_PATTERNS regex blocks self-validation (bootstrap issue)
+4. Root cause (deploy.sh writes .deployed-hash outside git) not addressed
+See coach review tasks below for follow-ups.
+
+### Task: fix-precommit-hook-auto-install
+**Priority:** P2
 **Status:** New
-**Description:** Add pre-commit or CI validation that `.deployed-hash` updates only accompany actual code changes. The current pattern (updating `.deployed-hash` without corresponding source changes in commit `7ad9ad9`) creates audit trail gaps where deployed code doesn't match git history. Implement a check that either: (a) prevents committing `.deployed-hash` changes without source tree modifications, or (b) validates deployed hash points to the actual committed code.
+**Description:** Add auto-installation mechanism for the pre-commit hook so fresh clones and CI environments also get structural enforcement. Options: npm prepare script (setting core.hooksPath), Makefile install target, or shell script.
+**Success criteria:** Fresh clone (git clone) automatically gets pre-commit hook installed. `git commit` on fresh clone invokes all 6 gates.
+**Coach checks:** Clone repo fresh, verify hook is active on first commit attempt.
 
-**Success criteria:**
-- A check exists (pre-commit hook or CI step) that validates `.deployed-hash` changes are accompanied by non-metadata code changes
-- No future commits should modify `.deployed-hash` without corresponding source changes
-
-**Coach checks:** Attempt a `.deployed-hash`-only commit; verify the validation blocks it.
+### Task: fix-precommit-gate6-meaningful-changes
+**Priority:** P2
+**Status:** New
+**Description:** Enhance GATE 6 to check for meaningful source changes, not just "not the only file." Verify that at least one staged file has substantive content (exclude empty files, .gitkeep, whitespace-only changes) when accompanied by .deployed-hash.
+**Success criteria:** Staging .deployed-hash + empty/trivial file is blocked by GATE 6. GATE 6 only passes when .deployed-hash has real source code changes alongside it.
+**Coach checks:** Attempt .deployed-hash + empty companion file commit → verify blocked.
 
 ### Task: audit-gitignore-pattern-breadth
 **Priority:** P3

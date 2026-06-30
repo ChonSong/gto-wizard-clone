@@ -7,16 +7,16 @@
   "api_dir": "apps/api",
   "phase": 7,
   "phase_name": "Core Gameplay Fixes",
-  "current_task": "audit-gitignore-pattern-breadth",
-  "current_sha": "8d404b4",
+  "current_task": "fix-precommit-hook-auto-install",
+  "current_sha": "36a8f7a",
   "completed": [
     {
       "task": "fix-deployment-hash-tracking",
       "sha": "8d404b4",
       "date": "2026-06-30",
       "summary": "Added GATE 6 to pre-commit hook: blocks commits where .deployed-hash is the ONLY staged file. Prevents the 7ad9ad9 pattern (claimed code fix but 0 source changes). Tracked at scripts/pre-commit, symlinked into .git/hooks/pre-commit. 53/53 vitest pass. GATE 6 verified: blocks .deployed-hash-only, allows .deployed-hash + .checkpoint.json, allows .deployed-hash + source files.",
-      "coach": "pending",
-      "coach_verified_at": null
+      "coach": "fix",
+      "coach_verified_at": "2026-06-30T17:38:00+10:00"
     },
     {
       "task": "fix-git-governance-postflop-training",
@@ -225,20 +225,26 @@
       "cfs": 0.997,
       "trend": "stable",
       "timestamp": "2026-06-30T01:36:35Z"
+    },
+    {
+      "sha": "36a8f7a",
+      "cfs": 0.999681,
+      "trend": "improving",
+      "timestamp": "2026-06-30T17:38:00+10:00"
     }
   ],
   "coach_review": {
-    "last_reviewed_sha": "c827783",
-    "last_reviewed_at": "2026-06-30T16:30:00Z",
+    "last_reviewed_sha": "36a8f7a",
+    "last_reviewed_at": "2026-06-30T17:38:00+10:00",
     "verdict": "FIX",
-    "findings_count": 5,
+    "findings_count": 4,
     "has_evidence": true,
     "assertion_specs": [],
-    "notes": "Coach review 2026-06-30T16:30:00Z. Verdict FIX for fix-postflop-action-button-registration (7ad9ad9). Player resolved via c827783: added clarifying comment to PostflopTraining.tsx documenting parent page.tsx provides overflow:auto. Fix was unnecessary — no code change needed. Coach pending changes committed.",
-    "commit_pending": false,
+    "notes": "Coach review 2026-06-30T17:38:00+10:00. Verdict FIX for fix-deployment-hash-tracking (8d404b4). All 7 structural gates pass: 53/53 vitest, build clean, HTTP 200, no secrets/injection, pre-commit hook symlinked to .git/hooks/pre-commit with GATE 6 blocking .deployed-hash-only commits. Browser QA: study page loads with 0 JS errors, position switching works, postflop training functional with action buttons and EV. Adversarial review found 7 additional findings — 2 significant: (1) GATE 6 bypassable with trivial companion file, (2) no auto-install for fresh clones. CFS 0.999681 improving. AGENTS.md updated with 2 P2 fix tasks. Band-gated commit awaits watchdog verification.",
+    "commit_pending": true,
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30 ~17:10: fix-deployment-hash-tracking complete. Commit 8d404b4 adds GATE 6 to pre-commit hook — blocks .deployed-hash-only commits. Tracked at scripts/pre-commit. Verified: blocks solo .deployed-hash, allows .deployed-hash + .checkpoint.json, allows .deployed-hash + source files. 53/53 vitest pass. Advanced to audit-gitignore-pattern-breadth (P3).",
-  "last_sha": "8d404b4"
+  "note": "Coach FIX 2026-06-30T17:38:00+10:00: fix-deployment-hash-tracking (8d404b4/36a8f7a). All 7 structural gates pass. PRE-COMMIT GATE 6 added blocking .deployed-hash-only commits. Adversarial review: GATE 6 bypassable with trivial companion file, no auto-install. Two P2 fix tasks generated (fix-precommit-hook-auto-install, fix-precommit-gate6-meaningful-changes). CFS 0.999681 improving. Band-gated — commit pending watchdog.",
+  "last_sha": "36a8f7a"
 }
