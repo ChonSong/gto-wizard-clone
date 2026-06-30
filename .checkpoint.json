@@ -5,11 +5,27 @@
   "repo": "/home/sc/repos/gto-wizard-clone",
   "web_dir": "apps/web",
   "api_dir": "apps/api",
-  "phase": 7,
-  "phase_name": "Core Gameplay Fixes",
-  "current_task": "fix-game-tree-equal-action-rule-preflop-allin",
-  "current_sha": "5069922",
+  "phase": 8,
+  "phase_name": "Coach-Generated Fixes",
+  "current_task": "fix-gate7-player-note-governance",
+  "current_sha": "51f16c2",
   "completed": [
+    {
+      "task": "fix-agents-md-stale-tasks",
+      "sha": "51f16c2",
+      "date": "2026-07-01",
+      "summary": "Updated 5 stale AGENTS.md status markers to match .checkpoint.json completed[]: fix-game-tree-equal-action-rule (In progress→Complete), fix-git-governance-postflop-training (New→Completed c827783), fix-gto-feedback-allin-raise-family (Not started→Completed a6e85cf), fix-checkpoint-band-gate-respect (New→Completed 542589e), create-preflop-allin-shortcircuit (New→Completed 4293d33). Fixed |### markdown formatting error. 53/53 vitest pass, 0 source changes.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
+    {
+      "task": "create-preflop-allin-shortcircuit",
+      "sha": "4293d33",
+      "date": "2026-07-01",
+      "summary": "Preflop all-in short-circuit: when any position goes all-in preflop and all other active players call/fold, all 5 community cards dealt straight to showdown. PostflopTraining now accepts externalStreet prop (flop/turn/river). Street breadcrumb jumps PREFLOP→RIVER. 53/53 vitest pass, build clean.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-game-tree-equal-action-rule-phase3",
       "sha": "2023b6b",
@@ -298,6 +314,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "5069922",
-  "player_note": "Tick 2026-07-01 ~01:05: audit-gitignore-pattern-breadth complete. *~* pattern verified correctly scoped — 0 legitimate files masked. Stale sw.js~Stashed changes deleted from disk (was gitignored but checkpoint claimed deleted). 53/53 vitest pass. Advanced to fix-game-tree-equal-action-rule-preflop-allin — remaining all-in short-circuit gap for preflop (deal 5 cards on round-complete). ⚠️ AGENTS.md stale — fix-destructive-hook-overwrite, fix-makefile-phony-install, fix-precommit-gate6-meaningful-changes already completed but still listed as 'New'."
+  "last_sha": "51f16c2",
+  "player_note": "Tick 2026-07-01 ~03:03: fix-agents-md-stale-tasks complete (commit 51f16c2). AGENTS.md now clean — all Phase 7 tasks marked completed, Phase 8 tasks accurate. 3 remaining Phase 8 tasks: fix-gate7-player-note-governance (P2), fix-allin-shortcircuit-dead-code (P3), fix-checkpoint-current-sha-staleness (P3). Note: create-preflop-allin-shortcircuit (4293d33) was committed but never added to .checkpoint.json completed[] — now added retroactively."
 }
