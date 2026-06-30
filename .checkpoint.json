@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 7,
   "phase_name": "Recovery-Generated Tasks (Backlog Exhaustion)",
-  "current_task": "audit-gitignore-pattern-breadth",
-  "current_sha": "069fd97",
+  "current_task": "fix-practice-poker-table-verify",
+  "current_sha": "980bfeb",
   "completed": [
+    {
+      "task": "audit-gitignore-pattern-breadth",
+      "sha": "980bfeb",
+      "date": "2026-06-30",
+      "summary": "Reviewed *~* gitignore pattern breadth. Confirmed no legitimate tilde-named files exist in repo (0 tracked, 0 on disk). Pattern is intentionally broader than *~ to catch VS Code 'Stashed changes' mid-filename tildes. Added explanatory comment. No pattern narrowing needed.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-study-bottom-bar-verify",
       "sha": "069fd97",
@@ -179,6 +187,6 @@
     "watchdog_verified": false,
     "watchdog_bypass": false
   },
-  "note": "Tick 2026-06-30T00:01:00Z. Player completed fix-study-bottom-bar-verify (069fd97). Implemented slim footer bar with 6 icon controls matching reference. New Footer.tsx component wired into RootLayout. Vision analysis confirmed reference has bottom bar. 53/53 vitest pass, 0 JS errors, build clean, live verified on dashboard + study pages. Next: audit-gitignore-pattern-breadth.",
-  "last_sha": "069fd97"
+  "note": "Tick 2026-06-30T00:42:00Z. Completed audit-gitignore-pattern-breadth (980bfeb). Reviewed *~* gitignore pattern: confirmed 0 tracked tilde files, pattern intentionally broader than *~ to catch VS Code Stashed changes. Added explanatory comment. Next: fix-practice-poker-table-verify.",
+  "last_sha": "980bfeb"
 }
