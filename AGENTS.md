@@ -385,6 +385,20 @@ See coach review tasks below for follow-ups.
 
 ## Phase 8 — Coach-Generated Fixes (2026-07-01)
 
+### Task: fix-current-sha-staleness-remaining
+**Priority:** P2
+**Status:** New — Coach generated 2026-07-01T11:42
+**Description:** Update current_sha in .checkpoint.json from c3a0604 to 27b4e04 (or actual HEAD at commit time). The fix-checkpoint-current-sha-staleness task added GATE 8 but the stale value itself was never corrected. Additionally, investigate GATE 8 design: it compares staged current_sha against parent HEAD (git rev-parse HEAD), which means checkpoint-update commits that follow the gate commit can reintroduce staleness. Consider whether GATE 8 should warn but not require an exact match for chore: checkpoint-update commits.
+**Success criteria:** current_sha in .checkpoint.json matches HEAD after commit. GATE 8 passes on the next commit that touches .checkpoint.json.
+**Coach checks:** Verify current_sha matches HEAD in committed .checkpoint.json.
+
+### Task: fix-agents-md-stale-markers-round2
+**Priority:** P3
+**Status:** New — Coach generated 2026-07-01T11:42
+**Description:** This task has already been handled by Coach in this review cycle. Stale task markers for fix-gate7-player-note-governance, fix-allin-shortcircuit-dead-code, and fix-checkpoint-current-sha-staleness have been updated in AGENTS.md. Verify no other stale markers remain.
+**Success criteria:** grep 'Status:\*\* New' in AGENTS.md returns only genuinely unstarted tasks (fix-current-sha-staleness-remaining, fix-preflop-round-complete-pot-size, add-unit-tests-for-preflop-round-complete).
+**Coach checks:** grep 'Status:\*\* New' in AGENTS.md — verify stale markers are gone.
+
 ### Task: fix-agents-md-stale-tasks
 **Priority:** P2
 **Status:** ✅ Completed (commit pending)
@@ -393,19 +407,19 @@ See coach review tasks below for follow-ups.
 
 ### Task: fix-gate7-player-note-governance
 **Priority:** P2
-**Status:** New
+**Status:** ✅ Completed (commit 5f31d36)
 **Description:** The `player_note` field in .checkpoint.json (introduced in commit 2411ef5) is ungoverned — GATE 7 protects `note` but not `player_note`. Either extend GATE 7 regex to protect player_note, or add documentation that player_note is Player-only with content restrictions.
 **Success criteria:** player_note is either protected by GATE 7 or has documented governance restricting its content.
 
 ### Task: fix-allin-shortcircuit-dead-code
 **Priority:** P3
-**Status:** New
+**Status:** ✅ Completed (commit 23cc830)
 **Description:** PostflopTraining.tsx lines 444-446 contain dead code: `for (let i = streetIndex + 1; i <= 2; i++) { if (finalActions[i] == null) finalActions[i] = null; }`. This assigns null to already-null entries — it's a no-op. Either remove the loop or change to unconditional assignment `finalActions[i] = null` to actually mark intermediate street actions as auto-dealt.
 **Success criteria:** No dead code in all-in short-circuit handler. Loop removed or replaced with meaningful logic.
 
 ### Task: fix-checkpoint-current-sha-staleness
 **Priority:** P3
-**Status:** New
+**Status:** ⚠️ FIX — Coach 2026-07-01T11:42 (current_sha still stale: c3a0604 vs HEAD 27b4e04)
 **Description:** `current_sha` field in .checkpoint.json was stale at '542589e' through 5+ commits (8e8e690, 2023b6b, 48afb58, 2411ef5, 5069922). Checkpoint update commits must always update current_sha to match actual HEAD. Fix the Player's checkpoint update workflow.
 **Success criteria:** current_sha always matches HEAD commit produced by the same tick. No multi-commit staleness.
 

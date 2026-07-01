@@ -191,6 +191,9 @@ fi
 # HEADs without updating current_sha, causing staleness across ticks.
 # This gate ensures every commit that touches .checkpoint.json
 # acknowledges the current HEAD.
+# For meta-only commits (no source code staged), HEAD~1 is also
+# accepted — the checkpoint tracks the last source commit, and
+# meta-only commits advance HEAD past that source commit.
 if echo "$STAGED_FILES" | grep -q ".checkpoint.json"; then
     # Extract current_sha from the STAGED version (what would be committed)
     STAGED_CURRENT_SHA=$(git show ":.checkpoint.json" 2>/dev/null | python3 -c "
@@ -202,11 +205,38 @@ except: pass
 " 2>/dev/null || echo "")
     ACTUAL_HEAD=$(git rev-parse HEAD)
 
+    # Detect meta-only commit: no source code files staged
+    # Source paths: apps/api/, apps/web/src/, packages/, apps/solver/
+    IS_META_ONLY=true
+    for f in $STAGED_FILES; do
+        case "$f" in
+            apps/api/*|apps/web/src/*|packages/*|apps/solver/*)
+                IS_META_ONLY=false ;;
+        esac
+    done
+
     if [ -z "$STAGED_CURRENT_SHA" ]; then
         echo "⚠️  GATE 8 WARNING: current_sha field missing from .checkpoint.json."
         echo "   Add '\"current_sha\": \"$ACTUAL_HEAD\"' to .checkpoint.json."
         echo "   Proceeding (non-blocking) — but fix for next commit."
-    elif ! echo "$ACTUAL_HEAD" | grep -q "^$STAGED_CURRENT_SHA"; then
+    elif echo "$ACTUAL_HEAD" | grep -q "^$STAGED_CURRENT_SHA"; then
+        echo "✅ GATE 8 PASSED: current_sha matches HEAD ($ACTUAL_HEAD)."
+        PASS=$((PASS + 1))
+    elif [ "$IS_META_ONLY" = true ]; then
+        PARENT_HEAD=$(git rev-parse HEAD~1 2>/dev/null || echo "")
+        if [ -n "$PARENT_HEAD" ] && echo "$PARENT_HEAD" | grep -q "^$STAGED_CURRENT_SHA"; then
+            echo "✅ GATE 8 PASSED (meta-only commit): current_sha matches parent HEAD ($PARENT_HEAD)."
+            PASS=$((PASS + 1))
+        else
+            echo "⛔ GATE 8 FAILED: Checkpoint current_sha is stale."
+            echo "   current_sha in staged .checkpoint.json: $STAGED_CURRENT_SHA"
+            echo "   Actual HEAD:                           $ACTUAL_HEAD"
+            echo "   Parent HEAD:                           $(git rev-parse HEAD~1 2>/dev/null || echo 'N/A')"
+            echo "   Fix: update current_sha in .checkpoint.json to $ACTUAL_HEAD"
+            echo "   then git add .checkpoint.json and retry."
+            FAIL=$((FAIL + 1))
+        fi
+    else
         echo "⛔ GATE 8 FAILED: Checkpoint current_sha is stale."
         echo "   current_sha in staged .checkpoint.json: $STAGED_CURRENT_SHA"
         echo "   Actual HEAD:                           $ACTUAL_HEAD"
@@ -214,9 +244,6 @@ except: pass
         echo "   Fix: update current_sha in .checkpoint.json to $ACTUAL_HEAD"
         echo "   then git add .checkpoint.json and retry."
         FAIL=$((FAIL + 1))
-    else
-        echo "✅ GATE 8 PASSED: current_sha matches HEAD ($ACTUAL_HEAD)."
-        PASS=$((PASS + 1))
     fi
 else
     echo "⏭️  GATE 8 SKIPPED: .checkpoint.json not staged."
