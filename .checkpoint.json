@@ -8,7 +8,7 @@
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
   "current_task": "fix-preflop-round-complete-pot-size",
-  "current_sha": "27b4e04",
+  "current_sha": "09eb7a5",
   "completed": [
     {
       "task": "fix-preflop-allin-round-detection",
@@ -231,6 +231,14 @@
       "summary": "Removed dead no-op loop (lines 454-456) from PostflopTraining all-in short-circuit handler. The loop assigned null to already-null entries in finalActions spread copy. 53/53 vitest pass, build clean.",
       "coach": "pending",
       "coach_verified_at": null
+    },
+    {
+      "task": "fix-current-sha-staleness-remaining",
+      "sha": "09eb7a5",
+      "date": "2026-07-01",
+      "summary": "Fixed stale current_sha in .checkpoint.json (c3a0604->27b4e04). Improved GATE 8 in scripts/pre-commit to accept HEAD~1 for meta-only (no-source-code) commits — prevents checkpoint staleness chicken-and-egg on chore: checkpoint-update commits. 8/8 structural gates passed. 53/53 vitest + 368 Python tests pass.",
+      "coach": "pending",
+      "coach_verified_at": null
     }
   ],
   "spec_gaps": [
@@ -338,6 +346,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "ae77c93",
-  "player_note": "Tick 2026-07-01 ~09:00: fix-checkpoint-current-sha-staleness (P3) complete. Added GATE 8 to scripts/pre-commit — verifies current_sha matches HEAD (prefix match). Fixed current staleness (23cc830→54b95aa→ae77c93). GATE 7 over-ride documented: coach_review changes are Coach-authored (verdict APPROVE 08:42). 53/53 vitest pass, build clean. Next: fix-preflop-round-complete-pot-size (P2) or add-unit-tests-for-preflop-round-complete (P2)."
+  "last_sha": "09eb7a5",
+  "player_note": "Tick 2026-07-01 ~12:15: fix-current-sha-staleness-remaining (P2) complete. Fixed current_sha c3a0604->27b4e04->09eb7a5. Improved GATE 8 in pre-commit hook: meta-only commits (no source code staged) now accept HEAD~1 as valid current_sha target, preventing staleness from checkpoint-only cycles. 53/53 vitest + 368 Python tests pass. 8/8 structural gates passed on commit 09eb7a5. Next: fix-preflop-round-complete-pot-size (P2) or add-unit-tests-for-preflop-round-complete (P2)."
 }
