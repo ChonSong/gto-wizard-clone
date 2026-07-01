@@ -151,7 +151,7 @@ export default function StudyPage() {
               setBoardStreet('river')
               setPfBoard(allCards)
               setPfStreet('river')
-              setPfPot(treeNode?.pot_size || 5.5)
+              setPfPot(computePotSize(treePath))
               setPfActivePosition('CO')
               setPfAction(null)
               setMode('postflop')
@@ -162,7 +162,7 @@ export default function StudyPage() {
               setBoardStreet('flop')
               setPfBoard(flopCards)
               setPfStreet('flop')
-              setPfPot(treeNode?.pot_size || 5.5)
+              setPfPot(computePotSize(treePath))
               setPfActivePosition('CO')
               setPfAction(null)
               setMode('postflop')
@@ -293,6 +293,36 @@ export default function StudyPage() {
     const active = POSITION_ORDER.filter(p => !folded.has(p))
     if (active.length === 1) return { complete: true, winner: active[0] }
     return { complete: false, winner: null }
+  }
+
+  // ── Compute pot size from treePath entries (avoids stale treeNode?.pot_size) ──
+  function computePotSize(path: TreeAction[], sd: number = 100): number {
+    if (path.length === 0) return 5.5
+
+    // Track each position's total contribution (blinds pre-posted)
+    const contrib: Record<string, number> = {
+      UTG: 0, HJ: 0, CO: 0, BTN: 0, SB: 0.5, BB: 1.0,
+    }
+
+    for (const entry of path) {
+      const pos = entry.position
+      if (entry.action === 'fold') continue
+
+      // Current bet is the highest contribution so far
+      const currentBet = Math.max(...Object.values(contrib))
+
+      if (entry.action === 'all_in') {
+        contrib[pos] = sd  // all-in for full stack
+      } else if (entry.action === 'raise') {
+        // entry.size is the "raise to N bb" amount from available_actions
+        contrib[pos] = entry.size ?? currentBet + 1
+      } else if (entry.action === 'call') {
+        // entry.size from API = total amount to call; fallback = current bet
+        contrib[pos] = entry.size ?? currentBet
+      }
+    }
+
+    return Object.values(contrib).reduce((sum, v) => sum + v, 0)
   }
 
   // ── Action click ──
