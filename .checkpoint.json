@@ -7,9 +7,17 @@
   "api_dir": "apps/api",
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
-  "current_task": "fix-preflop-round-complete-pot-size",
-  "current_sha": "09eb7a5",
+  "current_task": "add-unit-tests-for-preflop-round-complete",
+  "current_sha": "000d459",
   "completed": [
+    {
+      "task": "fix-preflop-round-complete-pot-size",
+      "sha": "000d459",
+      "date": "2026-07-01",
+      "summary": "Fixed stale pot_size in pre-flight round-complete transition. Added computePotSize() function that tracks each position's total contribution from treePath entries + blinds (SB 0.5, BB 1.0), producing correct pot independent of stale treeNode.pot_size. 6-way call after UTG raise now shows 15bb (was 4bb), 6-way all-in shows 600bb (was 100.5bb). 53/53 vitest pass, tsc clean. Verified live: auto-transition to postflop works, 0 JS errors.",
+      "coach": "pending",
+      "coach_verified_at": null
+    },
     {
       "task": "fix-preflop-allin-round-detection",
       "sha": "56223e1",
@@ -347,5 +355,5 @@
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
   "last_sha": "09eb7a5",
-  "player_note": "Tick 2026-07-01 ~12:15: fix-current-sha-staleness-remaining (P2) complete. Fixed current_sha c3a0604->27b4e04->09eb7a5. Improved GATE 8 in pre-commit hook: meta-only commits (no source code staged) now accept HEAD~1 as valid current_sha target, preventing staleness from checkpoint-only cycles. 53/53 vitest + 368 Python tests pass. 8/8 structural gates passed on commit 09eb7a5. Next: fix-preflop-round-complete-pot-size (P2) or add-unit-tests-for-preflop-round-complete (P2)."
+  "player_note": "Tick 2026-07-01 ~15:15: fix-preflop-round-complete-pot-size (P2) complete. Added computePotSize() computing pot from treePath contributions + blinds instead of stale treeNode.pot_size. 6-way call: 15bb (was 4bb), 6-way all-in: 600bb (was 100.5bb). 53/53 vitest pass, tsc clean. Live page: auto-transition to postflop works, 0 JS errors. Advanced to add-unit-tests-for-preflop-round-complete (P2)."
 }
