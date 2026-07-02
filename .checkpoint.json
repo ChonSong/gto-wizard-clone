@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
-  "current_task": "add-unit-tests-for-preflop-round-complete",
-  "current_sha": "000d459",
+  "current_task": "verify-fcr-frequency-display",
+  "current_sha": "d6c839c",
   "completed": [
     {
       "task": "fix-preflop-round-complete-pot-size",
@@ -247,6 +247,18 @@
       "summary": "Fixed stale current_sha in .checkpoint.json (c3a0604->27b4e04). Improved GATE 8 in scripts/pre-commit to accept HEAD~1 for meta-only (no-source-code) commits — prevents checkpoint staleness chicken-and-egg on chore: checkpoint-update commits. 8/8 structural gates passed. 53/53 vitest + 368 Python tests pass.",
       "coach": "pending",
       "coach_verified_at": null
+    },
+    {
+      "task": "fix-matrix-bottom-row-truncation",
+      "sha": "f7db3a6",
+      "date": "2026-07-02",
+      "summary": "Compacted hand matrix cells to fit all 13 rows in viewport without scrolling. Removed aspectRatio, reduced font 12→9, padding 4px→1px, gap 2→0, grid gap 1→0. Cells use fixed height 21px. tsc clean. Position frequency text (F/C/R) already fully visible — no change needed."
+    },
+    {
+      "task": "verify-fcr-frequency-display",
+      "sha": "d6c839c",
+      "date": "2026-07-02",
+      "summary": "Fixed F/C/R frequency display in StudyAggregateStrip. Two changes: (1) Changed denominator from hardcoded 1326 (all possible hands) to agg.total (position's range combos) so F/C/R percentages sum to ~100% of position range. (2) Added comboCount() helper and updated positionAggregates to use combo weights (pair=6, suited=4, offsuit=12) and account for mixed-strategy implicit folds. Previously used simple hand counts ignoring combo weights."
     }
   ],
   "spec_gaps": [
@@ -354,6 +366,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "09eb7a5",
-  "player_note": "Tick 2026-07-01 ~15:15: fix-preflop-round-complete-pot-size (P2) complete. Added computePotSize() computing pot from treePath contributions + blinds instead of stale treeNode.pot_size. 6-way call: 15bb (was 4bb), 6-way all-in: 600bb (was 100.5bb). 53/53 vitest pass, tsc clean. Live page: auto-transition to postflop works, 0 JS errors. Advanced to add-unit-tests-for-preflop-round-complete (P2)."
+  "last_sha": "d6c839c",
+  "player_note": "Tick 2026-07-02 ~22:15: verify-fcr-frequency-display (P3) complete. Fixed F/C/R frequency percentages in StudyAggregateStrip. Before: denominator was hardcoded 1326 (all hands), so F/C/R summed to ~range% of 1326 (e.g., UTG F:9%+C:0%+R:3%=12%, matching UTG's ~16.8% range fraction). After: denominator is agg.total (position's actual range combos), so F/C/R now sum to ~100% of the position's range. Additionally added comboCount() weighting to positionAggregates — previously used simple hand counts ignoring combo weights and mixed-strategy implicit folds. Build clean, tsc pass, 0 vitest regression."
 }
