@@ -26,9 +26,9 @@ export function StudyAggregateStrip({
         const isActive = pos === activePosition
         const agg = positionAggregates[pos]
         const hasData = agg.total > 0
-        const foldPct = hasData ? Math.round((agg.fold / 1326) * 100) : 0
-        const callPct = hasData ? Math.round((agg.call / 1326) * 100) : 0
-        const raisePct = hasData ? Math.round((agg.raise / 1326) * 100) : 0
+        const foldPct = hasData ? Math.round((agg.fold / agg.total) * 100) : 0
+        const callPct = hasData ? Math.round((agg.call / agg.total) * 100) : 0
+        const raisePct = hasData ? Math.round((agg.raise / agg.total) * 100) : 0
         return (
           <div key={pos} onClick={() => onSelectPosition(pos)}
             style={{

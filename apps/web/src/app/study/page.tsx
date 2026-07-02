@@ -381,6 +381,13 @@ export default function StudyPage() {
     setPfActivePosition(pos)
   }
 
+  // ── Combo-weight helper (consistent with StudyPlayerTiles.comboCount) ──
+  function comboCount(hand: string): number {
+    if (hand.length === 2 && hand[0] === hand[1]) return 6   // pair
+    if (hand.endsWith('s')) return 4                           // suited
+    return 12                                                   // offsuit
+  }
+
   // ── Computed values ──
   const positionAggregates = useMemo(() => {
     const agg: Record<string, { fold: number; call: number; raise: number; total: number }> = {}
@@ -391,12 +398,20 @@ export default function StudyPage() {
       }
       let fold = 0, call = 0, raise = 0
       data.forEach((h) => {
+        const weight = comboCount(h.hand)
         const action = h.action.startsWith('raise') ? 'raise' : h.action
-        if (action === 'fold') fold++
-        else if (action === 'call') call++
-        else if (action === 'raise' || action === 'all_in') raise++
+        if (action === 'fold') {
+          // Fold hands: count full combo weight (frequency=0 is a convention for fold)
+          fold += weight
+        } else if (action === 'call') {
+          call += weight * h.frequency
+          fold += weight * (1 - h.frequency)  // implicit fold for mixed-call hands
+        } else if (action === 'raise' || action === 'all_in') {
+          raise += weight * h.frequency
+          fold += weight * (1 - h.frequency)  // implicit fold for mixed-raise hands
+        }
       })
-      agg[pos] = { fold, call, raise, total: data.size }
+      agg[pos] = { fold, call, raise, total: fold + call + raise }
     }
     return agg
   }, [allPositionData])
