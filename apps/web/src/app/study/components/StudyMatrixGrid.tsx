@@ -82,8 +82,8 @@ export function StudyMatrixGrid({
           <div role="grid" aria-label="Hand matrix"
             style={{
               display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)',
-              gap: 1, background: '#1a1a1a',
-              borderRadius: 6, overflow: 'hidden', padding: 2,
+              gap: 0, background: '#1a1a1a',
+              borderRadius: 6, overflow: 'hidden', padding: 1,
             }}>
             {MATRIX_HANDS.map((row, rowIdx) => (
               <div key={rowIdx} role="row" style={{ display: 'contents' }}>
@@ -111,13 +111,14 @@ export function StudyMatrixGrid({
                         }
                       }}
                       style={{
-                        aspectRatio: isSelected ? 'auto' : '1/1',
                         minHeight: isSelected ? 84 : undefined,
+                        height: isSelected ? undefined : '21px',
+                        boxSizing: 'border-box',
                         display: 'flex', flexDirection: 'column',
                         alignItems: isSelected ? 'stretch' : 'center',
                         justifyContent: 'center',
                         fontWeight: 700, color: '#fff', letterSpacing: -0.3,
-                        fontSize: 12,
+                        fontSize: 9,
                         textShadow: '0 1px 2px rgba(0,0,0,.8)',
                         cursor: 'pointer', userSelect: 'none',
                         background: showFreqChip
@@ -128,19 +129,19 @@ export function StudyMatrixGrid({
                         borderRadius: 3,
                         transition: 'opacity .15s, border .15s',
                         outline: 'none',
-                        padding: isSelected ? '3px' : '4px 2px',
+                        padding: isSelected ? '3px' : '1px 2px',
                         zIndex: isSelected ? 10 : undefined,
-                        gap: 2,
+                        gap: 0,
                       }}>
-                      <span style={{ textAlign: 'center', width: '100%', lineHeight: 1.1 }}>{hand}</span>
+                      <span style={{ textAlign: 'center', width: '100%', lineHeight: 1, fontSize: 9 }}>{hand}</span>
 
                       {showFreqChip && !isSelected && (
                         <span style={{
-                          fontSize: 11, fontWeight: 700, opacity: 1,
+                          fontSize: 8, fontWeight: 700, opacity: 1,
                           color: '#fff',
                           background: 'rgba(0,0,0,0.45)',
-                          padding: '1px 4px', borderRadius: 2,
-                          lineHeight: 1.2,
+                          padding: '0px 2px', borderRadius: 2,
+                          lineHeight: 1.1,
                         }}>
                           {(data.frequency * 100).toFixed(0)}% {actionLetter}
                         </span>
