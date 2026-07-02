@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
-  "current_task": "verify-fcr-frequency-display",
-  "current_sha": "d6c839c",
+  "current_task": "rebuild-and-deploy-fcr-frequency-fix",
+  "current_sha": "3e57d7c",
   "completed": [
     {
       "task": "fix-preflop-round-complete-pot-size",
@@ -259,6 +259,12 @@
       "sha": "d6c839c",
       "date": "2026-07-02",
       "summary": "Fixed F/C/R frequency display in StudyAggregateStrip. Two changes: (1) Changed denominator from hardcoded 1326 (all possible hands) to agg.total (position's range combos) so F/C/R percentages sum to ~100% of position range. (2) Added comboCount() helper and updated positionAggregates to use combo weights (pair=6, suited=4, offsuit=12) and account for mixed-strategy implicit folds. Previously used simple hand counts ignoring combo weights."
+    },
+    {
+      "task": "rebuild-and-deploy-fcr-frequency-fix",
+      "sha": "3e57d7c",
+      "date": "2026-07-03",
+      "summary": "Rebuilt Next.js app (npm run build) and restarted gto-wizard-web.service (systemctl --user). Source fix commit d6c839c had correct code but build artifacts predated the commit. After rebuild, compiled JS uses Math.round(h.fold/h.total*100) replacing old /1326. 53/53 vitest pass."
     }
   ],
   "spec_gaps": [
@@ -366,6 +372,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "d6c839c",
-  "player_note": "Tick 2026-07-02 ~22:15: verify-fcr-frequency-display (P3) complete. Fixed F/C/R frequency percentages in StudyAggregateStrip. Before: denominator was hardcoded 1326 (all hands), so F/C/R summed to ~range% of 1326 (e.g., UTG F:9%+C:0%+R:3%=12%, matching UTG's ~16.8% range fraction). After: denominator is agg.total (position's actual range combos), so F/C/R now sum to ~100% of the position's range. Additionally added comboCount() weighting to positionAggregates — previously used simple hand counts ignoring combo weights and mixed-strategy implicit folds. Build clean, tsc pass, 0 vitest regression."
+  "last_sha": "3e57d7c",
+  "player_note": "Tick 2026-07-03 ~00:12: rebuild-and-deploy-fcr-frequency-fix (P2) complete. Rebuilt next.js, restarted gto-wizard-web.service, updated .deployed-hash. 53/53 vitest pass."
 }
