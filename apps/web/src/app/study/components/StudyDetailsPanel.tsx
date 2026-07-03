@@ -125,7 +125,7 @@ function ActionsTab({
                   {ACTION_LABELS[action] || action}
                 </span>
                 <span style={{ fontSize: 11, color: '#888', fontWeight: 500 }}>
-                  {pct.toFixed(1)}% ({comboCount.toFixed(1)} combos)
+                  {pct.toFixed(1)}% ({Math.round(comboCount)} combos)
                 </span>
               </div>
               <div style={{ height: 10, background: '#2a2a2a', borderRadius: 5, overflow: 'hidden' }}>
@@ -632,7 +632,7 @@ function ActionsChartTab({
                   {ACTION_LABELS[action] || action}
                 </span>
                 <span style={{ fontSize: 11, color: '#888', fontWeight: 500 }}>
-                  {pct.toFixed(1)}% ({comboCount.toFixed(1)}c)
+                  {pct.toFixed(1)}% ({Math.round(comboCount)}c)
                 </span>
               </div>
               <div style={{ height: 22, background: '#1a1a1a', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>

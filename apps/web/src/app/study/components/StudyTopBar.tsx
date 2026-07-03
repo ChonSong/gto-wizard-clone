@@ -73,7 +73,7 @@ export function StudyAggregateStrip({
               <span style={{ color: '#E53935' }}>R:{raisePct}%</span>
             </div>
             <span style={{ fontSize: 8, color: '#555' }}>
-              {hasData ? `${agg.fold + agg.call + agg.raise} combos` : (allPositionLoading ? '...' : '—')}
+              {hasData ? `${Math.round(agg.fold + agg.call + agg.raise)} combos` : (allPositionLoading ? '...' : '—')}
             </span>
           </div>
         )
