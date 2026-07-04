@@ -11,6 +11,15 @@ const nextConfig = {
   transpilePackages: ['@gto-wizard/ui-components', '@gto-wizard/types'],
   compress: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/range',
+        destination: '/range-explorer',
+        permanent: true,
+      },
+    ]
+  },
   images: {
     formats: ['image/avif', 'image/webp'] as unknown as ['image/avif' | 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30,
