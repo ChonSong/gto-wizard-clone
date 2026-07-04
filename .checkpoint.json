@@ -7,9 +7,16 @@
   "api_dir": "apps/api",
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
-  "current_task": "fix-position-specific-combo-counts",
-  "current_sha": "3049913212455bf7e37075369c4e9feca07c5069",
+  "current_task": "fix-range-page-404",
+  "current_sha": "282934b39f1b61c89de2642c10b1b0ea527a4a48",
   "completed": [
+    {
+      "task": "fix-range-page-404",
+      "sha": "282934b",
+      "date": "2026-07-04",
+      "summary": "Added Next.js redirect from /range to /range-explorer. The Range nav link already pointed to /range-explorer (which works), but direct /range access returned 404. Added async redirects() in next.config.ts for permanent 308 redirect. Build+deploy+restart. Verified live: /range → 308 → /range-explorer loads Range Explorer page. 53/53 vitest pass, tsc clean.",
+      "coach": "pending"
+    },
     {
       "task": "fix-preflop-round-complete-pot-size",
       "sha": "000d459",
@@ -378,6 +385,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "3049913212455bf7e37075369c4e9feca07c5069",
-  "player_note": "Tick 2026-07-04 ~16:10: fix-position-specific-combo-counts complete. Changed combo count from agg.total (always 1326) to agg.call+agg.raise (range combos only). Build+deploy+restart. Live verified: all 6 positions show correct range combos. 53/53 vitest pass."
+  "last_sha": "282934b39f1b61c89de2642c10b1b0ea527a4a48",
+  "player_note": "Tick 2026-07-04 ~23:20: fix-range-page-404 complete. Added Next.js redirect /range → /range-explorer (308 permanent). The Range nav link already pointed to /range-explorer (working) but direct /range access returned 404. Added redirects() in next.config.ts. Build+deploy+restart. Live verified: /range redirects to /range-explorer. 53/53 vitest pass, tsc clean. Also recorded: item 53d6d6ca537e (deploy combo rounding) already deployed — live shows integer combos. Item 7c5706d31114 is a Coach-review task (not Player-implementable)."
 }
