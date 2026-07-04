@@ -7,8 +7,8 @@
   "api_dir": "apps/api",
   "phase": 8,
   "phase_name": "Coach-Generated Fixes",
-  "current_task": "rebuild-and-deploy-fcr-frequency-fix",
-  "current_sha": "3e57d7c",
+  "current_task": "fix-position-specific-combo-counts",
+  "current_sha": "3049913212455bf7e37075369c4e9feca07c5069",
   "completed": [
     {
       "task": "fix-preflop-round-complete-pot-size",
@@ -265,6 +265,12 @@
       "sha": "3e57d7c",
       "date": "2026-07-03",
       "summary": "Rebuilt Next.js app (npm run build) and restarted gto-wizard-web.service (systemctl --user). Source fix commit d6c839c had correct code but build artifacts predated the commit. After rebuild, compiled JS uses Math.round(h.fold/h.total*100) replacing old /1326. 53/53 vitest pass."
+    },
+    {
+      "task": "fix-position-specific-combo-counts",
+      "sha": "3049913",
+      "date": "2026-07-04",
+      "summary": "Fixed position-specific combo counts in aggregate strip. Changed from Math.round(agg.fold+agg.call+agg.raise) to Math.round(agg.call+agg.raise) — the former always sum to 1326 (total combos) because out-of-range hands count as folds. Only non-fold action combos (call+raise) represent the position's actual range size. Build + deploy + restart. Live verified: UTG=223, HJ=312, CO=460, BTN=588, SB=599, BB=236 combos. 53/53 vitest pass."
     }
   ],
   "spec_gaps": [
@@ -372,6 +378,6 @@
     "watchdog_bypass": false
   },
   "note": "Tick 2026-06-30 ~23:05: fix-game-tree-equal-action-rule-phase3 (all-in short-circuit) complete. Commit 2023b6b adds all-in short-circuit to PostflopTraining: ALL IN on flop/turn → all remaining cards dealt → river. 53/53 vitest pass, build clean. Advanced to fix-destructive-hook-overwrite. Known gap: preflop all-in short-circuit (deal 5 cards on round-complete) not yet implemented.",
-  "last_sha": "3e57d7c",
-  "player_note": "Tick 2026-07-03 ~00:12: rebuild-and-deploy-fcr-frequency-fix (P2) complete. Rebuilt next.js, restarted gto-wizard-web.service, updated .deployed-hash. 53/53 vitest pass."
+  "last_sha": "3049913212455bf7e37075369c4e9feca07c5069",
+  "player_note": "Tick 2026-07-04 ~16:10: fix-position-specific-combo-counts complete. Changed combo count from agg.total (always 1326) to agg.call+agg.raise (range combos only). Build+deploy+restart. Live verified: all 6 positions show correct range combos. 53/53 vitest pass."
 }
