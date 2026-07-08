@@ -1,4 +1,4 @@
-# GTO Wizard Clone
+# GTO Wizard Clone - WIP
 
 **Open-source GTO poker training platform** — equity calculator, CFR solver, PLO4 tools, double board / bomb pot solver, training modes, hand history analysis, ICM calculator, push/fold charts, training courses, and community spots.
 
